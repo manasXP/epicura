@@ -26,6 +26,8 @@ Welcome to the comprehensive documentation for the Epicura autonomous kitchen ro
 6. **[[03-Software/04-Controller-Software-Architecture|Controller & Software Architecture]]** - Dual-processor software modules, recipe state machine, and control flow
 7. **[[03-Software/03-Main-Loop-State-Machine|Main Loop State Machine]]** - Cooking state diagram, state-layer impact matrix, sequence diagrams, and transition triggers
 8. **[[03-Software/08-Tech-Stack|Tech Stack]]** - Hardware platforms, software frameworks, and development tools
+9. **[[03-Software/04-MPU-Functional-Specification|MPU Functional Specification]]** - CM5 (Cortex-A76) functional requirements, interfaces, and software architecture
+10. **[[03-Software/05-MCU-Functional-Specification|MCU Functional Specification]]** - STM32G474RE functional requirements, pin assignments, and FreeRTOS tasks
 
 #### 04. User Interface
 8. **[[04-UserInterface/03-UI-UX-Design|UI/UX Design]]** - Touchscreen interface, companion app, and multi-language support
@@ -89,7 +91,9 @@ docs/
 ├── 03-Software/
 │   ├── 01-Tech-Stack.md                         Technology choices
 │   ├── 02-Controller-Software-Architecture.md   Software architecture
-│   └── 03-Main-Loop-State-Machine.md            Cooking state machine & layer impacts
+│   ├── 03-Main-Loop-State-Machine.md            Cooking state machine & layer impacts
+│   ├── 04-MPU-Functional-Specification.md       CM5 functional spec
+│   └── 05-MCU-Functional-Specification.md       STM32 functional spec
 ├── 04-UserInterface/
 │   └── 01-UI-UX-Design.md                       Touchscreen & app design
 ├── 05-Subsystems/

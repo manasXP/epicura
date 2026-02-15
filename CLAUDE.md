@@ -8,7 +8,7 @@ Epicura is an autonomous countertop kitchen robot that cooks one-pot meals using
 
 ## Project Status
 
-Design/documentation phase. Comprehensive documentation exists across 18 documents in `docs/`. No source code exists yet.
+Design/documentation phase. Comprehensive documentation exists across 35+ documents in `docs/`. No source code exists yet.
 
 ## Hardware Architecture
 
@@ -55,7 +55,9 @@ Design/documentation phase. Comprehensive documentation exists across 18 documen
 | Power supply | Mean Well LRS-75-24 (24V single output) | Single reliable PSU feeds both CMIO+CM5 and controller; downstream buck/LDO for 5V/3.3V |
 | Heating module | Commercial microwave surface with CAN bus | Eliminates custom IGBT driver; pre-certified safety; CAN control |
 | UI framework | Kivy over Qt6/QML | Python-only development (no C++/QML), GPU acceleration, sufficient widgets; Qt6/QML is overkill (medical-grade UX) |
-| Mobile app | Flutter over React Native | Better performance, Dart type safety, single codebase iOS+Android |
+| Mobile apps | Native (SwiftUI + Kotlin/Compose) over Flutter | Direct BLE/camera APIs, platform-native UX, reliable background processing |
+| Cloud backend | Fastify (Node.js/TypeScript) | High-performance API server, TypeScript type safety, modular service architecture |
+| Admin portal | Next.js | React-based, SSR, recipe/device/user management |
 | CM5-STM32 Comm | Python bridge service | Dedicated service for protocol handling, message queuing, health monitoring |
 
 ## Software Stack
@@ -66,7 +68,6 @@ Design/documentation phase. Comprehensive documentation exists across 18 documen
 - **Container Orchestration**: Docker Compose for all services
 - **Database**: PostgreSQL 16 (Docker container) - same schema as cloud for consistency
 - **MQTT**: Mosquitto broker (Docker container) with cloud bridge
-- **Backend API**: FastAPI (Python, Docker container) - REST endpoints for UI and mobile
 - **Recipe Engine**: Python service (Docker container) - YAML parsing, state machine
 - **CV Pipeline**: Python service (Docker container) - OpenCV + TFLite MobileNetV2 INT8
 - **UI**: Kivy (Python, Docker container) - touchscreen interface, camera widget
@@ -83,37 +84,74 @@ Design/documentation phase. Comprehensive documentation exists across 18 documen
 - **CAN**: FDCAN1 interface to microwave induction surface (power control, status, faults)
 - **HAL**: STM32 HAL drivers for ADC, PWM, UART, SPI, I2C
 
+### Cloud Backend
+
+- **API Server**: Fastify (Node.js / TypeScript) - REST API for mobile apps and admin portal
+- **Database**: PostgreSQL (cloud) - recipes, users, devices, telemetry
+- **MQTT Broker**: Mosquitto / AWS IoT - device telemetry and commands
+- **Admin Portal**: Next.js - recipe management, device monitoring, user administration
+
+### Mobile Apps (Native)
+
+- **iOS**: SwiftUI, Core Bluetooth (BLE pairing/WiFi provisioning), AVFoundation (camera streaming)
+- **Android**: Kotlin + Jetpack Compose, CompanionDeviceManager (BLE), CameraX (streaming)
+
 ## Documentation Structure
 
 ```
 docs/
 ├── README.md                          Documentation index
-├── 01-Overview/01-Project-Overview    Product definition and use cases
+├── 01-Overview/
+│   └── 01-Project-Overview            Product definition and use cases
 ├── 02-Hardware/
+│   ├── 01-Epicura-Architecture        System block diagrams and wiring
 │   ├── 02-Technical-Specifications    Induction, sensors, power specs
-│   ├── Epicura-Architecture           System block diagrams and wiring
-│   ├── 05-Sensors-Acquisition         Camera, IR, load cells, NTC
-│   └── 07-Mechanical-Design           Enclosure, arm, thermal management
+│   ├── 03-Sensors-Acquisition         Camera, IR, load cells, NTC
+│   └── 04-Mechanical-Design           Enclosure, arm, thermal management
 ├── 03-Software/
-│   ├── 04-Controller-Software-Architecture    Recipe state machine, CV, PID
-│   └── 08-Tech-Stack                  Yocto, Qt, FreeRTOS, Flutter
-├── 04-UserInterface/03-UI-UX-Design   Touchscreen wireframes, companion app
+│   ├── 01-Tech-Stack                  Yocto, Kivy, FreeRTOS, native mobile
+│   ├── 02-Controller-Software-Architecture    Recipe state machine, CV, PID
+│   └── 03-Main-Loop-State-Machine     Cooking state machine across UI/CM5/STM32
+├── 04-UserInterface/
+│   └── 01-UI-UX-Design               Touchscreen wireframes, companion app
 ├── 05-Subsystems/
-│   ├── 09-Induction-Heating           PID control, safety interlocks
-│   ├── 10-Robotic-Arm                 Servo patterns, stall detection
+│   ├── 01-Induction-Heating           PID control, safety interlocks
+│   ├── 02-Robotic-Arm                 Servo patterns, stall detection
 │   ├── 03-Ingredient-Dispensing       ASD/CID/SLD dispensing subsystems
-│   ├── 12-Vision-System              TFLite pipeline, anomaly detection
-│   └── 13-Exhaust-Fume-Management    PWM fan, grease/carbon filtration
-├── 06-Compliance/06-Safety-Compliance IEC 60335, food safety, BIS
-├── 07-Development/Prototype-Plan      20-24 week phased roadmap
+│   ├── 04-Vision-System              TFLite pipeline, anomaly detection
+│   └── 05-Exhaust-Fume-Management    PWM fan, grease/carbon filtration
+├── 06-Compliance/
+│   └── 01-Safety-Compliance           IEC 60335, food safety, BIS
+├── 07-Development/
+│   └── 01-Prototype-Development-Plan  20-24 week phased roadmap
 ├── 08-Components/
 │   ├── 01-Compute-Module-Components   CM5 + STM32 BOM ($188)
 │   ├── 02-Actuation-Components        ASD/CID/SLD + induction BOM ($197)
 │   ├── 03-Sensor-Components           Sensors BOM ($65)
 │   └── 04-Total-Component-Cost        Full BOM ($700 prototype)
-└── 09-PCB/
-    ├── Controller-PCB-Design          STM32G474RE controller board (160x90mm)
-    └── Driver-PCB-Design              Power electronics & actuator drivers (160x90mm)
+├── 09-PCB/
+│   ├── 01-Controller-PCB-Design       STM32G474RE controller board (160x90mm)
+│   └── 02-Driver-PCB-Design           Power electronics & actuator drivers (160x90mm)
+├── 10-Backend/
+│   ├── 01-Backend-Architecture        Fastify API, cloud services, MQTT
+│   ├── 02-Database-Schema             PostgreSQL schema for cloud and device
+│   └── 03-Admin-Portal                Next.js admin dashboard
+├── 11-API/
+│   ├── 01-REST-API-Reference          Mobile and admin REST endpoints
+│   ├── 02-WebSocket-Events            Real-time cooking event streams
+│   ├── 03-MQTT-Topics                 Device telemetry and command topics
+│   └── 04-BLE-Services                BLE pairing and WiFi provisioning
+├── 12-MobileApps/
+│   ├── 01-Mobile-Architecture         Native app strategy and shared patterns
+│   ├── 02-iOS-App                     SwiftUI implementation details
+│   └── 03-Android-App                 Kotlin/Compose implementation details
+└── 13-ProjectManagement/
+    ├── 01-Epics                       High-level project epics
+    ├── 02-Stories                     User stories breakdown
+    ├── 03-Sprints                     Sprint planning and schedule
+    ├── 04-Procurement-Schedule        Component procurement timeline
+    ├── 05-Resource-Allocation         Team resource planning
+    └── 06-Weekly-Status-Report-Template  Status report template
 ```
 
 ## Workspace Conventions
