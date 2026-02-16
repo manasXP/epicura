@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
-modified: 2026-02-15
-version: 1.0
+modified: 2026-02-16
+version: 2.0
 status: Draft
 ---
 
@@ -22,9 +22,9 @@ This document details the actuation subsystem components for the Epicura kitchen
 │  │  (Controller)│         │  Servo Arm   │                     │
 │  │              │         └──────────────┘                     │
 │  │              │                                               │
-│  │              │─── PWM ►┌──────────────┐                     │
-│  │              │         │  ASD: SG90 x3│                     │
-│  │              │         │  (Seasonings)│                     │
+│  │              │── PWM  ►┌──────────────┐                     │
+│  │              │  +GPIO  │  P-ASD: Pump │                     │
+│  │              │         │  + Sol. x6   │                     │
 │  │              │         └──────────────┘                     │
 │  │              │                                               │
 │  │              │── GPIO ►┌──────────────┐                     │
@@ -52,7 +52,15 @@ This document details the actuation subsystem components for the Epicura kitchen
 |-----------|-------------|-----|------------|----------|----------|-------|
 | Microwave Induction Surface (1800W, CAN) | Commercial module | 1 | $60.00 | $60.00 | Supplier TBD | Self-contained module with CAN bus port; no teardown needed |
 | DS3225 Servo Motor (25 kg.cm) | DS3225 | 1 | $15.00 | $15.00 | Amazon / AliExpress | Main stirring arm; metal gear, waterproof rated |
-| SG90 Micro Servo (9g) — ASD | SG90 | 3 | $2.00 | $6.00 | Amazon / AliExpress | ASD seasoning gate actuators |
+| 12V Micro Diaphragm Pump — P-ASD | SC3701PM or equiv. | 1 | $15.00 | $15.00 | AliExpress | P-ASD air source, 3-4 L/min, <45 dB |
+| 12V NC Solenoid Valve (mini) — P-ASD | Generic 12V, 2-3mm orifice | 6 | $3.50 | $21.00 | AliExpress | P-ASD cartridge air valves, <20 ms response |
+| Accumulator (100mL aluminum) — P-ASD | Custom/generic | 1 | $8.00 | $8.00 | AliExpress | P-ASD pressure reservoir, 1.5 bar max |
+| Pressure Regulator (inline) — P-ASD | Miniature, 0.3-2.0 bar | 1 | $5.00 | $5.00 | AliExpress | P-ASD operating pressure set to 1.0 bar |
+| ADS1015 ADC (pressure sensor) — P-ASD | ADS1015 breakout | 1 | $3.00 | $3.00 | Mouser | I2C pressure reading, addr 0x48 |
+| MPXV5100GP Pressure Sensor — P-ASD | MPXV5100GP | 1 | $8.00 | $8.00 | Mouser | Analog pressure sensor for accumulator |
+| Pneumatic Tubing + Fittings — P-ASD | 4mm OD silicone + barb fittings | 1 lot | $10.00 | $10.00 | AliExpress | Pump-to-manifold-to-cartridges |
+| Spice Cartridges (6x, PP) — P-ASD | Custom 60mL, food-grade PP | 6 | $3.00 | $18.00 | Custom/3D print | Bayonet-lock, 5mm orifice + 200-mesh screen |
+| Relief Valve (2.0 bar) — P-ASD | Pop-off safety valve | 1 | $2.00 | $2.00 | AliExpress | Overpressure protection on accumulator |
 | 12V DC Linear Actuator (50mm) — CID | Generic 12V, 50mm stroke | 2 | $8.00 | $16.00 | Amazon / AliExpress | CID push-plate slider for coarse ingredients |
 | 12V Peristaltic Pump — SLD | Generic 12V DC gear motor | 2 | $10.00 | $20.00 | Amazon / AliExpress | SLD liquid dispensing (oil + water) |
 | 12V NC Solenoid Valve — SLD | Generic 12V, normally closed | 2 | $4.00 | $8.00 | Amazon / AliExpress | SLD drip prevention |
@@ -80,7 +88,7 @@ This document details the actuation subsystem components for the Epicura kitchen
 |------|------|
 | Microwave Induction Surface (CAN) | $60.00 |
 | DS3225 Servo (main arm) | $15.00 |
-| SG90 Micro Servos — ASD (3x) | $6.00 |
+| P-ASD Pneumatic System (pump, valves, accumulator, regulator, sensor, tubing, cartridges, relief valve) | $90.00 |
 | Linear Actuators — CID (2x) | $16.00 |
 | Peristaltic Pumps — SLD (2x) | $20.00 |
 | Solenoid Valves — SLD (2x) | $8.00 |
@@ -93,7 +101,7 @@ This document details the actuation subsystem components for the Epicura kitchen
 | Connectors + Wiring | $17.00 |
 | Exhaust Fan + Filtration | $22.50 |
 | Piezo Buzzer + MOSFET | $0.85 |
-| **Category Subtotal** | **$197.35** |
+| **Category Subtotal** | **$281.35** |
 
 ---
 
@@ -114,11 +122,14 @@ This document details the actuation subsystem components for the Epicura kitchen
 - PWM control: 500-2500 us pulse, 50 Hz frequency
 - Continuous rotation not needed; 270° range sufficient for stirring patterns
 
-### ASD Gate Servos (SG90 ×3)
-- 9g weight, minimal space requirement per seasoning hopper gate
-- 1.2 kg.cm torque sufficient for gate open/close
-- 3 units for 3 seasoning hoppers (ASD-1, ASD-2, ASD-3)
-- Consider upgrading to MG90S (metal gear) if reliability issues arise
+### P-ASD Pneumatic System
+- **Puff-dosing mechanism**: pressurized air bursts through sealed cartridges
+- **6 cartridges** (60 mL each) with quarter-turn bayonet docking
+- **12V diaphragm pump** (3-4 L/min) + 100 mL accumulator at ~1.0 bar
+- **6× 12V NC solenoid valves** (<20 ms response) for individual cartridge control
+- **Weight-verified** via existing pot load cells (±10% accuracy)
+- **Anti-clog**: inherent (pressurized air breaks powder bridges), no moving parts in powder path
+- **BOM cost**: ~$90 (vs ~$6 for old 3× SG90 servos) — 15× cost for 2× capacity + dramatically improved reliability with sticky Indian spices
 
 ### CID Linear Actuators (×2)
 - 12V DC, 50 mm stroke push-plate sliders for coarse ingredients
@@ -138,7 +149,7 @@ This document details the actuation subsystem components for the Epicura kitchen
 |------|-----------|----------------------|---------|
 | Microwave surface | $60 | $40 (bulk) | 33% |
 | DS3225 | $15 | $8 (bulk) | 47% |
-| SG90 x3 (ASD) | $6 | $3 (bulk) | 50% |
+| P-ASD system (pump+valves+cartridges) | $90 | $50 (bulk) | 44% |
 | Linear actuators x2 (CID) | $16 | $8 (bulk) | 50% |
 | Peristaltic pumps x2 (SLD) | $20 | $10 (bulk) | 50% |
 | Solenoid valves x2 (SLD) | $8 | $4 (bulk) | 50% |
@@ -166,3 +177,4 @@ This document details the actuation subsystem components for the Epicura kitchen
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
+| 2.0 | 2026-02-16 | Manas Pradhan | Replace ASD (3× SG90 servo hoppers) with P-ASD pneumatic puff-dosing system (pump + 6× solenoid valves + sealed cartridges) |

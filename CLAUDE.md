@@ -31,7 +31,7 @@ Design/documentation phase. Comprehensive documentation exists across 35+ docume
 | Microwave Induction Surface | 1,800W commercial module | CAN bus to STM32 FDCAN1 | Cooking heat source (self-contained coil + driver) |
 | Servo Arm | DS3225 (25kg·cm) | PWM from STM32 | Stirring and scraping |
 | Display | 10" 1280x800 capacitive | DSI/HDMI to CM5 | Kivy touchscreen UI |
-| ASD (Seasoning Dispenser) | 3× SG90 micro servos | PWM from STM32 | Servo-gated gravity-fed seasoning hoppers |
+| P-ASD (Pneumatic Seasoning Dispenser) | 1× 12V diaphragm pump + 6× 12V NC solenoid valves + ADS1015 pressure sensor | PWM+GPIO+I2C from STM32 | Pneumatic puff-dosing, 6× sealed 60 mL cartridges |
 | CID (Coarse Ingredient Dispenser) | 2× 12V DC linear actuators | GPIO+PWM from STM32 | Push-plate slider trays for vegetables, dal, meat |
 | SLD (Standard Liquid Dispenser) | 2× peristaltic pumps + 2× solenoid valves + 1× load cell | PWM+GPIO from STM32 | Closed-loop oil and water dispensing |
 

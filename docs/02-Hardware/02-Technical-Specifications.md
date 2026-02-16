@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
-modified: 2026-02-15
-version: 1.0
+modified: 2026-02-16
+version: 2.0
 status: Draft
 ---
 
@@ -153,13 +153,13 @@ The primary cooking element is a commercial microwave induction surface — a se
 | CM5 + camera + display | 15 | 25 |
 | STM32 + sensors | 2 | 3 |
 | Servo arm (stirring) | 5 | 15 |
-| ASD servos (x3) | 0.5 | 3 |
+| P-ASD pump + solenoids | 1 | 10 |
 | CID linear actuators (x2) | 0 | 5 |
 | SLD pumps (x2) + solenoids (x2) | 0 | 16 |
 | LED ring | 2 | 5 |
 | Exhaust fan | 1 | 3 |
 | PSU losses | 10 | 30 |
-| **Total** | **636** | **1,887** |
+| **Total** | **637** | **1,894** |
 
 ## Performance Requirements
 
@@ -171,7 +171,7 @@ The primary cooking element is a commercial microwave induction surface — a se
 | UI Response Time | <200ms | Touch-to-visual feedback on display |
 | System Boot Time | <30s | Power-on to recipe selection screen |
 | Temperature Accuracy | +/-5C | IR sensor to actual food surface |
-| Dispensing Accuracy | ±10% (ASD), ±5% (SLD) | ASD by pot weight, SLD by dedicated load cell |
+| Dispensing Accuracy | ±10% (P-ASD), ±5% (SLD) | P-ASD by pot weight, SLD by dedicated load cell |
 | Camera Latency | <100ms | Capture to frame available in memory |
 | Recipe Step Transition | <2s | From stage detection to actuator response |
 | WiFi Connection | <10s | Auto-reconnect to saved network |
@@ -212,3 +212,4 @@ The primary cooking element is a commercial microwave induction surface — a se
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
+| 2.0 | 2026-02-16 | Manas Pradhan | Update power budget and dispensing accuracy for P-ASD pneumatic redesign |

@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
-modified: 2026-02-15
-version: 1.0
+modified: 2026-02-16
+version: 2.0
 status: Draft
 ---
 
@@ -47,8 +47,9 @@ The three boards (CM5IO, Controller, Driver) form a stackable architecture conne
          │    │                           │                │
          │    │  TIM1_CH1 (PA8) ───────────── J3: DS3225 Servo
          │    │                           │                │
-         │    │  TIM2_CH1-3 (PA0-PA2) ─────── J_STACK: ASD Servos 1-3
-         │    │  PA3/PC7/PD2 ─────────────── J_STACK: ASD Vibration Motors
+         │    │  TIM2_CH1 (PA0) ──────────── J_STACK: P-ASD Pump PWM
+         │    │  PA1/PA2/PC7/PD2/PA3 ────── J_STACK: P-ASD Solenoids V1-V5
+         │    │  PB11 ───────────────────── J_STACK: P-ASD Solenoid V6
          │    │                           │                │
          │    │  I2C1 (PB6/PB7) ───────────── J6: MLX90614
          │    │                           │                │
@@ -102,12 +103,16 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 │  │  50 Hz, 500-2500 us pulse width                            │  │
 │  └─────────────────────────────────┘                           │
 │                                                                │
-│  ┌─── PWM: ASD Seasoning Servos ──┐                           │
-│  │  PA0  (TIM2_CH1)  ──► ASD-1 SG90 Signal                  │  │
-│  │  PA1  (TIM2_CH2)  ──► ASD-2 SG90 Signal                  │  │
-│  │  PA2  (TIM2_CH3)  ──► ASD-3 SG90 Signal                  │  │
-│  │  50 Hz, 500-2500 us pulse width                            │  │
-│  └─────────────────────────────────┘                           │
+│  ┌─── P-ASD: Pneumatic Seasoning Dispenser ─┐                           │
+│  │  PA0  (TIM2_CH1)  ──► P-ASD Pump PWM (12V diaphragm pump)          │  │
+│  │  PA1  (GPIO)       ──► P-ASD Solenoid V1 (via MOSFET)              │  │
+│  │  PA2  (GPIO)       ──► P-ASD Solenoid V2 (via MOSFET)              │  │
+│  │  PC7  (GPIO)       ──► P-ASD Solenoid V3 (via MOSFET)              │  │
+│  │  PD2  (GPIO)       ──► P-ASD Solenoid V4 (via MOSFET)              │  │
+│  │  PA3  (GPIO)       ──► P-ASD Solenoid V5 (via MOSFET)              │  │
+│  │  PB11 (GPIO)       ──► P-ASD Solenoid V6 (via MOSFET)              │  │
+│  │  I2C1 (PB6/PB7)   ──► ADS1015 Pressure Sensor (addr 0x48)         │  │
+│  └───────────────────────────────────────────┘                           │
 │  Note: All actuator signals (servos, pumps, solenoids,        │
 │  vibration motors) route via J_STACK to Driver PCB where      │
 │  power electronics drive the actual actuators.                 │
@@ -159,10 +164,10 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 
 | Pin | Function | Peripheral | Direction | Connector | Subsystem |
 |-----|----------|------------|-----------|-----------|-----------|
-| PA0 | TIM2_CH1 | ASD Servo 1 PWM | Output | J_STACK Pin 15 | ASD |
-| PA1 | TIM2_CH2 | ASD Servo 2 PWM | Output | J_STACK Pin 16 | ASD |
-| PA2 | TIM2_CH3 | ASD Servo 3 PWM | Output | J_STACK Pin 17 | ASD |
-| PA3 | GPIO | ASD Vibration Motor 3 | Output | J_STACK Pin 20 | ASD |
+| PA0 | TIM2_CH1 | P-ASD Pump PWM | Output | J_STACK Pin 15 | P-ASD |
+| PA1 | GPIO | P-ASD Solenoid V1 | Output | J_STACK Pin 16 | P-ASD |
+| PA2 | GPIO | P-ASD Solenoid V2 | Output | J_STACK Pin 17 | P-ASD |
+| PA3 | GPIO | P-ASD Solenoid V5 | Output | J_STACK Pin 20 | P-ASD |
 | PA4 | ADC2_IN17 | NTC Coil | Input | J8 | Sensors |
 | PA5 | ADC2_IN13 | NTC Ambient | Input | J8 | Sensors |
 | PA6 | TIM3_CH1 | Exhaust Fan 1 PWM | Output | J_STACK Pin 27 | Exhaust |
@@ -182,7 +187,7 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 | PB6 | I2C1_SCL | MLX90614/INA219 | Output | J6, J_STACK Pin 35 | Sensors |
 | PB7 | I2C1_SDA | MLX90614/INA219 | Bidir | J6, J_STACK Pin 36 | Sensors |
 | PB10 | TIM2_CH3 | Exhaust Fan 2 PWM | Output | J_STACK Pin 28 | Exhaust |
-| PB11 | Available | — | — | — | — |
+| PB11 | GPIO | P-ASD Solenoid V6 | Output | J_STACK Pin 39 | P-ASD |
 | PB12 | SPI2_NSS | CM5 CE0 | Input | J1 | Comms |
 | PB13 | SPI2_SCK | CM5 SCLK | Input | J1 | Comms |
 | PB14 | SPI2_MISO | CM5 MISO | Output | J1 | Comms |
@@ -194,9 +199,9 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 | PC4 | GPIO | SLD Pump 1 DIR | Output | J_STACK Pin 30 | SLD |
 | PC5 | GPIO | SLD Pump 2 PWM | Output | J_STACK Pin 31 | SLD |
 | PC6 | GPIO | SLD Pump 2 DIR | Output | J_STACK Pin 32 | SLD |
-| PC7 | GPIO | ASD Vibration Motor 1 | Output | J_STACK Pin 18 | ASD |
+| PC7 | GPIO | P-ASD Solenoid V3 | Output | J_STACK Pin 18 | P-ASD |
 | PC13 | GPIO | Status LED | Output | D1 | Status |
-| PD2 | GPIO | ASD Vibration Motor 2 | Output | J_STACK Pin 19 | ASD |
+| PD2 | GPIO | P-ASD Solenoid V4 | Output | J_STACK Pin 19 | P-ASD |
 
 ---
 
@@ -338,7 +343,7 @@ The CM5 (master) initiates all SPI transactions. The STM32 (slave) asserts the I
 |---------|-----------|-----------|---------|
 | SET_TEMP | 0x01 | CM5 → STM32 | target_temp (float), ramp_rate (float) |
 | SET_STIR | 0x02 | CM5 → STM32 | pattern (uint8), speed_rpm (uint16) |
-| DISPENSE_ASD | 0x03 | CM5 → STM32 | asd_id (uint8: 1-3), target_g (uint16) |
+| DISPENSE_PASD | 0x03 | CM5 → STM32 | cartridge_id (uint8: 1-6), target_g (uint16) |
 | DISPENSE_CID | 0x06 | CM5 → STM32 | cid_id (uint8: 1-2), mode (uint8), pos_mm (uint8) |
 | DISPENSE_SLD | 0x07 | CM5 → STM32 | channel (uint8: OIL=1, WATER=2), target_g (uint16) |
 | E_STOP | 0x04 | CM5 → STM32 | reason_code (uint8) |
@@ -346,6 +351,8 @@ The CM5 (master) initiates all SPI transactions. The STM32 (slave) asserts the I
 | TELEMETRY | 0x10 | STM32 → CM5 | ir_temp, ntc_temps, weight, duty_pct |
 | SENSOR_DATA | 0x11 | STM32 → CM5 | adc_values[], ir_temp, load_cells[] |
 | STATUS | 0x12 | STM32 → CM5 | safety_state, error_code, flags |
+| PURGE_PASD | 0x0B | CM5 → STM32 | cartridge_id (uint8: 1-6, or 0xFF=all) |
+| PRESSURE_STATUS | 0x0C | CM5 → STM32 | — (returns pressure_bar, 2 bytes fixed-point) |
 | ACK | 0xFF | Bidirectional | ack_msg_id, result_code |
 
 ### STM32 SPI Slave Implementation Notes
@@ -455,10 +462,10 @@ The stacking connector passes 24V power, ground, 5V/3.3V references, all servo P
 | 9 | GND | Power | 10 | GND | Power |
 | 11 | 5V | Power | 12 | 5V | Power |
 | 13 | 3.3V | Power | 14 | 3.3V | Power |
-| **ASD Subsystem (Pins 15-20)** ||||
-| 15 | ASD_SERVO1_PWM (PA0) | Out | 16 | ASD_SERVO2_PWM (PA1) | Out |
-| 17 | ASD_SERVO3_PWM (PA2) | Out | 18 | ASD_VIB1_EN (PC7) | Out |
-| 19 | ASD_VIB2_EN (PD2) | Out | 20 | ASD_VIB3_EN (PA3) | Out |
+| **P-ASD Subsystem (Pins 15-20, 39)** ||||
+| 15 | PASD_PUMP_PWM (PA0) | Out | 16 | PASD_SOL1_EN (PA1) | Out |
+| 17 | PASD_SOL2_EN (PA2) | Out | 18 | PASD_SOL3_EN (PC7) | Out |
+| 19 | PASD_SOL4_EN (PD2) | Out | 20 | PASD_SOL5_EN (PA3) | Out |
 | **CID Subsystem (Pins 21-26)** ||||
 | 21 | CID_LACT1_EN (PA10) | Out | 22 | CID_LACT1_PH (PB4) | Out |
 | 23 | CID_LACT2_EN (PB5) | Out | 24 | CID_LACT2_PH (PC2) | Out |
@@ -470,9 +477,9 @@ The stacking connector passes 24V power, ground, 5V/3.3V references, all servo P
 | 31 | SLD_PUMP2_PWM (PC5) | Out | 32 | SLD_PUMP2_DIR (PC6) | Out |
 | 33 | SLD_SOL1_EN (PA7) | Out | 34 | SLD_SOL2_EN (PA9) | Out |
 | 35 | I2C1_SCL (PB6) | Bidir | 36 | I2C1_SDA (PB7) | Bidir |
-| **Main Actuators & Audio (Pins 37-40)** ||||
+| **Main Actuators & Audio (Pins 37-38, 40)** ||||
 | 37 | MAIN_SERVO_PWM (PA8) | Out | 38 | BUZZER_PWM (PA11) | Out |
-| 39 | Reserved | — | 40 | GND | Power |
+| 39 | PASD_SOL6_EN (PB11) | Out | 40 | GND | Power |
 
 #### Pin Group Summary
 
@@ -482,11 +489,11 @@ The stacking connector passes 24V power, ground, 5V/3.3V references, all servo P
 | GND | 5-10, 25-26, 40 | 9 | Low-impedance ground return |
 | 5V | 11-12 | 2 | 5V passthrough |
 | 3.3V | 13-14 | 2 | Logic reference |
-| **ASD** (Seasoning) | 15-20 | 6 | 3× servo PWM, 3× vibration motor enable |
+| **P-ASD** (Seasoning) | 15-20, 39 | 7 | 1× pump PWM, 6× solenoid enable |
 | **CID** (Coarse) | 21-26 | 6 | 2× actuator EN/PH, 2× GND |
 | **Exhaust Fans** | 27-28 | 2 | 2× fan PWM (independent speed control, 120mm) |
 | **SLD** (Liquid) | 29-36 | 8 | 2× pump PWM/DIR, 2× solenoid, I2C (INA219) |
-| **Main** (Arm/Audio) | 37-40 | 4 | Main servo, buzzer, 1× reserved, 1× GND |
+| **Main** (Arm/Audio) | 37-38, 40 | 3 | Main servo, buzzer, 1× GND |
 
 > [!note]
 > Subsystem grouping enables modular wiring harnesses. All signals for ASD run together (pins 15-20), all CID signals together (21-28), etc. Servo and actuator external connectors are on the Driver PCB, not the Controller PCB. The Controller PCB only carries low-level PWM/GPIO signals.
@@ -778,3 +785,4 @@ Material: FR4 (Tg 150°C minimum)
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
+| 2.0 | 2026-02-16 | Manas Pradhan | Replaced ASD (3× servo + 3× vibration motor) pin allocations with P-ASD (1× pump PWM + 6× solenoid + pressure sensor); updated J_STACK pinout, pin summary, and SPI message types |

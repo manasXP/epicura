@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
-modified: 2026-02-15
-version: 1.0
+modified: 2026-02-16
+version: 2.0
 status: Draft
 ---
 
@@ -9,7 +9,7 @@ status: Draft
 
 ## Overview
 
-The Driver PCB is the power electronics and actuator interface board in Epicura's 3-board stackable architecture. It receives low-level PWM and GPIO signals from the Controller PCB (STM32G474RE) through a 2x20 stacking connector and converts them into high-current drive signals for all actuators — servos, solenoids, linear actuators, peristaltic pumps, vibration motors, and the exhaust fan.
+The Driver PCB is the power electronics and actuator interface board in Epicura's 3-board stackable architecture. It receives low-level PWM and GPIO signals from the Controller PCB (STM32G474RE) through a 2x20 stacking connector and converts them into high-current drive signals for all actuators — servos, solenoids, linear actuators, peristaltic pumps, diaphragm pump, and the exhaust fan.
 
 ### 3-Board Stackable Architecture
 
@@ -59,11 +59,11 @@ All three boards share a uniform 160x90mm footprint with M3 mounting holes at id
                   │                      │                │
         ┌─────────┼──────────┐           │         ┌──────┼──────────┐
         │         │          │           │         │      │          │
-    ┌───▼───┐ ┌──▼──┐  ┌───▼────┐  ┌───▼───┐  ┌──▼──┐  │    ┌────▼────┐
-    │2x Sol │ │Fan  │  │2x Lin  │  │DS3225 │  │3x   │  │    │3x Vib  │
-    │IRLML  │ │IRLML│  │Act     │  │Servo  │  │ASD  │  │    │Motor   │
-    │6344   │ │6344 │  │DRV8876 │  │Direct │  │SG90 │  │    │2N7002  │
-    └───────┘ └─────┘  └────────┘  └───────┘  └─────┘  │    └────────┘
+    ┌───▼───┐ ┌──▼──┐  ┌───▼────┐  ┌───▼───┐  ┌───────▼───────┐
+    │2x Sol │ │Fan  │  │2x Lin  │  │DS3225 │  │P-ASD: 6x Sol │
+    │IRLML  │ │IRLML│  │Act     │  │Servo  │  │+ 1x Pump     │
+    │6344   │ │6344 │  │DRV8876 │  │Direct │  │IRLML6344     │
+    └───────┘ └─────┘  └────────┘  └───────┘  └───────────────┘
                                                         │
                                                    ┌────▼────┐
                                                    │2x Peri  │
@@ -91,7 +91,7 @@ Three MP1584EN synchronous buck converters step down the 24V input to three sepa
 |-----------|-------|
 | Output Voltage | 12V |
 | Max Current | 3A |
-| Load | Solenoids (2x 0.5A), exhaust fans (2x 0.5A), linear actuators (2x 1.5A peak), peristaltic pumps (2x 0.6A) |
+| Load | SLD solenoids (2x 0.5A), P-ASD solenoids (6x 0.5A, max 1 at a time), P-ASD pump (0.8A), exhaust fans (2x 0.5A), linear actuators (2x 1.5A peak), peristaltic pumps (2x 0.6A) |
 | Inductor | 33µH, CDRH104R (Sumida), Isat > 4A |
 | Output Cap | 2x 22µF MLCC (X5R, 25V) + 100µF electrolytic (25V) |
 | Feedback Resistors | R_top = 100k, R_bot = 12.7k (Vout = 0.8V × (1 + 100/12.7) = 7.1V... adjusted: R_top = 140k, R_bot = 10k → 12.0V) |
@@ -119,7 +119,7 @@ Three MP1584EN synchronous buck converters step down the 24V input to three sepa
 |-----------|-------|
 | Output Voltage | 5V |
 | Max Current | 3A |
-| Load | 3x ASD SG90 gate servos (3x 0.25A = 0.75A peak), 3x vibration motors (3x 0.1A) |
+| Load | Buzzer (0.03A), LED ring (1A peak) — ASD servos removed (P-ASD uses 12V solenoids on 12V rail) |
 | Inductor | 22µH, CDRH104R (Sumida), Isat > 4A |
 | Output Cap | 2x 22µF MLCC (X5R, 10V) + 220µF electrolytic (10V) |
 | Feedback Resistors | R_top = 52.3k, R_bot = 10k → 4.98V |
@@ -129,9 +129,9 @@ Three MP1584EN synchronous buck converters step down the 24V input to three sepa
 
 | Rail | Typical Load (A) | Peak Load (A) | Headroom |
 |------|------------------|---------------|----------|
-| 12V (3A max) | 1.4 | 3.0 | 0% (at limit) |
+| 12V (3A max) | 1.9 | 3.0 | 0% (at limit) |
 | 6.5V (3A max) | 0.5 | 2.5 | 17% |
-| 5V (3A max) | 0.6 | 1.4 | 53% |
+| 5V (3A max) | 0.1 | 1.1 | 63% |
 | **24V input** | **~2.0** | **~3.0** | Within PSU 3.2A rating |
 
 ---
@@ -161,27 +161,43 @@ PA8 (TIM1_CH1) ── via J_STACK ── 33R ── J_SERVO_MAIN Pin 3 (Signal, 
 | TVS | SMBJ6.5A on 6.5V rail |
 | Signal Protection | 33Ω series resistor |
 
-### ASD Gate Servos (3x)
+### P-ASD Solenoid Valves (6×)
 
-Three SG90 micro servos for ASD (Advanced Seasoning Dispenser) gates, powered from the 5V rail with shared bulk capacitance.
+Six 12V normally-closed solenoid valves for P-ASD (Pneumatic Advanced Seasoning Dispenser) cartridge air control, driven by low-side N-MOSFETs with flyback protection. One valve per spice cartridge.
 
 ```
-5V Rail ──┬── 220µF Bulk Cap ──┬── J_SERVO_ASD[1-3] Pin 2 (VCC)
-          │                    │
-          └── SMBJ5.0A TVS ───┘
-                               │
-                              GND ── J_SERVO_ASD[1-3] Pin 1 (GND)
-
-PA0-PA2 ── via J_STACK ── 33R ── J_SERVO_ASD[1-3] Pin 3 (Signal)
+12V Rail ──── Solenoid Coil ──┬── Drain (IRLML6344)
+                              │
+                         SS14 Flyback ─── 12V
+                              │
+                         10k Pull-down
+                              │
+PA1/PA2/PC7/PD2/PA3/PB11 ── via J_STACK ── 100R Gate Resistor ── Gate
+                              │
+                             GND ── Source
 ```
 
 | Parameter | Value |
 |-----------|-------|
-| PWM Frequency | 50 Hz |
-| Pulse Width | 1000-2000 µs |
-| Supply | 5V from MP1584EN #3 |
-| Bulk Cap | 220µF 10V electrolytic (shared) |
-| Signal Protection | 33Ω series resistors (x3) |
+| MOSFET | IRLML6344 (SOT-23) |
+| Vds(max) | 30V |
+| Rds(on) | 29 mΩ @ Vgs=4.5V |
+| Id(max) | 5A |
+| Flyback Diode | SS14 (1A, 40V Schottky) |
+| Gate Resistor | 100Ω (limits dI/dt, reduces EMI) |
+| Gate Pull-down | 10kΩ to GND (safe state during STM32 boot/reset) |
+| Solenoid Current | ~0.5A per valve (max 1 energized at a time) |
+
+**Pin Allocation:**
+
+| Valve | STM32 Pin | Cartridge |
+|-------|-----------|-----------|
+| Solenoid V1 | PA1 | P-ASD-1 (Turmeric) |
+| Solenoid V2 | PA2 | P-ASD-2 (Chili) |
+| Solenoid V3 | PC7 | P-ASD-3 (Cumin) |
+| Solenoid V4 | PD2 | P-ASD-4 (Salt) |
+| Solenoid V5 | PA3 | P-ASD-5 (Garam Masala) |
+| Solenoid V6 | PB11 | P-ASD-6 (Coriander) |
 
 ### SLD Solenoid Valves (2x)
 
@@ -388,44 +404,32 @@ PA11 (TIM1_CH4) ── via J_STACK ── 100R ── Gate
 | Cooking Stage Change | Ascending tones | 2-3 kHz sweep | 300ms |
 | E-Stop | Pulsing alarm | 1-2 kHz alternating | Continuous |
 
-### ASD Vibration Motors (3x)
+### P-ASD Diaphragm Pump (1×)
 
-Three small vibration motors (ERM type, 3V nominal) for ASD hopper anti-clog settling, driven by 2N7002 N-MOSFETs from the 5V rail with current-limiting resistors. One motor per ASD hopper.
+A 12V micro diaphragm pump (3-4 L/min) pressurizes the P-ASD accumulator. Driven by an IRLML6344 N-MOSFET with PWM speed control from STM32.
 
 ```
-5V Rail ──── 10Ω Current Limit ──── Motor (+) ──── Motor (−) ──┬── Drain (2N7002)
-                                                                │
-                                                           1N4148WS Flyback ─── 5V
-                                                                │
-                                                           10k Pull-down
-                                                                │
-PC7/PD2/PA3 ── via J_STACK ── 100R ── Gate
-                                                                │
-                                                               GND ── Source
+12V Rail ──── Pump Motor (+) ──── Pump Motor (−) ──┬── Drain (IRLML6344)
+                                                    │
+                                               SS14 Flyback ─── 12V
+                                                    │
+                                               10k Pull-down
+                                                    │
+PA0 (TIM2_CH1) ── via J_STACK Pin 15 ── 100R ── Gate
+                                                    │
+                                                   GND ── Source
 ```
 
 | Parameter | Value |
 |-----------|-------|
-| MOSFET | 2N7002 (SOT-23) |
-| Vds(max) | 60V |
-| Rds(on) | 2.5Ω @ Vgs=4.5V |
-| Id(max) | 300 mA |
-| Flyback Diode | 1N4148WS (SOD-323) |
-| Current Limit | 10Ω (limits inrush to ~0.5A) |
+| Pump | 12V micro diaphragm, 3-4 L/min, <45 dB |
+| MOSFET | IRLML6344 (SOT-23) |
+| Vds(max) | 30V |
+| Rds(on) | 29 mΩ @ Vgs=4.5V |
+| PWM Frequency | 25 kHz (above audible range) |
 | Gate Resistor | 100Ω |
-| Gate Pull-down | 10kΩ |
-| Motor Current | ~80-100 mA typical |
-
-**Pin Allocation:**
-
-| Motor | STM32 Pin | ASD Hopper |
-|-------|-----------|------------|
-| Vibration Motor 1 | PC7 | ASD-1 |
-| Vibration Motor 2 | PD2 | ASD-2 |
-| Vibration Motor 3 | PA3 | ASD-3 |
-
-> [!note]
-> PD2 is the only Port D pin available on the STM32G474RE LQFP-64 package. PA3 is repurposed from TIM2_CH4 (no longer needed since ASD uses only 3 servo channels on PA0-PA2).
+| Gate Pull-down | 10kΩ (pump off during boot) |
+| Pump Current | 0.5–0.8A typical |
 
 ---
 
@@ -451,7 +455,7 @@ PC7/PD2/PA3 ── via J_STACK ── 100R ── Gate
 |------|----------|-----------|-------|
 | 12V | 1.5A (0805) | SMBJ12A | Protects solenoid/fan/actuator branch |
 | 6.5V | 3A (1206) | SMBJ6.5A | Protects DS3225 servo branch |
-| 5V | 2A (1206) | SMBJ5.0A | Protects ASD SG90 servos + vibration motors |
+| 5V | 2A (1206) | SMBJ5.0A | Protects buzzer + LED ring |
 
 ### MOSFET Gate Safety
 
@@ -525,10 +529,10 @@ The INA219 shares the I2C1 bus with the MLX90614 IR thermometer on the Controlle
 | 9 | GND | Power | 10 | GND | Power |
 | 11 | 5V | Power | 12 | 5V | Power |
 | 13 | 3.3V | Power | 14 | 3.3V | Power |
-| **ASD Subsystem (Pins 15-20)** ||||
-| 15 | ASD_SERVO1_PWM (PA0) | In | 16 | ASD_SERVO2_PWM (PA1) | In |
-| 17 | ASD_SERVO3_PWM (PA2) | In | 18 | ASD_VIB1_EN (PC7) | In |
-| 19 | ASD_VIB2_EN (PD2) | In | 20 | ASD_VIB3_EN (PA3) | In |
+| **P-ASD Subsystem (Pins 15-20, 39)** ||||
+| 15 | PASD_PUMP_PWM (PA0) | In | 16 | PASD_SOL1_EN (PA1) | In |
+| 17 | PASD_SOL2_EN (PA2) | In | 18 | PASD_SOL3_EN (PC7) | In |
+| 19 | PASD_SOL4_EN (PD2) | In | 20 | PASD_SOL5_EN (PA3) | In |
 | **CID Subsystem (Pins 21-26)** ||||
 | 21 | CID_LACT1_EN (PA10) | In | 22 | CID_LACT1_PH (PB4) | In |
 | 23 | CID_LACT2_EN (PB5) | In | 24 | CID_LACT2_PH (PC2) | In |
@@ -542,7 +546,7 @@ The INA219 shares the I2C1 bus with the MLX90614 IR thermometer on the Controlle
 | 35 | I2C1_SCL (PB6) | Bidir | 36 | I2C1_SDA (PB7) | Bidir |
 | **Main Actuators & Audio (Pins 37-40)** ||||
 | 37 | MAIN_SERVO_PWM (PA8) | In | 38 | BUZZER_PWM (PA11) | In |
-| 39 | Reserved | — | 40 | GND | Power |
+| 39 | PASD_SOL6_EN (PB11) | In | 40 | GND | Power |
 
 ### Pin Group Summary
 
@@ -552,14 +556,14 @@ The INA219 shares the I2C1 bus with the MLX90614 IR thermometer on the Controlle
 | GND | 5-10, 25-26, 40 | 9 | Low-impedance ground return (6 main + 2 CID + 1 main actuators) |
 | 5V | 11-12 | 2 | 5V reference/supply passthrough |
 | 3.3V | 13-14 | 2 | Logic-level reference passthrough |
-| **ASD** (Seasoning) | 15-20 | 6 | 3× servo PWM (PA0-PA2), 3× vibration motor enable (PC7, PD2, PA3) |
+| **P-ASD** (Seasoning) | 15-20, 39 | 7 | 1× pump PWM (PA0), 6× solenoid enable (PA1, PA2, PC7, PD2, PA3, PB11) |
 | **CID** (Coarse) | 21-26 | 6 | 2× actuator EN/PH (PA10/PB4, PB5/PC2), 2× GND |
 | **Exhaust Fans** | 27-28 | 2 | FAN1 (PA6), FAN2 (PB10) |
 | **SLD** (Liquid) | 29-36 | 8 | 2× pump PWM/DIR (PC3-PC6), 2× solenoid (PA7, PA9), I2C (INA219) |
-| **Main** (Arm/Audio) | 37-40 | 4 | Main servo (PA8), buzzer (PA11), 1× reserved, 1× GND |
+| **Main** (Arm/Audio) | 37-38, 40 | 3 | Main servo (PA8), buzzer (PA11), 1× GND |
 
 > [!note]
-> Subsystem grouping enables modular wiring harnesses. All ASD signals (pins 15-20) run together, all CID signals (21-26) together, exhaust fans (27-28) together, etc. Dedicated GND pins (25-26 for CID, 40 for main actuators) improve current return paths for high-power actuators.
+> Subsystem grouping enables modular wiring harnesses. All P-ASD signals (pins 15-20, 39) run together, all CID signals (21-26) together, exhaust fans (27-28) together, etc. Dedicated GND pins (25-26 for CID, 40 for main actuators) improve current return paths for high-power actuators.
 
 > [!warning]
 > The 24V pins carry up to 3A total from the PSU. Four paralleled pins provide adequate current capacity, but traces on both boards must be sized for ≥1A per pin (minimum 0.5mm / 20 mil trace width on 2oz copper).
@@ -611,16 +615,16 @@ Inner copper: 1 oz (35µm) for planes
 │                                                                          │
 │  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────────┐   │
 │  │  H-BRIDGE ICs    │  │  MOSFET DRIVERS  │  │  STACKING CONNECTOR  │   │
-│  │  2x DRV8876      │  │  4x IRLML6344   │  │  J_STACK (2x20)      │   │
-│  │  1x TB6612FNG    │  │  4x 2N7002      │  │  Center of board     │   │
+│  │  2x DRV8876      │  │  11x IRLML6344  │  │  J_STACK (2x20)      │   │
+│  │  1x TB6612FNG    │  │  1x 2N7002      │  │  Center of board     │   │
 │  │  + decoupling    │  │  + flyback diodes│  │  long edge           │   │
 │  │                  │  │  + gate resistors│  │                      │   │
 │  └──────────────────┘  └──────────────────┘  └──────────────────────┘   │
 │                                                                          │
 │  ┌──────────────────────────────────────────────────────────────────┐   │
 │  │                    OUTPUT CONNECTORS                              │   │
-│  │  J_SERVO_MAIN  J_ASD_SERVO[1-3]  J_ASD_VIB[1-3]  J_FAN1-2       │   │
-│  │  J_LACT[1-2]   J_PUMP[1-2]      J_SOL[1-2]      J_24V_IN        │   │
+│  │  J_SERVO_MAIN  J_PASD_SOL[1-6]  J_PASD_PUMP  J_FAN1-2            │   │
+│  │  J_LACT[1-2]   J_PUMP[1-2]     J_SOL[1-2]   J_24V_IN            │   │
 │  └──────────────────────────────────────────────────────────────────┘   │
 │                                                                          │
 │  Board Edge ──────────────────────── M3 Mounting Holes (4 corners)      │
@@ -666,22 +670,21 @@ Connectors are organized by subsystem for modular wiring harness assembly.
 | 1 | +24V | From Mean Well LRS-75-24 |
 | 2 | GND | Power ground |
 
-### ASD Subsystem Connectors (6 total)
+### P-ASD Subsystem Connectors (7 total)
 
-**J_ASD_SERVO1, J_ASD_SERVO2, J_ASD_SERVO3 — Seasoning Gate Servos (3x 3-pin header, 2.54mm)**
-
-| Pin | Signal | Notes |
-|-----|--------|-------|
-| 1 | GND | Brown wire |
-| 2 | 5V | Red wire (from MP1584EN #3) |
-| 3 | Signal | Orange wire (PA0/PA1/PA2 via J_STACK) |
-
-**J_ASD_VIB1, J_ASD_VIB2, J_ASD_VIB3 — Vibration Motors (3x 2-pin JST-PH 2.0mm)**
+**J_PASD_SOL1 through J_PASD_SOL6 — Solenoid Valves (6x 2-pin JST-XH 2.5mm)**
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
-| 1 | 5V | Motor power (switched by 2N7002) |
-| 2 | VIB_OUT | Drain side of 2N7002 (PC7/PD2/PA3 via J_STACK) |
+| 1 | 12V | Solenoid power (switched by IRLML6344 MOSFET) |
+| 2 | SOL_OUT | Drain side of MOSFET (PA1/PA2/PC7/PD2/PA3/PB11 via J_STACK) |
+
+**J_PASD_PUMP — Diaphragm Pump (2-pin JST-XH 2.5mm)**
+
+| Pin | Signal | Notes |
+|-----|--------|-------|
+| 1 | 12V | Pump power (switched by IRLML6344 MOSFET) |
+| 2 | PUMP_OUT | Drain side of MOSFET (PA0 via J_STACK Pin 15) |
 
 ### CID Subsystem Connectors (2 total)
 
@@ -747,7 +750,7 @@ See [[#Stacking Connector — J_STACK]] section for full pinout.
 
 ## STM32 Pin Allocation Update
 
-The Driver PCB introduces 13 new STM32 pin assignments (beyond the existing Controller PCB allocations). These pins were previously marked as "Available" or "Reserved" in the Controller PCB design.
+The Driver PCB introduces 14 new STM32 pin assignments (beyond the existing Controller PCB allocations). These pins were previously marked as "Available" or "Reserved" in the Controller PCB design.
 
 ### New Pin Assignments
 
@@ -766,8 +769,9 @@ The Driver PCB introduces 13 new STM32 pin assignments (beyond the existing Cont
 | PC5 | Available | GPIO | Pump 2 Speed (PWMB) | Output | TB6612 PWMB |
 | PC6 | Available | GPIO | Pump 2 Direction (BIN1) | Output | TB6612 BIN1 |
 | PA11 | Reserved (USB) | TIM1_CH4 | Piezo Buzzer PWM | Output | J_BUZZER via MOSFET |
-| PC7 | Available | GPIO | ASD Vibration Motor 1 Enable | Output | J_ASD_VIB1 via MOSFET |
-| PD2 | Available | GPIO | ASD Vibration Motor 2 Enable | Output | J_ASD_VIB2 via MOSFET |
+| PC7 | Available | GPIO | P-ASD Solenoid V3 Enable | Output | J_PASD_SOL3 via MOSFET |
+| PD2 | Available | GPIO | P-ASD Solenoid V4 Enable | Output | J_PASD_SOL4 via MOSFET |
+| PB11 | Available | GPIO | P-ASD Solenoid V6 Enable | Output | J_PASD_SOL6 via MOSFET |
 
 ### Complete Pin Usage Summary (Controller + Driver PCBs)
 
@@ -792,7 +796,7 @@ The following SPI message types are added to the CM5 ↔ STM32 protocol for Driv
 |---------|-----------|-----------|---------|
 | SET_LINEAR_ACT | 0x06 | CM5 → STM32 | actuator_id (uint8), direction (uint8), speed_pct (uint8) |
 | SET_PUMP | 0x07 | CM5 → STM32 | pump_id (uint8), direction (uint8), speed_pct (uint8), volume_ml (uint16) |
-| SET_VIBRATION | 0x08 | CM5 → STM32 | motor_id (uint8), intensity_pct (uint8), duration_ms (uint16) |
+| SET_PASD_PUMP | 0x08 | CM5 → STM32 | speed_pct (uint8), state (uint8: 0=off, 1=on) |
 | SET_SOLENOID | 0x09 | CM5 → STM32 | valve_id (uint8), state (uint8: 0=off, 1=on) |
 | SET_BUZZER | 0x0A | CM5 → STM32 | pattern (uint8: 0=off, 1=beep, 2=error, 3=complete, 4=warning), duration_ms (uint16) |
 | POWER_TELEMETRY | 0x13 | STM32 → CM5 | bus_voltage_mV (uint16), current_mA (uint16), power_mW (uint16) |
@@ -824,10 +828,10 @@ The following SPI message types are added to the CM5 ↔ STM32 protocol for Driv
 |-------|-------------|--------------|
 | TIM1 | CH1: DS3225 servo (PA8) | CH3: Linear Actuator 1 PWM (PA10), CH4: Buzzer PWM (PA11) |
 | TIM3 | Unused | CH1: Exhaust Fan 1 PWM (PA6, 25 kHz) |
-| TIM2 | CH1-CH3: ASD SG90 servos (PA0-PA2) | No change; PB10 for Fan 2 uses software/GPIO-based PWM at 25 kHz (CH4/PA3 repurposed to ASD vibration motor 3) |
+| TIM2 | Previously ASD SG90 servos (removed) | CH1: P-ASD pump PWM (PA0, 25 kHz); PB10 for Fan 2 uses software/GPIO-based PWM at 25 kHz |
 
 > [!note]
-> PB10 (Fan 2) can use TIM2_CH3 alternate function, but this conflicts with PA2 (ASD Servo 3). Since servo control requires precise hardware PWM but fan speed control is less critical, Fan 2 can use software PWM on PB10 GPIO, or reconfigure to use a free timer channel if needed in firmware.
+> PB10 (Fan 2) can use TIM2_CH3 alternate function. With ASD servos removed, TIM2 channels are now available. TIM2_CH1 (PA0) is used for P-ASD pump PWM. Fan 2 can use TIM2_CH3 on PB10, or software PWM if a timer conflict arises.
 
 ### INA219 Driver
 
@@ -854,8 +858,8 @@ I2C1 Read Sequence (every 1 second):
 | DRV8876 #1 | 1.5A continuous | ~0.8 | WSON-8 exposed pad → GND plane vias |
 | DRV8876 #2 | 1.5A continuous | ~0.8 | WSON-8 exposed pad → GND plane vias |
 | TB6612FNG | 1.2A total | ~0.7 | SSOP-24 thermal pad → PCB |
-| IRLML6344 (x3) | 1A each | ~0.03 each | SOT-23, negligible |
-| 2N7002 (x3+1) | 0.1A each | ~0.03 each | SOT-23, negligible (3 ASD vib + 1 buzzer) |
+| IRLML6344 (x11) | 0.5-1A each | ~0.03 each | SOT-23, negligible (4 SLD/fan + 7 P-ASD; max 1-2 P-ASD active at a time) |
+| 2N7002 (x1) | 0.03A | ~0.002 | SOT-23, negligible (buzzer only) |
 | INA219 | Monitoring only | ~0.01 | Negligible |
 | SS54 input diode | 3A peak | ~1.5 | SMA package, PCB copper pour |
 | Shunt resistor | 3A peak | ~0.09 | 2512 package |
@@ -894,8 +898,8 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 | U4-U5 | DRV8876RGTR | WSON-8 (3x3mm) | 2 | $2.50 | CID linear actuator drivers |
 | U6 | TB6612FNG | SSOP-24 | 1 | $1.50 | SLD dual peristaltic pump driver |
 | **Discrete MOSFETs** | | | | | |
-| Q1-Q4 | IRLML6344 | SOT-23 | 4 | $0.20 | Solenoid 1, solenoid 2, fan 1, fan 2 |
-| Q4-Q7 | 2N7002 | SOT-23 | 4 | $0.05 | Vibration motor 1-3 (ASD), buzzer |
+| Q1-Q11 | IRLML6344 | SOT-23 | 11 | $0.20 | SLD sol 1-2, fan 1-2, P-ASD sol V1-V6, P-ASD pump |
+| Q12 | 2N7002 | SOT-23 | 1 | $0.05 | Buzzer |
 | **Current Monitor** | | | | | |
 | U7 | INA219BIDR | SOT-23-8 | 1 | $1.50 | 24V input current/power |
 | R_SHUNT | 10 mΩ 1% 1W | 2512 | 1 | $0.30 | Current sense shunt |
@@ -908,32 +912,29 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 | D4 | SMBJ6.5A | SMB | 1 | $0.20 | 6.5V rail TVS |
 | D5 | SMBJ5.0A | SMB | 1 | $0.20 | 5V rail TVS |
 | **Flyback Diodes** | | | | | |
-| D6-D9 | SS14 | SMA | 4 | $0.10 | Solenoid 1, solenoid 2, fan 1, fan 2 |
-| D9-D11 | 1N4148WS | SOD-323 | 3 | $0.03 | Vibration motor 1-3 (ASD) |
+| D6-D16 | SS14 | SMA | 11 | $0.10 | SLD sol 1-2, fan 1-2, P-ASD sol V1-V6, P-ASD pump |
 | **Passive Components** | | | | | |
-| R_GATE (x9) | 100Ω | 0402 | 9 | $0.01 | Gate/input series resistors |
-| R_PD (x9) | 10kΩ | 0402 | 9 | $0.01 | Gate/enable pull-downs |
+| R_GATE (x16) | 100Ω | 0402 | 16 | $0.01 | Gate/input series resistors (11 MOSFETs + 1 buzzer + 4 H-bridge inputs) |
+| R_PD (x16) | 10kΩ | 0402 | 16 | $0.01 | Gate/enable pull-downs |
 | R_FB (x6) | Various (10k-140k) | 0402 | 6 | $0.01 | Buck converter feedback dividers |
 | R_SENSE (x2) | 1kΩ | 0402 | 2 | $0.01 | DRV8876 IPROPI sense |
-| R_SIG (x4) | 33Ω | 0402 | 4 | $0.01 | Servo signal series termination (1 main + 3 ASD) |
+| R_SIG (x1) | 33Ω | 0402 | 1 | $0.01 | Servo signal series termination (1 main DS3225) |
 | C_IN (x3) | 10µF ceramic | 0805 (25V) | 3 | $0.15 | Buck input bypass |
 | C_OUT (x6) | 22µF ceramic | 0805 (25V/16V/10V) | 6 | $0.12 | Buck output filter (2 per rail) |
 | C_BULK1 | 470µF electrolytic | 10x10mm (10V) | 1 | $0.30 | DS3225 servo bulk |
-| C_BULK2 | 220µF electrolytic | 8x8mm (10V) | 1 | $0.25 | SG90 servo bulk |
 | C_BULK3 | 100µF electrolytic | 8x8mm (25V) | 1 | $0.20 | 12V rail bulk |
 | C_DEC (x10) | 100nF ceramic | 0402 | 10 | $0.01 | IC decoupling |
 | C_IC (x3) | 10µF ceramic | 0805 | 3 | $0.10 | DRV8876/TB6612 VM bypass |
-| R_VIB (x3) | 10Ω | 0805 | 3 | $0.01 | ASD vibration motor current limit |
 | **Connectors** | | | | | |
 | J_STACK | 2x20 pin socket | 2.54mm, 11mm stacking | 1 | $0.80 | Stacking to Controller PCB |
 | J_24V_IN | XT30 or JST-VH 2-pin | 2.5mm pitch | 1 | $0.40 | 24V DC input |
 | J_SERVO_MAIN | Pin header 3-pin | 2.54mm | 1 | $0.05 | DS3225 servo |
-| J_ASD_SERVO1-3 | Pin header 3-pin | 2.54mm | 3 | $0.05 | ASD gate servos 1-3 |
-| J_SOL1-2 | JST-XH 2-pin | 2.5mm pitch | 2 | $0.10 | Solenoid valves |
+| J_SOL1-2 | JST-XH 2-pin | 2.5mm pitch | 2 | $0.10 | SLD solenoid valves |
+| J_PASD_SOL1-6 | JST-XH 2-pin | 2.5mm pitch | 6 | $0.10 | P-ASD solenoid valves |
+| J_PASD_PUMP | JST-XH 2-pin | 2.5mm pitch | 1 | $0.10 | P-ASD diaphragm pump |
 | J_FAN1-2 | JST-XH 2-pin | 2.5mm pitch | 2 | $0.10 | Exhaust fans |
 | J_LACT1-2 | JST-XH 2-pin | 2.5mm pitch | 2 | $0.10 | Linear actuators |
 | J_PUMP1-2 | JST-XH 2-pin | 2.5mm pitch | 2 | $0.10 | Peristaltic pumps |
-| J_ASD_VIB1-3 | JST-PH 2-pin | 2.0mm pitch | 3 | $0.08 | ASD vibration motors |
 | J_BUZZER | JST-PH 2-pin | 2.0mm pitch | 1 | $0.08 | Piezo buzzer |
 | BZ1 | MLT-5030 or generic | 12mm piezo | 1 | $0.80 | Active piezo buzzer 5V |
 | **PCB** | 4-layer, 160x90mm | FR4 ENIG, 2oz outer Cu | 1 | $5.00 | JLCPCB batch (5 pcs) |
@@ -944,13 +945,13 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 |----------|---------------|---------------|
 | Power Conversion ICs + Passives | $8.50 | $5.50 |
 | H-Bridge ICs (DRV8876 + TB6612) | $6.50 | $4.50 |
-| Discrete MOSFETs + Diodes | $2.00 | $1.20 |
+| Discrete MOSFETs + Diodes | $3.35 | $2.00 |
 | Current Monitor (INA219 + shunt) | $1.80 | $1.20 |
 | Protection (polyfuses + TVS) | $1.70 | $1.00 |
-| Passive Components | $2.50 | $1.30 |
-| Connectors | $2.50 | $1.50 |
+| Passive Components | $2.20 | $1.10 |
+| Connectors | $3.00 | $1.80 |
 | PCB | $5.00 | $2.00 |
-| **Total** | **~$29** | **~$18** |
+| **Total** | **~$32** | **~$19** |
 
 ---
 
@@ -1050,3 +1051,4 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
+| 2.0 | 2026-02-16 | Manas Pradhan | Replaced ASD (3× SG90 servo + 3× vibration motor) with P-ASD (6× solenoid valve + 1× diaphragm pump); updated 12V rail load, J_STACK pinout, connector definitions, BOM, and thermal analysis |

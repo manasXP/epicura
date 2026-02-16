@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-15
-version: 2.0
+version: 3.0
 status: Draft
 ---
 
@@ -13,7 +13,7 @@ The ingredient dispensing system is divided into three purpose-built subsystems,
 
 | Subsystem | Full Name | Purpose | Actuators | Metering |
 |-----------|-----------|---------|-----------|----------|
-| **ASD** | Advanced Seasoning Dispenser | Ground/powdered spices (turmeric, chili, salt, cumin powder, garam masala) | 3 Servo Motors (SG90) | Weight-verified via pot load cells |
+| **P-ASD** | Pneumatic Advanced Seasoning Dispenser | Ground/powdered spices (turmeric, chili, cumin, salt, garam masala, coriander) | 6 Solenoid Valves + Micro Diaphragm Pump | Weight-verified via pot load cells |
 | **CID** | Coarse Ingredients Dispenser | Pre-cut vegetables, meat, paneer, dal, rice | 2 Linear Actuators (slider mechanism) | Timed/position-based |
 | **SLD** | Standard Liquid Dispenser | Oil and water | 2 Peristaltic Pumps + 2 Solenoid Valves + 1 Load Cell (dedicated) | Closed-loop weight feedback |
 
@@ -25,15 +25,19 @@ The ingredient dispensing system is divided into three purpose-built subsystems,
 ┌───────────────────────────────────────────────────────┐
 │                    REAR OF UNIT                        │
 │                                                        │
-│       ┌──────────────────────────────────────┐         │
-│       │           ASD (Seasonings)           │         │
-│       │  ┌────────┐ ┌────────┐ ┌────────┐   │         │
-│       │  │ ASD-1  │ │ ASD-2  │ │ ASD-3  │   │         │
-│       │  │Turmeric│ │ Chili  │ │ Salt / │   │         │
-│       │  │Powder  │ │Powder  │ │ Masala │   │         │
-│       │  │(80 mL) │ │(80 mL) │ │(80 mL) │   │         │
-│       │  └───┬────┘ └───┬────┘ └───┬────┘   │         │
-│       └──────┼──────────┼──────────┼─────────┘         │
+│       ┌──────────────────────────────────────────┐     │
+│       │        P-ASD (Pneumatic Seasonings)       │     │
+│       │  ┌────────┐ ┌────────┐ ┌────────┐        │     │
+│       │  │P-ASD-1 │ │P-ASD-2 │ │P-ASD-3 │ Row A  │     │
+│       │  │Turmeric│ │ Chili  │ │ Cumin  │ (rear) │     │
+│       │  │(60 mL) │ │(60 mL) │ │(60 mL) │        │     │
+│       │  └───┬────┘ └───┬────┘ └───┬────┘        │     │
+│       │  ┌───┴────┐ ┌───┴────┐ ┌───┴────┐        │     │
+│       │  │P-ASD-4 │ │P-ASD-5 │ │P-ASD-6 │ Row B  │     │
+│       │  │  Salt  │ │ Garam  │ │Coriand.│ (front)│     │
+│       │  │(60 mL) │ │ Masala │ │(60 mL) │        │     │
+│       │  └───┬────┘ └───┬────┘ └───┬────┘        │     │
+│       └──────┼──────────┼──────────┼──────────────┘     │
 │              ▼          ▼          ▼                    │
 │  ┌─────┐ ┌──────────────────────────────────┐ ┌─────┐ │
 │  │ SLD │ │                                  │ │ SLD │ │
@@ -57,29 +61,40 @@ The ingredient dispensing system is divided into three purpose-built subsystems,
 
 ### Side-View Cross Sections
 
-**ASD (Servo-Gated Gravity Feed):**
+**P-ASD (Pneumatic Puff-Dosing):**
 
 ```
-       ┌───────────┐
-       │ Seasoning  │
-       │ (powder,   │
-       │  gravity   │
-       │  fed)      │
-       │     ▼      │
-       └─────┬──────┘
-             │
-       ┌─────┴──────┐
-       │ Servo Gate │ ◄── SG90 rotates flap 90°
-       └─────┬──────┘
-             │
-       ┌─────┴──────┐
-       │ Chute /    │ ◄── 45° min angle
-       │ Funnel     │
-       └─────┬──────┘
-             ▼
-    ┌────────────────────┐
-    │    COOKING POT     │
-    └────────────────────┘
+              ┌──── Threaded cap + silicone O-ring seal
+              │     ┌── Desiccant pocket (1g silica gel)
+              ▼     ▼
+       ┌───────────────────┐
+       │  ╔═══════════════╗│
+       │  ║               ║│  45 mm dia × 50 mm tall
+       │  ║   SPICE       ║│  60 mL capacity
+       │  ║   POWDER      ║│  Food-grade PP, translucent
+       │  ║               ║│
+       │  ╚═══╤═══════╤═══╝│
+       │      │  AIR ► │    │ ◄── Air inlet barb (4mm, side wall)
+       │      └───┬───┘    │
+       │     ┌────▼────┐   │
+       │     │ 5mm     │   │ ◄── Discharge orifice + 200-mesh SS screen
+       │     │ orifice │   │
+       │     └────┬────┘   │
+       └──────────┼────────┘
+                  │
+           ┌──────▼──────┐
+           │  Bayonet    │ ◄── Quarter-turn lock into docking station
+           │  collar     │
+           └──────┬──────┘
+                  │
+           ┌──────▼──────┐
+           │ Chute /     │ ◄── Shared collection funnel
+           │ Funnel      │
+           └──────┬──────┘
+                  ▼
+       ┌────────────────────┐
+       │    COOKING POT     │
+       └────────────────────┘
 ```
 
 **CID (Linear Actuator Slider):**
@@ -137,59 +152,138 @@ The ingredient dispensing system is divided into three purpose-built subsystems,
     └──────────────┘
 ```
 
-## ASD — Advanced Seasoning Dispenser
+## P-ASD — Pneumatic Advanced Seasoning Dispenser
 
-### Compartment Specifications
+### Mechanism Overview
 
-| Parameter | Value |
-|-----------|-------|
-| Compartments | 3 (ASD-1, ASD-2, ASD-3) |
-| Capacity | 80 mL each |
-| Material | Food-grade PP (translucent) |
-| Removable | Yes (lift-out for cleaning/refill) |
-| Lid | Snap-fit with silicone gasket |
-| Feed Type | Gravity-fed, tapered hopper with 45° minimum chute angle |
-| Gate | SG90 servo rotates flap 90° (closed ↔ open) |
+The P-ASD uses **puff-dosing** — a micro diaphragm pump pressurizes a small accumulator to ~1.0 bar. Individual solenoid valves open briefly (100–400 ms), delivering calibrated air bursts into sealed cartridges. The pressure forces powder through a 5 mm bottom orifice into a shared funnel chute leading to the pot. This eliminates all moving parts from the powder path, dramatically improving reliability with sticky Indian spices like turmeric and chili.
 
-### Actuator: SG90 Micro Servo
+### Cartridge Specifications
 
 | Parameter | Value |
 |-----------|-------|
-| Model | SG90 (or MG90S metal-gear upgrade) |
-| Torque | 1.2 kg·cm @ 4.8V |
-| Weight | 9g |
-| PWM | 50 Hz, 500–2500 µs pulse |
-| Supply | 5V from buck converter rail |
-| Cost | ~$2 each |
+| Cartridges | 6 (P-ASD-1 through P-ASD-6) |
+| Capacity | 60 mL each |
+| Dimensions | 45 mm diameter × 50 mm tall (cylindrical) |
+| Material | Food-grade polypropylene (PP), translucent |
+| Removable | Yes (quarter-turn bayonet lock for quick swap) |
+| Lid | Threaded screw-cap with silicone O-ring seal, desiccant pocket |
+| Orifice | 5 mm diameter bottom opening with 200-mesh SS anti-clog screen |
+| Air Inlet | 4 mm barb on side wall (above powder line), self-sealing push-fit |
+| Weight (empty) | ~25 g |
 
-### Anti-Clog Mechanisms
+### Default Cartridge Assignment
 
-| Mechanism | Implementation | Trigger |
-|-----------|---------------|---------|
-| Vibration motors (3x) | Coin-type eccentric motor mounted on each ASD hopper (PC7, PD2, PA3) | 200 ms pulse before every dispense |
-| Anti-bridging geometry | Tapered walls, rounded internal corners, 45° min angle | Passive |
-| Retry logic | Close-open-close if no weight change after 3s | Auto on stall detection |
-| Gate oscillation | Rapidly open/close servo 3× in 1s | After first retry fails |
-| Vibration + oscillation | Simultaneous vibration motor pulse and servo oscillation | Final retry before error |
+| Cartridge | Position | Default Spice |
+|-----------|----------|---------------|
+| P-ASD-1 | Row A, Left | Turmeric powder |
+| P-ASD-2 | Row A, Center | Chili powder |
+| P-ASD-3 | Row A, Right | Cumin powder |
+| P-ASD-4 | Row B, Left | Salt (fine) |
+| P-ASD-5 | Row B, Center | Garam masala |
+| P-ASD-6 | Row B, Right | Coriander powder |
 
-**Vibration Motor Specifications:**
-- Type: ERM (Eccentric Rotating Mass), 3V nominal
-- Driver: 2N7002 N-MOSFET with 10Ω current limit resistor
-- Current: ~80-100 mA typical
-- Pulse duration: 200 ms before dispense, 500 ms during retry
-- One motor per ASD hopper ensures targeted anti-clog action
+### Pneumatic System
+
+#### Air Source
+
+| Parameter | Value |
+|-----------|-------|
+| Type | 12V micro diaphragm pump (e.g., SC3701PM or equivalent) |
+| Max Pressure | 2.0 bar (200 kPa) |
+| Free Flow | 3–4 L/min |
+| Voltage | 12V DC |
+| Current | 0.5–0.8 A |
+| Noise | <45 dB |
+| Size | 65 × 40 × 40 mm |
+
+#### Accumulator & Regulation
+
+| Component | Specification |
+|-----------|---------------|
+| Accumulator | 100 mL sealed aluminum cylinder, 1.5 bar max |
+| Pressure Regulator | Miniature inline, adjustable 0.3–2.0 bar |
+| Pressure Sensor | ADS1015 (I2C) + MPXV5100GP analog, on I2C1 bus (address 0x48) |
+| Relief Valve | 2.0 bar pop-off safety valve on accumulator |
+| Operating Pressure | 0.8–1.2 bar nominal |
+
+#### Solenoid Valves (×6)
+
+| Parameter | Value |
+|-----------|-------|
+| Type | 2-way normally-closed, direct-acting, 12V DC |
+| Response Time | <20 ms open, <30 ms close |
+| Orifice | 2–3 mm (sufficient for air burst) |
+| Power | ~4W when energized (one at a time) |
+| Driver | IRLML6344 N-MOSFET (SOT-23) with flyback diode on Driver PCB |
+| Cost | ~$3.50 each |
+
+#### Pneumatic Circuit
+
+```
+12V ───► Micro Diaphragm Pump (3-4 L/min, <45 dB)
+              │
+              ▼
+         Accumulator (100 mL, 1.5 bar max)
+              │
+              ▼
+         Pressure Regulator (set 1.0 bar) + Relief Valve (2.0 bar)
+              │
+              ▼
+         Pressure Sensor ──► STM32 via I2C1 (ADS1015 @ 0x48)
+              │
+              ▼
+         ┌─── 6-Way Manifold (3D-printed nylon PA12) ───┐
+         │                                               │
+    ┌──┐ ┌──┐ ┌──┐ ┌──┐ ┌──┐ ┌──┐
+    │V1│ │V2│ │V3│ │V4│ │V5│ │V6│   6× 12V NC solenoid valves
+    └┬─┘ └┬─┘ └┬─┘ └┬─┘ └┬─┘ └┬─┘
+     ▼    ▼    ▼    ▼    ▼    ▼
+   C-1  C-2  C-3  C-4  C-5  C-6     Cartridges
+```
+
+### Anti-Clog Design
+
+Pneumatic dispensing inherently prevents clogging — the primary failure mode of gravity-fed systems:
+
+| Advantage | Mechanism |
+|-----------|-----------|
+| Bridge breaking | Pressurized air shatters powder arches over the orifice |
+| Humidity tolerance | Forced airflow pushes damp/sticky powder through |
+| No residue buildup | No gate in powder path; orifice air-cleared after every dispense |
+| Self-clearing nozzle | Post-dispense purge (200 ms at 1.2 bar) cleans orifice |
+| 200-mesh SS screen | Prevents large clumps from blocking the 5 mm orifice |
+| 60° cone angle | Internal cartridge geometry prevents dead zones |
+
+**Clog Recovery (if no weight change after 3 pulses):** Rapid 50 ms on/off oscillating air pulses to vibrate powder loose — pneumatic equivalent of vibration motors, but with no additional hardware.
 
 ### Metering Strategy
 
-ASD uses the **pot load cells** (4× 5 kg Wheatstone bridge under the cooking pot) for weight verification:
+P-ASD uses **calibrated puff-dosing with weight feedback** (dual-loop):
+
+**Primary control:** Timed air pulses calibrated per spice type:
+
+| Spice | Bulk Density (g/mL) | Pulse Duration for ~1g (ms) | Pressure (bar) |
+|-------|--------------------|-----------------------------|-----------------|
+| Turmeric powder | 0.55 | 200–300 | 1.0 |
+| Chili powder | 0.45 | 250–350 | 1.0 |
+| Cumin powder | 0.40 | 300–400 | 1.0 |
+| Salt (fine) | 1.20 | 100–150 | 0.8 |
+| Garam masala | 0.50 | 200–300 | 1.0 |
+| Coriander powder | 0.35 | 300–400 | 1.0 |
+
+**Secondary control (closed-loop):** Pot load cells provide weight feedback at 10 Hz:
 
 1. Tare pot weight → W_initial
-2. Open ASD-N servo gate
-3. Monitor pot weight at 10 Hz: W_delta = W_current − W_initial
-4. Close gate when W_delta ≥ target × 0.90 (early close for in-flight powder)
-5. Log actual dispensed weight
+2. Pre-purge: 100 ms pulse at 0.3 bar (loosen packed powder)
+3. Main dispense: open solenoid for calibrated duration
+4. Monitor pot weight at 10 Hz: W_delta = W_current − W_initial
+5. If W_delta < target × 0.85 → additional 50 ms pulses until target reached
+6. Close solenoid when W_delta ≥ target × 0.90 (in-flight compensation)
+7. Post-dispense purge: 200 ms at 1.2 bar (clear orifice)
+8. Log actual dispensed weight
 
-Accuracy: ±10% of target weight.
+Accuracy: ±10% of target weight (with weight feedback).
 
 ## CID — Coarse Ingredients Dispenser
 
@@ -330,12 +424,14 @@ Accuracy: ±5% of target weight (significantly better than ASD due to dedicated 
 
 | Subsystem | Actuator | STM32 Pin | Interface | Notes |
 |-----------|----------|-----------|-----------|-------|
-| **ASD** | Servo ASD-1 | PA0 (TIM2_CH1) | PWM 50 Hz | SG90, 500–2500 µs pulse |
-| **ASD** | Servo ASD-2 | PA1 (TIM2_CH2) | PWM 50 Hz | SG90, 500–2500 µs pulse |
-| **ASD** | Servo ASD-3 | PA2 (TIM2_CH3) | PWM 50 Hz | SG90, 500–2500 µs pulse |
-| **ASD** | Vibration Motor 1 | PC7 (GPIO) | Digital output via MOSFET | 5V ERM motor, hopper 1 anti-clog |
-| **ASD** | Vibration Motor 2 | PD2 (GPIO) | Digital output via MOSFET | 5V ERM motor, hopper 2 anti-clog |
-| **ASD** | Vibration Motor 3 | PA3 (GPIO) | Digital output via MOSFET | 5V ERM motor, hopper 3 anti-clog |
+| **P-ASD** | Diaphragm Pump Motor | PA0 (TIM2_CH1) | PWM | 12V pump speed control via MOSFET |
+| **P-ASD** | Solenoid Valve V1 | PA1 (GPIO) | Digital output via MOSFET | 12V NC solenoid, cartridge 1 |
+| **P-ASD** | Solenoid Valve V2 | PA2 (GPIO) | Digital output via MOSFET | 12V NC solenoid, cartridge 2 |
+| **P-ASD** | Solenoid Valve V3 | PC7 (GPIO) | Digital output via MOSFET | 12V NC solenoid, cartridge 3 |
+| **P-ASD** | Solenoid Valve V4 | PD2 (GPIO) | Digital output via MOSFET | 12V NC solenoid, cartridge 4 |
+| **P-ASD** | Solenoid Valve V5 | PA3 (GPIO) | Digital output via MOSFET | 12V NC solenoid, cartridge 5 |
+| **P-ASD** | Solenoid Valve V6 | PB11 (GPIO) | Digital output via MOSFET | 12V NC solenoid, cartridge 6 |
+| **P-ASD** | Pressure Sensor | I2C1 (PB6/PB7) | I2C via ADS1015 | Accumulator pressure, addr 0x48 |
 | **CID** | Linear Actuator CID-1 EN | PA10 (TIM1_CH3/GPIO) | PWM/GPIO | DRV8876 #1 enable/speed |
 | **CID** | Linear Actuator CID-1 PH | PB4 (GPIO) | Digital output | DRV8876 #1 phase/direction |
 | **CID** | Linear Actuator CID-2 EN | PB5 (GPIO) | PWM/GPIO | DRV8876 #2 enable/speed |
@@ -349,29 +445,29 @@ Accuracy: ±5% of target weight (significantly better than ASD due to dedicated 
 | **SLD** | HX711 SCK (dedicated) | PC11 (GPIO) | Clock out | SLD reservoir load cell (not implemented in current design) |
 | **SLD** | HX711 DOUT (dedicated) | PC12 (GPIO) | Data in | SLD reservoir load cell (not implemented in current design) |
 
-> **Note:** Pot load cells remain on PC0/PC1 (existing allocation). Pin assignments match [[../09-PCB/02-Driver-PCB-Design|Driver PCB Design]] document. Vibration motors are part of the ASD anti-clog mechanism — one motor per hopper vibrates powder before dispensing.
+> **Note:** Pot load cells remain on PC0/PC1 (existing allocation). Pin assignments match [[../09-PCB/02-Driver-PCB-Design|Driver PCB Design]] document. P-ASD solenoid valves are driven by IRLML6344 MOSFETs on the Driver PCB. Pressure sensor shares I2C1 bus with MLX90614 (0x5A) and INA219 (0x40) — ADS1015 at address 0x48.
 
 ### Dispensing Command Protocol (CM5 → STM32)
 
 | Command | Code | Parameters | Response | Description |
 |---------|------|------------|----------|-------------|
-| DISPENSE_ASD | 0x30 | asd_id (1 byte: 1–3), target_weight_g (2 bytes) | ACK + actual_weight_g | Dispense seasoning via servo gate, weight-verified by pot load cells |
+| DISPENSE_PASD | 0x30 | cartridge_id (1 byte: 1–6), target_weight_g (2 bytes) | ACK + actual_weight_g | Dispense seasoning via pneumatic puff-dose, weight-verified by pot load cells |
 | DISPENSE_CID | 0x31 | cid_id (1 byte: 1–2), mode (1 byte: FULL/PARTIAL), position_mm (1 byte) | ACK + status | Push tray contents into pot via linear actuator |
 | DISPENSE_SLD | 0x32 | channel (1 byte: OIL=1, WATER=2), target_weight_g (2 bytes) | ACK + actual_weight_g | Pump liquid, closed-loop via dedicated load cell |
-| OPEN_GATE | 0x33 | subsystem (1 byte: ASD=1), gate_id (1 byte), duration_ms (2 bytes) | ACK | Timed gate open (manual override, ASD only) |
-| CLOSE_GATE | 0x34 | subsystem (1 byte), gate_id (1 byte) | ACK | Force close gate/stop actuator |
+| PURGE_PASD | 0x38 | cartridge_id (1 byte: 1–6, or 0xFF=all) | ACK | Post-dispense air purge to clear orifice |
+| PRESSURE_STATUS | 0x39 | — | pressure_bar (2 bytes, fixed-point) | Read accumulator pressure |
 | QUERY_WEIGHT | 0x35 | source (1 byte: POT=0, SLD=1) | weight_g (4 bytes) | Read weight from pot or SLD load cells |
 | PREFLIGHT | 0x36 | subsystem_mask (1 byte) | status per subsystem | Check if required subsystems are loaded/ready |
 | TARE | 0x37 | source (1 byte: POT=0, SLD=1) | ACK | Zero the specified load cell readings |
 
-## Clog Prevention (ASD)
+## Clog Prevention (P-ASD)
 
 ### Clog Detection and Recovery Flow
 
 ```
 ┌──────────────┐     ┌───────────────┐     ┌──────────────┐
-│ Open Servo   │────►│ Wait 3s,      │────►│ Pot Weight   │
-│ Gate         │     │ Monitor Weight │     │ Changed?     │
+│ Pre-purge    │────►│ Main dispense │────►│ Pot Weight   │
+│ (100ms,0.3bar│     │ pulse         │     │ Changed?     │
 └──────────────┘     └───────────────┘     └──────┬───────┘
                                                    │
                                           Yes ◄────┴────► No
@@ -379,8 +475,11 @@ Accuracy: ±5% of target weight (significantly better than ASD due to dedicated 
                                            ▼              ▼
                                     ┌──────────┐   ┌──────────────┐
                                     │ Continue │   │ Retry #1:    │
-                                    │ Normally │   │ Close + Open │
-                                    └──────────┘   └──────┬───────┘
+                                    │ Normally │   │ Increase     │
+                                    └──────────┘   │ pressure to  │
+                                                   │ 1.2 bar,     │
+                                                   │ repeat pulse │
+                                                   └──────┬───────┘
                                                           │
                                                           ▼
                                                    ┌──────────────┐
@@ -393,8 +492,9 @@ Accuracy: ±5% of target weight (significantly better than ASD due to dedicated 
                                                   ▼              ▼
                                            ┌──────────┐   ┌──────────────┐
                                            │ Continue │   │ Retry #2:    │
-                                           │ Normally │   │ Vibrate +    │
-                                           └──────────┘   │ Oscillate    │
+                                           │ Normally │   │ Rapid 50ms   │
+                                           └──────────┘   │ on/off pulses│
+                                                          │ (5 cycles)   │
                                                           └──────┬───────┘
                                                                  │
                                                                  ▼
@@ -416,13 +516,13 @@ Accuracy: ±5% of target weight (significantly better than ASD due to dedicated 
 
 ## Metering Accuracy Summary
 
-| Factor | ASD Impact | CID Impact | SLD Impact | Mitigation |
-|--------|-----------|-----------|-----------|------------|
-| In-flight material | Powder still falling when gate closes | N/A (push mechanism) | Fluid in tube after pump stops | ASD: close at 90% target. SLD: close at 95% target |
+| Factor | P-ASD Impact | CID Impact | SLD Impact | Mitigation |
+|--------|-------------|-----------|-----------|------------|
+| In-flight material | Powder still in chute after solenoid closes | N/A (push mechanism) | Fluid in tube after pump stops | P-ASD: close at 90% target. SLD: close at 95% target |
 | Load cell noise | ±3 g at 10 Hz (pot cells) | N/A | ±1 g (dedicated cell) | Moving average filter (3 samples) |
-| Vibration | Arm motor affects pot weight | N/A | Dedicated cell isolated from pot | Pause arm during ASD dispensing |
-| Sticky ingredients | Powder adheres to gate | Pieces stick to tray | Oil residue in tube | ASD: vibration + anti-stick coating. CID: angled tray. SLD: tube replacement |
-| Fill level variance | Gravity rate varies with hopper level | N/A | Pump rate independent of level | ASD: tapered hopper geometry |
+| Vibration | Arm motor affects pot weight | N/A | Dedicated cell isolated from pot | Pause arm during P-ASD dispensing |
+| Sticky ingredients | Pressurized air forces through orifice | Pieces stick to tray | Oil residue in tube | P-ASD: post-dispense purge. CID: angled tray. SLD: tube replacement |
+| Fill level variance | Air pressure compensates (consistent regardless of fill) | N/A | Pump rate independent of level | P-ASD: pressure regulation maintains consistent force |
 
 ## Recipe Integration
 
@@ -431,12 +531,13 @@ Accuracy: ±5% of target weight (significantly better than ASD due to dedicated 
 ```
 Step 1:  DISPENSE_SLD(OIL, 30g)                ──► Oil into hot pot
 Step 2:  Wait for sear temp (200°C)             ──► IR sensor confirms
-Step 3:  DISPENSE_ASD(ASD-1, 3g)               ──► Turmeric powder
-Step 4:  DISPENSE_ASD(ASD-2, 5g)               ──► Chili powder
+Step 3:  DISPENSE_PASD(P-ASD-1, 3g)             ──► Turmeric powder
+Step 4:  DISPENSE_PASD(P-ASD-2, 5g)             ──► Chili powder
 Step 5:  Stir briefly                           ──► Arm mixes spices into oil
 Step 6:  DISPENSE_CID(CID-1, FULL)             ──► Chopped onions, tomatoes
 Step 7:  Wait for browning (CV detection)       ──► Camera detects golden color
-Step 8:  DISPENSE_ASD(ASD-3, 5g)               ──► Salt + garam masala
+Step 8:  DISPENSE_PASD(P-ASD-4, 5g)             ──► Salt
+Step 8b: DISPENSE_PASD(P-ASD-5, 3g)             ──► Garam masala
 Step 9:  DISPENSE_CID(CID-2, FULL)             ──► Toor dal (200g, pre-measured)
 Step 10: DISPENSE_SLD(WATER, 400g)              ──► Water
 Step 11: Simmer until done (CV + timer)         ──► Camera detects thickening
@@ -448,7 +549,7 @@ Users configure subsystem contents when loading ingredients before cooking:
 
 | Field | Example Value | Source |
 |-------|---------------|--------|
-| Subsystem | ASD-2 | Fixed by hardware position |
+| Subsystem | P-ASD-2 | Fixed by hardware position |
 | Ingredient Name | "Chili Powder" | From recipe ingredient list |
 | Target Weight (g) | 5 | From recipe (adjusted for servings) |
 | Pre-loaded | Yes/No | User confirms via touchscreen or app |
@@ -457,7 +558,7 @@ Users configure subsystem contents when loading ingredients before cooking:
 
 Before starting a recipe, the system verifies all required subsystems:
 
-1. **ASD:** Check pot weight change when each hopper is tapped (vibration motor pulse) — confirms powder present
+1. **P-ASD:** Short air pulse into each cartridge, monitor pot weight change — confirms powder present and orifice clear
 2. **CID:** User confirms tray loaded via touchscreen (no automatic check — visual confirmation)
 3. **SLD:** Read dedicated load cell — compare reservoir weight to minimum required for recipe
 4. Display subsystem status on UI: loaded / insufficient / empty
@@ -476,7 +577,7 @@ Before starting a recipe, the system verifies all required subsystems:
 
 ### Contamination Prevention
 
-- ASD: each hopper has a dedicated chute/funnel (no shared paths)
+- P-ASD: each cartridge has a dedicated discharge path; shared funnel is air-purged between dispenses
 - CID: each tray drops into a distinct zone of the pot (no shared surfaces)
 - SLD: fluid only contacts silicone tubing (per-channel, no shared path)
 - All removable parts are smooth, non-porous food-grade PP
@@ -488,14 +589,15 @@ Before starting a recipe, the system verifies all required subsystems:
 
 | Component | Removal Method | Dishwasher Safe | Cleaning Frequency |
 |-----------|----------------|-----------------|-------------------|
-| ASD Hoppers (×3) | Lift out from top | Yes | After every use |
-| ASD Hopper Lids (×3) | Snap-off | Yes | After every use |
-| ASD Chute/Funnel Inserts (×3) | Pull out from below | Yes | After every use |
+| P-ASD Cartridges (×6) | Quarter-turn bayonet, lift out | Yes | After every use |
+| P-ASD Cartridge Caps (×6) | Unscrew threaded cap | Yes | After every use |
+| P-ASD Orifice Screens (×6) | Press-fit removal from cartridge base | Yes | Weekly deep clean |
+| P-ASD Docking Funnels (×6) | Pull out from below | Yes | After every use |
 | CID Trays (×2) | Slide out from front | Yes | After every use |
 | SLD Reservoirs (×2) | Lift out | Yes | After every use |
 | SLD Silicone Tubing (×2) | Disconnect at quick-fit couplings | Hand wash (boil sterilize) | Weekly; replace every 3 months |
 | SLD Nozzles (×2) | Unscrew | Yes | After every use |
-| Servo Flap Assembly (ASD) | Not user-removable | No | Wipe-down weekly |
+| P-ASD Pneumatic Tubing | Not user-removable | No | Air purge self-cleans; inspect monthly |
 | Linear Actuator / Push-Plate (CID) | Not user-removable | No | Wipe-down weekly |
 | Solenoid Valve Assembly (SLD) | Not user-removable | No | Wipe-down weekly |
 
@@ -515,15 +617,16 @@ For quick cleaning of SLD channels between recipes:
 
 | Test | Subsystem | Method | Pass Criteria |
 |------|-----------|--------|---------------|
-| Seasoning Accuracy | ASD | 10 trials per hopper, weigh dispensed amount vs. target | Within ±10% of target weight |
+| Seasoning Accuracy | P-ASD | 10 trials per cartridge, weigh dispensed amount vs. target | Within ±10% of target weight |
 | Liquid Accuracy | SLD | 10 trials per channel, compare load cell reading to scale | Within ±5% of target weight |
 | Coarse Dispense | CID | 10 trials, verify full tray contents dumped into pot | All contents reach pot, no spillage |
-| Clog Recovery (ASD) | ASD | Pack powder tightly, run dispense cycle | Cleared within 2 retries, or clean error reported |
+| Clog Recovery (P-ASD) | P-ASD | Pack powder tightly, run dispense cycle | Cleared within 2 retries, or clean error reported |
 | Drip Prevention (SLD) | SLD | After pump stop, observe nozzle for 60s | No drip (solenoid sealed) |
 | Cross-Contamination | All | Dispense colored liquid (SLD), colored powder (ASD), inspect adjacent paths | No visible contamination |
 | Food Safety Hold Time | All | Load perishable ingredient, monitor temperature over 2 hours | Temperature remains within safe zone (ambient <25°C) |
 | Cleaning Verification | All | ATP swab test after cleaning on all removable parts | ATP reading <100 RLU |
-| ASD Servo Endurance | ASD | 10,000 open/close cycles per servo | No binding, position accuracy maintained |
+| P-ASD Solenoid Endurance | P-ASD | 10,000 open/close cycles per valve | Consistent response time, no leaking |
+| P-ASD Pump Endurance | P-ASD | 10,000 pump cycles | Consistent pressure, no membrane degradation |
 | SLD Pump Endurance | SLD | 10,000 pump cycles (1-minute runs) | Consistent flow rate, no tube degradation |
 | CID Actuator Endurance | CID | 5,000 extend/retract cycles | Limit switches reliable, no mechanical play |
 | SLD Solenoid Endurance | SLD | 10,000 open/close cycles | No leaking when closed, consistent response |
@@ -531,11 +634,13 @@ For quick cleaning of SLD channels between recipes:
 
 ### Prototype Validation Checklist
 
-- [ ] All 3 ASD hoppers seat securely and lift out easily
-- [ ] ASD servo flaps close fully (no gap visible)
-- [ ] ASD weight-verified dispensing achieves ±10% accuracy
-- [ ] ASD clog detection fires within 3s of blocked flow
-- [ ] ASD vibration motor successfully loosens settled ground spices
+- [ ] All 6 P-ASD cartridges dock securely via bayonet lock and release easily
+- [ ] P-ASD air seals are airtight (no pressure loss when cartridge docked)
+- [ ] P-ASD weight-verified dispensing achieves ±10% accuracy for all 6 spices
+- [ ] P-ASD clog detection fires within 3 pulse cycles of blocked flow
+- [ ] P-ASD post-dispense purge clears orifice (no residual powder visible)
+- [ ] P-ASD pump recharges accumulator to 1.0 bar within 5 seconds
+- [ ] P-ASD pressure sensor reads within ±0.05 bar of reference gauge
 - [ ] Both CID trays slide in/out smoothly
 - [ ] CID linear actuators push full tray contents into pot reliably
 - [ ] CID limit switches trigger at correct positions
@@ -557,7 +662,7 @@ For quick cleaning of SLD channels between recipes:
 - [[12-Vision-System|Vision System]]
 - [[../06-Compliance/06-Safety-Compliance|Safety & Compliance]]
 
-#epicura #ingredient-dispensing #subsystem #asd #cid #sld
+#epicura #ingredient-dispensing #subsystem #p-asd #pneumatic #cid #sld
 
 ---
 
@@ -567,3 +672,4 @@ For quick cleaning of SLD channels between recipes:
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
 | 2.0 | 2026-02-15 | Manas Pradhan | Rewrite: replaced 6-compartment C1-C6 system with 3 subsystems (ASD, CID, SLD) |
+| 3.0 | 2026-02-16 | Manas Pradhan | Replaced ASD (servo-gated gravity-fed, 3 hoppers) with P-ASD (pneumatic puff-dosing, 6 cartridges) |

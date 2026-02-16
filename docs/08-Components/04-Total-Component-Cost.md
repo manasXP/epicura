@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
-modified: 2026-02-15
-version: 1.0
+modified: 2026-02-16
+version: 2.0
 status: Draft
 ---
 
@@ -17,10 +17,10 @@ This document provides a consolidated view of all component costs for the Epicur
 
 | Category | Subtotal | % of Total | Details |
 |----------|----------|------------|---------|
-| [[01-Compute-Module-Components|Compute Modules]] | $188.00 | 27% | CM5, STM32, display, cables |
-| [[02-Actuation-Components|Actuation]] | $197.35 | 28% | Induction hob, ASD servos, CID linear actuators, SLD pumps/solenoids/load cell, relays, exhaust fan, filters |
-| [[03-Sensor-Components|Sensors]] | $64.90 | 9% | Camera, IR thermo, load cells, NTC |
-| **Component Total** | **$450.25** | **64%** | Electronic components only |
+| [[01-Compute-Module-Components|Compute Modules]] | $188.00 | 24% | CM5, STM32, display, cables |
+| [[02-Actuation-Components|Actuation]] | $281.35 | 36% | Induction hob, P-ASD pneumatic system, CID linear actuators, SLD pumps/solenoids/load cell, relays, exhaust fan, filters |
+| [[03-Sensor-Components|Sensors]] | $64.90 | 8% | Camera, IR thermo, load cells, NTC |
+| **Component Total** | **$534.25** | **68%** | Electronic components only |
 
 ---
 
@@ -42,7 +42,7 @@ This document provides a consolidated view of all component costs for the Epicur
 |------|------|
 | Microwave Induction Surface (CAN) | $60.00 |
 | DS3225 Servo (main arm) | $15.00 |
-| SG90 Micro Servos — ASD (3x) | $6.00 |
+| P-ASD Pneumatic System (pump, valves, accumulator, regulator, sensor, tubing, cartridges, relief valve) | $90.00 |
 | Linear Actuators — CID (2x) | $16.00 |
 | Peristaltic Pumps — SLD (2x) | $20.00 |
 | Solenoid Valves — SLD (2x) | $8.00 |
@@ -88,11 +88,11 @@ This document provides a consolidated view of all component costs for the Epicur
 
 | Category | Cost |
 |----------|------|
-| Electronic Components | $450.25 |
+| Electronic Components | $534.25 |
 | Mechanical / Other | $250.00 |
-| **Total BOM (Prototype)** | **$700.25** |
-| **With Contingency (+20%)** | **~$840** |
-| **With Tools & Consumables** | **$1,000-1,250** |
+| **Total BOM (Prototype)** | **$784.25** |
+| **With Contingency (+20%)** | **~$941** |
+| **With Tools & Consumables** | **$1,100-1,350** |
 
 ---
 
@@ -104,7 +104,7 @@ This document provides a consolidated view of all component costs for the Epicur
 | STM32G474 | $18.00 (Nucleo) | $5.00 (bare chip) | Custom PCB eliminates dev board |
 | Display (10.1") | $80.00 | $45.00 | OEM panel with DSI, no HDMI |
 | Microwave Induction Surface | $60.00 (CAN module) | $40.00 (bulk pricing) | Self-contained module, no custom driver |
-| Servos — ASD (3x SG90) | $6.00 | $3.00 | Bulk pricing |
+| P-ASD system (pump+valves+cartridges) | $90.00 | $50.00 | Bulk pricing, simplified assembly |
 | Linear Actuators — CID (2x) | $16.00 | $8.00 | Bulk pricing |
 | Pumps + Solenoids — SLD | $28.00 | $14.00 | Bulk pricing |
 | DS3225 Main Arm Servo | $15.00 | $8.00 | Bulk pricing |
@@ -117,7 +117,7 @@ This document provides a consolidated view of all component costs for the Epicur
 | Wiring / Connectors | $30.00 | $10.00 | Custom harness, bulk connectors |
 | Exhaust + Filters | $22.50 | $8.00 (OEM blower + bulk filters) | Custom blower + injection-molded housing |
 | Other (CAN, relays, drivers, load cell, cables, buzzer) | $94.85 | $20.00 (integrated into PCB + bulk) | Small components absorbed into custom PCB at volume |
-| **Total Unit** | **~$700** | **~$290** | **~59% cost reduction** |
+| **Total Unit** | **~$784** | **~$337** | **~57% cost reduction** |
 
 ---
 
@@ -127,29 +127,29 @@ This document provides a consolidated view of all component costs for the Epicur
 ┌────────────────────────────────────────────────────────────────────────────┐
 │                 Epicura Prototype Component Costs                         │
 │                                                                          │
-│  Compute Modules (27%)  ███████████████████████████                      │
-│  └─ Display (11%)       ███████████                                      │
+│  Compute Modules (24%)  ████████████████████████                         │
+│  └─ Display (10%)       ██████████                                       │
 │  └─ CM5 (6%)            ██████                                           │
-│  └─ STM32 (3%)          ███                                              │
-│  └─ Other (7%)          ███████                                          │
+│  └─ STM32 (2%)          ██                                               │
+│  └─ Other (6%)          ██████                                           │
 │                                                                          │
-│  Actuation (28%)        ████████████████████████████                     │
-│  └─ Induction (9%)      █████████                                        │
-│  └─ ASD/CID/SLD (9%)   █████████                                        │
-│  └─ Wiring (2%)         ██                                               │
-│  └─ Other (8%)          ████████                                         │
+│  Actuation (36%)        ████████████████████████████████████              │
+│  └─ P-ASD system (11%)  ███████████                                      │
+│  └─ Induction (8%)      ████████                                         │
+│  └─ CID/SLD (7%)        ███████                                          │
+│  └─ Other (10%)         ██████████                                       │
 │                                                                          │
-│  Sensors (9%)           █████████                                        │
-│  └─ Camera (4%)         ████                                             │
+│  Sensors (8%)           ████████                                         │
+│  └─ Camera (3%)         ███                                              │
 │  └─ Load Cells (2%)     ██                                               │
 │  └─ Other (3%)          ███                                              │
 │                                                                          │
-│  Additional (36%)       ████████████████████████████████████              │
-│  └─ Enclosure (11%)     ███████████                                      │
-│  └─ Mechanical (7%)     ███████                                          │
-│  └─ PCBs/PSU (10%)      ██████████                                       │
+│  Additional (32%)       ████████████████████████████████                  │
+│  └─ Enclosure (10%)     ██████████                                       │
+│  └─ Mechanical (6%)     ██████                                           │
+│  └─ PCBs/PSU (9%)       █████████                                        │
 │                                                                          │
-│  Total Prototype BOM: ~$700                                              │
+│  Total Prototype BOM: ~$784                                              │
 └────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -162,7 +162,7 @@ This document provides a consolidated view of all component costs for the Epicur
 | Phase 1 | Hardware Setup (CM5 + STM32 + display + PSU) | $300-400 | $300-400 |
 | Phase 2-3 | Induction + Arm (hob + servos + load cells + mechanical) | $200-300 | $500-700 |
 | Phase 4 | Vision (camera + LED ring + training data ingredients) | $50-80 | $550-780 |
-| Phase 5 | Dispensing (ASD servos, CID actuators, SLD pumps/solenoids/load cell) | $80-120 | $630-900 |
+| Phase 5 | Dispensing (P-ASD pneumatic system, CID actuators, SLD pumps/solenoids/load cell) | $160-200 | $710-980 |
 | Phase 6 | UI (display already counted; app dev = $0 software) | $0-20 | $600-880 |
 | Phase 7 | Integration (consumables, replacements, debugging) | $50-100 | $650-980 |
 | Contingency | Unexpected costs, rework, replacement parts | $200-400 | $850-1,380 |
@@ -178,12 +178,13 @@ This document provides a consolidated view of all component costs for the Epicur
 
 | Rank | Component | Cost | % of BOM | Notes |
 |------|-----------|------|----------|-------|
-| 1 | 10.1" Display | $80.00 | 11% | Largest single component; OEM reduces to $45 |
-| 2 | Enclosure (3D print) | $80.00 | 11% | Prototype only; injection mold: $15/unit |
-| 3 | Microwave Induction Surface | $60.00 | 9% | Self-contained CAN module; bulk: $40 |
-| 4 | Mechanical Parts | $50.00 | 7% | Shaft, brackets, fasteners |
-| 5 | Raspberry Pi CM5 | $45.00 | 6% | Volume pricing: $35 |
-| 6 | Custom PCBs | $40.00 | 6% | Panel production: $8/unit |
+| 1 | P-ASD Pneumatic System | $90.00 | 11% | Pump+valves+cartridges; bulk: $50 |
+| 2 | 10.1" Display | $80.00 | 10% | Largest single component; OEM reduces to $45 |
+| 3 | Enclosure (3D print) | $80.00 | 10% | Prototype only; injection mold: $15/unit |
+| 4 | Microwave Induction Surface | $60.00 | 8% | Self-contained CAN module; bulk: $40 |
+| 5 | Mechanical Parts | $50.00 | 6% | Shaft, brackets, fasteners |
+| 6 | Raspberry Pi CM5 | $45.00 | 6% | Volume pricing: $35 |
+| 7 | Custom PCBs | $40.00 | 5% | Panel production: $8/unit |
 
 ### Cost Reduction Opportunities
 
@@ -203,8 +204,8 @@ This document provides a consolidated view of all component costs for the Epicur
 | Volume | Unit BOM Cost | Target Selling Price | Gross Margin |
 |--------|--------------|---------------------|-------------|
 | 100 units | $400-450 | Not viable (pre-production) | - |
-| 1,000 units | $280-320 | $599-799 | 53-60% |
-| 10,000 units | $220-260 | $499-699 | 53-63% |
+| 1,000 units | $320-370 | $599-799 | 47-54% |
+| 10,000 units | $260-300 | $499-699 | 50-57% |
 
 ---
 
@@ -228,3 +229,4 @@ This document provides a consolidated view of all component costs for the Epicur
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
+| 2.0 | 2026-02-16 | Manas Pradhan | Update costs for P-ASD pneumatic redesign (+$84 to actuation); new prototype BOM ~$784 |

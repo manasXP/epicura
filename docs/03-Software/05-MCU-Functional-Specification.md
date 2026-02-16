@@ -64,7 +64,7 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 | FR-MCU-010 | Drive main servo (DS3225) at 50 Hz PWM via TIM1_CH1 (PA8) | Must | 500–2500 µs pulse width range |
 | FR-MCU-011 | Support stir patterns: circular, figure-8, scrape, fold | Must | Pattern selected by CM5 command (0x02) |
 | FR-MCU-012 | Stall detection via current monitoring | Should | Alert CM5 if servo draws >2 A for >500 ms |
-| FR-MCU-013 | Drive 3× ASD servo gates (SG90) via TIM2_CH1–3 (PA0–PA2) | Must | 50 Hz PWM, 500–2500 µs |
+| FR-MCU-013 | Drive P-ASD: pump PWM via TIM2_CH1 (PA0), 6× solenoid GPIO (PA1, PA2, PC7, PD2, PA3, PB11) | Must | Pump: 25 kHz PWM speed control; Solenoids: digital on/off via MOSFET |
 | FR-MCU-014 | Motor control task at 50 Hz (20 ms period) | Must | Highest priority FreeRTOS task |
 
 ### 2.4 Sensor Polling
@@ -82,18 +82,25 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 
 | ID | Requirement | Priority | Acceptance Criteria |
 |----|-------------|----------|---------------------|
-| FR-MCU-030 | ASD: Open servo gate, vibrate motor, monitor weight | Must | Accuracy ±10%, clog retry (3 attempts) |
+| FR-MCU-030 | P-ASD: Pressurize accumulator, open solenoid valve, puff-dose spice, monitor pot weight | Must | Accuracy ±10%, clog retry (3 attempts), post-dispense purge |
 | FR-MCU-031 | CID: Drive linear actuators via DRV8876 (PH/EN) | Must | Home + full-extend limit switch detection |
 | FR-MCU-032 | SLD: Drive peristaltic pumps + solenoids, closed-loop weight | Must | Accuracy ±5%, stop at target×0.95 |
 | FR-MCU-033 | Tare load cells on command (0x37) | Must | Zero offset stored in SRAM |
 | FR-MCU-034 | Report weight on query (0x35) | Must | Response within 100 ms |
 
-#### 2.5.1 ASD Clog Recovery Sequence
+#### 2.5.1 P-ASD Dispensing & Clog Recovery Sequence
 
-1. Open gate → wait 3 s for weight change
-2. **Retry 1:** Close + reopen gate
-3. **Retry 2:** Vibrate motor (500 ms) + oscillate servo 3×
-4. **Failure:** Send CLOG ERROR to CM5
+**Normal dispense:**
+1. Pre-purge: 100 ms pulse at 0.3 bar (loosen packed powder)
+2. Main dispense: open solenoid for calibrated duration (100–400 ms)
+3. Monitor pot weight at 10 Hz; additional 50 ms pulses if under target
+4. Close at 90% target (in-flight compensation)
+5. Post-dispense purge: 200 ms at 1.2 bar (clear orifice)
+
+**Clog recovery (no weight change after main pulse):**
+1. **Retry 1:** Increase pressure to 1.2 bar, repeat pulse
+2. **Retry 2:** Rapid 50 ms on/off oscillating pulses (5 cycles)
+3. **Failure:** Send CLOG ERROR (0x12) to CM5
 
 #### 2.5.2 SLD Closed-Loop Dispensing
 
@@ -134,10 +141,10 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 
 | Pin | Function | Peripheral | Target |
 |-----|----------|------------|--------|
-| **PA0** | TIM2_CH1 | PWM 50 Hz | ASD servo 1 (SG90) |
-| **PA1** | TIM2_CH2 | PWM 50 Hz | ASD servo 2 (SG90) |
-| **PA2** | TIM2_CH3 | PWM 50 Hz | ASD servo 3 (SG90) |
-| **PA3** | GPIO output | Digital | ASD vibration motor 3 (via 2N7002) |
+| **PA0** | TIM2_CH1 | PWM 25 kHz | P-ASD diaphragm pump (via IRLML6344) |
+| **PA1** | GPIO output | Digital | P-ASD solenoid V1 (via IRLML6344) |
+| **PA2** | GPIO output | Digital | P-ASD solenoid V2 (via IRLML6344) |
+| **PA3** | GPIO output | Digital | P-ASD solenoid V5 (via IRLML6344) |
 | **PA4** | ADC2_IN17 | Analog in | NTC thermistor — coil temp |
 | **PA5** | ADC2_IN13 | Analog in | NTC thermistor — ambient temp |
 | **PA6** | TIM3_CH1 | PWM 25 kHz | Exhaust fan 1 |
@@ -170,8 +177,9 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 | **PC4** | GPIO output | Digital | SLD pump 1 DIR (TB6612) |
 | **PC5** | GPIO output | PWM (software) | SLD pump 2 PWM (TB6612) |
 | **PC6** | GPIO output | Digital | SLD pump 2 DIR (TB6612) |
-| **PC7** | GPIO output | Digital | ASD vibration motor 1 (via 2N7002) |
-| **PD2** | GPIO output | Digital | ASD vibration motor 2 (via 2N7002) |
+| **PC7** | GPIO output | Digital | P-ASD solenoid V3 (via IRLML6344) |
+| **PD2** | GPIO output | Digital | P-ASD solenoid V4 (via IRLML6344) |
+| **PB11** | GPIO output | Digital | P-ASD solenoid V6 (via IRLML6344) |
 
 ### 3.2 I2C1 Bus (PB6/PB7)
 
@@ -179,6 +187,7 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 |---------|--------|------|
 | 0x5A | MLX90614 | Object + ambient temperature |
 | 0x40 | INA219 | 24 V rail voltage + current |
+| 0x48 | ADS1015 | P-ASD accumulator pressure (via MPXV5100GP) |
 
 ### 3.3 CAN Bus (FDCAN1)
 
@@ -329,7 +338,7 @@ See [[04-MPU-Functional-Specification#5.1 SPI Protocol]] for full frame definiti
 | 0x05 | CM5_HEARTBEAT_LOSS | Critical | Safe state (hold temp at 0, stop servo) |
 | 0x10 | SERVO_STALL | Warning | Stop servo, alert CM5 |
 | 0x11 | LOAD_CELL_DRIFT | Warning | Alert CM5, flag dispense unreliable |
-| 0x12 | ASD_CLOG | Warning | Retry sequence, then alert CM5 |
+| 0x12 | PASD_CLOG | Warning | Pneumatic retry sequence (pressure increase + oscillating pulses), then alert CM5 |
 | 0x13 | SLD_DISPENSE_ERROR | Warning | Stop pump, alert CM5 with actual vs target |
 | 0x20 | CAN_TX_TIMEOUT | Info | Retry 3×, then CAN_FAULT |
 | 0x21 | I2C_NACK | Info | Retry 3×, use last-known value |
