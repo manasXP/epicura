@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-16
-version: 2.0
+version: 3.0
 status: Draft
 ---
 
@@ -18,9 +18,9 @@ This document provides a consolidated view of all component costs for the Epicur
 | Category | Subtotal | % of Total | Details |
 |----------|----------|------------|---------|
 | [[01-Compute-Module-Components|Compute Modules]] | $188.00 | 24% | CM5, STM32, display, cables |
-| [[02-Actuation-Components|Actuation]] | $281.35 | 36% | Induction hob, P-ASD pneumatic system, CID linear actuators, SLD pumps/solenoids/load cell, relays, exhaust fan, filters |
+| [[02-Actuation-Components|Actuation]] | $281.85 | 36% | Induction hob, P-ASD pneumatic system + PCF8574 I2C expander, CID linear actuators, SLD pumps/solenoids/load cell, relays, exhaust fan, filters |
 | [[03-Sensor-Components|Sensors]] | $64.90 | 8% | Camera, IR thermo, load cells, NTC |
-| **Component Total** | **$534.25** | **68%** | Electronic components only |
+| **Component Total** | **$534.75** | **68%** | Electronic components only |
 
 ---
 
@@ -36,17 +36,17 @@ This document provides a consolidated view of all component costs for the Epicur
 | 10.1" IPS Display | $80.00 |
 | Storage + Cables | $25.00 |
 
-### Actuation ($197.35)
+### Actuation ($197.85)
 
 | Item | Cost |
 |------|------|
 | Microwave Induction Surface (CAN) | $60.00 |
 | DS3225 Servo (main arm) | $15.00 |
-| P-ASD Pneumatic System (pump, valves, accumulator, regulator, sensor, tubing, cartridges, relief valve) | $90.00 |
+| P-ASD Pneumatic System (pump, valves, accumulator, regulator, sensor, tubing, cartridges, relief valve, PCF8574) | $90.50 |
 | Linear Actuators — CID (2x) | $16.00 |
 | Peristaltic Pumps — SLD (2x) | $20.00 |
 | Solenoid Valves — SLD (2x) | $8.00 |
-| Load Cell + HX711 — SLD | $8.00 |
+| Load Cells + HX711 — SLD (2×) | $16.00 |
 | H-Bridge Driver — CID | $5.00 |
 | Limit Switches — CID (4x) | $2.00 |
 | CAN Transceiver | $3.00 |
@@ -88,10 +88,10 @@ This document provides a consolidated view of all component costs for the Epicur
 
 | Category | Cost |
 |----------|------|
-| Electronic Components | $534.25 |
+| Electronic Components | $534.75 |
 | Mechanical / Other | $250.00 |
-| **Total BOM (Prototype)** | **$784.25** |
-| **With Contingency (+20%)** | **~$941** |
+| **Total BOM (Prototype)** | **$784.75** |
+| **With Contingency (+20%)** | **~$942** |
 | **With Tools & Consumables** | **$1,100-1,350** |
 
 ---
@@ -162,7 +162,7 @@ This document provides a consolidated view of all component costs for the Epicur
 | Phase 1 | Hardware Setup (CM5 + STM32 + display + PSU) | $300-400 | $300-400 |
 | Phase 2-3 | Induction + Arm (hob + servos + load cells + mechanical) | $200-300 | $500-700 |
 | Phase 4 | Vision (camera + LED ring + training data ingredients) | $50-80 | $550-780 |
-| Phase 5 | Dispensing (P-ASD pneumatic system, CID actuators, SLD pumps/solenoids/load cell) | $160-200 | $710-980 |
+| Phase 5 | Dispensing (P-ASD pneumatic system, CID actuators, SLD pumps/solenoids/2× load cells) | $168-208 | $718-988 |
 | Phase 6 | UI (display already counted; app dev = $0 software) | $0-20 | $600-880 |
 | Phase 7 | Integration (consumables, replacements, debugging) | $50-100 | $650-980 |
 | Contingency | Unexpected costs, rework, replacement parts | $200-400 | $850-1,380 |
@@ -230,3 +230,4 @@ This document provides a consolidated view of all component costs for the Epicur
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
 | 2.0 | 2026-02-16 | Manas Pradhan | Update costs for P-ASD pneumatic redesign (+$84 to actuation); new prototype BOM ~$784 |
+| 3.0 | 2026-02-16 | Manas Pradhan | Added PCF8574 I2C GPIO expander (+$0.50); prototype BOM ~$785 |

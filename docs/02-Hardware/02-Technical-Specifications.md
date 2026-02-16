@@ -171,7 +171,7 @@ The primary cooking element is a commercial microwave induction surface — a se
 | UI Response Time | <200ms | Touch-to-visual feedback on display |
 | System Boot Time | <30s | Power-on to recipe selection screen |
 | Temperature Accuracy | +/-5C | IR sensor to actual food surface |
-| Dispensing Accuracy | ±10% (P-ASD), ±5% (SLD) | P-ASD by pot weight, SLD by dedicated load cell |
+| Dispensing Accuracy | ±10% (P-ASD), ±5% (SLD) | P-ASD by pot weight, SLD by dedicated per-reservoir load cells (2× 2 kg) |
 | Camera Latency | <100ms | Capture to frame available in memory |
 | Recipe Step Transition | <2s | From stage detection to actuator response |
 | WiFi Connection | <10s | Auto-reconnect to saved network |

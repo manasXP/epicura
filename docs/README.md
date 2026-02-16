@@ -185,7 +185,7 @@ Start with:
 - **AI Vision Monitoring** - Overhead HD camera with TFLite edge AI for food color/texture analysis and cooking stage detection
 - **Induction PID Control** - 1,800W microwave induction surface (CAN-controlled) with closed-loop PID, sear at 250°C, simmer at 60°C, ±5°C accuracy
 - **Robotic Stirring Arm** - Single-axis servo arm (STM32-driven) with multiple stir patterns and auto-scraping
-- **Three-Subsystem Dispensing** - ASD (3 servo-gated seasoning hoppers), CID (2 linear actuator coarse trays), SLD (2 peristaltic pump liquid channels with dedicated load cell)
+- **Three-Subsystem Dispensing** - ASD (3 servo-gated seasoning hoppers), CID (2 linear actuator coarse trays), SLD (2 peristaltic pump liquid channels with dedicated per-reservoir load cells + low-level alerts)
 - **Touchscreen + Companion Apps** - 10" Kivy touchscreen on device, native mobile apps (iOS + Android) for remote control and live camera feed
 - **100+ Indian Recipes** - Curated recipe database covering curries, dal, rice, biryani, and more with regional variations
 - **Cloud + Offline Operation** - Cloud-updatable recipe library with full local SQLite fallback for offline cooking

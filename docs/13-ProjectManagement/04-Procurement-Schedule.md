@@ -231,7 +231,8 @@ Week 0: Sprint 1 starts with tested PCBs ready
 | 12V Linear Actuator (CID) | Generic 50mm stroke | 12V DC, 20-50N | 2 | AliExpress | $8/ea | 10 days | Week 15 |
 | Peristaltic Pump (SLD) | Generic 12V DC | 5-50 mL/min, silicone tube | 2 | AliExpress | $10/ea | 10 days | Week 15 |
 | 12V NC Solenoid Valve (SLD) | Generic | Normally closed, spring return | 2 | Amazon | $4/ea | 5 days | Week 16 |
-| 1 kg Load Cell + HX711 (SLD) | Generic | Strain gauge + 24-bit ADC | 1 | Amazon | $8 | 5 days | Week 16 |
+| 2 kg Load Cell + HX711 (SLD, oil) | Generic | 2 kg strain gauge + 24-bit ADC | 1 | Amazon | $8 | 5 days | Week 16 |
+| 2 kg Load Cell + HX711 (SLD, water) | Generic | 2 kg strain gauge + 24-bit ADC | 1 | Amazon | $8 | 5 days | Week 16 |
 | PETG Filament | - | 1kg natural PETG | 1 | Amazon B07PGZNM34 | $25 | 2 days | Week 16 |
 
 **Sprint 9 Total:** ~$90

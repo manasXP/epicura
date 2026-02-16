@@ -64,7 +64,7 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 | FR-MCU-010 | Drive main servo (DS3225) at 50 Hz PWM via TIM1_CH1 (PA8) | Must | 500–2500 µs pulse width range |
 | FR-MCU-011 | Support stir patterns: circular, figure-8, scrape, fold | Must | Pattern selected by CM5 command (0x02) |
 | FR-MCU-012 | Stall detection via current monitoring | Should | Alert CM5 if servo draws >2 A for >500 ms |
-| FR-MCU-013 | Drive P-ASD: pump PWM via TIM2_CH1 (PA0), 6× solenoid GPIO (PA1, PA2, PC7, PD2, PA3, PB11) | Must | Pump: 25 kHz PWM speed control; Solenoids: digital on/off via MOSFET |
+| FR-MCU-013 | Drive P-ASD: pump PWM via TIM2_CH1 (PA0), 6× solenoid via PCF8574 I2C GPIO expander (I2C1, addr 0x20, outputs P0-P5) | Must | Pump: 25 kHz PWM speed control; Solenoids: digital on/off via I2C write to PCF8574 → MOSFET gates |
 | FR-MCU-014 | Motor control task at 50 Hz (20 ms period) | Must | Highest priority FreeRTOS task |
 
 ### 2.4 Sensor Polling
@@ -72,7 +72,7 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 | ID | Requirement | Priority | Acceptance Criteria |
 |----|-------------|----------|---------------------|
 | FR-MCU-020 | Read pot load cells (4× strain gauge + HX711) at 10 Hz | Must | Resolution ~1 g, total capacity 20 kg |
-| FR-MCU-021 | Read SLD reservoir load cell at 10 Hz during dispensing | Must | Accuracy ±5% for closed-loop liquid dispensing |
+| FR-MCU-021 | Read 2× SLD reservoir load cells (oil + water) at 10 Hz during dispensing | Must | Accuracy ±5% for closed-loop liquid dispensing; individual level monitoring with low-level alerts |
 | FR-MCU-022 | Read IR thermometer at 10 Hz | Must | MLX90614 via I2C1 (PB6/PB7) |
 | FR-MCU-023 | Read NTC thermistors at 10 Hz | Must | ADC2_IN17 (PA4) coil, ADC2_IN13 (PA5) ambient |
 | FR-MCU-024 | Read INA219 bus current monitor | Should | I2C1 @ address 0x40, 24 V rail monitoring |
@@ -104,11 +104,12 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 
 #### 2.5.2 SLD Closed-Loop Dispensing
 
-1. Tare reservoir load cell
+1. Tare the channel's dedicated reservoir load cell (oil or water)
 2. Open solenoid + start pump
-3. Monitor weight loss @ 10 Hz
+3. Monitor weight loss on that channel's load cell @ 10 Hz
 4. Stop pump when `weight_dispensed ≥ target × 0.95`
 5. Close solenoid, report final weight to CM5
+6. If reservoir weight < low-level threshold, send SLD_LOW_LEVEL alert (0x14) to CM5
 
 ### 2.6 CM5 Communication
 
@@ -142,9 +143,9 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 | Pin | Function | Peripheral | Target |
 |-----|----------|------------|--------|
 | **PA0** | TIM2_CH1 | PWM 25 kHz | P-ASD diaphragm pump (via IRLML6344) |
-| **PA1** | GPIO output | Digital | P-ASD solenoid V1 (via IRLML6344) |
-| **PA2** | GPIO output | Digital | P-ASD solenoid V2 (via IRLML6344) |
-| **PA3** | GPIO output | Digital | P-ASD solenoid V5 (via IRLML6344) |
+| **PA1** | — | Available | Freed (was P-ASD solenoid V1, now via PCF8574) |
+| **PA2** | — | Available | Freed (was P-ASD solenoid V2, now via PCF8574) |
+| **PA3** | — | Available | Freed (was P-ASD solenoid V5, now via PCF8574) |
 | **PA4** | ADC2_IN17 | Analog in | NTC thermistor — coil temp |
 | **PA5** | ADC2_IN13 | Analog in | NTC thermistor — ambient temp |
 | **PA6** | TIM3_CH1 | PWM 25 kHz | Exhaust fan 1 |
@@ -177,17 +178,18 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 | **PC4** | GPIO output | Digital | SLD pump 1 DIR (TB6612) |
 | **PC5** | GPIO output | PWM (software) | SLD pump 2 PWM (TB6612) |
 | **PC6** | GPIO output | Digital | SLD pump 2 DIR (TB6612) |
-| **PC7** | GPIO output | Digital | P-ASD solenoid V3 (via IRLML6344) |
-| **PD2** | GPIO output | Digital | P-ASD solenoid V4 (via IRLML6344) |
-| **PB11** | GPIO output | Digital | P-ASD solenoid V6 (via IRLML6344) |
+| **PC7** | — | Available | Freed (was P-ASD solenoid V3, now via PCF8574) |
+| **PD2** | — | Available | Freed (was P-ASD solenoid V4, now via PCF8574) |
+| **PB11** | — | Available | Freed (was P-ASD solenoid V6, now via PCF8574) |
 
 ### 3.2 I2C1 Bus (PB6/PB7)
 
 | Address | Device | Data |
 |---------|--------|------|
-| 0x5A | MLX90614 | Object + ambient temperature |
+| 0x20 | PCF8574 | P-ASD solenoid V1-V6 GPIO expander (on Driver PCB) |
 | 0x40 | INA219 | 24 V rail voltage + current |
 | 0x48 | ADS1015 | P-ASD accumulator pressure (via MPXV5100GP) |
+| 0x5A | MLX90614 | Object + ambient temperature |
 
 ### 3.3 CAN Bus (FDCAN1)
 
@@ -202,7 +204,8 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 - Interface: Bit-banged GPIO (PC0 = SCK, PC1 = DOUT)
 - Sample rate: 10 Hz (RATE pin low) or 80 Hz (RATE pin high)
 - Configuration: 4× 5 kg strain gauges in Wheatstone bridge (pot)
-- SLD reservoir: Separate HX711 on SLD I2C load cell (shared I2C1)
+- SLD oil reservoir: HX711 #1 on PC11 (SCK) / PC12 (DOUT), 2 kg strain gauge
+- SLD water reservoir: HX711 #2 on PC9 (SCK) / PC10 (DOUT), 2 kg strain gauge
 - Resolution: 24-bit ADC → ~1 g at 20 kg full scale
 
 ---
@@ -398,7 +401,7 @@ See [[04-MPU-Functional-Specification#5.1 SPI Protocol]] for full frame definiti
 - No dynamic memory allocation after boot (all FreeRTOS objects static)
 - No floating-point in ISRs (FPU context save overhead)
 - CAN bus requires 120 Ω termination at both ends
-- I2C bus: max 2 devices (MLX90614 + INA219) to stay within 400 pF bus capacitance
+- I2C bus: 4 devices (MLX90614 + INA219 + ADS1015 + PCF8574), total bus capacitance must stay under 400 pF
 
 ### 9.4 Cross-References
 

@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-16
-version: 2.0
+version: 3.0
 status: Draft
 ---
 
@@ -48,8 +48,8 @@ The three boards (CM5IO, Controller, Driver) form a stackable architecture conne
          │    │  TIM1_CH1 (PA8) ───────────── J3: DS3225 Servo
          │    │                           │                │
          │    │  TIM2_CH1 (PA0) ──────────── J_STACK: P-ASD Pump PWM
-         │    │  PA1/PA2/PC7/PD2/PA3 ────── J_STACK: P-ASD Solenoids V1-V5
-         │    │  PB11 ───────────────────── J_STACK: P-ASD Solenoid V6
+         │    │  (P-ASD solenoids V1-V6 via PCF8574 on Driver PCB,
+         │    │   I2C1 addr 0x20 — no direct GPIO needed)
          │    │                           │                │
          │    │  I2C1 (PB6/PB7) ───────────── J6: MLX90614
          │    │                           │                │
@@ -105,17 +105,15 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 │                                                                │
 │  ┌─── P-ASD: Pneumatic Seasoning Dispenser ─┐                           │
 │  │  PA0  (TIM2_CH1)  ──► P-ASD Pump PWM (12V diaphragm pump)          │  │
-│  │  PA1  (GPIO)       ──► P-ASD Solenoid V1 (via MOSFET)              │  │
-│  │  PA2  (GPIO)       ──► P-ASD Solenoid V2 (via MOSFET)              │  │
-│  │  PC7  (GPIO)       ──► P-ASD Solenoid V3 (via MOSFET)              │  │
-│  │  PD2  (GPIO)       ──► P-ASD Solenoid V4 (via MOSFET)              │  │
-│  │  PA3  (GPIO)       ──► P-ASD Solenoid V5 (via MOSFET)              │  │
-│  │  PB11 (GPIO)       ──► P-ASD Solenoid V6 (via MOSFET)              │  │
+│  │  Solenoids V1-V6: driven by PCF8574 I2C GPIO expander              │  │
+│  │    on Driver PCB (I2C1, addr 0x20, outputs P0-P5)                  │  │
 │  │  I2C1 (PB6/PB7)   ──► ADS1015 Pressure Sensor (addr 0x48)         │  │
+│  │                    ──► PCF8574 Solenoid Expander (addr 0x20)       │  │
 │  └───────────────────────────────────────────┘                           │
-│  Note: All actuator signals (servos, pumps, solenoids,        │
-│  vibration motors) route via J_STACK to Driver PCB where      │
-│  power electronics drive the actual actuators.                 │
+│  Note: All actuator signals (servos, pumps) route via J_STACK │
+│  to Driver PCB where power electronics drive the actuators.   │
+│  P-ASD solenoids are controlled via PCF8574 on the Driver PCB,│
+│  accessed over shared I2C1 bus through J_STACK.                 │
 │                                                                │
 │  ┌─── I2C1: IR Thermometer ───────┐                           │
 │  │  PB6  (I2C1_SCL) ──► MLX90614 SCL                        │  │
@@ -165,9 +163,9 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 | Pin | Function | Peripheral | Direction | Connector | Subsystem |
 |-----|----------|------------|-----------|-----------|-----------|
 | PA0 | TIM2_CH1 | P-ASD Pump PWM | Output | J_STACK Pin 15 | P-ASD |
-| PA1 | GPIO | P-ASD Solenoid V1 | Output | J_STACK Pin 16 | P-ASD |
-| PA2 | GPIO | P-ASD Solenoid V2 | Output | J_STACK Pin 17 | P-ASD |
-| PA3 | GPIO | P-ASD Solenoid V5 | Output | J_STACK Pin 20 | P-ASD |
+| PA1 | — | Available (was P-ASD Sol V1) | — | — | — |
+| PA2 | — | Available (was P-ASD Sol V2) | — | — | — |
+| PA3 | — | Available (was P-ASD Sol V5) | — | — | — |
 | PA4 | ADC2_IN17 | NTC Coil | Input | J8 | Sensors |
 | PA5 | ADC2_IN13 | NTC Ambient | Input | J8 | Sensors |
 | PA6 | TIM3_CH1 | Exhaust Fan 1 PWM | Output | J_STACK Pin 27 | Exhaust |
@@ -187,7 +185,7 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 | PB6 | I2C1_SCL | MLX90614/INA219 | Output | J6, J_STACK Pin 35 | Sensors |
 | PB7 | I2C1_SDA | MLX90614/INA219 | Bidir | J6, J_STACK Pin 36 | Sensors |
 | PB10 | TIM2_CH3 | Exhaust Fan 2 PWM | Output | J_STACK Pin 28 | Exhaust |
-| PB11 | GPIO | P-ASD Solenoid V6 | Output | J_STACK Pin 39 | P-ASD |
+| PB11 | — | Available (was P-ASD Sol V6) | — | — | — |
 | PB12 | SPI2_NSS | CM5 CE0 | Input | J1 | Comms |
 | PB13 | SPI2_SCK | CM5 SCLK | Input | J1 | Comms |
 | PB14 | SPI2_MISO | CM5 MISO | Output | J1 | Comms |
@@ -199,9 +197,9 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 | PC4 | GPIO | SLD Pump 1 DIR | Output | J_STACK Pin 30 | SLD |
 | PC5 | GPIO | SLD Pump 2 PWM | Output | J_STACK Pin 31 | SLD |
 | PC6 | GPIO | SLD Pump 2 DIR | Output | J_STACK Pin 32 | SLD |
-| PC7 | GPIO | P-ASD Solenoid V3 | Output | J_STACK Pin 18 | P-ASD |
+| PC7 | — | Available (was P-ASD Sol V3) | — | — | — |
 | PC13 | GPIO | Status LED | Output | D1 | Status |
-| PD2 | GPIO | P-ASD Solenoid V4 | Output | J_STACK Pin 19 | P-ASD |
+| PD2 | — | Available (was P-ASD Sol V4) | — | — | — |
 
 ---
 
@@ -272,13 +270,13 @@ The CM5 IO Board's GPIO header connects to J1 on the controller PCB via a 7-wire
 CM5 IO Board (GPIO Header)              Controller PCB (J1)
 ┌───────────────────────┐                ┌───────────────────────┐
 │                       │                │                       │
-│  GPIO8  (CE0)   Pin 24├───────────────►│Pin 1  PB12 (SPI2_NSS)│
-│  GPIO9  (MISO)  Pin 21│◄──────────────┤Pin 2  PB14 (SPI2_MISO)│
+│  GPIO8  (CE0)   Pin 24├───────────────►│Pin 1  PB12 (SPI2_NSS) │
+│  GPIO9  (MISO)  Pin 21│◄───────────────┤Pin 2  PB14 (SPI2_MISO)│
 │  GPIO10 (MOSI)  Pin 19├───────────────►│Pin 3  PB15 (SPI2_MOSI)│
-│  GPIO11 (SCLK)  Pin 23├───────────────►│Pin 4  PB13 (SPI2_SCK)│
-│  GPIO4  (IRQ)   Pin  7│◄──────────────┤Pin 5  PB3  (IRQ)     │
-│  GND            Pin 25├───────────────►│Pin 6  GND            │
-│  3.3V           Pin  1├───── (N/C) ───┤       (not connected) │
+│  GPIO11 (SCLK)  Pin 23├───────────────►│Pin 4  PB13 (SPI2_SCK) │
+│  GPIO4  (IRQ)   Pin  7│◄───────────────┤Pin 5  PB3  (IRQ)      │
+│  GND            Pin 25├───────────────►│Pin 6  GND             │
+│  3.3V           Pin  1├───── (N/C) ────┤       (not connected) │
 │                       │                │                       │
 └───────────────────────┘                └───────────────────────┘
 
@@ -463,9 +461,9 @@ The stacking connector passes 24V power, ground, 5V/3.3V references, all servo P
 | 11 | 5V | Power | 12 | 5V | Power |
 | 13 | 3.3V | Power | 14 | 3.3V | Power |
 | **P-ASD Subsystem (Pins 15-20, 39)** ||||
-| 15 | PASD_PUMP_PWM (PA0) | Out | 16 | PASD_SOL1_EN (PA1) | Out |
-| 17 | PASD_SOL2_EN (PA2) | Out | 18 | PASD_SOL3_EN (PC7) | Out |
-| 19 | PASD_SOL4_EN (PD2) | Out | 20 | PASD_SOL5_EN (PA3) | Out |
+| 15 | PASD_PUMP_PWM (PA0) | Out | 16 | Reserved (was PASD_SOL1) | — |
+| 17 | Reserved (was PASD_SOL2) | — | 18 | Reserved (was PASD_SOL3) | — |
+| 19 | Reserved (was PASD_SOL4) | — | 20 | Reserved (was PASD_SOL5) | — |
 | **CID Subsystem (Pins 21-26)** ||||
 | 21 | CID_LACT1_EN (PA10) | Out | 22 | CID_LACT1_PH (PB4) | Out |
 | 23 | CID_LACT2_EN (PB5) | Out | 24 | CID_LACT2_PH (PC2) | Out |
@@ -479,7 +477,7 @@ The stacking connector passes 24V power, ground, 5V/3.3V references, all servo P
 | 35 | I2C1_SCL (PB6) | Bidir | 36 | I2C1_SDA (PB7) | Bidir |
 | **Main Actuators & Audio (Pins 37-38, 40)** ||||
 | 37 | MAIN_SERVO_PWM (PA8) | Out | 38 | BUZZER_PWM (PA11) | Out |
-| 39 | PASD_SOL6_EN (PB11) | Out | 40 | GND | Power |
+| 39 | Reserved (was PASD_SOL6) | — | 40 | GND | Power |
 
 #### Pin Group Summary
 
@@ -489,7 +487,7 @@ The stacking connector passes 24V power, ground, 5V/3.3V references, all servo P
 | GND | 5-10, 25-26, 40 | 9 | Low-impedance ground return |
 | 5V | 11-12 | 2 | 5V passthrough |
 | 3.3V | 13-14 | 2 | Logic reference |
-| **P-ASD** (Seasoning) | 15-20, 39 | 7 | 1× pump PWM, 6× solenoid enable |
+| **P-ASD** (Seasoning) | 15 | 1 | 1× pump PWM (solenoids via PCF8574 on Driver PCB, I2C1) |
 | **CID** (Coarse) | 21-26 | 6 | 2× actuator EN/PH, 2× GND |
 | **Exhaust Fans** | 27-28 | 2 | 2× fan PWM (independent speed control, 120mm) |
 | **SLD** (Liquid) | 29-36 | 8 | 2× pump PWM/DIR, 2× solenoid, I2C (INA219) |
@@ -511,17 +509,17 @@ The stacking connector passes 24V power, ground, 5V/3.3V references, all servo P
 ### Relay Driver (Q1)
 
 ```
-PB0 ────┤ 330R ├──── Gate ┐
+PB0 ────┤ 330R ├──── Gate ─┐
                            │
-                     ┌─────▼─────┐
+                     ┌─────▼──────┐
                      │  Q1: 2N7002│
                      │  (N-MOSFET)│
-                     └─────┬─────┘
+                     └─────┬──────┘
                            │ Drain
-                     ┌─────▼─────┐
+                     ┌─────▼──────┐
                      │ Relay Coil │ ◄── 5V or 12V
                      │ (Omron G5V)│
-                     └─────┬─────┘
+                     └─────┬──────┘
                            │
                       D1 (1N4148) ◄── Flyback diode across coil
                            │
@@ -579,19 +577,19 @@ Sufficient to attenuate induction EMI at 20-40 kHz
 
 ```
 ┌──────────────────────────────────────────────┐
-│  Layer 1 (Top)    — Signal + Components       │  35um Cu
+│  Layer 1 (Top)    — Signal + Components      │  35um Cu
 ├──────────────────────────────────────────────┤
 │  Prepreg          — FR4, 0.2mm               │
 ├──────────────────────────────────────────────┤
-│  Layer 2 (Inner1) — GND Plane (continuous)    │  35um Cu
+│  Layer 2 (Inner1) — GND Plane (continuous)   │  35um Cu
 ├──────────────────────────────────────────────┤
 │  Core             — FR4, 0.8mm               │
 ├──────────────────────────────────────────────┤
-│  Layer 3 (Inner2) — 3.3V Power Plane          │  35um Cu
+│  Layer 3 (Inner2) — 3.3V Power Plane         │  35um Cu
 ├──────────────────────────────────────────────┤
 │  Prepreg          — FR4, 0.2mm               │
 ├──────────────────────────────────────────────┤
-│  Layer 4 (Bottom) — Signal + Components       │  35um Cu
+│  Layer 4 (Bottom) — Signal + Components      │  35um Cu
 └──────────────────────────────────────────────┘
 
 Total thickness: ~1.6mm (standard)
@@ -603,8 +601,8 @@ Material: FR4 (Tg 150°C minimum)
 **Component Placement Zones:**
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│                                                          │
+┌─────────────────────────────────────────────────────────┐
+│                                                         │
 │  ┌────────────────┐  ┌────────────────┐  ┌───────────┐  │
 │  │   STM32G474RE  │  │  SPI + Debug   │  │  Power    │  │
 │  │   + Crystal    │  │  Connectors    │  │  LDO +    │  │
@@ -612,7 +610,7 @@ Material: FR4 (Tg 150°C minimum)
 │  │                │  │                │  │  (J10)    │  │
 │  │  DIGITAL ZONE  │  │  COMM ZONE     │  │ PWR ZONE  │  │
 │  └────────────────┘  └────────────────┘  └───────────┘  │
-│                                                          │
+│                                                         │
 │  ┌────────────────┐  ┌────────────────┐  ┌───────────┐  │
 │  │  CAN + I2C     │  │  ADC + Sensors │  │  Safety   │  │
 │  │  Connectors    │  │  Connectors    │  │  Relay    │  │
@@ -620,14 +618,14 @@ Material: FR4 (Tg 150°C minimum)
 │  │                │  │                │  │  (J11)    │  │
 │  │  BUS ZONE      │  │  SENSOR ZONE   │  │ SAFETY    │  │
 │  └────────────────┘  └────────────────┘  └───────────┘  │
-│                                                          │
-│  ┌──────────────────────────────────────────────────┐    │
-│  │  J_STACK Stacking Connector (2x20, center edge)  │    │
-│  │  Signals to Driver PCB (ASD/CID/SLD/Main)       │    │
-│  └──────────────────────────────────────────────────┘    │
-│                                                          │
+│                                                         │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │  J_STACK Stacking Connector (2x20, center edge)  │   │
+│  │  Signals to Driver PCB (ASD/CID/SLD/Main)        │   │
+│  └──────────────────────────────────────────────────┘   │
+│                                                         │
 │  Board Edge ─────────────────── Mounting Holes (M3 x 4) │
-└──────────────────────────────────────────────────────────┘
+└─────────────────────────────────────────────────────────┘
 ```
 
 **Critical Layout Rules:**
@@ -786,3 +784,4 @@ Material: FR4 (Tg 150°C minimum)
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
 | 2.0 | 2026-02-16 | Manas Pradhan | Replaced ASD (3× servo + 3× vibration motor) pin allocations with P-ASD (1× pump PWM + 6× solenoid + pressure sensor); updated J_STACK pinout, pin summary, and SPI message types |
+| 3.0 | 2026-02-16 | Manas Pradhan | Moved P-ASD solenoid control from 6× direct GPIO (PA1/PA2/PA3/PC7/PD2/PB11) to PCF8574 I2C GPIO expander on Driver PCB; freed 6 STM32 pins; J_STACK pins 16-20, 39 now Reserved |

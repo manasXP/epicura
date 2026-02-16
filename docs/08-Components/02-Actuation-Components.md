@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-16
-version: 2.0
+version: 3.0
 status: Draft
 ---
 
@@ -64,9 +64,11 @@ This document details the actuation subsystem components for the Epicura kitchen
 | 12V DC Linear Actuator (50mm) — CID | Generic 12V, 50mm stroke | 2 | $8.00 | $16.00 | Amazon / AliExpress | CID push-plate slider for coarse ingredients |
 | 12V Peristaltic Pump — SLD | Generic 12V DC gear motor | 2 | $10.00 | $20.00 | Amazon / AliExpress | SLD liquid dispensing (oil + water) |
 | 12V NC Solenoid Valve — SLD | Generic 12V, normally closed | 2 | $4.00 | $8.00 | Amazon / AliExpress | SLD drip prevention |
-| 1 kg Load Cell + HX711 — SLD | Generic strain gauge + HX711 | 1 | $8.00 | $8.00 | Amazon | SLD dedicated closed-loop metering |
+| 2 kg Load Cell + HX711 — SLD (oil) | Generic 2 kg strain gauge + HX711 | 1 | $8.00 | $8.00 | Amazon | SLD oil reservoir closed-loop metering + level alert |
+| 2 kg Load Cell + HX711 — SLD (water) | Generic 2 kg strain gauge + HX711 | 1 | $8.00 | $8.00 | Amazon | SLD water reservoir closed-loop metering + level alert |
 | H-Bridge Motor Driver — CID | DRV8876RGTR (x2) | 2 | $2.50 | $5.00 | Mouser | CID linear actuator EN/PH direction + speed |
 | Limit Switches (micro) — CID | Generic micro switch | 4 | $0.50 | $2.00 | Amazon | CID home/extend position detection |
+| PCF8574 I2C GPIO Expander — P-ASD | PCF8574 (SOIC-16) | 1 | $0.50 | $0.50 | LCSC / Mouser | P-ASD solenoid V1-V6 gate driver (I2C1, addr 0x20) |
 | CAN Transceiver (for FDCAN1) | SN65HVD230 or MCP2551 | 1 | $3.00 | $3.00 | Mouser / DigiKey | CAN bus interface to microwave surface module |
 | Relay Module (5V, 10A) | SRD-05VDC-SL-C | 2 | $3.00 | $6.00 | Amazon | Induction on/off and power cycling control (prototype) |
 | Motor Driver Board | L298N or custom | 1 | $8.00 | $8.00 | Amazon | Servo power distribution and level shifting |
@@ -92,16 +94,17 @@ This document details the actuation subsystem components for the Epicura kitchen
 | Linear Actuators — CID (2x) | $16.00 |
 | Peristaltic Pumps — SLD (2x) | $20.00 |
 | Solenoid Valves — SLD (2x) | $8.00 |
-| Load Cell + HX711 — SLD | $8.00 |
+| Load Cells + HX711 — SLD (2×) | $16.00 |
 | H-Bridge Driver — CID | $5.00 |
 | Limit Switches — CID (4x) | $2.00 |
+| PCF8574 I2C GPIO Expander (P-ASD) | $0.50 |
 | CAN Transceiver | $3.00 |
 | Relay Module (safety, 2x) | $6.00 |
 | Motor Driver Board | $8.00 |
 | Connectors + Wiring | $17.00 |
 | Exhaust Fan + Filtration | $22.50 |
 | Piezo Buzzer + MOSFET | $0.85 |
-| **Category Subtotal** | **$281.35** |
+| **Category Subtotal** | **$289.85** |
 
 ---
 
@@ -178,3 +181,4 @@ This document details the actuation subsystem components for the Epicura kitchen
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
 | 2.0 | 2026-02-16 | Manas Pradhan | Replace ASD (3× SG90 servo hoppers) with P-ASD pneumatic puff-dosing system (pump + 6× solenoid valves + sealed cartridges) |
+| 3.0 | 2026-02-16 | Manas Pradhan | Added PCF8574 I2C GPIO expander ($0.50) for P-ASD solenoid control |

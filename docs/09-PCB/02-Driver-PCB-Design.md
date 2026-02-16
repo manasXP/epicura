@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-16
-version: 2.0
+version: 3.0
 status: Draft
 ---
 
@@ -63,7 +63,8 @@ All three boards share a uniform 160x90mm footprint with M3 mounting holes at id
     │2x Sol │ │Fan  │  │2x Lin  │  │DS3225 │  │P-ASD: 6x Sol │
     │IRLML  │ │IRLML│  │Act     │  │Servo  │  │+ 1x Pump     │
     │6344   │ │6344 │  │DRV8876 │  │Direct │  │IRLML6344     │
-    └───────┘ └─────┘  └────────┘  └───────┘  └───────────────┘
+    └───────┘ └─────┘  └────────┘  └───────┘  │(via PCF8574)  │
+                                               └───────────────┘
                                                         │
                                                    ┌────▼────┐
                                                    │2x Peri  │
@@ -74,6 +75,12 @@ All three boards share a uniform 160x90mm footprint with M3 mounting holes at id
                     ┌──────────────┐
          24V ──────┤  INA219      │──── I2C1 (via stacking connector)
                    │  Current Mon │
+                   └──────────────┘
+
+                    ┌──────────────┐
+         I2C1 ────┤  PCF8574     │──── P0-P5 → P-ASD Solenoid V1-V6 MOSFET gates
+                   │  GPIO Exp.  │     (addr 0x20, 100Ω gate resistors)
+                   │  (SOIC-16)  │     P6-P7 available for future use
                    └──────────────┘
 
 All control signals arrive from Controller PCB via 2x20 stacking connector (J_STACK)
@@ -163,7 +170,7 @@ PA8 (TIM1_CH1) ── via J_STACK ── 33R ── J_SERVO_MAIN Pin 3 (Signal, 
 
 ### P-ASD Solenoid Valves (6×)
 
-Six 12V normally-closed solenoid valves for P-ASD (Pneumatic Advanced Seasoning Dispenser) cartridge air control, driven by low-side N-MOSFETs with flyback protection. One valve per spice cartridge.
+Six 12V normally-closed solenoid valves for P-ASD (Pneumatic Advanced Seasoning Dispenser) cartridge air control, driven by low-side N-MOSFETs with flyback protection. One valve per spice cartridge. MOSFET gates are driven by a **PCF8574 I2C GPIO expander** (address 0x20) on the Driver PCB, eliminating the need for 6 dedicated STM32 GPIO pins.
 
 ```
 12V Rail ──── Solenoid Coil ──┬── Drain (IRLML6344)
@@ -172,7 +179,7 @@ Six 12V normally-closed solenoid valves for P-ASD (Pneumatic Advanced Seasoning 
                               │
                          10k Pull-down
                               │
-PA1/PA2/PC7/PD2/PA3/PB11 ── via J_STACK ── 100R Gate Resistor ── Gate
+PCF8574 P0-P5 (I2C1, 0x20) ── 100R Gate Resistor ── Gate
                               │
                              GND ── Source
 ```
@@ -188,16 +195,29 @@ PA1/PA2/PC7/PD2/PA3/PB11 ── via J_STACK ── 100R Gate Resistor ── Gat
 | Gate Pull-down | 10kΩ to GND (safe state during STM32 boot/reset) |
 | Solenoid Current | ~0.5A per valve (max 1 energized at a time) |
 
-**Pin Allocation:**
+**PCF8574 Output Allocation:**
 
-| Valve | STM32 Pin | Cartridge |
-|-------|-----------|-----------|
-| Solenoid V1 | PA1 | P-ASD-1 (Turmeric) |
-| Solenoid V2 | PA2 | P-ASD-2 (Chili) |
-| Solenoid V3 | PC7 | P-ASD-3 (Cumin) |
-| Solenoid V4 | PD2 | P-ASD-4 (Salt) |
-| Solenoid V5 | PA3 | P-ASD-5 (Garam Masala) |
-| Solenoid V6 | PB11 | P-ASD-6 (Coriander) |
+| Valve | PCF8574 Pin | Cartridge |
+|-------|-------------|-----------|
+| Solenoid V1 | P0 | P-ASD-1 (Turmeric) |
+| Solenoid V2 | P1 | P-ASD-2 (Chili) |
+| Solenoid V3 | P2 | P-ASD-3 (Cumin) |
+| Solenoid V4 | P3 | P-ASD-4 (Salt) |
+| Solenoid V5 | P4 | P-ASD-5 (Garam Masala) |
+| Solenoid V6 | P5 | P-ASD-6 (Coriander) |
+| (Available) | P6 | Future use |
+| (Available) | P7 | Future use |
+
+**PCF8574 Configuration:**
+
+| Parameter | Value |
+|-----------|-------|
+| IC | PCF8574 (SOIC-16 or DIP-16) |
+| I2C Address | 0x20 (A0=A1=A2=GND) |
+| I2C Bus | I2C1 (PB6/PB7 via J_STACK), shared with MLX90614 (0x5A), INA219 (0x40), ADS1015 (0x48) |
+| Output Current | 25 mA sink per pin (sufficient for IRLML6344 gate charge) |
+| Decoupling | 100nF MLCC on VDD |
+| Cost | ~$0.50 |
 
 ### SLD Solenoid Valves (2x)
 
@@ -501,7 +521,7 @@ An INA219 bidirectional current/power monitor on the 24V input rail provides rea
 | I2C Bus | Shared with MLX90614 (0x5A) on Controller PCB |
 | Decoupling | 100nF on VS+ |
 
-The INA219 shares the I2C1 bus with the MLX90614 IR thermometer on the Controller PCB. Both devices have distinct addresses (0x40 vs 0x5A) so no conflict exists. I2C signals route through the stacking connector.
+The INA219 shares the I2C1 bus with the MLX90614 IR thermometer (0x5A) on the Controller PCB, the ADS1015 pressure sensor (0x48), and the PCF8574 GPIO expander (0x20) on the Driver PCB. All four devices have distinct addresses so no conflict exists. I2C signals route through the stacking connector.
 
 ---
 
@@ -530,9 +550,9 @@ The INA219 shares the I2C1 bus with the MLX90614 IR thermometer on the Controlle
 | 11 | 5V | Power | 12 | 5V | Power |
 | 13 | 3.3V | Power | 14 | 3.3V | Power |
 | **P-ASD Subsystem (Pins 15-20, 39)** ||||
-| 15 | PASD_PUMP_PWM (PA0) | In | 16 | PASD_SOL1_EN (PA1) | In |
-| 17 | PASD_SOL2_EN (PA2) | In | 18 | PASD_SOL3_EN (PC7) | In |
-| 19 | PASD_SOL4_EN (PD2) | In | 20 | PASD_SOL5_EN (PA3) | In |
+| 15 | PASD_PUMP_PWM (PA0) | In | 16 | Reserved (was PASD_SOL1) | — |
+| 17 | Reserved (was PASD_SOL2) | — | 18 | Reserved (was PASD_SOL3) | — |
+| 19 | Reserved (was PASD_SOL4) | — | 20 | Reserved (was PASD_SOL5) | — |
 | **CID Subsystem (Pins 21-26)** ||||
 | 21 | CID_LACT1_EN (PA10) | In | 22 | CID_LACT1_PH (PB4) | In |
 | 23 | CID_LACT2_EN (PB5) | In | 24 | CID_LACT2_PH (PC2) | In |
@@ -546,7 +566,7 @@ The INA219 shares the I2C1 bus with the MLX90614 IR thermometer on the Controlle
 | 35 | I2C1_SCL (PB6) | Bidir | 36 | I2C1_SDA (PB7) | Bidir |
 | **Main Actuators & Audio (Pins 37-40)** ||||
 | 37 | MAIN_SERVO_PWM (PA8) | In | 38 | BUZZER_PWM (PA11) | In |
-| 39 | PASD_SOL6_EN (PB11) | In | 40 | GND | Power |
+| 39 | Reserved (was PASD_SOL6) | — | 40 | GND | Power |
 
 ### Pin Group Summary
 
@@ -556,14 +576,14 @@ The INA219 shares the I2C1 bus with the MLX90614 IR thermometer on the Controlle
 | GND | 5-10, 25-26, 40 | 9 | Low-impedance ground return (6 main + 2 CID + 1 main actuators) |
 | 5V | 11-12 | 2 | 5V reference/supply passthrough |
 | 3.3V | 13-14 | 2 | Logic-level reference passthrough |
-| **P-ASD** (Seasoning) | 15-20, 39 | 7 | 1× pump PWM (PA0), 6× solenoid enable (PA1, PA2, PC7, PD2, PA3, PB11) |
+| **P-ASD** (Seasoning) | 15 | 1 | 1× pump PWM (PA0); solenoids V1-V6 via PCF8574 (I2C1, 0x20) on Driver PCB |
 | **CID** (Coarse) | 21-26 | 6 | 2× actuator EN/PH (PA10/PB4, PB5/PC2), 2× GND |
 | **Exhaust Fans** | 27-28 | 2 | FAN1 (PA6), FAN2 (PB10) |
 | **SLD** (Liquid) | 29-36 | 8 | 2× pump PWM/DIR (PC3-PC6), 2× solenoid (PA7, PA9), I2C (INA219) |
 | **Main** (Arm/Audio) | 37-38, 40 | 3 | Main servo (PA8), buzzer (PA11), 1× GND |
 
 > [!note]
-> Subsystem grouping enables modular wiring harnesses. All P-ASD signals (pins 15-20, 39) run together, all CID signals (21-26) together, exhaust fans (27-28) together, etc. Dedicated GND pins (25-26 for CID, 40 for main actuators) improve current return paths for high-power actuators.
+> Subsystem grouping enables modular wiring harnesses. P-ASD pump PWM on pin 15; solenoids V1-V6 are driven locally by a PCF8574 I2C GPIO expander on the Driver PCB (no J_STACK pins needed). CID signals (21-26) together, exhaust fans (27-28) together, etc. Dedicated GND pins (25-26 for CID, 40 for main actuators) improve current return paths for high-power actuators.
 
 > [!warning]
 > The 24V pins carry up to 3A total from the PSU. Four paralleled pins provide adequate current capacity, but traces on both boards must be sized for ≥1A per pin (minimum 0.5mm / 20 mil trace width on 2oz copper).
@@ -624,7 +644,7 @@ Inner copper: 1 oz (35µm) for planes
 │  ┌──────────────────────────────────────────────────────────────────┐   │
 │  │                    OUTPUT CONNECTORS                              │   │
 │  │  J_SERVO_MAIN  J_PASD_SOL[1-6]  J_PASD_PUMP  J_FAN1-2            │   │
-│  │  J_LACT[1-2]   J_PUMP[1-2]     J_SOL[1-2]   J_24V_IN            │   │
+│  │  J_LACT[1-2]   J_SLD            J_24V_IN   J_BUZZER            │   │
 │  └──────────────────────────────────────────────────────────────────┘   │
 │                                                                          │
 │  Board Edge ──────────────────────── M3 Mounting Holes (4 corners)      │
@@ -677,7 +697,7 @@ Connectors are organized by subsystem for modular wiring harness assembly.
 | Pin | Signal | Notes |
 |-----|--------|-------|
 | 1 | 12V | Solenoid power (switched by IRLML6344 MOSFET) |
-| 2 | SOL_OUT | Drain side of MOSFET (PA1/PA2/PC7/PD2/PA3/PB11 via J_STACK) |
+| 2 | SOL_OUT | Drain side of MOSFET (gate driven by PCF8574 P0-P5, I2C1 addr 0x20) |
 
 **J_PASD_PUMP — Diaphragm Pump (2-pin JST-XH 2.5mm)**
 
@@ -695,21 +715,20 @@ Connectors are organized by subsystem for modular wiring harness assembly.
 | 1 | OUT1 | DRV8876 output 1 |
 | 2 | OUT2 | DRV8876 output 2 |
 
-### SLD Subsystem Connectors (4 total)
+### SLD Subsystem Connectors (1 connector)
 
-**J_SLD_PUMP1, J_SLD_PUMP2 — Peristaltic Pumps (2x 2-pin JST-XH 2.5mm)**
-
-| Pin | Signal | Notes |
-|-----|--------|-------|
-| 1 | AO1/BO1 | TB6612 output 1 |
-| 2 | AO2/BO2 | TB6612 output 2 |
-
-**J_SLD_SOL1, J_SLD_SOL2 — Solenoid Valves (2x 2-pin JST-XH 2.5mm)**
+**J_SLD — Combined SLD Connector (1x 8-pin JST-XH 2.5mm)**
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
-| 1 | 12V | Solenoid power (switched by MOSFET) |
-| 2 | SOL_OUT | Drain side of IRLML6344 (PA7/PA9 via J_STACK) |
+| 1 | PUMP1_AO1 | TB6612 output A1 (oil pump +) |
+| 2 | PUMP1_AO2 | TB6612 output A2 (oil pump −) |
+| 3 | PUMP2_BO1 | TB6612 output B1 (water pump +) |
+| 4 | PUMP2_BO2 | TB6612 output B2 (water pump −) |
+| 5 | 12V_SOL1 | Oil solenoid power (switched) |
+| 6 | SOL1_OUT | Oil solenoid drain (PA7) |
+| 7 | 12V_SOL2 | Water solenoid power (switched) |
+| 8 | SOL2_OUT | Water solenoid drain (PA9) |
 
 ### Main Actuators (3 total)
 
@@ -758,8 +777,8 @@ The Driver PCB introduces 14 new STM32 pin assignments (beyond the existing Cont
 |-----|----------------|--------------|------------|-----------|--------|
 | PA6 | Available (was IGBT HIN) | TIM3_CH1 | Exhaust Fan 1 PWM (25 kHz) | Output | J_FAN1 via MOSFET |
 | PB10 | Available | GPIO (software PWM) | Exhaust Fan 2 PWM (25 kHz) | Output | J_FAN2 via MOSFET |
-| PA7 | Available (was IGBT LIN) | GPIO | Solenoid 1 Enable | Output | J_SOL1 via MOSFET |
-| PA9 | Reserved | GPIO | Solenoid 2 Enable | Output | J_SOL2 via MOSFET |
+| PA7 | Available (was IGBT LIN) | GPIO | SLD Solenoid 1 Enable | Output | J_SLD pin 6 via MOSFET |
+| PA9 | Reserved | GPIO | SLD Solenoid 2 Enable | Output | J_SLD pin 8 via MOSFET |
 | PA10 | Reserved | TIM1_CH3 / GPIO | Linear Actuator 1 EN/PWM | Output | DRV8876 #1 EN |
 | PB4 | Available | GPIO | Linear Actuator 1 PH/DIR | Output | DRV8876 #1 PH |
 | PB5 | Available | GPIO | Linear Actuator 2 EN/PWM | Output | DRV8876 #2 EN |
@@ -769,18 +788,21 @@ The Driver PCB introduces 14 new STM32 pin assignments (beyond the existing Cont
 | PC5 | Available | GPIO | Pump 2 Speed (PWMB) | Output | TB6612 PWMB |
 | PC6 | Available | GPIO | Pump 2 Direction (BIN1) | Output | TB6612 BIN1 |
 | PA11 | Reserved (USB) | TIM1_CH4 | Piezo Buzzer PWM | Output | J_BUZZER via MOSFET |
-| PC7 | Available | GPIO | P-ASD Solenoid V3 Enable | Output | J_PASD_SOL3 via MOSFET |
-| PD2 | Available | GPIO | P-ASD Solenoid V4 Enable | Output | J_PASD_SOL4 via MOSFET |
-| PB11 | Available | GPIO | P-ASD Solenoid V6 Enable | Output | J_PASD_SOL6 via MOSFET |
+| ~~PC7~~ | ~~Available~~ | ~~GPIO~~ | ~~P-ASD Solenoid V3~~ | ~~Output~~ | ~~Removed — now via PCF8574~~ |
+| ~~PD2~~ | ~~Available~~ | ~~GPIO~~ | ~~P-ASD Solenoid V4~~ | ~~Output~~ | ~~Removed — now via PCF8574~~ |
+| ~~PB11~~ | ~~Available~~ | ~~GPIO~~ | ~~P-ASD Solenoid V6~~ | ~~Output~~ | ~~Removed — now via PCF8574~~ |
 
 ### Complete Pin Usage Summary (Controller + Driver PCBs)
 
 | Port | Used Pins | Total Used | Available |
 |------|-----------|------------|-----------|
-| PA | PA0-PA11, PA13, PA14 | 14 | PA12 (USB reserved), PA15 |
-| PB | PB0-PB15 | 16 | None |
-| PC | PC0-PC7, PC13-PC15 | 11 | PC8-PC12 |
-| PD | PD2 | 1 | — (only PD2 available on LQFP-64) |
+| PA | PA0, PA4-PA11, PA13, PA14 | 11 | PA1, PA2, PA3 (freed from P-ASD solenoids), PA12 (USB reserved), PA15 |
+| PB | PB0-PB10, PB12-PB15 | 15 | PB11 (freed from P-ASD solenoid V6) |
+| PC | PC0-PC6, PC9-PC12, PC13-PC15 | 12 | PC7 (freed from P-ASD solenoid V3), PC8 |
+| PD | — | 0 | PD2 (freed from P-ASD solenoid V4) |
+
+> [!note]
+> P-ASD solenoids V1-V6 are now driven by a PCF8574 I2C GPIO expander (address 0x20) on the Driver PCB instead of direct STM32 GPIO pins. This frees 6 GPIO pins (PA1, PA2, PA3, PC7, PD2, PB11) for future use. The PCF8574 shares the I2C1 bus with MLX90614 (0x5A), INA219 (0x40), and ADS1015 (0x48) — no address conflicts.
 
 All new signals pass through the J_STACK stacking connector — no additional cabling between Controller and Driver PCBs is needed.
 
@@ -900,6 +922,8 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 | **Discrete MOSFETs** | | | | | |
 | Q1-Q11 | IRLML6344 | SOT-23 | 11 | $0.20 | SLD sol 1-2, fan 1-2, P-ASD sol V1-V6, P-ASD pump |
 | Q12 | 2N7002 | SOT-23 | 1 | $0.05 | Buzzer |
+| **I2C GPIO Expander** | | | | | |
+| U8 | PCF8574 | SOIC-16 | 1 | $0.50 | P-ASD solenoid V1-V6 driver (I2C addr 0x20) |
 | **Current Monitor** | | | | | |
 | U7 | INA219BIDR | SOT-23-8 | 1 | $1.50 | 24V input current/power |
 | R_SHUNT | 10 mΩ 1% 1W | 2512 | 1 | $0.30 | Current sense shunt |
@@ -929,12 +953,11 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 | J_STACK | 2x20 pin socket | 2.54mm, 11mm stacking | 1 | $0.80 | Stacking to Controller PCB |
 | J_24V_IN | XT30 or JST-VH 2-pin | 2.5mm pitch | 1 | $0.40 | 24V DC input |
 | J_SERVO_MAIN | Pin header 3-pin | 2.54mm | 1 | $0.05 | DS3225 servo |
-| J_SOL1-2 | JST-XH 2-pin | 2.5mm pitch | 2 | $0.10 | SLD solenoid valves |
+| J_SLD | JST-XH 8-pin | 2.5mm pitch | 1 | $0.30 | SLD combined (2× pumps + 2× solenoids) |
 | J_PASD_SOL1-6 | JST-XH 2-pin | 2.5mm pitch | 6 | $0.10 | P-ASD solenoid valves |
 | J_PASD_PUMP | JST-XH 2-pin | 2.5mm pitch | 1 | $0.10 | P-ASD diaphragm pump |
 | J_FAN1-2 | JST-XH 2-pin | 2.5mm pitch | 2 | $0.10 | Exhaust fans |
 | J_LACT1-2 | JST-XH 2-pin | 2.5mm pitch | 2 | $0.10 | Linear actuators |
-| J_PUMP1-2 | JST-XH 2-pin | 2.5mm pitch | 2 | $0.10 | Peristaltic pumps |
 | J_BUZZER | JST-PH 2-pin | 2.0mm pitch | 1 | $0.08 | Piezo buzzer |
 | BZ1 | MLT-5030 or generic | 12mm piezo | 1 | $0.80 | Active piezo buzzer 5V |
 | **PCB** | 4-layer, 160x90mm | FR4 ENIG, 2oz outer Cu | 1 | $5.00 | JLCPCB batch (5 pcs) |
@@ -949,7 +972,7 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 | Current Monitor (INA219 + shunt) | $1.80 | $1.20 |
 | Protection (polyfuses + TVS) | $1.70 | $1.00 |
 | Passive Components | $2.20 | $1.10 |
-| Connectors | $3.00 | $1.80 |
+| Connectors | $2.90 | $1.70 |
 | PCB | $5.00 | $2.00 |
 | **Total** | **~$32** | **~$19** |
 
@@ -1052,3 +1075,4 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
 | 2.0 | 2026-02-16 | Manas Pradhan | Replaced ASD (3× SG90 servo + 3× vibration motor) with P-ASD (6× solenoid valve + 1× diaphragm pump); updated 12V rail load, J_STACK pinout, connector definitions, BOM, and thermal analysis |
+| 3.0 | 2026-02-16 | Manas Pradhan | Added PCF8574 I2C GPIO expander (addr 0x20) for P-ASD solenoid control; solenoid MOSFET gates now driven by PCF8574 P0-P5 instead of direct STM32 GPIO; freed 6 STM32 pins; J_STACK pins 16-20, 39 now Reserved |

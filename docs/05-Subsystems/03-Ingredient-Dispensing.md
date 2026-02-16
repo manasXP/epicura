@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-15
-version: 3.0
+version: 4.0
 status: Draft
 ---
 
@@ -15,7 +15,7 @@ The ingredient dispensing system is divided into three purpose-built subsystems,
 |-----------|-----------|---------|-----------|----------|
 | **P-ASD** | Pneumatic Advanced Seasoning Dispenser | Ground/powdered spices (turmeric, chili, cumin, salt, garam masala, coriander) | 6 Solenoid Valves + Micro Diaphragm Pump | Weight-verified via pot load cells |
 | **CID** | Coarse Ingredients Dispenser | Pre-cut vegetables, meat, paneer, dal, rice | 2 Linear Actuators (slider mechanism) | Timed/position-based |
-| **SLD** | Standard Liquid Dispenser | Oil and water | 2 Peristaltic Pumps + 2 Solenoid Valves + 1 Load Cell (dedicated) | Closed-loop weight feedback |
+| **SLD** | Standard Liquid Dispenser | Oil and water | 2 Peristaltic Pumps + 2 Solenoid Valves + 2 Load Cells (one per reservoir) | Closed-loop weight feedback + low-level alerts |
 
 ## Layout
 
@@ -145,11 +145,11 @@ The ingredient dispensing system is divided into three purpose-built subsystems,
     │  Nozzle      │ ──► Into cooking pot
     └──────────────┘
 
-    ┌──────────────┐
-    │  Load Cell   │ ◄── Dedicated HX711, measures reservoir weight
-    │  (under      │     Closed-loop: pump until target Δweight reached
-    │   reservoir) │
-    └──────────────┘
+    ┌──────────────┐  ┌──────────────┐
+    │  Load Cell   │  │  Load Cell   │ ◄── 2× dedicated HX711 (one per reservoir)
+    │  (under oil  │  │  (under water│     Closed-loop: pump until target Δweight
+    │   reservoir) │  │   reservoir) │     Low-level alert when < threshold
+    └──────────────┘  └──────────────┘
 ```
 
 ## P-ASD — Pneumatic Advanced Seasoning Dispenser
@@ -363,25 +363,27 @@ CID uses **position-based / timed dispensing**:
 | Driver | N-channel MOSFET (IRLZ44N) with flyback diode |
 | Cost | ~$4 each |
 
-### Dedicated Load Cell
+### Dedicated Load Cells (2×)
 
 | Parameter | Value |
 |-----------|-------|
-| Type | Single 1 kg strain gauge under SLD reservoir platform |
-| ADC | Dedicated HX711 (separate from pot load cells) |
-| Purpose | Measure liquid dispensed by tracking reservoir weight decrease |
+| Type | 2× 2 kg strain gauge (one under each SLD reservoir: oil and water) |
+| ADC | 2× dedicated HX711 (separate from pot load cells) |
+| Purpose | Individual liquid level monitoring + closed-loop dispensing by tracking reservoir weight decrease |
+| Capacity | 2 kg per load cell (accommodates full reservoir + container weight) |
 | Accuracy | ±1 g (24-bit HX711 with averaging) |
 | Sampling | 10 Hz |
-| Cost | ~$5 (load cell) + ~$3 (HX711) |
+| Low-Level Alert | Configurable threshold per channel (default: 50 g remaining); alert sent to CM5 + UI when level drops below threshold |
+| Cost | ~$5 (load cell) × 2 + ~$3 (HX711) × 2 = ~$16 total |
 
 ### Metering Strategy (Closed-Loop)
 
-SLD uses a **dedicated load cell** under the reservoir platform for closed-loop dispensing:
+SLD uses **two dedicated load cells** (one under each reservoir) for independent closed-loop dispensing and level monitoring:
 
 ```
 ┌───────────────┐
 │ 1. Tare       │
-│ reservoir     │──► W_initial = sld_load_cell.read()
+│ reservoir     │──► W_initial = sld_load_cell[channel].read()
 │ weight        │
 └───────┬───────┘
         │
@@ -395,7 +397,7 @@ SLD uses a **dedicated load cell** under the reservoir platform for closed-loop 
         ▼
 ┌───────────────┐
 │ 3. Monitor    │
-│ reservoir     │──► W_dispensed = W_initial - sld_load_cell.read()
+│ reservoir     │──► W_dispensed = W_initial - sld_load_cell[channel].read()
 │ weight loss   │    (sampled at 10 Hz)
 │ in real-time  │
 └───────┬───────┘
@@ -411,8 +413,10 @@ SLD uses a **dedicated load cell** under the reservoir platform for closed-loop 
         ▼
 ┌───────────────┐
 │ 5. Verify     │
-│ final weight  │──► W_actual = W_initial - sld_load_cell.read()
+│ final weight  │──► W_actual = W_initial - sld_load_cell[channel].read()
 │ and log       │    log(channel, target_g, W_actual)
+│               │    IF sld_load_cell[channel].read() < LOW_LEVEL_THRESHOLD:
+│               │        send SLD_LOW_LEVEL alert to CM5
 └───────────────┘
 ```
 
@@ -425,12 +429,7 @@ Accuracy: ±5% of target weight (significantly better than ASD due to dedicated 
 | Subsystem | Actuator | STM32 Pin | Interface | Notes |
 |-----------|----------|-----------|-----------|-------|
 | **P-ASD** | Diaphragm Pump Motor | PA0 (TIM2_CH1) | PWM | 12V pump speed control via MOSFET |
-| **P-ASD** | Solenoid Valve V1 | PA1 (GPIO) | Digital output via MOSFET | 12V NC solenoid, cartridge 1 |
-| **P-ASD** | Solenoid Valve V2 | PA2 (GPIO) | Digital output via MOSFET | 12V NC solenoid, cartridge 2 |
-| **P-ASD** | Solenoid Valve V3 | PC7 (GPIO) | Digital output via MOSFET | 12V NC solenoid, cartridge 3 |
-| **P-ASD** | Solenoid Valve V4 | PD2 (GPIO) | Digital output via MOSFET | 12V NC solenoid, cartridge 4 |
-| **P-ASD** | Solenoid Valve V5 | PA3 (GPIO) | Digital output via MOSFET | 12V NC solenoid, cartridge 5 |
-| **P-ASD** | Solenoid Valve V6 | PB11 (GPIO) | Digital output via MOSFET | 12V NC solenoid, cartridge 6 |
+| **P-ASD** | Solenoid Valves V1-V6 | PCF8574 P0-P5 (I2C1, addr 0x20) | Digital output via MOSFET | 12V NC solenoids, cartridges 1-6; PCF8574 on Driver PCB |
 | **P-ASD** | Pressure Sensor | I2C1 (PB6/PB7) | I2C via ADS1015 | Accumulator pressure, addr 0x48 |
 | **CID** | Linear Actuator CID-1 EN | PA10 (TIM1_CH3/GPIO) | PWM/GPIO | DRV8876 #1 enable/speed |
 | **CID** | Linear Actuator CID-1 PH | PB4 (GPIO) | Digital output | DRV8876 #1 phase/direction |
@@ -442,10 +441,12 @@ Accuracy: ±5% of target weight (significantly better than ASD due to dedicated 
 | **SLD** | Pump Motor SLD-WATER (DIR) | PC6 (GPIO) | Digital output | TB6612 BIN1 direction |
 | **SLD** | Solenoid SLD-OIL | PA7 (GPIO) | Digital output via MOSFET | 12V NC solenoid, flyback diode |
 | **SLD** | Solenoid SLD-WATER | PA9 (GPIO) | Digital output via MOSFET | 12V NC solenoid, flyback diode |
-| **SLD** | HX711 SCK (dedicated) | PC11 (GPIO) | Clock out | SLD reservoir load cell (not implemented in current design) |
-| **SLD** | HX711 DOUT (dedicated) | PC12 (GPIO) | Data in | SLD reservoir load cell (not implemented in current design) |
+| **SLD** | HX711 #1 SCK (oil) | PC11 (GPIO) | Clock out | SLD oil reservoir load cell (2 kg) |
+| **SLD** | HX711 #1 DOUT (oil) | PC12 (GPIO) | Data in | SLD oil reservoir load cell (2 kg) |
+| **SLD** | HX711 #2 SCK (water) | PC9 (GPIO) | Clock out | SLD water reservoir load cell (2 kg) |
+| **SLD** | HX711 #2 DOUT (water) | PC10 (GPIO) | Data in | SLD water reservoir load cell (2 kg) |
 
-> **Note:** Pot load cells remain on PC0/PC1 (existing allocation). Pin assignments match [[../09-PCB/02-Driver-PCB-Design|Driver PCB Design]] document. P-ASD solenoid valves are driven by IRLML6344 MOSFETs on the Driver PCB. Pressure sensor shares I2C1 bus with MLX90614 (0x5A) and INA219 (0x40) — ADS1015 at address 0x48.
+> **Note:** Pot load cells remain on PC0/PC1 (existing allocation). Pin assignments match [[../09-PCB/02-Driver-PCB-Design|Driver PCB Design]] document. P-ASD solenoid valves are driven by IRLML6344 MOSFETs on the Driver PCB, with gates controlled by a PCF8574 I2C GPIO expander (addr 0x20) instead of direct STM32 GPIO. I2C1 bus devices: MLX90614 (0x5A), INA219 (0x40), ADS1015 (0x48), PCF8574 (0x20).
 
 ### Dispensing Command Protocol (CM5 → STM32)
 
@@ -456,9 +457,9 @@ Accuracy: ±5% of target weight (significantly better than ASD due to dedicated 
 | DISPENSE_SLD | 0x32 | channel (1 byte: OIL=1, WATER=2), target_weight_g (2 bytes) | ACK + actual_weight_g | Pump liquid, closed-loop via dedicated load cell |
 | PURGE_PASD | 0x38 | cartridge_id (1 byte: 1–6, or 0xFF=all) | ACK | Post-dispense air purge to clear orifice |
 | PRESSURE_STATUS | 0x39 | — | pressure_bar (2 bytes, fixed-point) | Read accumulator pressure |
-| QUERY_WEIGHT | 0x35 | source (1 byte: POT=0, SLD=1) | weight_g (4 bytes) | Read weight from pot or SLD load cells |
+| QUERY_WEIGHT | 0x35 | source (1 byte: POT=0, SLD_OIL=1, SLD_WATER=2) | weight_g (4 bytes) | Read weight from pot or individual SLD load cell |
 | PREFLIGHT | 0x36 | subsystem_mask (1 byte) | status per subsystem | Check if required subsystems are loaded/ready |
-| TARE | 0x37 | source (1 byte: POT=0, SLD=1) | ACK | Zero the specified load cell readings |
+| TARE | 0x37 | source (1 byte: POT=0, SLD_OIL=1, SLD_WATER=2) | ACK | Zero the specified load cell readings |
 
 ## Clog Prevention (P-ASD)
 
@@ -560,7 +561,7 @@ Before starting a recipe, the system verifies all required subsystems:
 
 1. **P-ASD:** Short air pulse into each cartridge, monitor pot weight change — confirms powder present and orifice clear
 2. **CID:** User confirms tray loaded via touchscreen (no automatic check — visual confirmation)
-3. **SLD:** Read dedicated load cell — compare reservoir weight to minimum required for recipe
+3. **SLD:** Read each reservoir's dedicated load cell — compare oil and water levels individually to minimum required for recipe; alert if either is below threshold
 4. Display subsystem status on UI: loaded / insufficient / empty
 5. Block recipe start if any required subsystem is insufficient
 
@@ -646,8 +647,10 @@ For quick cleaning of SLD channels between recipes:
 - [ ] CID limit switches trigger at correct positions
 - [ ] SLD peristaltic pumps deliver consistent flow at calibrated speed
 - [ ] SLD solenoid valves seal completely when de-energized (no drips)
-- [ ] SLD dedicated load cell reads within ±1g of calibration weight
-- [ ] SLD closed-loop dispensing achieves ±5% accuracy
+- [ ] SLD oil reservoir load cell reads within ±1g of calibration weight
+- [ ] SLD water reservoir load cell reads within ±1g of calibration weight
+- [ ] SLD closed-loop dispensing achieves ±5% accuracy (both channels independently)
+- [ ] SLD low-level alert triggers when reservoir weight drops below configured threshold
 - [ ] Pre-flight check correctly identifies empty/insufficient subsystems
 - [ ] All chutes/nozzles direct ingredients into pot center (no spillage)
 - [ ] Auto-rinse cycle clears visible residue from SLD tubing
@@ -673,3 +676,4 @@ For quick cleaning of SLD channels between recipes:
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
 | 2.0 | 2026-02-15 | Manas Pradhan | Rewrite: replaced 6-compartment C1-C6 system with 3 subsystems (ASD, CID, SLD) |
 | 3.0 | 2026-02-16 | Manas Pradhan | Replaced ASD (servo-gated gravity-fed, 3 hoppers) with P-ASD (pneumatic puff-dosing, 6 cartridges) |
+| 4.0 | 2026-02-16 | Manas Pradhan | P-ASD solenoids now controlled via PCF8574 I2C GPIO expander (addr 0x20) on Driver PCB instead of 6× direct STM32 GPIO |

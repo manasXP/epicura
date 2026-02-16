@@ -33,7 +33,7 @@ Design/documentation phase. Comprehensive documentation exists across 35+ docume
 | Display | 10" 1280x800 capacitive | DSI/HDMI to CM5 | Kivy touchscreen UI |
 | P-ASD (Pneumatic Seasoning Dispenser) | 1× 12V diaphragm pump + 6× 12V NC solenoid valves + ADS1015 pressure sensor | PWM+GPIO+I2C from STM32 | Pneumatic puff-dosing, 6× sealed 60 mL cartridges |
 | CID (Coarse Ingredient Dispenser) | 2× 12V DC linear actuators | GPIO+PWM from STM32 | Push-plate slider trays for vegetables, dal, meat |
-| SLD (Standard Liquid Dispenser) | 2× peristaltic pumps + 2× solenoid valves + 1× load cell | PWM+GPIO from STM32 | Closed-loop oil and water dispensing |
+| SLD (Standard Liquid Dispenser) | 2× peristaltic pumps + 2× solenoid valves + 2× 2 kg load cells (one per reservoir) | PWM+GPIO from STM32 | Closed-loop oil and water dispensing + individual level alerts |
 
 ### Interface Constraints
 

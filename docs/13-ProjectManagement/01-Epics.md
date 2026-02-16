@@ -160,7 +160,7 @@ This epic brings all subsystems together into cohesive autonomous cooking. It va
 ### Success Criteria
 - [ ] Recipe YAML schema defined and validated
 - [ ] State machine executes recipes with CV/timeout/weight transitions
-- [ ] ASD (3 servo gates), CID (2 linear actuators), SLD (2 pumps + solenoids + load cell) operational
+- [ ] ASD (3 servo gates), CID (2 linear actuators), SLD (2 pumps + solenoids + 2 load cells) operational
 - [ ] Weight-verified dispensing ±10% accuracy
 - [ ] 5 recipes successfully cooked: Dal Tadka, Jeera Rice, Tomato Soup, Khichdi, Vegetable Curry
 

@@ -611,10 +611,11 @@ As a user, I want the robot to automatically dispense ingredients in precise amo
 - [ ] ASD: 3 seasoning hoppers built (80 mL each, 3D printed PETG) with SG90 servo gates
 - [ ] CID: 2 slide-out trays built (400 mL each) with 12V linear actuators + limit switches
 - [ ] SLD: 2 liquid channels built (peristaltic pumps + solenoid valves + silicone tubing)
-- [ ] SLD: dedicated load cell + HX711 installed under reservoir platform
+- [ ] SLD: 2× dedicated load cells (2 kg) + HX711 installed under oil and water reservoirs
 - [ ] All actuators wired to STM32 (PWM + GPIO)
 - [ ] ASD calibration: open gate → monitor pot weight → close at target ±10%
-- [ ] SLD calibration: start pump → monitor reservoir weight loss → stop at target ±5%
+- [ ] SLD calibration per channel: start pump → monitor individual reservoir weight loss → stop at target ±5%
+- [ ] SLD low-level alert: verify UI/CM5 alert when reservoir drops below threshold
 - [ ] All subsystems tested individually
 - [ ] Integration test: dispense from ASD, CID, and SLD sequentially
 

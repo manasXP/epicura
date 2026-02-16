@@ -226,8 +226,8 @@ typedef struct {
 | 0x30 | DISPENSE_ASD | id, target_g | Seasoning dispense |
 | 0x31 | DISPENSE_CID | id, mode, position | Coarse ingredient dispense |
 | 0x32 | DISPENSE_SLD | channel, target_g | Liquid dispense |
-| 0x35 | QUERY_WEIGHT | source (POT=0, SLD=1) | Read load cell |
-| 0x37 | TARE | source | Zero load cell |
+| 0x35 | QUERY_WEIGHT | source (POT=0, SLD_OIL=1, SLD_WATER=2) | Read load cell |
+| 0x37 | TARE | source (POT=0, SLD_OIL=1, SLD_WATER=2) | Zero load cell |
 
 **Key Response Types (STM32 → CM5):**
 

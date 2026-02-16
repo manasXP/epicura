@@ -339,10 +339,11 @@ This document outlines the comprehensive plan for building a functional Epicura 
 - [ ] Build ASD: 3 seasoning hoppers (3D printed PETG, 80 mL each) with SG90 servo gates
 - [ ] Build CID: 2 slide-out trays (400 mL each) with 12V linear actuators and limit switches
 - [ ] Build SLD: 2 liquid channels (peristaltic pumps + solenoid valves + silicone tubing)
-- [ ] Install SLD dedicated load cell + HX711 under reservoir platform
+- [ ] Install 2× SLD dedicated load cells (2 kg each) + HX711 under oil and water reservoirs
 - [ ] Wire all dispensing actuators to STM32 (PWM + GPIO)
 - [ ] Calibrate ASD dispensing: open gate, monitor pot weight, close at target
-- [ ] Calibrate SLD dispensing: start pump, monitor reservoir weight loss, stop at target
+- [ ] Calibrate SLD dispensing per channel: start pump, monitor individual reservoir weight loss, stop at target
+- [ ] Test SLD low-level alert: verify alert fires when reservoir drops below threshold
 
 ```
 ┌──────────────────────────────────────────────────┐

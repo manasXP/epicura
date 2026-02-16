@@ -223,14 +223,12 @@ STM32G474RE (LQFP-64)
 │  │  50Hz, 500-2500us pulse width                               │
 │  └─────────────────────────────────┘                           │
 │                                                                │
-│  ┌─── ASD Subsystem (Advanced Seasoning Dispenser) ──┐         │
-│  │  PA0  (TIM2_CH1)  ──► ASD-1 SG90 Servo Signal            │
-│  │  PA1  (TIM2_CH2)  ──► ASD-2 SG90 Servo Signal            │
-│  │  PA2  (TIM2_CH3)  ──► ASD-3 SG90 Servo Signal            │
-│  │  PC7  (GPIO)      ──► ASD-1 Vibration Motor (anti-clog)  │
-│  │  PD2  (GPIO)      ──► ASD-2 Vibration Motor (anti-clog)  │
-│  │  PA3  (GPIO)      ──► ASD-3 Vibration Motor (anti-clog)  │
-│  │  50Hz PWM for servos, GPIO for vibration motors          │
+│  ┌─── P-ASD Subsystem (Pneumatic Seasoning Dispenser) ──┐     │
+│  │  PA0  (TIM2_CH1)  ──► P-ASD Diaphragm Pump PWM           │
+│  │  Solenoids V1-V6: PCF8574 I2C GPIO expander              │
+│  │    (I2C1 addr 0x20, on Driver PCB, outputs P0-P5)        │
+│  │  I2C1 (PB6/PB7)  ──► ADS1015 Pressure Sensor (0x48)     │
+│  │                   ──► PCF8574 Solenoid Expander (0x20)    │
 │  └─────────────────────────────────┘                           │
 │                                                                │
 │  ┌─── CID Subsystem (Coarse Ingredients Dispenser) ──┐        │
@@ -660,23 +658,21 @@ System Safety:
 
 The dispensing system comprises three subsystems. See [[../05-Subsystems/03-Ingredient-Dispensing|Ingredient Dispensing System]] for full details.
 
-### ASD — Seasoning Servo & Vibration Motor Wiring
+### P-ASD — Pneumatic Seasoning Dispenser Wiring
 
 ```
-  5V Rail (from Driver PCB MP1584EN #3)
+  12V Rail (from Driver PCB MP1584EN #1)
   │
-  ├──► SG90 ASD-1 VCC  Signal ◄── PA0 (TIM2_CH1) via J_STACK Pin 15
-  ├──► SG90 ASD-2 VCC  Signal ◄── PA1 (TIM2_CH2) via J_STACK Pin 16
-  ├──► SG90 ASD-3 VCC  Signal ◄── PA2 (TIM2_CH3) via J_STACK Pin 17
+  ├──► Diaphragm Pump ◄── PA0 (TIM2_CH1) via J_STACK Pin 15, IRLML6344 MOSFET
   │
-  ├──► Vibration Motor 1 (ERM) ◄── PC7 (GPIO) via J_STACK Pin 18, 2N7002 MOSFET
-  ├──► Vibration Motor 2 (ERM) ◄── PD2 (GPIO) via J_STACK Pin 19, 2N7002 MOSFET
-  └──► Vibration Motor 3 (ERM) ◄── PA3 (GPIO) via J_STACK Pin 20, 2N7002 MOSFET
+  ├──► Solenoid V1-V6 (6×) ◄── PCF8574 P0-P5 (I2C1, addr 0x20)
+  │      PCF8574 on Driver PCB, gates drive IRLML6344 MOSFETs
+  │
+  I2C1 (PB6/PB7 via J_STACK Pins 35-36):
+    ├── ADS1015 (0x48) — Accumulator pressure sensor
+    └── PCF8574 (0x20) — Solenoid GPIO expander
 
-  GND ──► Common ground bus
-  Bulk cap: 220 µF on 5V rail (shared with vibration motors)
-
-  Note: Vibration motors provide anti-clog mechanism (one per hopper)
+  Note: P-ASD uses pneumatic puff-dosing (no servo gates or vibration motors)
 ```
 
 ### CID — Linear Actuator Wiring
@@ -717,20 +713,23 @@ The dispensing system comprises three subsystems. See [[../05-Subsystems/03-Ingr
     SCL ◄── PB6 (I2C1_SCL) via J_STACK Pin 35
     SDA ◄── PB7 (I2C1_SDA) via J_STACK Pin 36
 
-  Note: Dedicated SLD load cell (HX711) not implemented in current design
+  SLD Load Cells (2× 2 kg, one per reservoir):
+    HX711 #1 (oil):   SCK ◄── PC11 (GPIO), DOUT ──► PC12 (GPIO)
+    HX711 #2 (water): SCK ◄── PC9  (GPIO), DOUT ──► PC10 (GPIO)
+    Low-level alert when reservoir weight < configurable threshold
 ```
 
 ### Dispensing Summary
 
 | Subsystem | Actuators | Metering | Min Dispense |
 |-----------|-----------|----------|-------------|
-| ASD (seasonings) | 3× SG90 servo + 3× vibration motor (anti-clog) | Pot load cells (±10%) | ~2 g |
+| P-ASD (seasonings) | 1× diaphragm pump + 6× solenoid valve (PCF8574 I2C) | Pot load cells (±10%) | ~1 g |
 | CID (coarse) | 2× linear actuator (DRV8876 drivers) | Position-based / user pre-measured | Full tray |
-| SLD (liquids) | 2× peristaltic pump (TB6612) + 2× solenoid | Closed-loop via pot load cells | ~5 g |
+| SLD (liquids) | 2× peristaltic pump (TB6612) + 2× solenoid + 2× 2 kg load cell | Closed-loop via dedicated per-reservoir load cells + low-level alerts | ~5 g |
 | Exhaust | 2× 120mm fans (independent PWM control) | Temperature/fume-based control | — |
 
 **J_STACK Connector Organization:**
-- **ASD**: Pins 15-20 (3× servo PWM, 3× vibration motor GPIO)
+- **P-ASD**: Pin 15 (pump PWM); solenoids V1-V6 via PCF8574 on Driver PCB (I2C1, no J_STACK pins needed)
 - **CID**: Pins 21-26 (2× actuator EN/PH, 2× GND)
 - **Exhaust Fans**: Pins 27-28 (FAN1 PWM, FAN2 PWM)
 - **SLD**: Pins 29-36 (2× pump PWM/DIR, 2× solenoid, I2C for INA219)
