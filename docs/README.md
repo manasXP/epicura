@@ -46,9 +46,8 @@ Welcome to the comprehensive documentation for the Epicura autonomous kitchen ro
 14. **[[07-Development/01-Prototype-Development-Plan|Prototype Development Plan]]** - Phased plan from prototype to production (20-24 weeks)
 
 #### 08. Project Management
-15. **[[13-ProjectManagement/01-Epics|Epics]]** - 7 major epics covering foundation, thermal control, robotic manipulation, computer vision, recipe orchestration, UI, and integration
-16. **[[13-ProjectManagement/02-Stories|User Stories]]** - 29 detailed user stories and technical stories with acceptance criteria
-17. **[[13-ProjectManagement/03-Sprints|Sprint Planning]]** - 12 two-week sprints with capacity planning and velocity tracking
+15. **[[13-ProjectManagement/epics/__init|Epics]]** - 12 subsystem-based epics (~58 stories, ~365 points) covering PCB, embedded, thermal, actuation, vision, recipe, UI, backend, iOS, Android, admin, and integration
+16. **[[13-ProjectManagement/sprints/__init|Sprint Calendar]]** - 6-week pre-sprint PCB phase + 12 two-week sprints (30 weeks total)
 
 #### 09. Components (BOM)
 18. **[[08-Components/01-Compute-Module-Components|Compute Module Components]]** - Raspberry Pi CM5, STM32, carrier boards
@@ -129,9 +128,34 @@ docs/
 │   └── 03-Android-App.md                        Kotlin/Compose implementation
 └── 13-ProjectManagement/
     ├── __init.md                                PM overview
-    ├── 01-Epics.md                              7 major epics (EP-001 to EP-007)
-    ├── 02-Stories.md                            29 user stories (246 story points)
-    └── 03-Sprints.md                            12 two-week sprints
+    ├── epics/
+    │   ├── __init.md                            Epic index (12 epics, ~365 points)
+    │   ├── PCB-pcb-design.md                    PCB Design & Fabrication
+    │   ├── EMB-embedded.md                      Embedded Platform (STM32 + CM5)
+    │   ├── THR-thermal.md                       Thermal & Induction Control
+    │   ├── ARM-actuation.md                     Robotic Arm & Dispensing
+    │   ├── CV-vision.md                         Computer Vision
+    │   ├── RCP-recipe.md                        Recipe Engine
+    │   ├── UI-touchscreen.md                    Touchscreen UI (Kivy)
+    │   ├── BE-backend.md                        Cloud Backend (Fastify)
+    │   ├── IOS-ios.md                           iOS App (SwiftUI)
+    │   ├── AND-android.md                       Android App (Kotlin/Compose)
+    │   ├── ADM-admin.md                         Admin Portal (Next.js)
+    │   └── INT-integration.md                   Integration & Validation
+    └── sprints/
+        ├── __init.md                            Sprint calendar (12 sprints)
+        ├── sprint-01.md                         STM32 FreeRTOS, CM5 Yocto, SPI
+        ├── sprint-02.md                         Docker, safety, OTA
+        ├── sprint-03.md                         CAN bus, PID start
+        ├── sprint-04.md                         PID, thermal safety, servo arm
+        ├── sprint-05.md                         P-ASD, CID, backend start
+        ├── sprint-06.md                         SLD, calibration, camera
+        ├── sprint-07.md                         ML model, stage detection
+        ├── sprint-08.md                         Recipe engine, mobile apps
+        ├── sprint-09.md                         State machine, Kivy UI
+        ├── sprint-10.md                         Cooking UI, admin portal
+        ├── sprint-11.md                         Integration & safety testing
+        └── sprint-12.md                         Reliability, launch readiness
 ```
 
 ## Getting Started
@@ -139,9 +163,8 @@ docs/
 ### For Project Managers
 Start with:
 1. [[01-Overview/01-Project-Overview|Project Overview]] - Understand the project scope and target market
-2. [[13-ProjectManagement/01-Epics|Epics]] - 7 major epics covering all development phases
-3. [[13-ProjectManagement/02-Stories|User Stories]] - 29 detailed stories with acceptance criteria and story points
-4. [[13-ProjectManagement/03-Sprints|Sprint Planning]] - 12 two-week sprints with capacity planning
+2. [[13-ProjectManagement/epics/__init|Epics]] - 12 subsystem-based epics (~58 stories, ~365 points)
+3. [[13-ProjectManagement/sprints/__init|Sprint Calendar]] - 6-week pre-sprint PCB phase + 12 two-week sprints
 5. [[07-Development/01-Prototype-Development-Plan|Prototype Development Plan]] - Phased development roadmap (20-24 weeks)
 6. [[03-Software/01-Tech-Stack|Tech Stack]] - Review technology choices
 7. [[06-Compliance/01-Safety-Compliance|Safety & Compliance]] - Understand electrical and food safety requirements
