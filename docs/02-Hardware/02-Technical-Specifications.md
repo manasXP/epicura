@@ -138,9 +138,9 @@ The primary cooking element is a commercial microwave induction surface — a se
 | **Maximum Draw** | <2,000W (1,800W induction + 75W system) |
 | **Fuse Rating** | 10A (IEC C14 inlet with integrated fuse) |
 | **PSU** | Mean Well LRS-75-24 (24V / 3.2A / 76.8W) |
-| **24V Rail** | 24V / 3.2A — main bus from PSU; feeds CMIO+CM5, controller, relay coils |
-| **5V Rail** | 5V (buck from 24V) — CMIO onboard regulator feeds CM5; separate buck for servo rail, LED ring |
-| **3.3V Rail** | 3.3V / 500mA (LDO from CMIO 5V via 40-pin) — STM32, sensors, I2C devices |
+| **24V Rail** | 24V / 3.2A — main bus from PSU; feeds CM5IO+CM5, controller, relay coils |
+| **5V Rail** | 5V (buck from 24V) — CM5IO onboard regulator feeds CM5; separate buck for servo rail, LED ring |
+| **3.3V Rail** | 3.3V / 500mA (LDO from CM5IO 5V via 40-pin) — STM32, sensors, I2C devices |
 | **Standby Power** | <5W (CM5 idle, display off, induction off) |
 | **PSU Type** | Mean Well enclosed AC-DC, single 24V output |
 | **Efficiency** | >87% at full load (Mean Well LRS-75 series) |

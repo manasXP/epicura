@@ -40,14 +40,14 @@ This document provides detailed resource allocation across all project phases, i
 |------|--------------|--------------|----------------|-------------------|
 | -6 | 100% (Controller schematic) | 20% (pin review) | 20% (power review) | 1.4 |
 | -5 | 100% (Driver schematic) | 20% (review) | 40% (buck converter design) | 1.6 |
-| -4 | 100% (CMIO design) | 30% (CM5 integration review) | 10% (final review) | 1.4 |
+| -4 | 100% (CM5IO design) | 30% (CM5 integration review) | 10% (final review) | 1.4 |
 | -3 | 100% (PCB layout all 3 boards) | 10% (DRC review) | 10% (thermal review) | 1.2 |
 | **Subtotal** | **4.0 weeks** | **0.8 weeks** | **0.8 weeks** | **5.6 weeks** |
 
 **Deliverables:**
 - Controller PCB schematic + layout (KiCad files)
 - Driver PCB schematic + layout (KiCad files)
-- CMIO PCB schematic + layout (KiCad files)
+- CM5IO PCB schematic + layout (KiCad files)
 - Gerber files for JLCPCB submission
 - BOM with part numbers (Mouser/Digikey)
 - Assembly drawings
@@ -67,7 +67,7 @@ This document provides detailed resource allocation across all project phases, i
 | **Subtotal** | **0.8 weeks** | **3.0 weeks** | **0.6 weeks** | **4.4 weeks** |
 
 **Deliverables:**
-- Assembled PCBs (10x Controller, 10x Driver, 5x CMIO)
+- Assembled PCBs (10x Controller, 10x Driver, 5x CM5IO)
 - Power-on test reports
 - Continuity and short-circuit checks passed
 - STM32 SWD connectivity verified
@@ -543,7 +543,7 @@ Week 24: Sprint 12 (Validation) ← Integration complete
 ### Pre-Sprint Phase Deliverables (Week 0)
 - [ ] Controller PCB (10 pcs) assembled and powered
 - [ ] Driver PCB (10 pcs) assembled and powered
-- [ ] CMIO PCB (5 pcs) assembled and powered
+- [ ] CM5IO PCB (5 pcs) assembled and powered
 - [ ] Yocto minimal image booting on CM5
 - [ ] STM32 FreeRTOS blinking LED on all Controller PCBs
 - [ ] Complete BOM with Mouser/Digikey part numbers

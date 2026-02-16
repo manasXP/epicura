@@ -48,7 +48,7 @@ As a developer, I need to build and deploy a Yocto Linux image on the Raspberry 
 - Include Python, OpenCV, libcamera, GStreamer in image recipe
 
 #### Dependencies
-- CM5 module + CMIO carrier board procured
+- CM5 module + CM5IO carrier board procured
 - Development workstation with 100GB+ free space
 
 ---

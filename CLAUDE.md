@@ -23,7 +23,7 @@ Design/documentation phase. Comprehensive documentation exists across 35+ docume
 
 | Component | Part | Interface | Purpose |
 |-----------|------|-----------|---------|
-| Carrier Board | CMIO (official Raspberry Pi IO board) | Board-to-board connectors | CM5 carrier with all breakouts |
+| Carrier Board | CM5IO (official Raspberry Pi IO board) | Board-to-board connectors | CM5 carrier with all breakouts |
 | Camera | IMX219 (8MP) or IMX477 (12.3MP) | CSI-2 to CM5 | Food stage detection via CV |
 | IR Thermometer | MLX90614 | I2C to STM32 | Non-contact food surface temp |
 | Load Cells | 4x strain gauge + HX711 | SPI to STM32 | Weight-based dispensing verification |
@@ -47,12 +47,12 @@ Design/documentation phase. Comprehensive documentation exists across 35+ docume
 | Decision | Choice | Rationale |
 |----------|--------|-----------|
 | Compute platform | CM5 (4GB RAM, 64GB eMMC) over Jetson Nano | Lower cost, sufficient for Docker + PostgreSQL + ML, better Linux support |
-| Carrier board | CMIO (official) | Off-the-shelf, all necessary breakouts, no custom PCB needed for prototype |
+| Carrier board | CM5IO (official) | Off-the-shelf, all necessary breakouts, no custom PCB needed for prototype |
 | Motor controller | STM32G4 over ESP32 | Hardware FPU for PID, MISRA C compliance, CAN peripheral |
 | Database | PostgreSQL (Docker) over SQLite | Schema consistency with cloud, JSONB support, full-text search, production-grade |
 | Containerization | Docker Compose | Modular services, easy updates, consistent dev/prod environments |
 | Camera | IMX219 (prototype) | $25 vs $50, 8MP sufficient for food classification |
-| Power supply | Mean Well LRS-75-24 (24V single output) | Single reliable PSU feeds both CMIO+CM5 and controller; downstream buck/LDO for 5V/3.3V |
+| Power supply | Mean Well LRS-75-24 (24V single output) | Single reliable PSU feeds both CM5IO+CM5 and controller; downstream buck/LDO for 5V/3.3V |
 | Heating module | Commercial microwave surface with CAN bus | Eliminates custom IGBT driver; pre-certified safety; CAN control |
 | UI framework | Kivy over Qt6/QML | Python-only development (no C++/QML), GPU acceleration, sufficient widgets; Qt6/QML is overkill (medical-grade UX) |
 | Mobile apps | Native (SwiftUI + Kotlin/Compose) over Flutter | Direct BLE/camera APIs, platform-native UX, reliable background processing |

@@ -39,7 +39,7 @@ This document details the compute subsystem components for the Epicura kitchen r
 | Component | Part Number | Qty | Unit Price | Subtotal | Supplier | Notes |
 |-----------|-------------|-----|------------|----------|----------|-------|
 | Raspberry Pi CM5 (4GB RAM, 64GB eMMC) | SC1441 | 1 | $65.00 | $65.00 | RPi Foundation | Core compute: AI inference, vision, UI, recipe engine, Docker containers |
-| CMIO Board (carrier) | SC1439 | 1 | $20.00 | $20.00 | RPi Foundation | Official CM5 carrier board (CMIO) with all breakouts |
+| CM5IO Board (carrier) | SC1439 | 1 | $20.00 | $20.00 | RPi Foundation | Official CM5 carrier board (CM5IO) with all breakouts |
 | STM32G474RE Nucleo | NUCLEO-G474RE | 1 | $18.00 | $18.00 | STMicroelectronics / Mouser | Motor controller dev board; CAN-FD + advanced timers |
 | 10.1" IPS Display (1280x800) | Waveshare 10.1" HDMI | 1 | $80.00 | $80.00 | Waveshare / Amazon | HDMI input + I2C capacitive touch; prototype display |
 | (Storage on eMMC) | - | - | - | - | Included | 64GB eMMC on CM5 module for OS and data |
@@ -54,7 +54,7 @@ This document details the compute subsystem components for the Epicura kitchen r
 | Item | Cost |
 |------|------|
 | Raspberry Pi CM5 (4GB, 64GB eMMC) | $65.00 |
-| CMIO Board | $20.00 |
+| CM5IO Board | $20.00 |
 | STM32G474RE Nucleo | $18.00 |
 | 10.1" Display | $80.00 |
 | Cables | $13.00 |
@@ -73,7 +73,7 @@ This document details the compute subsystem components for the Epicura kitchen r
   - Cooking logs and telemetry (~5GB)
   - Firmware updates (A/B partitions) (~2GB)
   - Remaining space for future expansion (~40GB+)
-- CMIO carrier board provides all necessary breakouts without custom PCB
+- CM5IO carrier board provides all necessary breakouts without custom PCB
 - CM5 provides dual CSI-2 camera interfaces (one used, one spare)
 - WiFi 802.11ac + Bluetooth 5.0 built-in (no external wireless module needed)
 - 40-pin GPIO header provides UART, I2C, SPI for STM32 bridge communication
@@ -95,7 +95,7 @@ This document details the compute subsystem components for the Epicura kitchen r
 
 | Item | Prototype | Production |
 |------|-----------|------------|
-| CM5 carrier | CMIO Board | CMIO Board or custom PCB |
+| CM5 carrier | CM5IO Board | CM5IO Board or custom PCB |
 | STM32 | Nucleo dev board | Bare STM32G474RE on controller PCB |
 | Display | Standalone HDMI | OEM DSI panel, bezel-mounted |
 | Storage | 64GB eMMC on CM5 | 64GB/128GB eMMC on CM5 |

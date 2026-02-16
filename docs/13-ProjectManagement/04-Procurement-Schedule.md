@@ -84,14 +84,14 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-#### CMIO Board (CM5 Carrier) Components
+#### CM5IO Board (CM5 Carrier) Components
 
 | Item | Part Number | Description | Qty | Supplier | Unit Cost | Lead Time | Order By |
 |------|-------------|-------------|-----|----------|-----------|-----------|----------|
 | PCB | Custom 4L 160x90mm | FR4 ENIG, CM5 footprint | 5 | JLCPCB | $15/ea | 3-4 weeks | Week -6 |
 | - | CM5 carrier reference BOM | Connectors, power, GPIO | 1 | Mouser/Digikey | $80 | 1-2 weeks | Week -7 |
 
-**CMIO Total:** ~$155 (5 boards + components)
+**CM5IO Total:** ~$155 (5 boards + components)
 
 ---
 
@@ -101,7 +101,7 @@ Week 0: Sprint 1 starts with tested PCBs ready
 |-------|-------|----------|-----------|-------|------------|-----------|
 | Controller PCB | 4L, 160x90mm, ENIG, 1oz Cu | 10 | $9 | $90 | JLCPCB | 3-4 weeks |
 | Driver PCB | 4L, 160x90mm, ENIG, 2oz Cu outer | 10 | $11 | $110 | JLCPCB | 3-4 weeks |
-| CMIO Board | 4L, 160x90mm, ENIG, 1oz Cu | 5 | $15 | $75 | JLCPCB | 3-4 weeks |
+| CM5IO Board | 4L, 160x90mm, ENIG, 1oz Cu | 5 | $15 | $75 | JLCPCB | 3-4 weeks |
 
 **PCB Fabrication Total:** $275 (includes shipping DHL Express ~$30)
 
@@ -116,7 +116,7 @@ Week 0: Sprint 1 starts with tested PCBs ready
 | Item | Part Number | Description | Qty | Supplier | Unit Cost | Lead Time | Order By |
 |------|-------------|-------------|-----|----------|-----------|-----------|----------|
 | Raspberry Pi CM5 4GB | CM5004000 | Compute Module 5, 4GB RAM | 2 | Approved RPi Distributor | $45 | 2-4 weeks | Week -4 |
-| CM5 IO Board | CM5IO | Official IO board (if not using CMIO) | 1 | Approved RPi Distributor | $20 | 2-4 weeks | Week -4 |
+| CM5 IO Board | CM5IO | Official IO board (if not using CM5IO) | 1 | Approved RPi Distributor | $20 | 2-4 weeks | Week -4 |
 | microSD Card | SDSQXAV-032G-GN6MA | SanDisk Extreme 32GB | 2 | Amazon B06XWMQ81P | $8 | 2 days | Week 0 |
 | USB-C Power Supply | T6716DV | Anker 30W PD USB-C | 1 | Amazon B08T5QVTKW | $18 | 2 days | Week 0 |
 | NUCLEO-G474RE | NUCLEO-G474RE | STM32 dev board (backup) | 1 | Mouser 511-NUCLEO-G474RE | $18 | 1-2 weeks | Week -2 |
@@ -331,7 +331,7 @@ Week 0: Sprint 1 starts with tested PCBs ready
 **Single Combined Order:**
 - Controller PCB 4L 160x90mm ENIG (10 pcs)
 - Driver PCB 4L 160x90mm ENIG 2oz Cu (10 pcs)
-- CMIO PCB 4L 160x90mm ENIG (5 pcs)
+- CM5IO PCB 4L 160x90mm ENIG (5 pcs)
 - Assembly service (optional): add $150-300
 - DHL Express shipping: $30
 - **Total:** $275 PCBs only, **$425-575 with assembly**
@@ -435,10 +435,10 @@ Week 0: Sprint 1 starts with tested PCBs ready
 - [ ] Order all passive components (resistors, caps, inductors) from Mouser
 - [ ] Order connector kits from Amazon
 - [ ] Order MLX90614, load cells from respective suppliers
-- [ ] Finalize CMIO board BOM and add to Mouser cart
+- [ ] Finalize CM5IO board BOM and add to Mouser cart
 
 ### Week -6
-- [ ] Submit PCB fabrication order to JLCPCB (Controller + Driver + CMIO)
+- [ ] Submit PCB fabrication order to JLCPCB (Controller + Driver + CM5IO)
 - [ ] Decide on assembly service (add $150-300 but saves 2-3 days)
 - [ ] Verify all component inventories match PCB BOM
 

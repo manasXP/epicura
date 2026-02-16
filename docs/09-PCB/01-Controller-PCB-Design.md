@@ -17,10 +17,10 @@ This document covers the design of the custom controller PCB for Epicura. This b
 |------|--------|-------|
 | **Controller PCB** (this document) | Custom design required | STM32G474RE + peripherals, 160x90mm |
 | **Driver PCB** | Custom design required | Power conversion + actuator drivers (see [[Driver-PCB-Design]]) |
-| **CM5 IO Board (CMIO)** | Custom design required | CM5 carrier board, 160x90mm to match stack |
+| **CM5 IO Board (CM5IO)** | Custom design required | CM5 carrier board, 160x90mm to match stack |
 | **Microwave induction surface** | Commercial module with CAN port (see [[../05-Subsystems/09-Induction-Heating\|Induction Heating]]) | Self-contained coil + driver; controlled via CAN bus |
 
-The three boards (CMIO, Controller, Driver) form a stackable architecture connected via 2x20-pin 2.54mm board-to-board headers, all sharing a uniform 160x90mm footprint. The Controller PCB sits in the middle of the stack — it connects upward to the CMIO board via SPI (J1) and downward to the Driver PCB via a stacking connector (J_STACK). All real-time control, sensor acquisition, and safety monitoring runs on this controller board. Servo PWM and actuator GPIO signals pass through J_STACK to the Driver PCB where power electronics drive the actual actuators.
+The three boards (CM5IO, Controller, Driver) form a stackable architecture connected via 2x20-pin 2.54mm board-to-board headers, all sharing a uniform 160x90mm footprint. The Controller PCB sits in the middle of the stack — it connects upward to the CM5IO board via SPI (J1) and downward to the Driver PCB via a stacking connector (J_STACK). All real-time control, sensor acquisition, and safety monitoring runs on this controller board. Servo PWM and actuator GPIO signals pass through J_STACK to the Driver PCB where power electronics drive the actual actuators.
 
 ---
 
@@ -204,12 +204,12 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 
 ### Input
 
-The controller PCB receives 5V DC from the CMIO board's 40-pin GPIO connector (pins 2/4: 5V, pins 6/9/14/20/25/30/34/39: GND). A 3.3V LDO regulates this down for the STM32 and all 3.3V peripherals. No onboard buck converter is needed — the CMIO board handles 24V→5V regulation from the Mean Well PSU.
+The controller PCB receives 5V DC from the CM5IO board's 40-pin GPIO connector (pins 2/4: 5V, pins 6/9/14/20/25/30/34/39: GND). A 3.3V LDO regulates this down for the STM32 and all 3.3V peripherals. No onboard buck converter is needed — the CM5IO board handles 24V→5V regulation from the Mean Well PSU.
 
 ### Regulator Circuit
 
 ```
-5V from CMIO 40-pin (pins 2,4)
+5V from CM5IO 40-pin (pins 2,4)
     │
     ├──── C1: 10uF ceramic (input bypass)
     │
@@ -640,7 +640,7 @@ Material: FR4 (Tg 150°C minimum)
 
 ### Board Dimensions
 
-- **Target size:** 160mm x 90mm (matches CMIO and Driver PCB in 3-board stack)
+- **Target size:** 160mm x 90mm (matches CM5IO and Driver PCB in 3-board stack)
 - **Mounting:** 4x M3 mounting holes at corners (3.2mm drill), positions match stack
 - **Connector placement:** SPI (J1) and sensors on board edges; J_STACK centered on one long edge (bottom side, mates with Driver PCB)
 - **Layer 2 GND plane:** Continuous, no cuts or splits under STM32

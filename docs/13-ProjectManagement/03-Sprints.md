@@ -134,16 +134,16 @@ As a hardware engineer, I need to fabricate and assemble the Controller and Driv
 - [ ] PCB orders placed with JLCPCB (or equivalent):
   - Controller PCB: 10 pcs, 4-layer, 160x90mm, ENIG, 1.6mm thick
   - Driver PCB: 10 pcs, 4-layer, 160x90mm, ENIG, 2oz outer Cu
-  - CMIO Board: 5 pcs, 4-layer, 160x90mm, ENIG (CM5 carrier)
+  - CM5IO Board: 5 pcs, 4-layer, 160x90mm, ENIG (CM5 carrier)
 - [ ] All components procured and received:
   - Controller PCB BOM (~$115 for 10 boards with spares)
   - Driver PCB BOM (~$180 for 10 boards with spares)
-  - CMIO BOM (~$155 for 5 boards)
+  - CM5IO BOM (~$155 for 5 boards)
 - [ ] PCBs received and visually inspected (no defects)
 - [ ] Assembly completed (SMT reflow + through-hole):
   - Controller PCB: 3 boards fully assembled
   - Driver PCB: 3 boards fully assembled
-  - CMIO Board: 2 boards fully assembled
+  - CM5IO Board: 2 boards fully assembled
 - [ ] Power-on testing passed for all assembled boards:
   - 3.3V rail measures 3.3V ±3% under 100mA load
   - 12V, 6.5V, 5V rails measure correctly ±3% (Driver PCB)
@@ -152,7 +152,7 @@ As a hardware engineer, I need to fabricate and assemble the Controller and Driv
 - [ ] Continuity testing complete (all connectors, signals)
 - [ ] Basic I/O validated:
   - STM32 GPIO toggle (blink LED) on Controller PCB
-  - CM5 boots to Linux prompt on CMIO
+  - CM5 boots to Linux prompt on CM5IO
   - Buck converters regulate properly under 500mA dummy load (Driver PCB)
 
 #### Technical Notes
@@ -178,7 +178,7 @@ As a hardware engineer, I need to fabricate and assemble the Controller and Driv
 #### Definition of Done
 - [ ] 3x Controller PCBs powered and responding to SWD debugger
 - [ ] 3x Driver PCBs powered with all rails within spec
-- [ ] 2x CMIO boards booting CM5 to Linux
+- [ ] 2x CM5IO boards booting CM5 to Linux
 - [ ] All test results documented in git repository
 - [ ] Known issues list created (minor rework if needed)
 
@@ -193,7 +193,7 @@ By Week 0 (Sprint 1 start), the following must be complete:
 - [ ] **Hardware:**
   - 3 functional Controller PCBs (STM32 programmed, basic I/O verified)
   - 3 functional Driver PCBs (power rails stable, actuators connectable)
-  - 2 functional CMIO boards (CM5 booting Linux)
+  - 2 functional CM5IO boards (CM5 booting Linux)
   - Stacking connector tested (all 3 boards mate correctly)
 
 - [ ] **Documentation:**
@@ -768,7 +768,7 @@ Week 24: Project Complete
 
 **Pre-Sprint Phase (Weeks -6 to 0):**
 - Week -6 to -4: Controller + Driver PCB design (serial, PCB engineer)
-- Week -4: CMIO PCB design (can overlap with layout work)
+- Week -4: CM5IO PCB design (can overlap with layout work)
 - Week -3 to 0: Fabrication (JLCPCB) + procurement (parallel)
 
 **Sprint Phase (Weeks 7-18):**
@@ -916,7 +916,7 @@ Story Points
 - [ ] Begin Driver PCB schematic
 
 ### Week -6
-- [ ] Complete all PCB layouts (Controller, Driver, CMIO)
+- [ ] Complete all PCB layouts (Controller, Driver, CM5IO)
 - [ ] Submit Gerber files to JLCPCB
 - [ ] Confirm component orders placed
 

@@ -41,7 +41,7 @@ An autonomous countertop kitchen robot that cooks one-pot meals using AI vision,
 |-----------|------|---------|
 | Compute (AI) | Raspberry Pi CM5 (4GB, 64GB eMMC) | Vision, recipe engine, UI, cloud sync |
 | Compute (Control) | STM32G474 (Cortex-M4F, 170 MHz) | PID, servo driver, sensor polling, safety |
-| Carrier Board | CMIO (official RPi IO board) | CM5 carrier with all breakouts |
+| Carrier Board | CM5IO (official RPi IO board) | CM5 carrier with all breakouts |
 | Camera | IMX219 (8MP) | Food stage detection via CV |
 | IR Thermometer | MLX90614 | Non-contact food surface temp |
 | Load Cells | 4× strain gauge + HX711 | Weight-based dispensing verification |

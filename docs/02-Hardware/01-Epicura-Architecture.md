@@ -98,7 +98,7 @@ This document provides the comprehensive hardware architecture, wiring diagrams,
 | Piezo Buzzer | 5V active | PWM | STM32 PA11 via MOSFET | Audio alerts |
 | Microwave Induction Surface | Commercial module w/ CAN | CAN 2.0B (500kbps) | STM32 FDCAN1 (PB8/PB9) | Self-contained induction heating with internal coil, driver, and safety |
 | 10" Touchscreen | Generic DSI/HDMI 10.1" IPS | DSI or HDMI + I2C | CM5 DSI/HDMI + I2C | User interface display |
-| PSU Module | Mean Well LRS-75-24 | AC-DC 24V | AC mains input | 24V DC for CMIO, controller, servos |
+| PSU Module | Mean Well LRS-75-24 | AC-DC 24V | AC mains input | 24V DC for CM5IO, controller, servos |
 | Safety Relay | Omron G5V-2 or equiv. | GPIO (via MOSFET) | STM32 GPIO | Induction mains disconnect |
 | LED Ring | WS2812B strip (12-16 LEDs) | SPI/GPIO data line | CM5 or STM32 GPIO | Pot illumination for camera |
 | E-Stop Button | Normally-closed mushroom | GPIO (interrupt) | STM32 GPIO + relay | Emergency power cutoff |
@@ -124,13 +124,13 @@ This document provides the comprehensive hardware architecture, wiring diagrams,
 | Operating System | Yocto Linux (custom BSP) |
 | Form Factor | CM4-compatible, 55x40mm |
 
-### Carrier Board Design (CMIO)
+### Carrier Board Design (CM5IO)
 
-The CM5 mounts on the CMIO (Raspberry Pi Compute Module IO Board) carrier that breaks out:
+The CM5 mounts on the CM5IO (Raspberry Pi Compute Module IO Board) carrier that breaks out:
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
-│              CMIO (CM5 Carrier Board)                          │
+│              CM5IO (CM5 Carrier Board)                          │
 │                                                                │
 │  ┌──────────────────┐                                          │
 │  │  Raspberry Pi CM5 │                                         │
@@ -555,7 +555,7 @@ AC Mains (220-240V 50Hz)
      │           │           │
      ▼           ▼           ▼
 ┌─────────┐ ┌─────────┐ ┌─────────┐
-│ CMIO    │ │ Buck    │ │ Direct  │
+│ CM5IO    │ │ Buck    │ │ Direct  │
 │ Board   │ │ 24V→5V  │ │ 24V     │
 │ (24V in)│ │ (servo  │ │ safety  │
 │ Onboard │ │  rail,  │ │ relay,  │
@@ -579,7 +579,7 @@ AC Mains (220-240V 50Hz)
 Note: Microwave induction surface has its own AC power
 inlet (not through the 24V PSU). The PSU only feeds
 logic, sensors, servos, and display. Controller PCB is
-powered via the CMIO board's 40-pin connector (5V rail).
+powered via the CM5IO board's 40-pin connector (5V rail).
 STM32 controls the module via CAN bus (FDCAN1).
 ```
 
@@ -601,8 +601,8 @@ STM32 controls the module via CAN bus (FDCAN1).
 | Rail | Subsystem | Typical (W) | Peak (W) | Notes |
 |------|-----------|-------------|----------|-------|
 | AC direct | Microwave induction surface | 600 | 1,800 | Self-contained module, own AC inlet |
-| 24V (via CMIO reg) | CM5 compute module | 8 | 15 | CMIO onboard buck to 5V, includes eMMC, WiFi, camera |
-| 24V (via CMIO reg) | Display backlight | 3 | 5 | Fed from CMIO board 5V/12V rail |
+| 24V (via CM5IO reg) | CM5 compute module | 8 | 15 | CM5IO onboard buck to 5V, includes eMMC, WiFi, camera |
+| 24V (via CM5IO reg) | Display backlight | 3 | 5 | Fed from CM5IO board 5V/12V rail |
 | 24V → 5V buck | DS3225 servo | 3 | 12 | 5-7.4V via buck, peak during stall |
 | 24V → 5V buck | ASD SG90 servos (x3) | 0.5 | 3 | 4.8-6V via same buck |
 | 24V → 12V | CID linear actuators (x2) | 0 | 5 | 12V, only during dispense |
@@ -611,8 +611,8 @@ STM32 controls the module via CAN bus (FDCAN1).
 | 24V → 5V buck | LED ring (WS2812B) | 2 | 5 | 16 LEDs at partial brightness |
 | 24V direct | Safety relay coil | 0.5 | 1 | Mains disconnect for microwave surface |
 | 24V → 12V | Exhaust fans (x2) | 1 | 6 | 12V DC, 120mm, 0.3-0.5A each |
-| CMIO 5V → 3.3V | STM32G474RE | 0.3 | 0.5 | Controller PCB via CMIO 40-pin, LDO to 3.3V |
-| CMIO 5V → 3.3V | MLX90614 + HX711 | 0.05 | 0.1 | Low-power I2C/SPI devices |
+| CM5IO 5V → 3.3V | STM32G474RE | 0.3 | 0.5 | Controller PCB via CM5IO 40-pin, LDO to 3.3V |
+| CM5IO 5V → 3.3V | MLX90614 + HX711 | 0.05 | 0.1 | Low-power I2C/SPI devices |
 | - | Regulator losses | 5 | 10 | Buck + LDO inefficiency |
 | **24V PSU Total** | | **~25W** | **~62W** | **Within 76.8W PSU capacity** |
 | **System Total (incl. induction)** | | **~625W** | **~1,862W** | **Within 2kW limit** |

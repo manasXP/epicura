@@ -41,7 +41,7 @@ Epicura uses a dual-processor architecture with clearly separated responsibiliti
 | Display | MIPI DSI (for touchscreen) or HDMI |
 | Connectivity | WiFi 802.11ac, Bluetooth 5.0, GbE |
 | GPIO | 28x GPIO, UART, SPI, I2C |
-| Carrier Board | CMIO (Raspberry Pi Compute Module IO Board) |
+| Carrier Board | CM5IO (Raspberry Pi Compute Module IO Board) |
 
 ### Operating System & Container Architecture
 

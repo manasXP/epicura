@@ -287,7 +287,7 @@ See [[04-MPU-Functional-Specification#5.1 SPI Protocol]] for full frame definiti
 
 ### 6.1 Power Supply
 
-- Input: 5 V from CMIO 40-pin (or direct from Driver PCB 5 V rail)
+- Input: 5 V from CM5IO 40-pin (or direct from Driver PCB 5 V rail)
 - LDO: AMS1117-3.3 (SOT-223), 5 V → 3.3 V @ 800 mA max
 - Decoupling: 10 µF input, 10 µF output, 100 nF per VDD pin
 - Typical consumption: ~0.5 W (170 MHz, all peripherals active)
@@ -373,7 +373,7 @@ See [[04-MPU-Functional-Specification#5.1 SPI Protocol]] for full frame definiti
 - Controller PCB (160×90 mm) provides STM32 + LDO + connectors
 - Driver PCB (160×90 mm) provides buck converters, H-bridges, MOSFETs
 - Stacking connector (J_STACK, 2×20) bridges Controller ↔ Driver
-- CMIO provides SPI connection to CM5
+- CM5IO provides SPI connection to CM5
 
 ### 9.2 Firmware Dependencies
 

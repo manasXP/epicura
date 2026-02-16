@@ -9,7 +9,7 @@ aliases: [CM5 Spec, MPU Spec]
 > **Document ID:** EPIC-SW-MPU-001
 > **Processor:** BCM2712, Quad-core Cortex-A76 @ 2.4 GHz
 > **RAM / Storage:** 4 GB LPDDR4X / 64 GB eMMC
-> **Carrier Board:** Raspberry Pi CMIO (official IO board)
+> **Carrier Board:** Raspberry Pi CM5IO (official IO board)
 > **Related:** [[05-MCU-Functional-Specification]], [[02-Controller-Software-Architecture]], [[01-Tech-Stack]]
 
 ---
@@ -29,7 +29,7 @@ The CM5 is the main application processor for Epicura. It runs Yocto Linux with 
 | Camera | MIPI CSI-2 2-lane (IMX219 8 MP or IMX477 12.3 MP) |
 | Display | DSI/HDMI — 10" 1280×800 capacitive touch |
 | Networking | Wi-Fi 5, BLE 5.0 (on-module) |
-| Power | 5 V via CMIO, ~15 W typical (CM5 + display) |
+| Power | 5 V via CM5IO, ~15 W typical (CM5 + display) |
 
 ---
 
@@ -121,7 +121,7 @@ The CM5 is the main application processor for Epicura. It runs Yocto Linux with 
 
 ## 3 Hardware Interfaces
 
-### 3.1 GPIO Allocation (via CMIO 40-pin header)
+### 3.1 GPIO Allocation (via CM5IO 40-pin header)
 
 | GPIO | Function | Direction | Notes |
 |------|----------|-----------|-------|
@@ -136,7 +136,7 @@ The CM5 is the main application processor for Epicura. It runs Yocto Linux with 
 
 ### 3.2 Camera (CSI-2)
 
-- Connector: 15-pin FFC on CMIO
+- Connector: 15-pin FFC on CM5IO
 - Interface: MIPI CSI-2, 2-lane
 - Cable length: ≤150 mm (signal integrity)
 - Sensor: IMX219 (prototype) or IMX477 (production option)
@@ -149,9 +149,9 @@ The CM5 is the main application processor for Epicura. It runs Yocto Linux with 
 
 ### 3.4 Power
 
-- Input: 5 V from CMIO 40-pin header (sourced from 24 V → 5 V buck on Driver PCB)
+- Input: 5 V from CM5IO 40-pin header (sourced from 24 V → 5 V buck on Driver PCB)
 - Typical draw: ~15 W (CM5 + display combined)
-- No separate power connector; all power via CMIO carrier
+- No separate power connector; all power via CM5IO carrier
 
 ---
 
@@ -323,9 +323,9 @@ The CM5 is **not** the primary safety controller — the STM32 owns all safety-c
 
 ### 9.1 Hardware Dependencies
 
-- CMIO carrier board provides 5 V power, CSI-2, DSI, SPI, I2C, GPIO breakout
+- CM5IO carrier board provides 5 V power, CSI-2, DSI, SPI, I2C, GPIO breakout
 - Controller PCB (STM32) connects via SPI (PB12–15 on STM32 side)
-- Driver PCB provides 5 V buck converter feeding CMIO
+- Driver PCB provides 5 V buck converter feeding CM5IO
 - Camera FFC cable ≤150 mm
 
 ### 9.2 Software Dependencies
