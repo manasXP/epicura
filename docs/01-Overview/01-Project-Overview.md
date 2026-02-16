@@ -57,7 +57,7 @@ This project encompasses the following major subsystems:
 - Anomaly detection for burning, boiling over, or ingredient issues
 
 ### User Experience
-- 10" capacitive touchscreen with Qt-based interface for recipe browsing and cooking status
+- 10" capacitive touchscreen with Kivy-based interface for recipe browsing and cooking status
 - Native companion mobile apps (SwiftUI + Jetpack Compose) for remote recipe selection, live camera feed, and notifications
 - Multi-language support: English, Hindi, Tamil, Telugu (extensible to more regional languages)
 - Live camera feed on both touchscreen and mobile app during cooking
@@ -101,7 +101,7 @@ This project encompasses the following major subsystems:
 │  │  ┌────────────▼─────────────────┐    │  │  ┌────────────▼────────┐   │  │
 │  │  │  Recipe State Machine        │    │  │  │  PID Temperature    │   │  │
 │  │  │  CV Pipeline (TFLite)        │◄───┼──┼─►│  Servo Motor Driver │   │  │
-│  │  │  Qt Touchscreen UI           │UART│  │  │  Sensor Polling     │   │  │
+│  │  │  Kivy Touchscreen UI         │UART│  │  │  Sensor Polling     │   │  │
 │  │  │  Cloud Sync / OTA            │/SPI│  │  │  Safety Watchdog    │   │  │
 │  │  │  SQLite Recipe DB            │    │  │  │  Dispensing Control │   │  │
 │  │  └──────────────────────────────┘    │  │  └─────────────────────┘   │  │
@@ -111,7 +111,7 @@ This project encompasses the following major subsystems:
 │     ┌───────▼──────┐ ┌───▼──────────┐    ┌───────▼────┐ ┌───▼──────────┐  │
 │     │ 10" Touch    │ │ HD Camera    │    │ Induction  │ │ Servo Arm    │  │
 │     │ Display      │ │ (1080p)      │    │ Heater     │ │ (Stirring)   │  │
-│     │ (Qt UI)      │ │              │    │ (1,800W)   │ │              │  │
+│     │ (Kivy UI)    │ │              │    │ (1,800W)   │ │              │  │
 │     └──────────────┘ └──────────────┘    └────────────┘ └──────────────┘  │
 │                                                                            │
 │     ┌──────────────┐ ┌──────────────┐    ┌────────────┐ ┌──────────────┐  │

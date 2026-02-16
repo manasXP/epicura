@@ -238,7 +238,7 @@ Comprehensive weekly reporting template for tracking progress, budget, risks, an
 - [[../02-Hardware/01-Epicura-Architecture|System Architecture]] — Block diagrams
 
 ### Software Architecture
-- [[../03-Software/01-Tech-Stack|Tech Stack]] — Yocto, FreeRTOS, Qt, Flutter
+- [[../03-Software/01-Tech-Stack|Tech Stack]] — Yocto, FreeRTOS, Kivy, Swift/Kotlin
 - [[../03-Software/02-Controller-Software-Architecture|Controller Software]] — Recipe engine
 
 ### Project Planning

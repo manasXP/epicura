@@ -16,7 +16,7 @@ Design/documentation phase. Comprehensive documentation exists across 35+ docume
 
 | Component | Processor | Role |
 |-----------|-----------|------|
-| **CM5** | Raspberry Pi CM5 (BCM2712, Cortex-A76 quad-core) | AI/vision, recipe engine, Qt UI, cloud sync |
+| **CM5** | Raspberry Pi CM5 (BCM2712, Cortex-A76 quad-core) | AI/vision, recipe engine, Kivy UI, cloud sync |
 | **STM32** | STM32G474 (Cortex-M4F, 170 MHz) | PID control, servo driver, sensor polling, safety watchdog |
 
 ### Shared Components (both models)
@@ -30,7 +30,7 @@ Design/documentation phase. Comprehensive documentation exists across 35+ docume
 | NTC Thermistors | 100K NTC | ADC to STM32 | Coil and ambient temp monitoring |
 | Microwave Induction Surface | 1,800W commercial module | CAN bus to STM32 FDCAN1 | Cooking heat source (self-contained coil + driver) |
 | Servo Arm | DS3225 (25kg·cm) | PWM from STM32 | Stirring and scraping |
-| Display | 10" 1280x800 capacitive | DSI/HDMI to CM5 | Qt touchscreen UI |
+| Display | 10" 1280x800 capacitive | DSI/HDMI to CM5 | Kivy touchscreen UI |
 | ASD (Seasoning Dispenser) | 3× SG90 micro servos | PWM from STM32 | Servo-gated gravity-fed seasoning hoppers |
 | CID (Coarse Ingredient Dispenser) | 2× 12V DC linear actuators | GPIO+PWM from STM32 | Push-plate slider trays for vegetables, dal, meat |
 | SLD (Standard Liquid Dispenser) | 2× peristaltic pumps + 2× solenoid valves + 1× load cell | PWM+GPIO from STM32 | Closed-loop oil and water dispensing |

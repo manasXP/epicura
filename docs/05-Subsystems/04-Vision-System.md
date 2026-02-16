@@ -363,23 +363,26 @@ ELSE:
 
 | Destination | Protocol | Resolution | Frame Rate | Latency Target |
 |-------------|----------|------------|------------|----------------|
-| Touchscreen (Qt UI) | GStreamer pipeline (local) | 1080p or 720p | 15 fps | <100ms |
+| Touchscreen (Kivy UI) | Kivy Camera widget (local) | 1080p or 720p | 15 fps | <100ms |
 | Mobile App | MJPEG over HTTP or WebRTC | 720p | 15 fps | <500ms (LAN), <2s (WAN) |
 | CV Inference | Direct memory buffer | 224x224 (cropped) | 2 fps | <50ms |
 
-### GStreamer Pipeline (Touchscreen)
+### Kivy Camera Widget (Touchscreen)
 
-```bash
-# Camera -> H264 encode -> Qt overlay display
-gst-launch-1.0 \
-  libcamerasrc ! \
-  video/x-raw,width=1280,height=720,framerate=15/1 ! \
-  videoconvert ! \
-  v4l2h264enc ! \
-  h264parse ! \
-  queue ! \
-  qtoverlay ! \
-  autovideosink
+```python
+# Kivy Camera widget for live CSI-2 feed on touchscreen
+from kivy.uix.camera import Camera
+from kivy.uix.floatlayout import FloatLayout
+
+class CookingCameraView(FloatLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.camera = Camera(
+            resolution=(1280, 720),
+            play=True,
+            index=0  # CSI-2 camera device
+        )
+        self.add_widget(self.camera)
 ```
 
 ### MJPEG Streaming (Mobile App)

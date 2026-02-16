@@ -675,7 +675,7 @@ As a product owner, I want to validate that 5 recipes cook successfully end-to-e
 As a user, I want a touchscreen interface so that I can select recipes, monitor cooking, and adjust settings without using a mobile app.
 
 #### Acceptance Criteria
-- [ ] Qt6/QML or LVGL framework set up on CM5
+- [ ] Kivy framework set up on CM5
 - [ ] 5 core screens implemented:
   1. **Home:** Recipe selection grid with images
   2. **Recipe Detail:** Ingredients, servings, estimated time, start button
@@ -688,7 +688,7 @@ As a user, I want a touchscreen interface so that I can select recipes, monitor 
 - [ ] Visual design polished (fonts, colors, icons)
 
 #### Technical Notes
-- Use Qt6 for richer widgets and camera integration
+- Use Kivy for Python-native widgets and camera integration
 
 #### Dependencies
 - ST-001 (CM5 platform)

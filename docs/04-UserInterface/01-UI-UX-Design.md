@@ -343,38 +343,27 @@ status: Draft
 **Python i18n Workflow:**
 1. Mark all UI strings with gettext `_()` function
 2. Run `xgettext` to extract strings into `.po` translation files
-3. Translate using Qt Linguist tool
-4. Compile `.ts` to binary `.qm` files with `lrelease`
-5. Load appropriate `.qm` at runtime based on user preference
+3. Translate `.po` files using Poedit or Python Babel tools
+4. Compile `.po` to binary `.mo` files with `msgfmt`
+5. Load appropriate `.mo` at runtime based on user preference
 
 ```python
 # In Python files
+import gettext
+_ = gettext.gettext
+
 from kivy.uix.label import Label
-label = Label(
-    text=_("Cooking in Progress...")
-    text: qsTr("Good Afternoon!")
-}
+from kivy.uix.button import Button
 
-Button {
-    text: qsTr("Start Cooking")
-}
-
-Label {
-    text: qsTr("Temperature: %1°C").arg(currentTemp)
-}
-```
-
-```cpp
-// In C++ backend
-void RecipeManager::loadRecipe(const QString &path) {
-    // ...
-    emit statusChanged(tr("Recipe loaded successfully"));
-}
+label = Label(text=_("Cooking in Progress..."))
+greeting = Label(text=_("Good Afternoon!"))
+start_btn = Button(text=_("Start Cooking"))
+temp_label = Label(text=_("Temperature: %d°C") % current_temp)
 ```
 
 **Font Requirements:**
 - Noto Sans family covers all target scripts
-- Embedded in Qt resources (`.qrc`)
+- Embedded in Kivy resources
 - Fallback font chain for missing glyphs
 - Estimated font storage: ~15-20 MB for all scripts
 
@@ -444,13 +433,13 @@ void RecipeManager::loadRecipe(const QString &path) {
 
 ---
 
-## Qt Implementation Notes
+## Kivy Implementation Notes
 
 ### Application Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                      main.qml                           │
+│                      main.kv                            │
 │  ┌─────────────────┐  ┌──────────────────────────────┐  │
 │  │   HeaderBar     │  │        StatusBar             │  │
 │  └─────────────────┘  └──────────────────────────────┘  │
@@ -508,7 +497,7 @@ class CameraWidget(FloatLayout):
 
 **GStreamer Pipeline (for CSI-2 camera on CM5):**
 ```
-libcamerasrc ! video/x-raw,width=640,height=480,framerate=15/1 ! videoconvert ! qtvideosink
+Kivy Camera widget (index=0, resolution=(640, 480), play=True) with CSI-2 V4L2 backend
 ```
 
 ### Styling
@@ -527,27 +516,23 @@ libcamerasrc ! video/x-raw,width=640,height=480,framerate=15/1 ! videoconvert ! 
 | Success | Green | #43A047 |
 | Warning | Amber | #FFB300 |
 
-```qml
-// Theme.qml - Singleton for app-wide styling
-pragma Singleton
-import QtQuick
+```python
+# theme.py - App-wide styling constants
+class Theme:
+    PRIMARY = "#E65100"
+    SECONDARY = "#2E7D32"
+    BACKGROUND = "#FFF8E1"
+    SURFACE = "#FFFFFF"
+    TEXT_PRIMARY = "#3E2723"
+    TEXT_SECONDARY = "#6D4C41"
+    EMERGENCY = "#D50000"
+    SUCCESS = "#43A047"
+    WARNING = "#FFB300"
 
-QtObject {
-    readonly property color primary: "#E65100"
-    readonly property color secondary: "#2E7D32"
-    readonly property color background: "#FFF8E1"
-    readonly property color surface: "#FFFFFF"
-    readonly property color textPrimary: "#3E2723"
-    readonly property color textSecondary: "#6D4C41"
-    readonly property color emergency: "#D50000"
-    readonly property color success: "#43A047"
-    readonly property color warning: "#FFB300"
-
-    readonly property int fontSizeBody: 16
-    readonly property int fontSizeHeading: 24
-    readonly property int fontSizeDisplay: 36
-    readonly property int touchTargetMin: 48
-}
+    FONT_SIZE_BODY = 16
+    FONT_SIZE_HEADING = 24
+    FONT_SIZE_DISPLAY = 36
+    TOUCH_TARGET_MIN = 48
 ```
 
 ---
@@ -599,7 +584,7 @@ Epicura uses native mobile development: **SwiftUI** (iOS) and **Jetpack Compose*
 - [[../03-Software/04-Controller-Software-Architecture|Controller & Software Architecture]]
 - [[../03-Software/08-Tech-Stack|Tech Stack]]
 
-#epicura #ui-ux #user-interface #touchscreen #mobile-app #qt6 #qml #swift #kotlin #native-mobile #accessibility #multi-language
+#epicura #ui-ux #user-interface #touchscreen #mobile-app #kivy #swift #kotlin #native-mobile #accessibility #multi-language
 
 ---
 

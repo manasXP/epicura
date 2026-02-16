@@ -259,7 +259,7 @@ Target: 10-15 fps at 640x480 resolution.
 | Success | Green | `#43A047` | Cooking complete, success states |
 | Warning | Amber | `#FFB300` | Warnings, caution states |
 
-This palette matches the Qt touchscreen UI colors defined in [[../04-UserInterface/03-UI-UX-Design#Styling|UI/UX Design - Styling]].
+This palette matches the Kivy touchscreen UI colors defined in [[../04-UserInterface/03-UI-UX-Design#Styling|UI/UX Design - Styling]].
 
 ### Platform-Native Patterns
 

@@ -396,13 +396,13 @@ This document outlines the comprehensive plan for building a functional Epicura 
 
 #### Objectives
 - Build touchscreen UI on CM5 with 5 core screens
-- Build basic Flutter companion app
+- Build basic native companion mobile apps (iOS + Android)
 - Connect app to CM5 via REST API
 
 #### Tasks
 
 **Week 18: Touchscreen UI**
-- [ ] Set up Qt/QML or LVGL framework on CM5
+- [ ] Set up Kivy framework on CM5
 - [ ] Implement 5 core screens:
   1. **Home:** Recipe selection grid with images
   2. **Recipe Detail:** Ingredients, servings, estimated time, start button
@@ -423,8 +423,8 @@ This document outlines the comprehensive plan for building a functional Epicura 
   - `GET /camera/stream` - MJPEG camera stream
 - [ ] Test API with curl and Postman
 
-**Week 20: Flutter Companion App**
-- [ ] Create Flutter project (Android + iOS)
+**Week 20: Native Companion Mobile Apps**
+- [ ] Create native app projects (Swift/SwiftUI for iOS, Kotlin/Compose for Android)
 - [ ] Implement 4 screens:
   1. **Discovery:** Find Epicura on local network (mDNS)
   2. **Recipe Browse:** List and detail view from API
@@ -439,7 +439,7 @@ This document outlines the comprehensive plan for building a functional Epicura 
 |-------------|-----------------|
 | Touchscreen UI | 5 screens, responsive touch, camera feed |
 | REST API | All endpoints functional, < 500 ms response |
-| Flutter app | Recipe browse, live camera, start/stop cooking |
+| Native mobile apps | Recipe browse, live camera, start/stop cooking |
 | WiFi pairing | AP mode → home WiFi configuration works |
 
 ---

@@ -20,7 +20,7 @@ Epicura uses a dual-processor architecture with clearly separated responsibiliti
 | **Application** | Python 3.11+ (Recipe Engine, CV, UI) | C (MISRA C subset) |
 | **Communication** | SPI/CAN driver, MQTT, HTTPS | SPI/CAN driver |
 | **Storage** | PostgreSQL 16 (Docker), ext4 filesystem | Non-volatile flash (settings, logs) |
-| **Development** | Yocto/bitbake, Qt Creator, VS Code | STM32CubeIDE, STM32CubeMX |
+| **Development** | Yocto/bitbake, VS Code + Kivy Designer | STM32CubeIDE, STM32CubeMX |
 
 ---
 
@@ -152,11 +152,11 @@ All application services run as Docker containers on the CM5:
 - **Language:** Python 3.11+
 - **Container:** Dedicated Docker container with Python runtime
 - **Libraries:** PyYAML (recipe parsing), jsonschema (validation), transitions (state machine), psycopg2 (PostgreSQL driver)
-- **Interface:** REST API endpoints consumed by Qt frontend
+- **Interface:** REST API endpoints consumed by Kivy frontend
 - **Communication:**
   - PostgreSQL for recipe data
   - Redis pub/sub for real-time state updates
-  - gRPC or HTTP API for Qt frontend integration
+  - gRPC or HTTP API for Kivy frontend integration
 
 ### Cloud & Networking
 
@@ -199,12 +199,12 @@ All application services run as Docker containers on the CM5:
 |------|---------|
 | Yocto / bitbake | Build custom Linux image with Docker support |
 | Docker Compose | Container orchestration for local development |
-| Qt Creator | Qt6/QML application development |
+| VS Code + Kivy Designer | Kivy application development |
 | VS Code + Remote SSH | Python development on target |
 | GDB (remote) | C++ debugging via SSH |
 | perf / htop | Performance profiling on target |
 | pytest | Python unit and integration testing |
-| Qt Test | C++/QML unit testing |
+| pytest | Kivy UI unit testing |
 | docker logs / docker stats | Container debugging and monitoring |
 
 ---
@@ -219,7 +219,7 @@ The bridge service runs as a Python Docker container and handles all communicati
 ┌─────────────────────────────────────────────────────────────┐
 │                    CM5 Application Layer                    │
 │  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐        │
-│  │ Recipe Engine│ │   Qt UI      │ │  Backend API │        │
+│  │ Recipe Engine│ │  Kivy UI     │ │  Backend API │        │
 │  └──────┬───────┘ └──────┬───────┘ └──────┬───────┘        │
 │         │                │                │                 │
 │         └────────────────┼────────────────┘                 │
@@ -395,7 +395,7 @@ The bridge service runs as a Python Docker container and handles all communicati
 |-----------|----------|-------|
 | pytest | Python | Recipe engine, CV pipeline, cloud sync |
 | pytest-cov | Python | Code coverage reporting |
-| Qt Test | C++ | Qt backend classes, QML components |
+| pytest | Python | Kivy UI components and screens |
 | Google Test | C++ | Shared C++ libraries |
 
 ### STM32 Testing
@@ -415,7 +415,7 @@ The bridge service runs as a Python Docker container and handles all communicati
 | Static analysis (cppcheck) | C/C++ code quality on both platforms |
 | PC-lint (MISRA) | MISRA C compliance on STM32 safety code |
 | Valgrind | Memory leak detection on CM5 |
-| Qt Quick Profiler | UI rendering performance on CM5 |
+| Kivy Inspector | UI rendering performance on CM5 |
 
 ---
 
@@ -457,7 +457,7 @@ The bridge service runs as a Python Docker container and handles all communicati
 | **Hardware Bring-up** | 4 weeks | CM5 boot + display, STM32 peripherals (PWM, ADC, UART), camera test |
 | **Core Firmware** | 6 weeks | FreeRTOS tasks, PID controller, motor control, safety monitor, protocol |
 | **CV Integration** | 4 weeks | Camera pipeline, model training (collect cooking images), TFLite on CM5 |
-| **UI Development** | 4 weeks | Qt/QML screens (home, cooking, settings), camera widget, recipe browser |
+| **UI Development** | 4 weeks | Kivy screens (home, cooking, settings), camera widget, recipe browser |
 | **App Development** | 3 weeks | Native iOS + Android apps (recipe browse, live view, settings), WiFi communication |
 | **System Integration** | 4 weeks | End-to-end cooking tests, timing tuning, error handling, OTA updates |
 
@@ -470,7 +470,7 @@ The bridge service runs as a Python Docker container and handles all communicati
 | Decision | Chosen | Alternative | Rationale |
 |----------|--------|-------------|-----------|
 | CM5 OS | Yocto Linux | Raspbian (Raspberry Pi OS) | Yocto provides minimal custom image, A/B OTA, long-term reproducibility; Raspbian is general-purpose and bloated for embedded |
-| UI Framework | Qt6/QML | LVGL | Qt6 offers GPU-accelerated rendering, rich widget library, camera integration, and multi-language support via Qt Linguist; LVGL lighter but less capable |
+| UI Framework | Kivy | Qt6/QML, LVGL | Kivy provides GPU-accelerated rendering, Python-native development, camera integration, and i18n via gettext; simpler than Qt6, more capable than LVGL |
 | Recipe Engine Language | Python 3.11+ | C++ | Python provides rapid development, easy YAML parsing, and rich ecosystem; performance is sufficient on Cortex-A76 |
 | Mobile App Framework | Native (Swift + Kotlin) | Flutter | Native platform APIs for BLE (Core Bluetooth, CompanionDeviceManager) and camera streaming; better UX, smaller app size |
 | Backend Framework | Fastify (TypeScript) | Express, NestJS | Fastest Node.js framework, built-in schema validation, TypeScript-first, plugin system |
@@ -492,7 +492,7 @@ The bridge service runs as a Python Docker container and handles all communicati
 - [[../11-API/01-REST-API-Reference|REST API Reference]]
 - [[../12-MobileApps/01-Mobile-Architecture|Mobile Architecture]]
 
-#epicura #tech-stack #development #raspberry-pi #stm32 #yocto #qt6 #freertos #swift #kotlin #native-mobile #tflite
+#epicura #tech-stack #development #raspberry-pi #stm32 #yocto #kivy #freertos #swift #kotlin #native-mobile #tflite
 
 ---
 

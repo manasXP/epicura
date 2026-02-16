@@ -24,7 +24,7 @@ This document provides detailed resource allocation across all project phases, i
 | **Embedded Developer** | C, FreeRTOS, STM32 HAL, Yocto | $60-100/hr | Full-time (24 weeks) |
 | **Mechanical Engineer** | CAD (Fusion 360), 3D printing, fabrication | $50-80/hr | Part-time (8 weeks) |
 | **ML/CV Engineer** | Python, TensorFlow, OpenCV, data labeling | $70-110/hr | Full-time (4 weeks) |
-| **Frontend Developer** | Qt/QML, C++, UI/UX design | $55-90/hr | Full-time (4 weeks) |
+| **Frontend Developer** | Kivy, Python, UI/UX design | $55-90/hr | Full-time (4 weeks) |
 | **Backend Developer** | Python, Flask/FastAPI, REST API, MQTT | $60-95/hr | Full-time (2 weeks) |
 | **Mobile Developer** | Flutter, Dart, REST integration | $60-95/hr | Full-time (2 weeks) |
 | **QA/Test Engineer** | Safety testing, reliability analysis, documentation | $45-70/hr | Full-time (4 weeks) |
@@ -176,7 +176,7 @@ This document provides detailed resource allocation across all project phases, i
 |------|------------|-------|------------|
 | Mechanical Engineer | 100% | Dispensing tray CAD, 3D printing, gate calibration | 40 |
 | Embedded Developer | 60% | SG90 control, weight-based dispensing logic | 24 |
-| Frontend Developer | 80% | Qt/QML UI screens (start) | 32 |
+| Frontend Developer | 80% | Kivy UI screens (start) | 32 |
 | Cook/Lab Assistant | 30% | Recipe testing (3 minimum recipes) | 12 |
 
 **Total:** 2.7 person-weeks per week × 2 weeks = **5.4 person-weeks**
@@ -187,7 +187,7 @@ This document provides detailed resource allocation across all project phases, i
 
 | Role | Allocation | Tasks | Hours/Week |
 |------|------------|-------|------------|
-| Frontend Developer | 100% | Qt touchscreen UI completion, camera widget | 40 |
+| Frontend Developer | 100% | Kivy touchscreen UI completion, camera widget | 40 |
 | Backend Developer | 100% | Flask REST API, MQTT telemetry | 40 |
 | Mobile Developer | 100% | Flutter app (discovery, browse, live view) | 40 |
 | Embedded Developer | 30% | API integration with recipe engine | 12 |

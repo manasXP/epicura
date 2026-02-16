@@ -50,7 +50,7 @@
 - [ ] Camera capture pipeline
 - [ ] TFLite model inference
 - [ ] Recipe state machine engine
-- [ ] Qt touchscreen UI
+- [ ] Kivy touchscreen UI
 - [ ] Ingredient dispensing control
 - [ ] Safety watchdog and interlocks
 
@@ -63,7 +63,7 @@
 - [ ] Model training and INT8 quantization
 - [ ] Cloud MQTT telemetry
 - [ ] OTA update mechanism
-- [ ] Flutter companion app
+- [ ] Native companion mobile apps (iOS + Android)
 
 ## Testing & Validation
 

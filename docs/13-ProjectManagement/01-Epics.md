@@ -186,7 +186,7 @@ This epic brings all subsystems together into cohesive autonomous cooking. It va
 **Status:** Not Started
 
 ### Description
-Build Qt/QML touchscreen UI on CM5, implement REST API for remote control, and develop Flutter companion mobile app for iOS and Android.
+Build Kivy touchscreen UI on CM5, implement REST API for remote control, and develop native companion mobile apps for iOS and Android.
 
 ### Business Value
 User-friendly interfaces (touchscreen + mobile app) make the product accessible to non-technical users. Live camera feed and remote monitoring enhance user experience and trust.
@@ -195,7 +195,7 @@ User-friendly interfaces (touchscreen + mobile app) make the product accessible 
 - [ ] 5 touchscreen screens: Home, Recipe Detail, Cooking, Settings, History
 - [ ] Live camera feed embedded in UI with CV overlays
 - [ ] REST API with 5+ endpoints operational
-- [ ] Flutter app functional on Android/iOS with recipe browse and live view
+- [ ] Native mobile apps functional on Android/iOS with recipe browse and live view
 - [ ] WiFi AP mode pairing flow working
 
 ### Dependencies

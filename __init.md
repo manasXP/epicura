@@ -14,7 +14,7 @@ The robot resembles a large microwave in size, featuring an induction cooktop ba
     
 - **Vision and Sensors**: Overhead HD camera with edge AI (e.g., Raspberry Pi CM5 or Nvidia Jetson for color/texture analysis) plus IR thermometer and load cells for portion feedback.[[youtube](https://www.youtube.com/watch?v=yturqqp64Ng)]​[[theverge](https://www.theverge.com/tech/840599/posha-robot-chef-review)]​
     
-- **UI Display**: 10-inch touchscreen or app-paired interface using Qt/LVGL for recipe browsing, grocery lists, and progress cams.[[posha](https://www.posha.com/)]​
+- **UI Display**: 10-inch touchscreen or app-paired interface using Kivy for recipe browsing, grocery lists, and progress cams.[[posha](https://www.posha.com/)]​
     
 
 ## Software Architecture
@@ -33,7 +33,7 @@ Culinary AI runs on embedded Linux (e.g., Yocto on CM5), processing recipes as s
 
 ## Prototyping Steps
 
-Start with off-the-shelf: Raspberry Pi CM5 carrier board for AI/compute, ST STM32 for arm control, and a commercial induction hob. Code UI in Qt for cross-platform (app + device). Test one-pot Indian recipes (e.g., dal tadka) to validate stirring/heat logic. Estimated BOM: $800-1,200 for prototype, scalable for production.
+Start with off-the-shelf: Raspberry Pi CM5 carrier board for AI/compute, ST STM32 for arm control, and a commercial induction hob. Code device UI in Kivy (Python). Test one-pot Indian recipes (e.g., dal tadka) to validate stirring/heat logic. Estimated BOM: $800-1,200 for prototype, scalable for production.
 
 ## Documentation
 

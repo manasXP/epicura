@@ -17,8 +17,8 @@ Epicura uses a dual-processor architecture: a Raspberry Pi CM5 running Yocto Lin
 | **Clock** | 2.4 GHz | 170 MHz |
 | **OS** | Yocto Linux (Kirkstone/Scarthgap) | FreeRTOS 10.x |
 | **Role** | AI/Vision, UI, Recipe Engine, Cloud | PID, Motor, Sensors, Safety |
-| **Languages** | Python 3.11+, C++, QML | C (MISRA C subset) |
-| **Graphics** | Qt6 + QML on 10" touchscreen | None |
+| **Languages** | Python 3.11+, KV | C (MISRA C subset) |
+| **Graphics** | Kivy on 10" touchscreen | None |
 | **IPC** | SPI (primary) / CAN bus (alternative) | SPI (primary) / CAN bus (alternative) |
 
 ---
@@ -33,7 +33,7 @@ Epicura uses a dual-processor architecture: a Raspberry Pi CM5 running Yocto Lin
 │  │                      Application Layer                              │    │
 │  │  ┌──────────────┐ ┌──────────────┐ ┌────────┐ ┌──────────────┐    │    │
 │  │  │ Recipe Engine │ │ CV Pipeline  │ │   UI   │ │  Cloud Sync  │    │    │
-│  │  │ (State Mach.) │ │ (TFLite/OCV) │ │(Qt/QML)│ │ (MQTT/HTTPS) │    │    │
+│  │  │ (State Mach.) │ │ (TFLite/OCV) │ │(Kivy) │ │ (MQTT/HTTPS) │    │    │
 │  │  └──────────────┘ └──────────────┘ └────────┘ └──────────────┘    │    │
 │  ├─────────────────────────────────────────────────────────────────────┤    │
 │  │                      Middleware Layer                                │    │
@@ -78,7 +78,7 @@ Epicura uses a dual-processor architecture: a Raspberry Pi CM5 running Yocto Lin
 |--------|-----------|-----------|
 | Recipe Engine (State Machine) | CM5 | Complex logic, YAML parsing, file I/O |
 | Computer Vision Pipeline | CM5 | TFLite inference, camera access, OpenCV |
-| Qt/QML User Interface | CM5 | GPU-accelerated UI, touchscreen driver |
+| Kivy User Interface | CM5 | GPU-accelerated UI, touchscreen driver |
 | Cloud Sync (MQTT/HTTPS) | CM5 | Full Linux networking stack |
 | SQLite Database | CM5 | Filesystem access, complex queries |
 | OTA Firmware Updates | CM5 | Network + flash management |
@@ -724,7 +724,7 @@ typedef struct {
 | Safety monitor check | 10 Hz | 100 ms | STM32 | Highest |
 | Communication handler | 20 Hz | 50 ms | STM32 | Medium |
 | CV inference | 2 Hz | 500 ms | CM5 | Medium |
-| UI update (Qt render) | 30 Hz | 33 ms | CM5 | Medium |
+| UI update (Kivy render) | 30 Hz | 33 ms | CM5 | Medium |
 | Recipe engine tick | 1 Hz | 1 s | CM5 | Low |
 | Cloud sync (MQTT) | 0.1 Hz | 10 s | CM5 | Low |
 

@@ -186,7 +186,7 @@ Start with:
 - **Induction PID Control** - 1,800W microwave induction surface (CAN-controlled) with closed-loop PID, sear at 250°C, simmer at 60°C, ±5°C accuracy
 - **Robotic Stirring Arm** - Single-axis servo arm (STM32-driven) with multiple stir patterns and auto-scraping
 - **Three-Subsystem Dispensing** - ASD (3 servo-gated seasoning hoppers), CID (2 linear actuator coarse trays), SLD (2 peristaltic pump liquid channels with dedicated load cell)
-- **Touchscreen + Companion Apps** - 10" Qt touchscreen on device, native mobile apps (iOS + Android) for remote control and live camera feed
+- **Touchscreen + Companion Apps** - 10" Kivy touchscreen on device, native mobile apps (iOS + Android) for remote control and live camera feed
 - **100+ Indian Recipes** - Curated recipe database covering curries, dal, rice, biryani, and more with regional variations
 - **Cloud + Offline Operation** - Cloud-updatable recipe library with full local SQLite fallback for offline cooking
 - **Under 2kW Power Draw** - Designed for standard Indian household 15A outlets with dynamic power management
@@ -206,13 +206,13 @@ Start with:
 ### Hardware Subsystems
 - **Compute Platform** - Raspberry Pi CM5 (AI/vision/UI) + STM32 (motor/arm control)
 - **Induction Heater** - 1,800W induction cooktop with NTC + IR temperature feedback
-- **Display** - 10" 1280x800 capacitive touchscreen (Qt interface)
+- **Display** - 10" 1280x800 capacitive touchscreen (Kivy interface)
 - **Robotic Arm** - Single-axis servo arm for stirring and ingredient dispensing
 - **Vision System** - Overhead HD camera + IR thermometer + load cells
 - **Ingredient Dispensing** - ASD (seasoning servos) + CID (linear actuator sliders) + SLD (peristaltic pumps + solenoids)
 
 ### Software Subsystems
-- **CM5 (Yocto Linux)** - Recipe engine, computer vision pipeline, Qt UI, cloud sync, SQLite data management
+- **CM5 (Yocto Linux)** - Recipe engine, computer vision pipeline, Kivy UI, cloud sync, SQLite data management
 - **STM32 (FreeRTOS)** - PID temperature control, servo motor driver, sensor polling, safety watchdog
 
 ```
@@ -224,7 +224,7 @@ Start with:
 │  │  (Yocto Linux)       │◄──────►│  (FreeRTOS)          │           │
 │  │  - Recipe Engine     │  UART  │  - PID Control       │           │
 │  │  - CV Pipeline       │  /SPI  │  - Servo Driver      │           │
-│  │  - Qt UI             │        │  - Sensor Polling    │           │
+│  │  - Kivy UI            │        │  - Sensor Polling    │           │
 │  │  - Cloud Sync        │        │  - Safety Watchdog   │           │
 │  └──────────┬───────────┘        └──────────┬───────────┘           │
 │             │                               │                       │
