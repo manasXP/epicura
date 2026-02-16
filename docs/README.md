@@ -44,6 +44,7 @@ Welcome to the comprehensive documentation for the Epicura autonomous kitchen ro
 
 #### 07. Development
 14. **[[07-Development/01-Prototype-Development-Plan|Prototype Development Plan]]** - Phased plan from prototype to production (20-24 weeks)
+15. **[[07-Development/02-Repository-Plan|Repository Plan]]** - 6 GitHub repositories, directory structures, CI/CD, and cross-repo dependencies
 
 #### 08. Project Management
 15. **[[13-ProjectManagement/epics/__init|Epics]]** - 12 subsystem-based epics (~58 stories, ~365 points) covering PCB, embedded, thermal, actuation, vision, recipe, UI, backend, iOS, Android, admin, and integration
@@ -111,7 +112,8 @@ docs/
 ├── 06-Compliance/
 │   └── 01-Safety-Compliance.md                  Regulatory compliance
 ├── 07-Development/
-│   └── 01-Prototype-Development-Plan.md         Development roadmap (20-24 weeks)
+│   ├── 01-Prototype-Development-Plan.md         Development roadmap (20-24 weeks)
+│   └── 02-Repository-Plan.md                    6-repo structure & GitHub setup
 ├── 08-Components/
 │   ├── 01-Compute-Module-Components.md          Compute & control BOM
 │   ├── 02-Actuation-Components.md               Motors & actuators BOM
