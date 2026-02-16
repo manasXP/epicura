@@ -75,6 +75,13 @@ Welcome to the comprehensive documentation for the Epicura autonomous kitchen ro
 32. **[[12-MobileApps/02-iOS-App|iOS App]]** - Swift/SwiftUI implementation (Core Bluetooth, APNs)
 33. **[[12-MobileApps/03-Android-App|Android App]]** - Kotlin/Compose implementation (CompanionDeviceManager, FCM)
 
+#### 14. Testing
+34. **[[14-Testing/01-Firmware-Test-Strategy|Firmware Test Strategy]]** - Unity/CMock unit tests, HIL tests, MISRA static analysis, safety tests
+35. **[[14-Testing/02-CM5-Test-Strategy|CM5 Test Strategy]]** - pytest per Docker service, Docker Compose integration, CV model validation
+36. **[[14-Testing/03-API-Test-Strategy|API & Admin Test Strategy]]** - Vitest monorepo tests, Testcontainers integration, API contract tests
+37. **[[14-Testing/04-iOS-Test-Strategy|iOS Test Strategy]]** - XCTest/XCUITest, performance benchmarks, security tests
+38. **[[14-Testing/05-Android-Test-Strategy|Android Test Strategy]]** - JUnit 5/Compose UI tests, Macrobenchmark, security tests
+
 ## Documentation Structure
 
 ```
@@ -126,6 +133,12 @@ docs/
 │   ├── 01-Mobile-Architecture.md                MVVM, networking, design
 │   ├── 02-iOS-App.md                            Swift/SwiftUI implementation
 │   └── 03-Android-App.md                        Kotlin/Compose implementation
+├── 14-Testing/
+│   ├── 01-Firmware-Test-Strategy.md           STM32 firmware testing
+│   ├── 02-CM5-Test-Strategy.md                CM5 Docker services testing
+│   ├── 03-API-Test-Strategy.md                API & admin portal testing
+│   ├── 04-iOS-Test-Strategy.md                iOS app testing
+│   └── 05-Android-Test-Strategy.md            Android app testing
 └── 13-ProjectManagement/
     ├── __init.md                                PM overview
     ├── epics/

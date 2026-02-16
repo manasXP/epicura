@@ -573,10 +573,9 @@ Week 24: Sprint 12 (Validation) ← Integration complete
 - **Google Sheets**: BOM tracking, procurement schedule (free)
 
 **For Larger Team (3+ people):**
-- **Jira**: Agile sprint planning, story tracking ($7/user/month)
-- **Confluence**: Documentation wiki ($5.50/user/month)
+- **GitHub Issues**: Bug tracking and task management, linked to story IDs (free)
+- **GitHub Projects**: Kanban boards for sprint planning — one board per sprint (free)
 - **Slack**: Team communication (free tier OK)
-- **GitHub Projects**: Kanban boards integrated with code (free)
 
 **Time Tracking:**
 - **Toggl Track**: Time tracking per task (free for solo, $10/user/month team)
