@@ -10,7 +10,7 @@ tags: [epicura, warranty, support, service, installation]
 
 ## Overview
 
-This document covers the end-to-end customer experience from purchase to ongoing support for all Epicura product tiers: Lite ($399), Standard ($499), Pro ($599), and Pro Multipot ($799). It defines the installation journey, warranty structure, support channels, remote diagnostics, field service model, and service cost projections.
+This document covers the end-to-end customer experience from purchase to ongoing support for all Epicura product tiers: Standard ($499), Pro ($599), and Pro Multipot ($799). It defines the installation journey, warranty structure, support channels, remote diagnostics, field service model, and service cost projections.
 
 ---
 
