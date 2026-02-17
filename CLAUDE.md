@@ -131,7 +131,7 @@ docs/
 │   └── 04-Total-Component-Cost        Full BOM ($700 prototype)
 ├── 09-PCB/
 │   ├── 01-Controller-PCB-Design       STM32G474RE controller board (160x90mm)
-│   └── 02-Driver-PCB-Design           Power electronics & actuator drivers (160x90mm)
+│   └── 02-Driver-PCB-Design           Power electronics &  drivers (160x90mm)
 ├── 10-Backend/
 │   ├── 01-Backend-Architecture        Fastify API, cloud services, MQTT
 │   ├── 02-Database-Schema             PostgreSQL schema for cloud and device
