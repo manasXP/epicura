@@ -8,6 +8,7 @@ aliases: [THR Epic, Thermal Epic]
 > | Date | Author | Change |
 > |------|--------|--------|
 > | 2026-02-16 | Manas Pradhan | Initial version — 4 stories across Sprints 3–4 |
+> | 2026-02-17 | Manas Pradhan | Split CAN and PID stories (>5pts) — 6 stories across Sprints 3–4 |
 
 # Epic: THR — Thermal & Induction Control
 
@@ -17,66 +18,93 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 
 | Module | Stories | Points | Sprints |
 |--------|:-------:|:------:|---------|
-| CAN — Induction CAN Interface | 1 | 8 | 3 |
-| PID — Temperature Control | 1 | 8 | 3–4 |
+| CAN — Induction CAN Interface | 2 | 8 | 3 |
+| PID — Temperature Control | 2 | 8 | 3–4 |
 | SAF — Thermal Safety | 1 | 5 | 4 |
 | EXH — Exhaust Fan Control | 1 | 5 | 4 |
-| **Total** | **4** | **~28** | |
+| **Total** | **6** | **~28** | |
 
 ---
 
 ## Phase 1 — Thermal Control (Sprints 3–4)
 
-### THR-CAN.01: CAN bus interface — FDCAN1 driver, induction module communication
+### THR-CAN.01: CAN bus driver — FDCAN1 init, TX power command, RX status parsing
 - **Sprint:** [[sprint-03|Sprint 3]]
 - **Priority:** P0
-- **Points:** 8
+- **Points:** 5
 - **Blocked by:** [[EMB-embedded#EMB-SET.01|EMB-SET.01]]
-- **Blocks:** [[THR-thermal#THR-PID.01|THR-PID.01]], [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]]
+- **Blocks:** [[THR-thermal#THR-CAN.02|THR-CAN.02]], [[THR-thermal#THR-PID.01|THR-PID.01]], [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]]
 
 **Acceptance Criteria:**
 - [ ] FDCAN1 initialized at 500 kbps with correct bit timing for STM32G474
-- [ ] CAN TX: power level command (0–100%) sent to induction module
+- [ ] CAN TX: power level command (0–100%) sent to induction module at 10 Hz
 - [ ] CAN RX: module status (power, fault codes, coil temperature) parsed correctly
-- [ ] CAN error handling: bus-off recovery, error frame counting, fault reporting
-- [ ] Power ramp: smooth 0→100% ramp in 5 seconds without CAN bus errors
-- [ ] Module emergency stop via CAN command verified
 
 **Tasks:**
 - [ ] `THR-CAN.01a` — Configure FDCAN1 peripheral: 500 kbps, 11-bit standard ID, FIFO0 for RX
 - [ ] `THR-CAN.01b` — Implement CAN TX function: pack power level into CAN frame; send at 10 Hz
 - [ ] `THR-CAN.01c` — Implement CAN RX callback: parse status frames, update shared telemetry struct
-- [ ] `THR-CAN.01d` — Implement CAN error handler: bus-off auto-recovery, error counter monitoring
-- [ ] `THR-CAN.01e` — Implement induction module command set: SET_POWER, GET_STATUS, EMERGENCY_STOP
-- [ ] `THR-CAN.01f` — Test with induction module: power ramp, status read, e-stop command
 
 ---
 
-### THR-PID.01: PID temperature controller — IR + NTC feedback, auto-tune
-- **Sprint:** [[sprint-03|Sprint 3]] → [[sprint-04|Sprint 4]]
+### THR-CAN.02: CAN bus error handling and induction commands — bus-off recovery, power ramp, e-stop
+- **Sprint:** [[sprint-03|Sprint 3]]
 - **Priority:** P0
-- **Points:** 8
-- **Blocked by:** [[EMB-embedded#EMB-COM.01|EMB-COM.01]], [[THR-thermal#THR-CAN.01|THR-CAN.01]]
-- **Blocks:** [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]], [[INT-integration#INT-SYS.01|INT-SYS.01]]
+- **Points:** 3
+- **Blocked by:** [[THR-thermal#THR-CAN.01|THR-CAN.01]]
+- **Blocks:** [[THR-thermal#THR-PID.01|THR-PID.01]], [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]]
 
 **Acceptance Criteria:**
-- [ ] PID loop runs at 100 Hz in dedicated FreeRTOS task (highest priority)
+- [ ] CAN error handling: bus-off auto-recovery, error frame counting, fault reporting
+- [ ] Power ramp: smooth 0→100% ramp in 5 seconds without CAN bus errors
+- [ ] Module emergency stop via CAN command verified
+- [ ] Full command set implemented: SET_POWER, GET_STATUS, EMERGENCY_STOP
+
+**Tasks:**
+- [ ] `THR-CAN.02a` — Implement CAN error handler: bus-off auto-recovery, error counter monitoring
+- [ ] `THR-CAN.02b` — Implement induction module command set: SET_POWER, GET_STATUS, EMERGENCY_STOP
+- [ ] `THR-CAN.02c` — Test with induction module: power ramp, status read, e-stop command
+
+---
+
+### THR-PID.01: PID controller — sensor drivers, closed-loop temperature control
+- **Sprint:** [[sprint-03|Sprint 3]]
+- **Priority:** P0
+- **Points:** 5
+- **Blocked by:** [[EMB-embedded#EMB-COM.01|EMB-COM.01]], [[THR-thermal#THR-CAN.01|THR-CAN.01]]
+- **Blocks:** [[THR-thermal#THR-PID.02|THR-PID.02]], [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]], [[INT-integration#INT-SYS.01|INT-SYS.01]]
+
+**Acceptance Criteria:**
 - [ ] MLX90614 IR thermometer read via I2C at 10 Hz; value fed to PID as process variable
-- [ ] NTC thermistors (coil + ambient) read via ADC at 10 Hz for secondary monitoring
-- [ ] PID output (0–100%) maps to CAN power command for induction module
-- [ ] Default gains: Kp=2.0, Ki=0.5, Kd=0.1; stored in flash; adjustable via SPI command
-- [ ] Steady-state error ≤ ±5°C at target temperatures (80°C, 120°C, 180°C)
+- [ ] NTC thermistors (coil + ambient) read via ADC at 10 Hz with Steinhart-Hart conversion
+- [ ] PID loop runs at 100 Hz in dedicated FreeRTOS task (highest priority); default gains Kp=2.0, Ki=0.5, Kd=0.1
 - [ ] Anti-windup: integral term clamped when output saturated
-- [ ] PID telemetry (setpoint, PV, output, error) published to CM5 at 1 Hz via SPI
+- [ ] PID output (0–100%) maps to CAN power command with rate limiting (max 10%/sec change)
 
 **Tasks:**
 - [ ] `THR-PID.01a` — Implement MLX90614 I2C driver: object temperature read, emissivity config
 - [ ] `THR-PID.01b` — Implement NTC ADC reading with Steinhart-Hart equation for temperature conversion
 - [ ] `THR-PID.01c` — Implement PID controller: proportional, integral (with anti-windup), derivative (with low-pass filter)
 - [ ] `THR-PID.01d` — Map PID output to CAN power command; implement output rate limiting (max 10%/sec change)
-- [ ] `THR-PID.01e` — Store PID gains in STM32 flash; implement SPI command to read/write gains
-- [ ] `THR-PID.01f` — Implement telemetry struct: setpoint, PV (IR), PV (NTC), output, error, integral; send via SPI at 1 Hz
-- [ ] `THR-PID.01g` — Test PID performance: step response to 80°C, 120°C, 180°C; measure overshoot and settling time
+
+---
+
+### THR-PID.02: PID tuning and telemetry — gain storage, SPI reporting, performance validation
+- **Sprint:** [[sprint-03|Sprint 3]] → [[sprint-04|Sprint 4]]
+- **Priority:** P0
+- **Points:** 3
+- **Blocked by:** [[THR-thermal#THR-PID.01|THR-PID.01]]
+- **Blocks:** [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]], [[INT-integration#INT-SYS.01|INT-SYS.01]]
+
+**Acceptance Criteria:**
+- [ ] PID gains stored in STM32 flash; adjustable via SPI command from CM5
+- [ ] PID telemetry (setpoint, PV, output, error) published to CM5 at 1 Hz via SPI
+- [ ] Steady-state error ≤ ±5°C at target temperatures (80°C, 120°C, 180°C)
+
+**Tasks:**
+- [ ] `THR-PID.02a` — Store PID gains in STM32 flash; implement SPI command to read/write gains
+- [ ] `THR-PID.02b` — Implement telemetry struct: setpoint, PV (IR), PV (NTC), output, error, integral; send via SPI at 1 Hz
+- [ ] `THR-PID.02c` — Test PID performance: step response to 80°C, 120°C, 180°C; measure overshoot and settling time
 
 ---
 
@@ -133,8 +161,10 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 
 | THR Story | Blocks | Reason |
 |-----------|--------|--------|
-| THR-CAN.01 | THR-PID.01, RCP-FSM.01 | CAN interface needed for PID output and recipe engine |
-| THR-PID.01 | RCP-FSM.01, INT-SYS.01 | Temperature control needed for cooking |
+| THR-CAN.01 | THR-CAN.02, THR-PID.01, RCP-FSM.01 | CAN driver needed for error handling, PID output, and recipe engine |
+| THR-CAN.02 | THR-PID.01, RCP-FSM.01 | CAN commands needed for PID output and recipe engine |
+| THR-PID.01 | THR-PID.02, RCP-FSM.01, INT-SYS.01 | Core PID needed for tuning, cooking, and integration |
+| THR-PID.02 | RCP-FSM.01, INT-SYS.01 | Tuned PID with telemetry needed for cooking and integration |
 | THR-SAF.01 | INT-SAF.01 | Thermal safety needed for certification |
 
 ### What blocks THR (upstream dependencies)
@@ -142,7 +172,9 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 | THR Story | Blocked by | Reason |
 |-----------|------------|--------|
 | THR-CAN.01 | EMB-SET.01 | Need STM32 HAL and FDCAN peripheral |
+| THR-CAN.02 | THR-CAN.01 | Need CAN driver for error handling and commands |
 | THR-PID.01 | EMB-COM.01, THR-CAN.01 | Need bridge for telemetry + CAN for power output |
+| THR-PID.02 | THR-PID.01 | Need core PID running for tuning and telemetry |
 | THR-SAF.01 | EMB-SAF.01, THR-PID.01 | Need safety framework + PID running |
 | THR-EXH.01 | EMB-SET.01 | Need STM32 PWM timer |
 

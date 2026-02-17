@@ -8,6 +8,7 @@ aliases: [BE Epic, Backend Epic]
 > | Date | Author | Change |
 > |------|--------|--------|
 > | 2026-02-16 | Manas Pradhan | Initial version — 6 stories across Sprints 5–10 |
+> | 2026-02-17 | Manas Pradhan | Split BE-SET.01, BE-RCP.01, BE-DEV.01 (8pts each) into pairs of 5+3pts |
 
 # Epic: BE — Cloud Backend (Fastify)
 
@@ -17,93 +18,135 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 
 | Module | Stories | Points | Sprints |
 |--------|:-------:|:------:|---------|
-| SET — Project Setup | 1 | 8 | 5 |
-| RCP — Recipe API | 1 | 8 | 6 |
-| DEV — Device Management | 1 | 8 | 7 |
+| SET — Project Setup | 2 | 8 | 5 |
+| RCP — Recipe API | 2 | 8 | 6 |
+| DEV — Device Management | 2 | 8 | 7 |
 | MQT — MQTT Cloud Bridge | 1 | 5 | 7 |
 | USR — User Management | 1 | 5 | 8 |
 | LCH — Launch | 1 | 5 | 10 |
-| **Total** | **6** | **~38** | |
+| **Total** | **9** | **~38** | |
 
 ---
 
 ## Phase 2 — Backend Foundation (Sprints 5–6)
 
-### BE-SET.01: Fastify project setup — TypeScript, PostgreSQL, auth, Swagger
+### BE-SET.01: Fastify project setup — TypeScript, Drizzle ORM, PostgreSQL schema, auth
 - **Sprint:** [[sprint-05|Sprint 5]]
 - **Priority:** P0
-- **Points:** 8
+- **Points:** 5
 - **Blocked by:** None
-- **Blocks:** [[BE-backend#BE-RCP.01|BE-RCP.01]], [[BE-backend#BE-DEV.01|BE-DEV.01]], All subsequent BE stories
+- **Blocks:** [[BE-backend#BE-SET.02|BE-SET.02]], All subsequent BE stories
 
 **Acceptance Criteria:**
 - [ ] Fastify app bootstraps with TypeScript; health-check returns 200
 - [ ] PostgreSQL connection via Drizzle ORM; migrations run without errors
 - [ ] Database schema: users, devices, recipes, cook_sessions, telemetry tables
 - [ ] JWT authentication: register, login, refresh token endpoints
-- [ ] Swagger UI accessible at `/docs` with auto-generated OpenAPI spec
-- [ ] Docker Compose for local development (PostgreSQL + Redis + API)
-- [ ] ESLint + Prettier configured; CI pipeline runs lint + type-check + test
 
 **Tasks:**
 - [ ] `BE-SET.01a` — Initialize Fastify project with TypeScript, fastify-swagger, fastify-jwt
 - [ ] `BE-SET.01b` — Configure Drizzle ORM with PostgreSQL; create initial migration with core tables
 - [ ] `BE-SET.01c` — Implement auth module: register (email/password), login, JWT refresh, logout
-- [ ] `BE-SET.01d` — Set up Docker Compose for local dev: PostgreSQL 16, Redis
-- [ ] `BE-SET.01e` — Configure Swagger with JWT bearer auth; verify spec generation
-- [ ] `BE-SET.01f` — Set up ESLint, Prettier, Vitest; create CI GitHub Actions workflow
 
 ---
 
-### BE-RCP.01: Recipe CRUD API — create, read, update, delete, image upload
+### BE-SET.02: Backend dev environment — Docker Compose, Swagger, CI pipeline
+- **Sprint:** [[sprint-05|Sprint 5]]
+- **Priority:** P0
+- **Points:** 3
+- **Blocked by:** [[BE-backend#BE-SET.01|BE-SET.01]]
+- **Blocks:** [[BE-backend#BE-RCP.01|BE-RCP.01]], [[BE-backend#BE-DEV.01|BE-DEV.01]]
+
+**Acceptance Criteria:**
+- [ ] Docker Compose for local development (PostgreSQL + Redis + API)
+- [ ] Swagger UI accessible at `/docs` with auto-generated OpenAPI spec
+- [ ] ESLint + Prettier configured; CI pipeline runs lint + type-check + test
+
+**Tasks:**
+- [ ] `BE-SET.02a` — Set up Docker Compose for local dev: PostgreSQL 16, Redis
+- [ ] `BE-SET.02b` — Configure Swagger with JWT bearer auth; verify spec generation
+- [ ] `BE-SET.02c` — Set up ESLint, Prettier, Vitest; create CI GitHub Actions workflow
+
+---
+
+### BE-RCP.01: Recipe CRUD API — endpoints, schema, versioning
 - **Sprint:** [[sprint-06|Sprint 6]]
 - **Priority:** P0
-- **Points:** 8
-- **Blocked by:** [[BE-backend#BE-SET.01|BE-SET.01]]
-- **Blocks:** [[RCP-recipe#RCP-SYN.01|RCP-SYN.01]], [[IOS-ios#IOS-RCP.01|IOS-RCP.01]], [[AND-android#AND-RCP.01|AND-RCP.01]], [[ADM-admin#ADM-RCP.01|ADM-RCP.01]]
+- **Points:** 5
+- **Blocked by:** [[BE-backend#BE-SET.02|BE-SET.02]]
+- **Blocks:** [[BE-backend#BE-RCP.02|BE-RCP.02]]
 
 **Acceptance Criteria:**
 - [ ] CRUD endpoints for recipes at `/api/recipes` with pagination and search
 - [ ] Recipe schema: name, cuisine, servings, cook_time, difficulty, ingredients (JSONB), steps (JSONB), image_url
-- [ ] Image upload via presigned S3/R2 URL; CDN delivery
-- [ ] Recipe versioning: version number incremented on update; devices sync by version
-- [ ] Bulk export endpoint: GET `/api/recipes/export` returns all recipes as JSON
+- [ ] Recipe versioning: version number incremented on update; sync endpoint with `since_version` param
 - [ ] Admin-only create/update/delete; public read access with auth
 
 **Tasks:**
 - [ ] `BE-RCP.01a` — Create recipes table migration with JSONB columns for ingredients and steps
 - [ ] `BE-RCP.01b` — Implement recipe CRUD endpoints with Drizzle ORM
-- [ ] `BE-RCP.01c` — Implement image upload: presigned URL generation, CDN URL storage
-- [ ] `BE-RCP.01d` — Implement recipe versioning: auto-increment on update, sync endpoint with `since_version` param
-- [ ] `BE-RCP.01e` — Implement pagination, search (full-text on name + cuisine), and filtering
-- [ ] `BE-RCP.01f` — Write API tests for all recipe endpoints
+- [ ] `BE-RCP.01c` — Implement recipe versioning: auto-increment on update, sync endpoint with `since_version` param
+
+---
+
+### BE-RCP.02: Recipe API — image upload, bulk export, testing
+- **Sprint:** [[sprint-06|Sprint 6]]
+- **Priority:** P0
+- **Points:** 3
+- **Blocked by:** [[BE-backend#BE-RCP.01|BE-RCP.01]]
+- **Blocks:** [[RCP-recipe#RCP-SYN.01|RCP-SYN.01]], [[IOS-ios#IOS-RCP.01|IOS-RCP.01]], [[AND-android#AND-RCP.01|AND-RCP.01]], [[ADM-admin#ADM-RCP.01|ADM-RCP.01]]
+
+**Acceptance Criteria:**
+- [ ] Image upload via presigned S3/R2 URL; CDN delivery
+- [ ] Pagination, search (full-text on name + cuisine), and filtering
+- [ ] Bulk export endpoint: GET `/api/recipes/export` returns all recipes as JSON
+- [ ] API tests for all recipe endpoints
+
+**Tasks:**
+- [ ] `BE-RCP.02a` — Implement image upload: presigned URL generation, CDN URL storage
+- [ ] `BE-RCP.02b` — Implement pagination, search (full-text on name + cuisine), and filtering
+- [ ] `BE-RCP.02c` — Implement bulk export endpoint; write API tests for all recipe endpoints
 
 ---
 
 ## Phase 2–3 — Device & MQTT (Sprints 7–8)
 
-### BE-DEV.01: Device management API — registration, telemetry storage, commands
+### BE-DEV.01: Device management API — registration, telemetry, status
 - **Sprint:** [[sprint-07|Sprint 7]]
 - **Priority:** P0
-- **Points:** 8
-- **Blocked by:** [[BE-backend#BE-SET.01|BE-SET.01]]
-- **Blocks:** [[IOS-ios#IOS-BLE.01|IOS-BLE.01]], [[AND-android#AND-BLE.01|AND-BLE.01]], [[ADM-admin#ADM-DEV.01|ADM-DEV.01]]
+- **Points:** 5
+- **Blocked by:** [[BE-backend#BE-SET.02|BE-SET.02]]
+- **Blocks:** [[BE-backend#BE-DEV.02|BE-DEV.02]]
 
 **Acceptance Criteria:**
 - [ ] Device registration: POST `/api/devices/register` with device UUID, firmware version, returns device token
 - [ ] Device telemetry storage: POST `/api/devices/:id/telemetry` stores sensor readings (time-series)
 - [ ] Device status: GET `/api/devices/:id` returns last seen, firmware version, cooking status
-- [ ] Device commands: POST `/api/devices/:id/commands` queues command (start_cook, abort, update)
-- [ ] User-device linking: POST `/api/devices/:id/claim` associates device with user account
-- [ ] Device list for user: GET `/api/devices` returns all claimed devices
 
 **Tasks:**
 - [ ] `BE-DEV.01a` — Create devices, device_telemetry, device_commands tables
 - [ ] `BE-DEV.01b` — Implement device registration with UUID validation and token generation
 - [ ] `BE-DEV.01c` — Implement telemetry ingestion endpoint with time-series storage
-- [ ] `BE-DEV.01d` — Implement device status and command queue endpoints
-- [ ] `BE-DEV.01e` — Implement user-device claim/unclaim flow
-- [ ] `BE-DEV.01f` — Write integration tests for device lifecycle
+
+---
+
+### BE-DEV.02: Device API — commands, user claiming, testing
+- **Sprint:** [[sprint-07|Sprint 7]]
+- **Priority:** P0
+- **Points:** 3
+- **Blocked by:** [[BE-backend#BE-DEV.01|BE-DEV.01]]
+- **Blocks:** [[IOS-ios#IOS-BLE.01|IOS-BLE.01]], [[AND-android#AND-BLE.01|AND-BLE.01]], [[ADM-admin#ADM-DEV.01|ADM-DEV.01]]
+
+**Acceptance Criteria:**
+- [ ] Device commands: POST `/api/devices/:id/commands` queues command (start_cook, abort, update)
+- [ ] User-device linking: POST `/api/devices/:id/claim` associates device with user account; unclaim endpoint
+- [ ] Device list for user: GET `/api/devices` returns all claimed devices
+- [ ] Integration tests for device lifecycle
+
+**Tasks:**
+- [ ] `BE-DEV.02a` — Implement device status and command queue endpoints
+- [ ] `BE-DEV.02b` — Implement user-device claim/unclaim flow
+- [ ] `BE-DEV.02c` — Write integration tests for device lifecycle
 
 ---
 
@@ -184,9 +227,12 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 
 | BE Story | Blocks | Reason |
 |----------|--------|--------|
-| BE-SET.01 | All BE stories | Foundation for all backend work |
-| BE-RCP.01 | RCP-SYN.01, IOS-RCP.01, AND-RCP.01, ADM-RCP.01 | Recipe API consumed by device sync, mobile, and admin |
-| BE-DEV.01 | IOS-BLE.01, AND-BLE.01, ADM-DEV.01 | Device API for pairing and monitoring |
+| BE-SET.01 | BE-SET.02, All subsequent BE stories | Foundation for all backend work |
+| BE-SET.02 | BE-RCP.01, BE-DEV.01 | Dev environment for API development |
+| BE-RCP.01 | BE-RCP.02 | Recipe CRUD needed for image upload and testing |
+| BE-RCP.02 | RCP-SYN.01, IOS-RCP.01, AND-RCP.01, ADM-RCP.01 | Recipe API consumed by device sync, mobile, and admin |
+| BE-DEV.01 | BE-DEV.02, BE-MQT.01 | Device registration needed for commands and MQTT |
+| BE-DEV.02 | IOS-BLE.01, AND-BLE.01, ADM-DEV.01 | Device API for pairing and monitoring |
 | BE-MQT.01 | ADM-DEV.01 | MQTT bridge for real-time device data |
 | BE-USR.01 | IOS-USR.01, AND-USR.01, ADM-USR.01 | User API for profiles and history |
 | BE-LCH.01 | INT-LCH.01 | Production backend for launch |
@@ -196,8 +242,11 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 | BE Story | Blocked by | Reason |
 |----------|------------|--------|
 | BE-SET.01 | None | Independent |
-| BE-RCP.01 | BE-SET.01 | Needs Fastify + DB setup |
-| BE-DEV.01 | BE-SET.01 | Needs Fastify + DB setup |
+| BE-SET.02 | BE-SET.01 | Needs Fastify + DB setup |
+| BE-RCP.01 | BE-SET.02 | Needs dev environment |
+| BE-RCP.02 | BE-RCP.01 | Needs recipe CRUD endpoints |
+| BE-DEV.01 | BE-SET.02 | Needs dev environment |
+| BE-DEV.02 | BE-DEV.01 | Needs device tables and registration |
 | BE-MQT.01 | BE-DEV.01 | Needs device table and API |
 | BE-USR.01 | BE-SET.01 | Needs auth module |
 | BE-LCH.01 | BE-USR.01 | Needs all features complete |

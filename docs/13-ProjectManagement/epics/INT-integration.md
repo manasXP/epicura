@@ -8,6 +8,7 @@ aliases: [INT Epic, Integration Epic]
 > | Date | Author | Change |
 > |------|--------|--------|
 > | 2026-02-16 | Manas Pradhan | Initial version — 4 stories across Sprints 11–12 |
+> | 2026-02-17 | Manas Pradhan | Split SYS.01 (8pts) → SYS.01+SYS.02; now 5 stories |
 
 # Epic: INT — Integration & Validation
 
@@ -17,22 +18,22 @@ Full system integration testing, safety certification testing, reliability endur
 
 | Module | Stories | Points | Sprints |
 |--------|:-------:|:------:|---------|
-| SYS — System Integration | 1 | 8 | 11 |
+| SYS — System Integration | 2 | 8 | 11 |
 | SAF — Safety Certification | 1 | 5 | 11 |
 | REL — Reliability Testing | 1 | 5 | 12 |
 | LCH — Launch Readiness | 1 | 5 | 12 |
-| **Total** | **4** | **~24** | |
+| **Total** | **5** | **~24** | |
 
 ---
 
 ## Phase 4 — Integration (Sprints 11–12)
 
-### INT-SYS.01: Full system integration test — end-to-end autonomous cooking
+### INT-SYS.01: System integration test — end-to-end autonomous cooking of 3 recipes
 - **Sprint:** [[sprint-11|Sprint 11]]
 - **Priority:** P0
-- **Points:** 8
+- **Points:** 5
 - **Blocked by:** [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]], [[RCP-recipe#RCP-DSP.01|RCP-DSP.01]], [[UI-touchscreen#UI-COK.01|UI-COK.01]], [[THR-thermal#THR-PID.01|THR-PID.01]], [[ARM-actuation#ARM-SRV.01|ARM-SRV.01]]
-- **Blocks:** [[INT-integration#INT-REL.01|INT-REL.01]], [[EMB-embedded#EMB-LCH.01|EMB-LCH.01]]
+- **Blocks:** [[INT-integration#INT-SYS.02|INT-SYS.02]]
 
 **Acceptance Criteria:**
 - [ ] Cook 3 recipes autonomously end-to-end: dal tadka, rice, khichdi
@@ -40,17 +41,32 @@ Full system integration testing, safety certification testing, reliability endur
 - [ ] Temperature control within ±10°C of recipe targets throughout cooking
 - [ ] All 3 dispensing subsystems (P-ASD, CID, SLD) dispense within ±15% accuracy
 - [ ] CV correctly identifies at least 4 of 6 cooking stages per recipe
-- [ ] UI displays correct status, camera feed, and controls throughout
-- [ ] Cook session data logged to PostgreSQL with complete telemetry
-- [ ] No safety faults triggered during normal operation
 
 **Tasks:**
 - [ ] `INT-SYS.01a` — Set up integration test environment: load ingredients, calibrate dispensers
 - [ ] `INT-SYS.01b` — Execute dal tadka recipe: record all telemetry, note deviations
 - [ ] `INT-SYS.01c` — Execute rice recipe: verify water dispensing accuracy and boil detection
 - [ ] `INT-SYS.01d` — Execute khichdi recipe: verify multi-ingredient dispensing sequence
-- [ ] `INT-SYS.01e` — Analyze telemetry data: temperature accuracy, dispensing accuracy, timing
-- [ ] `INT-SYS.01f` — Document integration test results and create issue tickets for failures
+
+---
+
+### INT-SYS.02: Integration test analysis — telemetry review, UI validation, defect documentation
+- **Sprint:** [[sprint-11|Sprint 11]]
+- **Priority:** P0
+- **Points:** 3
+- **Blocked by:** [[INT-integration#INT-SYS.01|INT-SYS.01]]
+- **Blocks:** [[INT-integration#INT-REL.01|INT-REL.01]], [[EMB-embedded#EMB-LCH.01|EMB-LCH.01]]
+
+**Acceptance Criteria:**
+- [ ] UI displays correct status, camera feed, and controls throughout
+- [ ] Cook session data logged to PostgreSQL with complete telemetry
+- [ ] No safety faults triggered during normal operation
+- [ ] Telemetry analysis report produced (temperature accuracy, dispensing accuracy, timing)
+- [ ] Issue tickets created for all failures
+
+**Tasks:**
+- [ ] `INT-SYS.02a` — Analyze telemetry data: temperature accuracy, dispensing accuracy, timing
+- [ ] `INT-SYS.02b` — Document integration test results and create issue tickets for failures
 
 ---
 
@@ -84,7 +100,7 @@ Full system integration testing, safety certification testing, reliability endur
 - **Sprint:** [[sprint-12|Sprint 12]]
 - **Priority:** P0
 - **Points:** 5
-- **Blocked by:** [[INT-integration#INT-SYS.01|INT-SYS.01]]
+- **Blocked by:** [[INT-integration#INT-SYS.02|INT-SYS.02]]
 - **Blocks:** [[INT-integration#INT-LCH.01|INT-LCH.01]]
 
 **Acceptance Criteria:**
@@ -137,7 +153,8 @@ Full system integration testing, safety certification testing, reliability endur
 
 | INT Story | Blocks | Reason |
 |-----------|--------|--------|
-| INT-SYS.01 | INT-REL.01, EMB-LCH.01 | Integration tests must pass before reliability and production firmware |
+| INT-SYS.01 | INT-SYS.02 | Cooking tests must complete before analysis |
+| INT-SYS.02 | INT-REL.01, EMB-LCH.01 | Integration analysis must pass before reliability and production firmware |
 | INT-SAF.01 | INT-LCH.01 | Safety certification required for launch |
 | INT-REL.01 | INT-LCH.01 | Reliability validation required for launch |
 
@@ -146,8 +163,9 @@ Full system integration testing, safety certification testing, reliability endur
 | INT Story | Blocked by | Reason |
 |-----------|------------|--------|
 | INT-SYS.01 | RCP-FSM.01, RCP-DSP.01, UI-COK.01, THR-PID.01, ARM-SRV.01 | Needs all subsystems working |
+| INT-SYS.02 | INT-SYS.01 | Needs cooking tests completed |
 | INT-SAF.01 | EMB-SAF.01, THR-SAF.01 | Needs safety systems implemented |
-| INT-REL.01 | INT-SYS.01 | Needs integration tests passing |
+| INT-REL.01 | INT-SYS.02 | Needs integration analysis passing |
 | INT-LCH.01 | INT-SAF.01, INT-REL.01, EMB-LCH.01, EMB-OTA.01, BE-LCH.01 | Needs everything complete |
 
 ---

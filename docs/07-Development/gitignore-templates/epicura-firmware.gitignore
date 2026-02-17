@@ -1,0 +1,38 @@
+# === epicura-firmware (.gitignore) ===
+# C / STM32 / FreeRTOS
+
+# Build output
+build/
+*.o
+*.d
+*.elf
+*.bin
+*.hex
+*.map
+*.lst
+
+# STM32CubeMX backups
+*.ioc.bak
+*_backup*/
+
+# OpenOCD temp files
+*.cfg~
+
+# IDE / toolchain
+.vscode/
+.idea/
+.settings/
+.project
+.cproject
+*.launch
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Secrets / local config
+.env
+*.local
+
+# Debug logs
+*.log

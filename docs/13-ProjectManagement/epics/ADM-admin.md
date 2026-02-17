@@ -8,6 +8,7 @@ aliases: [ADM Epic, Admin Epic]
 > | Date | Author | Change |
 > |------|--------|--------|
 > | 2026-02-16 | Manas Pradhan | Initial version — 4 stories across Sprints 10–12 |
+> | 2026-02-17 | Manas Pradhan | Split RCP.01 (8pts) → RCP.01+RCP.02; now 5 stories |
 
 # Epic: ADM — Admin Portal (Next.js)
 
@@ -18,10 +19,10 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 | Module | Stories | Points | Sprints |
 |--------|:-------:|:------:|---------|
 | SET — Project Setup | 1 | 5 | 10 |
-| RCP — Recipe Management | 1 | 8 | 10 |
+| RCP — Recipe Management | 2 | 8 | 10 |
 | DEV — Device Monitoring | 1 | 5 | 11 |
 | USR — User Administration | 1 | 5 | 12 |
-| **Total** | **4** | **~22** | |
+| **Total** | **5** | **~22** | |
 
 ---
 
@@ -50,28 +51,41 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 
 ---
 
-### ADM-RCP.01: Recipe management — CRUD, YAML editor, image upload
+### ADM-RCP.01: Recipe management — list, create/edit form, YAML editor
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
-- **Points:** 8
+- **Points:** 5
 - **Blocked by:** [[ADM-admin#ADM-SET.01|ADM-SET.01]], [[BE-backend#BE-RCP.01|BE-RCP.01]]
-- **Blocks:** None
+- **Blocks:** [[ADM-admin#ADM-RCP.02|ADM-RCP.02]]
 
 **Acceptance Criteria:**
 - [ ] Recipe list: TanStack Table with sort, search, pagination
-- [ ] Recipe create/edit form: name, cuisine, servings, time, difficulty, image upload
+- [ ] Recipe create/edit form: name, cuisine, servings, time, difficulty
 - [ ] YAML editor: Monaco editor for ingredients and steps with syntax highlighting
-- [ ] Recipe preview: rendered view of YAML steps as timeline
-- [ ] Image upload with drag-and-drop; preview before save
-- [ ] Delete with confirmation dialog; soft delete with undo
 
 **Tasks:**
 - [ ] `ADM-RCP.01a` — Implement recipe list page with TanStack Table, server-side pagination
 - [ ] `ADM-RCP.01b` — Implement recipe form with shadcn/ui Form and Zod validation
 - [ ] `ADM-RCP.01c` — Integrate Monaco editor for YAML ingredient/step editing
-- [ ] `ADM-RCP.01d` — Implement image upload with drag-and-drop and presigned URL
-- [ ] `ADM-RCP.01e` — Implement recipe preview renderer for YAML steps
-- [ ] `ADM-RCP.01f` — Implement delete with confirmation and soft-delete/undo
+
+---
+
+### ADM-RCP.02: Recipe management — image upload, preview, delete
+- **Sprint:** [[sprint-10|Sprint 10]]
+- **Priority:** P0
+- **Points:** 3
+- **Blocked by:** [[ADM-admin#ADM-RCP.01|ADM-RCP.01]]
+- **Blocks:** None
+
+**Acceptance Criteria:**
+- [ ] Image upload with drag-and-drop and presigned URL; preview before save
+- [ ] Recipe preview: rendered view of YAML steps as timeline
+- [ ] Delete with confirmation dialog; soft delete with undo
+
+**Tasks:**
+- [ ] `ADM-RCP.02a` — Implement image upload with drag-and-drop and presigned URL
+- [ ] `ADM-RCP.02b` — Implement recipe preview renderer for YAML steps
+- [ ] `ADM-RCP.02c` — Implement delete with confirmation and soft-delete/undo
 
 ---
 
@@ -132,6 +146,7 @@ None — Admin portal is a leaf node.
 |-----------|------------|--------|
 | ADM-SET.01 | BE-SET.01 | Needs backend auth API |
 | ADM-RCP.01 | ADM-SET.01, BE-RCP.01 | Needs portal scaffold + recipe API |
+| ADM-RCP.02 | ADM-RCP.01 | Needs recipe list and form |
 | ADM-DEV.01 | ADM-SET.01, BE-DEV.01, BE-MQT.01 | Needs portal + device API + MQTT |
 | ADM-USR.01 | ADM-SET.01, BE-USR.01 | Needs portal + user API |
 

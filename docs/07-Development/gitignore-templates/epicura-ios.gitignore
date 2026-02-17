@@ -1,0 +1,39 @@
+# === epicura-ios (.gitignore) ===
+# Swift / Xcode
+
+# Xcode build
+DerivedData/
+build/
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Xcode user data
+*.xcuserdata/
+*.xcworkspace/xcuserdata/
+xcuserdata/
+
+# CocoaPods
+Pods/
+
+# Swift Package Manager
+.build/
+Package.resolved
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+
+# Secrets / local config
+.env
+*.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

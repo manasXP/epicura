@@ -1,0 +1,46 @@
+# === epicura-cm5 (.gitignore) ===
+# Python / Docker / Yocto
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+*.whl
+
+# Virtual environments
+venv/
+.venv/
+
+# Type checking / linting
+.mypy_cache/
+.ruff_cache/
+
+# Large ML models (track with DVC or LFS instead)
+*.tflite
+*.onnx
+
+# Docker
+docker-compose.override.yml
+
+# Yocto build artifacts
+build/tmp/
+build/cache/
+build/sstate-cache/
+
+# Secrets / local config
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

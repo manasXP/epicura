@@ -8,6 +8,7 @@ aliases: [IOS Epic, iOS Epic]
 > | Date | Author | Change |
 > |------|--------|--------|
 > | 2026-02-16 | Manas Pradhan | Initial version — 5 stories across Sprints 8–12 |
+> | 2026-02-17 | Manas Pradhan | Split BLE.01 (8pts) → BLE.01+BLE.02, COK.01 (8pts) → COK.01+COK.02; now 7 stories |
 
 # Epic: IOS — iOS App (SwiftUI)
 
@@ -18,11 +19,11 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 | Module | Stories | Points | Sprints |
 |--------|:-------:|:------:|---------|
 | SET — Project Setup | 1 | 5 | 8 |
-| BLE — BLE Pairing | 1 | 8 | 8 |
+| BLE — BLE Pairing | 2 | 8 | 8 |
 | RCP — Recipe Browsing | 1 | 5 | 9 |
-| COK — Live Cooking | 1 | 8 | 10 |
+| COK — Live Cooking | 2 | 8 | 10 |
 | USR — User Profile | 1 | 5 | 11 |
-| **Total** | **5** | **~30** | |
+| **Total** | **7** | **~30** | |
 
 ---
 
@@ -52,28 +53,42 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 
 ---
 
-### IOS-BLE.01: BLE pairing — device discovery, WiFi provisioning, device claiming
+### IOS-BLE.01: BLE pairing — CoreBluetooth scanning, WiFi provisioning
 - **Sprint:** [[sprint-08|Sprint 8]]
 - **Priority:** P0
-- **Points:** 8
+- **Points:** 5
 - **Blocked by:** [[IOS-ios#IOS-SET.01|IOS-SET.01]], [[BE-backend#BE-DEV.01|BE-DEV.01]]
-- **Blocks:** [[IOS-ios#IOS-COK.01|IOS-COK.01]]
+- **Blocks:** [[IOS-ios#IOS-BLE.02|IOS-BLE.02]]
 
 **Acceptance Criteria:**
 - [ ] BLE scan discovers Epicura devices advertising service UUID
 - [ ] Pairing flow: scan → select device → connect → exchange WiFi credentials → verify connection
 - [ ] WiFi SSID and password sent to device via BLE characteristic write
 - [ ] Device confirms WiFi connection and registers with cloud API
-- [ ] App claims device via POST `/api/devices/:id/claim`
-- [ ] Paired device shown on Home screen with status (online/offline/cooking)
 
 **Tasks:**
 - [ ] `IOS-BLE.01a` — Implement CoreBluetooth manager: scan, connect, discover services
 - [ ] `IOS-BLE.01b` — Implement BLE pairing flow UI: scan screen, device list, pairing progress
 - [ ] `IOS-BLE.01c` — Implement WiFi provisioning: write SSID/password to BLE characteristic
-- [ ] `IOS-BLE.01d` — Implement device claim API call after successful WiFi connection
-- [ ] `IOS-BLE.01e` — Implement Home screen with paired device card and status indicator
-- [ ] `IOS-BLE.01f` — Test BLE flow end-to-end with Epicura device (or BLE simulator)
+
+---
+
+### IOS-BLE.02: BLE device management — claim API, home screen status, end-to-end test
+- **Sprint:** [[sprint-08|Sprint 8]]
+- **Priority:** P0
+- **Points:** 3
+- **Blocked by:** [[IOS-ios#IOS-BLE.01|IOS-BLE.01]]
+- **Blocks:** [[IOS-ios#IOS-COK.01|IOS-COK.01]]
+
+**Acceptance Criteria:**
+- [ ] App claims device via POST `/api/devices/:id/claim`
+- [ ] Paired device shown on Home screen with status (online/offline/cooking)
+- [ ] End-to-end BLE test with Epicura device (or BLE simulator)
+
+**Tasks:**
+- [ ] `IOS-BLE.02a` — Implement device claim API call after successful WiFi connection
+- [ ] `IOS-BLE.02b` — Implement Home screen with paired device card and status indicator
+- [ ] `IOS-BLE.02c` — Test BLE flow end-to-end with Epicura device (or BLE simulator)
 
 ---
 
@@ -103,30 +118,44 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 
 ---
 
-### IOS-COK.01: Live cooking view — camera stream, status, controls
+### IOS-COK.01: Live cooking view — camera stream, status, temperature, timer
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
-- **Points:** 8
-- **Blocked by:** [[IOS-ios#IOS-BLE.01|IOS-BLE.01]]
-- **Blocks:** None
+- **Points:** 5
+- **Blocked by:** [[IOS-ios#IOS-BLE.02|IOS-BLE.02]]
+- **Blocks:** [[IOS-ios#IOS-COK.02|IOS-COK.02]]
 
 **Acceptance Criteria:**
 - [ ] Live camera stream from device via WebSocket (MJPEG or H.264)
 - [ ] Cooking status overlay: current state, step name, progress bar
 - [ ] Temperature display: current vs target with animated gauge
 - [ ] Timer: step countdown and total elapsed
-- [ ] Controls: Pause/Resume, Abort (with confirmation alert)
-- [ ] Push notifications for cooking events: done, error, attention needed
-- [ ] Background audio alert when cooking requires user intervention
 
 **Tasks:**
 - [ ] `IOS-COK.01a` — Implement WebSocket client for camera stream; render in AVPlayerLayer or UIImage
 - [ ] `IOS-COK.01b` — Implement cooking status view: state, step, progress from MQTT via API polling
 - [ ] `IOS-COK.01c` — Implement temperature gauge with SwiftUI animation
 - [ ] `IOS-COK.01d` — Implement timer with background countdown
-- [ ] `IOS-COK.01e` — Implement pause/resume and abort controls via device command API
-- [ ] `IOS-COK.01f` — Implement push notifications (APNs) for cooking events
-- [ ] `IOS-COK.01g` — Test with live device: verify stream quality and control responsiveness
+
+---
+
+### IOS-COK.02: Cooking controls and notifications — pause/abort, push notifications, background alerts
+- **Sprint:** [[sprint-10|Sprint 10]]
+- **Priority:** P0
+- **Points:** 3
+- **Blocked by:** [[IOS-ios#IOS-COK.01|IOS-COK.01]]
+- **Blocks:** None
+
+**Acceptance Criteria:**
+- [ ] Controls: Pause/Resume, Abort (with confirmation alert)
+- [ ] Push notifications (APNs) for cooking events: done, error, attention needed
+- [ ] Background audio alert when cooking requires user intervention
+- [ ] Tested with live device: verify stream quality and control responsiveness
+
+**Tasks:**
+- [ ] `IOS-COK.02a` — Implement pause/resume and abort controls via device command API
+- [ ] `IOS-COK.02b` — Implement push notifications (APNs) for cooking events
+- [ ] `IOS-COK.02c` — Test with live device: verify stream quality and control responsiveness
 
 ---
 
@@ -169,8 +198,10 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 |-----------|------------|--------|
 | IOS-SET.01 | BE-SET.01 | Needs backend auth API |
 | IOS-BLE.01 | IOS-SET.01, BE-DEV.01 | Needs networking layer + device API |
+| IOS-BLE.02 | IOS-BLE.01 | Needs BLE pairing flow |
 | IOS-RCP.01 | IOS-SET.01, BE-RCP.01 | Needs app scaffold + recipe API |
-| IOS-COK.01 | IOS-BLE.01 | Needs paired device for streaming |
+| IOS-COK.01 | IOS-BLE.02 | Needs paired device for streaming |
+| IOS-COK.02 | IOS-COK.01 | Needs live cooking view |
 | IOS-USR.01 | BE-USR.01 | Needs user API |
 
 ---

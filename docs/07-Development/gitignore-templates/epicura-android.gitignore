@@ -1,0 +1,35 @@
+# === epicura-android (.gitignore) ===
+# Kotlin / Gradle
+
+# Gradle
+.gradle/
+build/
+
+# Local properties (SDK path, signing keys)
+local.properties
+
+# Build outputs
+*.apk
+*.aab
+
+# IntelliJ / Android Studio workspace files
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries/
+.idea/shelf/
+.idea/libraries/
+.idea/caches/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+
+# Secrets / local config
+.env
+*.local
+
+# OS files
+.DS_Store
+Thumbs.db

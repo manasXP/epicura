@@ -8,6 +8,7 @@ aliases: [CV Epic, Vision Epic]
 > | Date | Author | Change |
 > |------|--------|--------|
 > | 2026-02-16 | Manas Pradhan | Initial version — 4 stories across Sprints 6–7 |
+> | 2026-02-17 | Manas Pradhan | Split CV-MDL.01 (10pts) → MDL.01+MDL.02 (5+5); split CV-DET.01 (8pts) → DET.01+DET.02 (5+3); total 6 stories |
 
 # Epic: CV — Computer Vision Pipeline
 
@@ -19,9 +20,9 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 |--------|:-------:|:------:|---------|
 | CAM — Camera Setup | 1 | 5 | 6 |
 | PRE — Image Preprocessing | 1 | 5 | 6 |
-| MDL — ML Model | 1 | 10 | 7 |
-| DET — Stage Detection | 1 | 8 | 7 |
-| **Total** | **4** | **~28** | |
+| MDL — ML Model | 2 | 10 | 7 |
+| DET — Stage Detection | 2 | 8 | 7 |
+| **Total** | **6** | **~28** | |
 
 ---
 
@@ -76,53 +77,81 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 
 ## Phase 2 — ML Model & Detection (Sprint 7)
 
-### CV-MDL.01: TFLite food classification model — training, quantization, deployment
+### CV-MDL.01: TFLite model training — dataset collection, MobileNetV2 fine-tuning
 - **Sprint:** [[sprint-07|Sprint 7]]
 - **Priority:** P0
-- **Points:** 10
+- **Points:** 5
 - **Blocked by:** [[CV-vision#CV-PRE.01|CV-PRE.01]]
-- **Blocks:** [[CV-vision#CV-DET.01|CV-DET.01]], [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]]
+- **Blocks:** [[CV-vision#CV-MDL.02|CV-MDL.02]]
 
 **Acceptance Criteria:**
-- [ ] MobileNetV2 fine-tuned on cooking stage dataset (raw, boiling, simmering, browned, burnt, done)
-- [ ] INT8 quantization via TFLite converter; model size <5MB
-- [ ] Inference time <100ms on CM5 (CPU, no GPU/NPU)
+- [ ] 500+ images per class collected and curated (raw, boiling, simmering, browned, burnt, done)
+- [ ] MobileNetV2 fine-tuned via transfer learning from ImageNet on cooking stage dataset
 - [ ] Classification accuracy >85% on validation set (6 classes)
-- [ ] Model deployed as .tflite file in cv-pipeline container
-- [ ] Inference results published to MQTT: `epicura/cv/classification` with class, confidence, timestamp
 
 **Tasks:**
 - [ ] `CV-MDL.01a` — Collect/curate training dataset: 500+ images per class (raw, boiling, simmering, browned, burnt, done)
 - [ ] `CV-MDL.01b` — Fine-tune MobileNetV2 on cooking stage dataset (transfer learning from ImageNet)
-- [ ] `CV-MDL.01c` — Apply INT8 post-training quantization via TFLite converter
-- [ ] `CV-MDL.01d` — Deploy .tflite model to cv-pipeline container; implement inference wrapper
-- [ ] `CV-MDL.01e` — Benchmark inference on CM5: measure latency and accuracy on test set
-- [ ] `CV-MDL.01f` — Implement MQTT publisher for classification results
 
 ---
 
-### CV-DET.01: Cooking stage detection — state tracking, anomaly alerts, confidence thresholds
+### CV-MDL.02: TFLite model deployment — INT8 quantization, inference service, benchmarking
 - **Sprint:** [[sprint-07|Sprint 7]]
 - **Priority:** P0
-- **Points:** 8
+- **Points:** 5
 - **Blocked by:** [[CV-vision#CV-MDL.01|CV-MDL.01]]
-- **Blocks:** [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]]
+- **Blocks:** [[CV-vision#CV-DET.01|CV-DET.01]], [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]]
+
+**Acceptance Criteria:**
+- [ ] INT8 quantization via TFLite converter; model size <5MB
+- [ ] Inference time <100ms on CM5 (CPU, no GPU/NPU)
+- [ ] Model deployed as .tflite file in cv-pipeline container
+- [ ] Inference results published to MQTT: `epicura/cv/classification` with class, confidence, timestamp
+
+**Tasks:**
+- [ ] `CV-MDL.02a` — Apply INT8 post-training quantization via TFLite converter
+- [ ] `CV-MDL.02b` — Deploy .tflite model to cv-pipeline container; implement inference wrapper
+- [ ] `CV-MDL.02c` — Benchmark inference on CM5: measure latency and accuracy on test set
+- [ ] `CV-MDL.02d` — Implement MQTT publisher for classification results
+
+---
+
+### CV-DET.01: Cooking stage detection — sliding window classifier, transition detection, anomaly alerts
+- **Sprint:** [[sprint-07|Sprint 7]]
+- **Priority:** P0
+- **Points:** 5
+- **Blocked by:** [[CV-vision#CV-MDL.02|CV-MDL.02]]
+- **Blocks:** [[CV-vision#CV-DET.02|CV-DET.02]], [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]]
 
 **Acceptance Criteria:**
 - [ ] Stage tracker: smooths classification over 5-frame window (majority vote) to reduce flickering
-- [ ] Stage transition detection: publishes `epicura/cv/stage_change` on confirmed transition
+- [ ] Stage transition detection: publishes `epicura/cv/stage_change` on confirmed transition with hysteresis (3 consecutive windows)
 - [ ] Anomaly detection: burnt class with confidence >0.7 triggers immediate alert to recipe engine
 - [ ] Confidence threshold: only report classification if confidence >0.6; else report "uncertain"
-- [ ] Stage history logged to PostgreSQL: timestamp, class, confidence for each transition
-- [ ] Visual overlay: current stage label + confidence rendered on camera feed for UI
 
 **Tasks:**
 - [ ] `CV-DET.01a` — Implement sliding window classifier: 5-frame majority vote with confidence averaging
 - [ ] `CV-DET.01b` — Implement stage transition detector with hysteresis (must hold new class for 3 consecutive windows)
 - [ ] `CV-DET.01c` — Implement anomaly alerting: subscribe to classification, publish alert on burnt/overflow detection
-- [ ] `CV-DET.01d` — Implement PostgreSQL logging of stage transitions
-- [ ] `CV-DET.01e` — Implement visual overlay renderer for Kivy UI camera widget
-- [ ] `CV-DET.01f` — Test with recorded cooking videos: verify stage detection accuracy and alert timing
+
+---
+
+### CV-DET.02: Stage detection logging and visualization — PostgreSQL logging, UI overlay, video testing
+- **Sprint:** [[sprint-07|Sprint 7]]
+- **Priority:** P0
+- **Points:** 3
+- **Blocked by:** [[CV-vision#CV-DET.01|CV-DET.01]]
+- **Blocks:** [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]]
+
+**Acceptance Criteria:**
+- [ ] Stage history logged to PostgreSQL: timestamp, class, confidence for each transition
+- [ ] Visual overlay: current stage label + confidence rendered on camera feed for Kivy UI
+- [ ] Tested with recorded cooking videos: verified stage detection accuracy and alert timing
+
+**Tasks:**
+- [ ] `CV-DET.02a` — Implement PostgreSQL logging of stage transitions
+- [ ] `CV-DET.02b` — Implement visual overlay renderer for Kivy UI camera widget
+- [ ] `CV-DET.02c` — Test with recorded cooking videos: verify stage detection accuracy and alert timing
 
 ---
 
@@ -134,8 +163,10 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 |----------|--------|--------|
 | CV-CAM.01 | CV-PRE.01 | Camera needed for preprocessing |
 | CV-PRE.01 | CV-MDL.01 | Preprocessed images needed for model |
-| CV-MDL.01 | CV-DET.01, RCP-FSM.01 | Model needed for stage detection and recipe engine |
-| CV-DET.01 | RCP-FSM.01 | Stage detection feeds recipe state machine |
+| CV-MDL.01 | CV-MDL.02 | Trained model needed for quantization and deployment |
+| CV-MDL.02 | CV-DET.01, RCP-FSM.01 | Deployed model needed for stage detection and recipe engine |
+| CV-DET.01 | CV-DET.02, RCP-FSM.01 | Core detection needed for logging/UI and recipe state machine |
+| CV-DET.02 | RCP-FSM.01 | Stage detection logging feeds recipe state machine |
 
 ### What blocks CV (upstream dependencies)
 
@@ -144,7 +175,9 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 | CV-CAM.01 | EMB-SET.02, EMB-SET.03 | Need CM5 platform and Docker containers |
 | CV-PRE.01 | CV-CAM.01 | Need camera images |
 | CV-MDL.01 | CV-PRE.01 | Need preprocessing pipeline |
-| CV-DET.01 | CV-MDL.01 | Need classification model |
+| CV-MDL.02 | CV-MDL.01 | Need trained model for quantization |
+| CV-DET.01 | CV-MDL.02 | Need deployed classification model |
+| CV-DET.02 | CV-DET.01 | Need core stage detection logic |
 
 ---
 

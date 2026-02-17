@@ -18,3 +18,13 @@
 # IDE
 .vscode/
 .idea/
+
+# KiCAD
+*-backups/
+*.kicad_bak
+fp-info-cache
+*.dsn
+*.ses
+
+# PCB build artifacts
+pcb/**/gerbers/*.zip

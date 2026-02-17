@@ -8,6 +8,7 @@ aliases: [UI Epic, Touchscreen Epic]
 > | Date | Author | Change |
 > |------|--------|--------|
 > | 2026-02-16 | Manas Pradhan | Initial version — 4 stories across Sprints 9–10 |
+> | 2026-02-17 | Manas Pradhan | Split UI-COK.01 (8pts) into UI-COK.01 (5pts) + UI-COK.02 (3pts) |
 
 # Epic: UI — Touchscreen UI (Kivy)
 
@@ -19,9 +20,9 @@ aliases: [UI Epic, Touchscreen Epic]
 |--------|:-------:|:------:|---------|
 | SET — App Scaffold | 1 | 5 | 9 |
 | RCP — Recipe Browser | 1 | 5 | 9 |
-| COK — Cooking Screen | 1 | 8 | 10 |
+| COK — Cooking Screen | 2 | 8 | 10 |
 | MNT — Settings & Maintenance | 1 | 5 | 10 |
-| **Total** | **4** | **~24** | |
+| **Total** | **5** | **~24** | |
 
 ---
 
@@ -77,21 +78,18 @@ aliases: [UI Epic, Touchscreen Epic]
 
 ---
 
-### UI-COK.01: Live cooking screen — status, camera feed, timer, controls
+### UI-COK.01: Live cooking screen — camera feed, status, temperature, timer
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
-- **Points:** 8
+- **Points:** 5
 - **Blocked by:** [[UI-touchscreen#UI-SET.01|UI-SET.01]], [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]]
-- **Blocks:** [[INT-integration#INT-SYS.01|INT-SYS.01]]
+- **Blocks:** [[UI-touchscreen#UI-COK.02|UI-COK.02]]
 
 **Acceptance Criteria:**
 - [ ] Live camera feed (720p) displayed in main area with CV stage overlay
 - [ ] Current cooking state and step shown with progress bar
 - [ ] Temperature display: current (IR) vs target, with visual gauge
 - [ ] Timer: countdown for current step; total elapsed time
-- [ ] Control buttons: Pause/Resume, Abort (with confirmation dialog)
-- [ ] Dispensing status: current ingredient being dispensed, progress
-- [ ] Alert banners: thermal warning (yellow), safety shutdown (red), dispense error (orange)
 - [ ] Screen stays awake during cooking (no screen timeout)
 
 **Tasks:**
@@ -99,9 +97,26 @@ aliases: [UI Epic, Touchscreen Epic]
 - [ ] `UI-COK.01b` — Implement status panel: state label, step name, progress bar
 - [ ] `UI-COK.01c` — Implement temperature gauge widget: current vs target, color-coded
 - [ ] `UI-COK.01d` — Implement timer widget: step countdown + total elapsed
-- [ ] `UI-COK.01e` — Implement control buttons: pause/resume (MQTT publish), abort with confirmation
-- [ ] `UI-COK.01f` — Implement alert banner system: subscribe to MQTT alerts, display with severity colors
-- [ ] `UI-COK.01g` — Test during simulated cook: verify all widgets update in real-time
+
+---
+
+### UI-COK.02: Cooking screen controls and alerts — pause/resume, abort, alert banners
+- **Sprint:** [[sprint-10|Sprint 10]]
+- **Priority:** P0
+- **Points:** 3
+- **Blocked by:** [[UI-touchscreen#UI-COK.01|UI-COK.01]]
+- **Blocks:** [[INT-integration#INT-SYS.01|INT-SYS.01]]
+
+**Acceptance Criteria:**
+- [ ] Control buttons: Pause/Resume, Abort (with confirmation dialog)
+- [ ] Dispensing status: current ingredient being dispensed, progress
+- [ ] Alert banners: thermal warning (yellow), safety shutdown (red), dispense error (orange)
+- [ ] All real-time widgets tested during simulated cook
+
+**Tasks:**
+- [ ] `UI-COK.02a` — Implement control buttons: pause/resume (MQTT publish), abort with confirmation
+- [ ] `UI-COK.02b` — Implement alert banner system: subscribe to MQTT alerts, display with severity colors
+- [ ] `UI-COK.02c` — Test during simulated cook: verify all widgets update in real-time
 
 ---
 
@@ -136,7 +151,7 @@ aliases: [UI Epic, Touchscreen Epic]
 
 | UI Story | Blocks | Reason |
 |----------|--------|--------|
-| UI-COK.01 | INT-SYS.01 | Cooking UI needed for end-to-end integration test |
+| UI-COK.02 | INT-SYS.01 | Cooking UI needed for end-to-end integration test |
 
 ### What blocks UI (upstream dependencies)
 
@@ -145,6 +160,7 @@ aliases: [UI Epic, Touchscreen Epic]
 | UI-SET.01 | EMB-SET.02, EMB-SET.03 | Need CM5 Docker + Kivy container |
 | UI-RCP.01 | UI-SET.01, RCP-FMT.01 | Need app scaffold and recipe format |
 | UI-COK.01 | UI-SET.01, RCP-FSM.01 | Need app scaffold and state machine |
+| UI-COK.02 | UI-COK.01 | Need cooking screen base layout |
 | UI-MNT.01 | UI-SET.01 | Need app scaffold |
 
 ---

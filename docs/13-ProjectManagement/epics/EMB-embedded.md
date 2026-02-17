@@ -8,6 +8,7 @@ aliases: [EMB Epic, Embedded Epic]
 > | Date | Author | Change |
 > |------|--------|--------|
 > | 2026-02-16 | Manas Pradhan | Initial version — 7 stories across Sprints 1–2 and 11–12 |
+> | 2026-02-17 | Manas Pradhan | Split >5pt stories for sprint-sized delivery |
 
 # Epic: EMB — Embedded Platform
 
@@ -17,89 +18,133 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 
 | Module | Stories | Points | Sprints |
 |--------|:-------:|:------:|---------|
-| SET — Platform Setup | 3 | 21 | 1–2 |
-| COM — Inter-Processor Communication | 1 | 8 | 1 |
+| SET — Platform Setup | 5 | 21 | 1–2 |
+| COM — Inter-Processor Communication | 2 | 8 | 1 |
 | SAF — Safety Systems | 1 | 5 | 2 |
 | OTA — Over-The-Air Updates | 1 | 5 | 2 |
 | LCH — Launch Readiness | 1 | 5 | 12 |
-| **Total** | **7** | **~46** | |
+| **Total** | **10** | **~46** | |
 
 ---
 
 ## Phase 0 — Foundation (Sprints 1–2)
 
-### EMB-SET.01: STM32 FreeRTOS project — HAL config, task scaffold, watchdog
+### EMB-SET.01: STM32 FreeRTOS project — HAL config, task scaffold
 - **Sprint:** [[sprint-01|Sprint 1]]
 - **Priority:** P0
-- **Points:** 8
+- **Points:** 5
 - **Blocked by:** [[PCB-pcb-design#PCB-FAB.02|PCB-FAB.02]]
-- **Blocks:** [[THR-thermal#THR-CAN.01|THR-CAN.01]], [[ARM-actuation#ARM-SRV.01|ARM-SRV.01]], All STM32-dependent stories
+- **Blocks:** [[EMB-embedded#EMB-SET.01b|EMB-SET.01b]]
 
 **Acceptance Criteria:**
 - [ ] STM32CubeIDE project created with STM32G474RE target; HAL drivers generated
+- [ ] HAL peripherals configured: SPI1, USART1, I2C1, FDCAN1, TIM1-4, ADC1-2
 - [ ] FreeRTOS configured with 4 tasks: PID (100Hz), Servo (50Hz), Sensor (10Hz), Comms (20Hz)
-- [ ] Hardware watchdog (IWDG) enabled with 500ms timeout; kicks in all task loops
-- [ ] UART debug printf working via USART1 at 115200 baud
-- [ ] LED heartbeat blink confirms RTOS scheduler running
-- [ ] Stack overflow detection enabled (FreeRTOS configCHECK_FOR_STACK_OVERFLOW)
 
 **Tasks:**
 - [ ] `EMB-SET.01a` — Create STM32CubeIDE project; configure clock tree (170 MHz HSE+PLL)
 - [ ] `EMB-SET.01b` — Enable and configure HAL peripherals: SPI1, USART1, I2C1, FDCAN1, TIM1-4, ADC1-2
 - [ ] `EMB-SET.01c` — Configure FreeRTOS: 4 tasks with priorities (PID=4, Servo=3, Sensor=2, Comms=1)
+
+---
+
+### EMB-SET.01b: STM32 debug and watchdog — IWDG, UART printf, heartbeat
+- **Sprint:** [[sprint-01|Sprint 1]]
+- **Priority:** P0
+- **Points:** 3
+- **Blocked by:** [[EMB-embedded#EMB-SET.01|EMB-SET.01]]
+- **Blocks:** [[THR-thermal#THR-CAN.01|THR-CAN.01]], [[ARM-actuation#ARM-SRV.01|ARM-SRV.01]], All STM32-dependent stories
+
+**Acceptance Criteria:**
+- [ ] Hardware watchdog (IWDG) enabled with 500ms timeout; kicks in all task loops
+- [ ] UART debug printf working via USART1 at 115200 baud
+- [ ] LED heartbeat blink confirms RTOS scheduler running
+- [ ] Stack overflow detection enabled (FreeRTOS configCHECK_FOR_STACK_OVERFLOW)
+- [ ] RTOS stability verified over 1-hour run
+
+**Tasks:**
 - [ ] `EMB-SET.01d` — Implement IWDG watchdog with 500ms timeout; add kick to each task loop
 - [ ] `EMB-SET.01e` — Implement UART debug printf via USART1; add startup banner with firmware version
 - [ ] `EMB-SET.01f` — Add LED heartbeat toggle in idle hook; verify RTOS stability over 1-hour run
 
 ---
 
-### EMB-SET.02: CM5 Yocto image — Docker Compose, PostgreSQL, Mosquitto
+### EMB-SET.02: CM5 Yocto image — BSP layer, Docker engine, Compose
 - **Sprint:** [[sprint-01|Sprint 1]]
 - **Priority:** P0
-- **Points:** 8
+- **Points:** 5
 - **Blocked by:** [[PCB-pcb-design#PCB-FAB.02|PCB-FAB.02]]
-- **Blocks:** [[CV-vision#CV-CAM.01|CV-CAM.01]], [[RCP-recipe#RCP-FMT.01|RCP-FMT.01]], [[UI-touchscreen#UI-SET.01|UI-SET.01]]
+- **Blocks:** [[EMB-embedded#EMB-SET.02b|EMB-SET.02b]]
 
 **Acceptance Criteria:**
 - [ ] Yocto Kirkstone image boots on CM5 with Docker engine enabled
 - [ ] Docker Compose file defines services: PostgreSQL 16, Mosquitto, recipe-engine, cv-pipeline, kivy-ui, cm5-bridge
-- [ ] PostgreSQL container starts with Epicura schema (recipes, cook_sessions, telemetry tables)
-- [ ] Mosquitto container starts with local bridge configuration
-- [ ] CM5 boots to login within 30 seconds; Docker services start within 60 seconds
 - [ ] SSH access enabled for development; disabled in production image
 
 **Tasks:**
 - [ ] `EMB-SET.02a` — Set up Yocto Kirkstone build environment; create Epicura BSP layer
 - [ ] `EMB-SET.02b` — Configure Yocto recipe for Docker engine (moby) and Docker Compose
 - [ ] `EMB-SET.02c` — Create Docker Compose file with all 6 service containers
+
+---
+
+### EMB-SET.02b: CM5 database and MQTT — PostgreSQL schema, Mosquitto config, boot validation
+- **Sprint:** [[sprint-01|Sprint 1]]
+- **Priority:** P0
+- **Points:** 3
+- **Blocked by:** [[EMB-embedded#EMB-SET.02|EMB-SET.02]]
+- **Blocks:** [[CV-vision#CV-CAM.01|CV-CAM.01]], [[RCP-recipe#RCP-FMT.01|RCP-FMT.01]], [[UI-touchscreen#UI-SET.01|UI-SET.01]]
+
+**Acceptance Criteria:**
+- [ ] PostgreSQL container starts with Epicura schema (recipes, cook_sessions, telemetry tables)
+- [ ] Mosquitto container starts with local bridge configuration
+- [ ] CM5 boots to login within 30 seconds; Docker services start within 60 seconds
+
+**Tasks:**
 - [ ] `EMB-SET.02d` — Create PostgreSQL init script with Epicura schema migration
 - [ ] `EMB-SET.02e` — Configure Mosquitto with local topics and optional cloud bridge
 - [ ] `EMB-SET.02f` — Build and flash Yocto image to CM5 eMMC; verify boot and Docker services
 
 ---
 
-### EMB-COM.01: CM5-STM32 SPI bridge — protocol, message queuing, health monitoring
+### EMB-COM.01: CM5-STM32 SPI bridge — protocol, drivers, command dispatch
 - **Sprint:** [[sprint-01|Sprint 1]]
 - **Priority:** P0
-- **Points:** 8
+- **Points:** 5
 - **Blocked by:** [[EMB-embedded#EMB-SET.01|EMB-SET.01]], [[EMB-embedded#EMB-SET.02|EMB-SET.02]]
-- **Blocks:** [[THR-thermal#THR-PID.01|THR-PID.01]], [[ARM-actuation#ARM-SRV.01|ARM-SRV.01]], [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]]
+- **Blocks:** [[EMB-embedded#EMB-COM.02|EMB-COM.02]]
 
 **Acceptance Criteria:**
 - [ ] SPI communication at 1 MHz between CM5 (master) and STM32 (slave) verified
 - [ ] Binary protocol defined: header (2B sync + 1B cmd + 1B len) + payload + CRC16
 - [ ] Python bridge service on CM5 sends commands and receives telemetry
 - [ ] STM32 SPI interrupt handler processes commands within 1ms
-- [ ] Health monitoring: CM5 bridge detects STM32 timeout (>100ms); STM32 detects CM5 silence (>500ms)
-- [ ] UART fallback path tested and documented
+- [ ] Command dispatch on STM32: SET_TEMP, SET_SERVO, DISPENSE, GET_STATUS, E_STOP
 
 **Tasks:**
 - [ ] `EMB-COM.01a` — Define binary protocol specification: command IDs, payload formats, CRC16
 - [ ] `EMB-COM.01b` — Implement STM32 SPI slave driver (HAL_SPI_TransmitReceive_IT) with ring buffer
 - [ ] `EMB-COM.01c` — Implement Python bridge service: SPI master via spidev, message queue (asyncio)
 - [ ] `EMB-COM.01d` — Implement command dispatch on STM32: SET_TEMP, SET_SERVO, DISPENSE, GET_STATUS, E_STOP
-- [ ] `EMB-COM.01e` — Implement health monitoring: heartbeat ping/pong, timeout detection, error counters
-- [ ] `EMB-COM.01f` — Test round-trip latency; verify <5ms for command-response cycle
+
+---
+
+### EMB-COM.02: CM5-STM32 health monitoring — heartbeat, timeout detection, UART fallback
+- **Sprint:** [[sprint-01|Sprint 1]]
+- **Priority:** P0
+- **Points:** 3
+- **Blocked by:** [[EMB-embedded#EMB-COM.01|EMB-COM.01]]
+- **Blocks:** [[THR-thermal#THR-PID.01|THR-PID.01]], [[ARM-actuation#ARM-SRV.01|ARM-SRV.01]], [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]]
+
+**Acceptance Criteria:**
+- [ ] Health monitoring: CM5 bridge detects STM32 timeout (>100ms); STM32 detects CM5 silence (>500ms)
+- [ ] UART fallback path tested and documented
+- [ ] Round-trip latency verified <5ms for command-response cycle
+
+**Tasks:**
+- [ ] `EMB-COM.02a` — Implement health monitoring: heartbeat ping/pong, timeout detection, error counters
+- [ ] `EMB-COM.02b` — Test UART fallback path; document switchover procedure
+- [ ] `EMB-COM.02c` — Test round-trip latency; verify <5ms for command-response cycle
 
 ---
 
@@ -207,9 +252,12 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 
 | EMB Story | Blocks | Reason |
 |-----------|--------|--------|
-| EMB-SET.01 | THR-CAN.01, ARM-SRV.01 | STM32 HAL required for all peripheral drivers |
-| EMB-SET.02 | CV-CAM.01, RCP-FMT.01, UI-SET.01 | CM5 platform required for all CM5 services |
-| EMB-COM.01 | THR-PID.01, ARM-SRV.01, RCP-FSM.01 | Bridge needed for CM5→STM32 commands |
+| EMB-SET.01 | EMB-SET.01b | Task scaffold needed before debug/watchdog setup |
+| EMB-SET.01b | THR-CAN.01, ARM-SRV.01 | STM32 HAL and watchdog required for all peripheral drivers |
+| EMB-SET.02 | EMB-SET.02b | Docker environment needed before database/MQTT setup |
+| EMB-SET.02b | CV-CAM.01, RCP-FMT.01, UI-SET.01 | CM5 platform with database and MQTT required for CM5 services |
+| EMB-COM.01 | EMB-COM.02 | SPI bridge needed before health monitoring |
+| EMB-COM.02 | THR-PID.01, ARM-SRV.01, RCP-FSM.01 | Bridge with health monitoring needed for CM5→STM32 commands |
 | EMB-SET.03 | CV-CAM.01, RCP-FMT.01, UI-SET.01 | Docker containers needed for services |
 | EMB-SAF.01 | THR-SAF.01, INT-SAF.01 | Safety framework needed for thermal and integration testing |
 | EMB-OTA.01 | INT-LCH.01 | OTA needed for production deployment |
@@ -220,8 +268,11 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 | EMB Story | Blocked by | Reason |
 |-----------|------------|--------|
 | EMB-SET.01 | PCB-FAB.02 | Need validated controller board |
+| EMB-SET.01b | EMB-SET.01 | Need STM32 project and task scaffold |
 | EMB-SET.02 | PCB-FAB.02 | Need CM5IO carrier board verified |
+| EMB-SET.02b | EMB-SET.02 | Need CM5 Docker environment |
 | EMB-COM.01 | EMB-SET.01, EMB-SET.02 | Need both processors running |
+| EMB-COM.02 | EMB-COM.01 | Need SPI bridge working |
 | EMB-SET.03 | EMB-SET.02 | Need CM5 Docker environment |
 | EMB-SAF.01 | EMB-SET.01 | Need STM32 GPIO and interrupt setup |
 | EMB-OTA.01 | EMB-SET.02 | Need CM5 Yocto image |

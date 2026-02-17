@@ -1,0 +1,33 @@
+# === epicura-api (.gitignore) ===
+# TypeScript / Node / Next.js (admin portal)
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.next/
+.turbo/
+
+# Coverage
+coverage/
+
+# Drizzle ORM
+drizzle/meta/
+
+# Secrets / local config
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*

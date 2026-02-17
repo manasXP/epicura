@@ -8,6 +8,7 @@ aliases: [Epic Index, Epics]
 > | Date | Author | Change |
 > |------|--------|--------|
 > | 2026-02-16 | Manas Pradhan | Initial version — 12 epics with story counts |
+> | 2026-02-17 | Manas Pradhan | Split all >5pt stories for sprint-sized delivery (58 → 82 stories) |
 
 # Epics — Index
 
@@ -17,19 +18,19 @@ Twelve subsystem-based epics spanning a 6-week pre-sprint PCB phase and 12 two-w
 
 | Epic | File | Stories | Points (est.) | Sprints Active | Owner |
 |------|------|:-------:|:-------------:|----------------|-------|
-| **PCB** — PCB Design & Fabrication | [[PCB-pcb-design]] | 6 | ~34 | Pre-Sprint | PCB Engineer |
-| **EMB** — Embedded Platform | [[EMB-embedded]] | 7 | ~46 | 1–2, 11–12 | Embedded Engineer |
-| **THR** — Thermal & Induction Control | [[THR-thermal]] | 4 | ~28 | 3–4 | Embedded Engineer |
-| **ARM** — Robotic Arm & Dispensing | [[ARM-actuation]] | 5 | ~35 | 4–6 | Embedded + Mechanical |
-| **CV** — Computer Vision | [[CV-vision]] | 4 | ~28 | 6–7 | ML Engineer |
-| **RCP** — Recipe Engine | [[RCP-recipe]] | 4 | ~26 | 8–9 | Software Engineer |
-| **UI** — Touchscreen UI (Kivy) | [[UI-touchscreen]] | 4 | ~24 | 9–10 | Frontend Engineer |
-| **BE** — Cloud Backend (Fastify) | [[BE-backend]] | 6 | ~38 | 5–10 | Backend Engineer |
-| **IOS** — iOS App (SwiftUI) | [[IOS-ios]] | 5 | ~30 | 8–12 | iOS Developer |
-| **AND** — Android App (Kotlin/Compose) | [[AND-android]] | 5 | ~30 | 8–12 | Android Developer |
-| **ADM** — Admin Portal (Next.js) | [[ADM-admin]] | 4 | ~22 | 10–12 | Web Developer |
-| **INT** — Integration & Validation | [[INT-integration]] | 4 | ~24 | 11–12 | All Team |
-| | | **~58** | **~365** | | |
+| **PCB** — PCB Design & Fabrication | [[PCB-pcb-design]] | 8 | ~34 | Pre-Sprint | PCB Engineer |
+| **EMB** — Embedded Platform | [[EMB-embedded]] | 10 | ~46 | 1–2, 11–12 | Embedded Engineer |
+| **THR** — Thermal & Induction Control | [[THR-thermal]] | 6 | ~28 | 3–4 | Embedded Engineer |
+| **ARM** — Robotic Arm & Dispensing | [[ARM-actuation]] | 8 | ~35 | 4–6 | Embedded + Mechanical |
+| **CV** — Computer Vision | [[CV-vision]] | 6 | ~28 | 6–7 | ML Engineer |
+| **RCP** — Recipe Engine | [[RCP-recipe]] | 6 | ~28 | 8–9 | Software Engineer |
+| **UI** — Touchscreen UI (Kivy) | [[UI-touchscreen]] | 5 | ~24 | 9–10 | Frontend Engineer |
+| **BE** — Cloud Backend (Fastify) | [[BE-backend]] | 9 | ~38 | 5–10 | Backend Engineer |
+| **IOS** — iOS App (SwiftUI) | [[IOS-ios]] | 7 | ~30 | 8–12 | iOS Developer |
+| **AND** — Android App (Kotlin/Compose) | [[AND-android]] | 7 | ~30 | 8–12 | Android Developer |
+| **ADM** — Admin Portal (Next.js) | [[ADM-admin]] | 5 | ~22 | 10–12 | Web Developer |
+| **INT** — Integration & Validation | [[INT-integration]] | 5 | ~24 | 11–12 | All Team |
+| | | **~82** | **~367** | | |
 
 ## Dependency Order
 

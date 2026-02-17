@@ -8,6 +8,7 @@ aliases: [AND Epic, Android Epic]
 > | Date | Author | Change |
 > |------|--------|--------|
 > | 2026-02-16 | Manas Pradhan | Initial version — 5 stories across Sprints 8–12 |
+> | 2026-02-17 | Manas Pradhan | Split BLE.01 (8pts) → BLE.01+BLE.02, COK.01 (8pts) → COK.01+COK.02; now 7 stories |
 
 # Epic: AND — Android App (Kotlin/Compose)
 
@@ -18,11 +19,11 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 | Module | Stories | Points | Sprints |
 |--------|:-------:|:------:|---------|
 | SET — Project Setup | 1 | 5 | 8 |
-| BLE — BLE Pairing | 1 | 8 | 8 |
+| BLE — BLE Pairing | 2 | 8 | 8 |
 | RCP — Recipe Browsing | 1 | 5 | 9 |
-| COK — Live Cooking | 1 | 8 | 10 |
+| COK — Live Cooking | 2 | 8 | 10 |
 | USR — User Profile | 1 | 5 | 11 |
-| **Total** | **5** | **~30** | |
+| **Total** | **7** | **~30** | |
 
 ---
 
@@ -52,28 +53,42 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 
 ---
 
-### AND-BLE.01: BLE pairing — CompanionDeviceManager, WiFi provisioning
+### AND-BLE.01: BLE pairing — CompanionDeviceManager scanning, WiFi provisioning
 - **Sprint:** [[sprint-08|Sprint 8]]
 - **Priority:** P0
-- **Points:** 8
+- **Points:** 5
 - **Blocked by:** [[AND-android#AND-SET.01|AND-SET.01]], [[BE-backend#BE-DEV.01|BE-DEV.01]]
-- **Blocks:** [[AND-android#AND-COK.01|AND-COK.01]]
+- **Blocks:** [[AND-android#AND-BLE.02|AND-BLE.02]]
 
 **Acceptance Criteria:**
 - [ ] CompanionDeviceManager discovers Epicura devices by service UUID
-- [ ] Pairing flow: scan → select → connect → send WiFi credentials → verify
+- [ ] Pairing flow UI: scan → select → connect → send WiFi credentials → verify
 - [ ] WiFi SSID/password sent via BLE GATT characteristic write
-- [ ] Device confirms WiFi and registers with cloud; app claims device
-- [ ] Paired device shown on Home with online/offline/cooking status
 - [ ] Runtime permissions handled: Bluetooth, Location (for BLE scan on older APIs)
 
 **Tasks:**
 - [ ] `AND-BLE.01a` — Implement CompanionDeviceManager BLE scanning with service UUID filter
 - [ ] `AND-BLE.01b` — Implement BLE pairing flow UI: scan screen, device list, progress indicator
 - [ ] `AND-BLE.01c` — Implement WiFi provisioning: GATT write for SSID/password
-- [ ] `AND-BLE.01d` — Implement device claim via API after WiFi connection confirmed
-- [ ] `AND-BLE.01e` — Implement Home screen with paired device status card
-- [ ] `AND-BLE.01f` — Handle runtime permissions and edge cases (BLE off, location disabled)
+
+---
+
+### AND-BLE.02: BLE device management — claim API, home screen status, permissions edge cases
+- **Sprint:** [[sprint-08|Sprint 8]]
+- **Priority:** P0
+- **Points:** 3
+- **Blocked by:** [[AND-android#AND-BLE.01|AND-BLE.01]]
+- **Blocks:** [[AND-android#AND-COK.01|AND-COK.01]]
+
+**Acceptance Criteria:**
+- [ ] Device claim via API after WiFi connection confirmed
+- [ ] Home screen device card with online/offline/cooking status
+- [ ] BLE off/location disabled edge cases handled gracefully
+
+**Tasks:**
+- [ ] `AND-BLE.02a` — Implement device claim via API after WiFi connection confirmed
+- [ ] `AND-BLE.02b` — Implement Home screen with paired device status card
+- [ ] `AND-BLE.02c` — Handle runtime permissions and edge cases (BLE off, location disabled)
 
 ---
 
@@ -103,20 +118,18 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 
 ---
 
-### AND-COK.01: Live cooking view — camera stream, status, controls
+### AND-COK.01: Live cooking view — camera stream, status, temperature, timer
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
-- **Points:** 8
-- **Blocked by:** [[AND-android#AND-BLE.01|AND-BLE.01]]
-- **Blocks:** None
+- **Points:** 5
+- **Blocked by:** [[AND-android#AND-BLE.02|AND-BLE.02]]
+- **Blocks:** [[AND-android#AND-COK.02|AND-COK.02]]
 
 **Acceptance Criteria:**
 - [ ] Live camera stream via WebSocket rendered in AndroidView or Compose Canvas
 - [ ] Cooking status: current state, step, progress bar
-- [ ] Temperature gauge: current vs target with animated arc
-- [ ] Timer: step countdown + total elapsed
-- [ ] Controls: Pause/Resume, Abort with AlertDialog confirmation
-- [ ] FCM push notifications for cooking events
+- [ ] Temperature gauge: current vs target with animated arc (Canvas animation)
+- [ ] Timer: step countdown + total elapsed with foreground service
 - [ ] Keep screen on during cooking (FLAG_KEEP_SCREEN_ON)
 
 **Tasks:**
@@ -124,9 +137,25 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 - [ ] `AND-COK.01b` — Implement cooking status composable with state and progress
 - [ ] `AND-COK.01c` — Implement temperature gauge with Canvas animation
 - [ ] `AND-COK.01d` — Implement timer with foreground service for background accuracy
-- [ ] `AND-COK.01e` — Implement pause/resume/abort controls
-- [ ] `AND-COK.01f` — Implement FCM integration for cooking event notifications
-- [ ] `AND-COK.01g` — Test with live device stream
+
+---
+
+### AND-COK.02: Cooking controls and notifications — pause/abort, FCM push, testing
+- **Sprint:** [[sprint-10|Sprint 10]]
+- **Priority:** P0
+- **Points:** 3
+- **Blocked by:** [[AND-android#AND-COK.01|AND-COK.01]]
+- **Blocks:** None
+
+**Acceptance Criteria:**
+- [ ] Controls: Pause/Resume, Abort with AlertDialog confirmation
+- [ ] FCM push notifications for cooking events (done, error, attention needed)
+- [ ] Tested with live device stream
+
+**Tasks:**
+- [ ] `AND-COK.02a` — Implement pause/resume/abort controls
+- [ ] `AND-COK.02b` — Implement FCM integration for cooking event notifications
+- [ ] `AND-COK.02c` — Test with live device stream
 
 ---
 
@@ -167,8 +196,10 @@ None — Android app is a leaf node.
 |-----------|------------|--------|
 | AND-SET.01 | BE-SET.01 | Needs backend auth API |
 | AND-BLE.01 | AND-SET.01, BE-DEV.01 | Needs networking + device API |
+| AND-BLE.02 | AND-BLE.01 | Needs BLE pairing flow |
 | AND-RCP.01 | AND-SET.01, BE-RCP.01 | Needs app scaffold + recipe API |
-| AND-COK.01 | AND-BLE.01 | Needs paired device |
+| AND-COK.01 | AND-BLE.02 | Needs paired device |
+| AND-COK.02 | AND-COK.01 | Needs live cooking view |
 | AND-USR.01 | BE-USR.01 | Needs user API |
 
 ---

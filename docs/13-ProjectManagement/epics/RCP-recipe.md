@@ -8,6 +8,7 @@ aliases: [RCP Epic, Recipe Epic]
 > | Date | Author | Change |
 > |------|--------|--------|
 > | 2026-02-16 | Manas Pradhan | Initial version — 4 stories across Sprints 8–9 |
+> | 2026-02-17 | Manas Pradhan | Split RCP-FSM.01 (10pts) → FSM.01+FSM.02 (5+5); split RCP-DSP.01 (8pts) → DSP.01+DSP.02 (5+3); total 6 stories |
 
 # Epic: RCP — Recipe Engine & State Machine
 
@@ -18,10 +19,10 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 | Module | Stories | Points | Sprints |
 |--------|:-------:|:------:|---------|
 | FMT — Recipe Format | 1 | 5 | 8 |
-| FSM — State Machine | 1 | 10 | 8–9 |
-| DSP — Dispensing Orchestration | 1 | 8 | 9 |
+| FSM — State Machine | 2 | 10 | 8–9 |
+| DSP — Dispensing Orchestration | 2 | 8 | 9 |
 | SYN — Cloud Sync | 1 | 5 | 9 |
-| **Total** | **4** | **~28** | |
+| **Total** | **6** | **~28** | |
 
 ---
 
@@ -51,56 +52,85 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 
 ---
 
-### RCP-FSM.01: Cooking state machine — orchestration across CM5 and STM32
-- **Sprint:** [[sprint-08|Sprint 8]] → [[sprint-09|Sprint 9]]
+### RCP-FSM.01: Cooking state machine — design, engine, step executor, transitions
+- **Sprint:** [[sprint-08|Sprint 8]]
 - **Priority:** P0
-- **Points:** 10
-- **Blocked by:** [[EMB-embedded#EMB-COM.01|EMB-COM.01]], [[THR-thermal#THR-PID.01|THR-PID.01]], [[ARM-actuation#ARM-SRV.01|ARM-SRV.01]], [[CV-vision#CV-MDL.01|CV-MDL.01]], [[CV-vision#CV-DET.01|CV-DET.01]], [[RCP-recipe#RCP-FMT.01|RCP-FMT.01]]
-- **Blocks:** [[UI-touchscreen#UI-COK.01|UI-COK.01]], [[INT-integration#INT-SYS.01|INT-SYS.01]]
+- **Points:** 5
+- **Blocked by:** [[EMB-embedded#EMB-COM.01|EMB-COM.01]], [[THR-thermal#THR-PID.01|THR-PID.01]], [[ARM-actuation#ARM-SRV.01|ARM-SRV.01]], [[CV-vision#CV-MDL.02|CV-MDL.02]], [[CV-vision#CV-DET.02|CV-DET.02]], [[RCP-recipe#RCP-FMT.01|RCP-FMT.01]]
+- **Blocks:** [[RCP-recipe#RCP-FSM.02|RCP-FSM.02]]
 
 **Acceptance Criteria:**
 - [ ] State machine: IDLE → PREHEAT → PREP → COOK → SIMMER → DONE → CLEANUP
-- [ ] Each state executes recipe steps: sends commands to STM32 via SPI bridge (temp, servo, dispense)
-- [ ] Step transitions based on: timer expiry, CV stage detection, temperature reached, weight dispensed
-- [ ] Pause/resume: user can pause cooking; all actuators hold current state
-- [ ] Abort: user can cancel; system performs safe shutdown (heat off, arm home, valves closed)
-- [ ] Cook session logged to PostgreSQL: start time, recipe, state transitions, sensor data, completion status
-- [ ] Real-time status published to MQTT: `epicura/cook/status` with current state, step, progress %
+- [ ] Asyncio event-driven engine with event-driven transitions
+- [ ] Step executor maps recipe step actions to SPI bridge commands (temp, servo, dispense)
+- [ ] Transitions based on: timer expiry, CV stage detection, temperature reached, weight dispensed
 
 **Tasks:**
 - [ ] `RCP-FSM.01a` — Design state machine with state definitions, transitions, and guard conditions
 - [ ] `RCP-FSM.01b` — Implement state machine engine (Python, asyncio-based) with event-driven transitions
 - [ ] `RCP-FSM.01c` — Implement step executor: maps recipe step actions to SPI bridge commands
 - [ ] `RCP-FSM.01d` — Implement transition conditions: timer, CV stage, temperature threshold, weight target
-- [ ] `RCP-FSM.01e` — Implement pause/resume and abort with safe state handling
-- [ ] `RCP-FSM.01f` — Implement cook session logging to PostgreSQL
-- [ ] `RCP-FSM.01g` — Implement MQTT status publisher with progress calculation
-- [ ] `RCP-FSM.01h` — Test state machine with dal tadka recipe: full end-to-end dry run (simulated sensors)
 
 ---
 
-### RCP-DSP.01: Dispensing orchestration — sequencing, timing, verification
+### RCP-FSM.02: State machine controls and telemetry — pause/resume, abort, logging, MQTT status
+- **Sprint:** [[sprint-08|Sprint 8]] → [[sprint-09|Sprint 9]]
+- **Priority:** P0
+- **Points:** 5
+- **Blocked by:** [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]]
+- **Blocks:** [[UI-touchscreen#UI-COK.01|UI-COK.01]], [[INT-integration#INT-SYS.01|INT-SYS.01]]
+
+**Acceptance Criteria:**
+- [ ] Pause/resume: user can pause cooking; all actuators hold current state
+- [ ] Abort: user can cancel; system performs safe shutdown (heat off, arm home, valves closed)
+- [ ] Cook session logged to PostgreSQL: start time, recipe, state transitions, sensor data, completion status
+- [ ] Real-time status published to MQTT: `epicura/cook/status` with current state, step, progress %
+- [ ] Dry-run test with dal tadka recipe (simulated sensors)
+
+**Tasks:**
+- [ ] `RCP-FSM.02a` — Implement pause/resume and abort with safe state handling
+- [ ] `RCP-FSM.02b` — Implement cook session logging to PostgreSQL
+- [ ] `RCP-FSM.02c` — Implement MQTT status publisher with progress calculation
+- [ ] `RCP-FSM.02d` — Test state machine with dal tadka recipe: full end-to-end dry run (simulated sensors)
+
+---
+
+### RCP-DSP.01: Dispensing orchestration — sequence generation, coordination, weight verification
 - **Sprint:** [[sprint-09|Sprint 9]]
 - **Priority:** P0
-- **Points:** 8
+- **Points:** 5
 - **Blocked by:** [[ARM-actuation#ARM-ASD.01|ARM-ASD.01]], [[ARM-actuation#ARM-CID.01|ARM-CID.01]], [[ARM-actuation#ARM-SLD.01|ARM-SLD.01]], [[ARM-actuation#ARM-CAL.01|ARM-CAL.01]]
-- **Blocks:** [[INT-integration#INT-SYS.01|INT-SYS.01]]
+- **Blocks:** [[RCP-recipe#RCP-DSP.02|RCP-DSP.02]]
 
 **Acceptance Criteria:**
 - [ ] Dispensing orchestrator parses recipe ingredient list and generates dispense sequence
 - [ ] Sequential dispensing: one dispenser at a time to prevent mechanical conflicts
 - [ ] Weight verification: after each dispense, check load cell delta matches expected amount (±10%)
-- [ ] Retry logic: if weight verification fails, retry dispense once; then alert user
-- [ ] Dispense timing coordinated with cooking state: e.g., add oil before preheat, add spices at sizzle stage
-- [ ] Dispensing progress published to MQTT: `epicura/cook/dispense` with ingredient, amount, status
 
 **Tasks:**
 - [ ] `RCP-DSP.01a` — Implement dispensing sequence generator from recipe ingredient list
 - [ ] `RCP-DSP.01b` — Implement sequential dispenser coordination (mutex across P-ASD, CID, SLD)
 - [ ] `RCP-DSP.01c` — Implement weight verification after each dispense via HX711 load cells
-- [ ] `RCP-DSP.01d` — Implement retry logic with user alert on verification failure
-- [ ] `RCP-DSP.01e` — Integrate dispensing with state machine step executor
-- [ ] `RCP-DSP.01f` — Test dispensing sequence for dal tadka recipe: oil, mustard seeds, cumin, dal, water, salt
+
+---
+
+### RCP-DSP.02: Dispensing integration — retry logic, state machine integration, recipe testing
+- **Sprint:** [[sprint-09|Sprint 9]]
+- **Priority:** P0
+- **Points:** 3
+- **Blocked by:** [[RCP-recipe#RCP-DSP.01|RCP-DSP.01]]
+- **Blocks:** [[INT-integration#INT-SYS.01|INT-SYS.01]]
+
+**Acceptance Criteria:**
+- [ ] Retry logic: if weight verification fails, retry dispense once; then alert user
+- [ ] Dispense timing coordinated with cooking state: e.g., add oil before preheat, add spices at sizzle stage
+- [ ] Dispensing progress published to MQTT: `epicura/cook/dispense` with ingredient, amount, status
+- [ ] Tested with dal tadka recipe: oil, mustard seeds, cumin, dal, water, salt
+
+**Tasks:**
+- [ ] `RCP-DSP.02a` — Implement retry logic with user alert on verification failure
+- [ ] `RCP-DSP.02b` — Integrate dispensing with state machine step executor
+- [ ] `RCP-DSP.02c` — Test dispensing sequence for dal tadka recipe: oil, mustard seeds, cumin, dal, water, salt
 
 ---
 
@@ -135,16 +165,20 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 | RCP Story | Blocks | Reason |
 |-----------|--------|--------|
 | RCP-FMT.01 | RCP-FSM.01, BE-RCP.01 | Recipe format needed for engine and cloud API |
-| RCP-FSM.01 | UI-COK.01, INT-SYS.01 | State machine drives cooking UI and integration tests |
-| RCP-DSP.01 | INT-SYS.01 | Dispensing needed for end-to-end cooking |
+| RCP-FSM.01 | RCP-FSM.02 | Core state machine needed for controls and telemetry |
+| RCP-FSM.02 | UI-COK.01, INT-SYS.01 | State machine drives cooking UI and integration tests |
+| RCP-DSP.01 | RCP-DSP.02 | Core dispensing needed for integration and testing |
+| RCP-DSP.02 | INT-SYS.01 | Dispensing needed for end-to-end cooking |
 
 ### What blocks RCP (upstream dependencies)
 
 | RCP Story | Blocked by | Reason |
 |-----------|------------|--------|
 | RCP-FMT.01 | EMB-SET.02, EMB-SET.03 | Need CM5 platform for Python services |
-| RCP-FSM.01 | EMB-COM.01, THR-PID.01, ARM-SRV.01, CV-MDL.01, CV-DET.01, RCP-FMT.01 | Orchestrates all subsystems |
+| RCP-FSM.01 | EMB-COM.01, THR-PID.01, ARM-SRV.01, CV-MDL.02, CV-DET.02, RCP-FMT.01 | Orchestrates all subsystems |
+| RCP-FSM.02 | RCP-FSM.01 | Needs core state machine |
 | RCP-DSP.01 | ARM-ASD.01, ARM-CID.01, ARM-SLD.01, ARM-CAL.01 | Needs all dispensers working and calibrated |
+| RCP-DSP.02 | RCP-DSP.01 | Needs core dispensing orchestration |
 | RCP-SYN.01 | BE-RCP.01 | Needs cloud recipe API |
 
 ---
