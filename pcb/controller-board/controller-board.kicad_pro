@@ -1,0 +1,52 @@
+(kicad_project
+  (version 20231231)
+  (generator "kicad" "8.0")
+  (project
+    (name "controller-board")
+  )
+  (schematic
+    (legacy_lib_dir "")
+    (legacy_lib_list "")
+  )
+  (board
+    (design_rules
+      (min_clearance 0.15)
+      (min_trace_width 0.15)
+      (min_via_drill 0.3)
+      (min_via_diameter 0.6)
+    )
+  )
+  (libraries
+    (pinned_symbol_libraries "")
+    (pinned_footprint_libraries "")
+  )
+  (net_settings
+    (net_class
+      (name "Default")
+      (clearance 0.2)
+      (trace_width 0.25)
+      (via_diameter 0.6)
+      (via_drill 0.3)
+      (uvia_diameter 0.3)
+      (uvia_drill 0.1)
+    )
+    (net_class
+      (name "Power")
+      (clearance 0.3)
+      (trace_width 0.5)
+      (via_diameter 0.8)
+      (via_drill 0.4)
+      (uvia_diameter 0.3)
+      (uvia_drill 0.1)
+    )
+    (net_class
+      (name "SPI")
+      (clearance 0.2)
+      (trace_width 0.2)
+      (via_diameter 0.6)
+      (via_drill 0.3)
+      (uvia_diameter 0.3)
+      (uvia_drill 0.1)
+    )
+  )
+)

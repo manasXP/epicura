@@ -104,7 +104,7 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 │  └─────────────────────────────────┘                           │
 │                                                                │
 │  ┌─── P-ASD: Pneumatic Seasoning Dispenser ─┐                           │
-│  │  PA0  (TIM2_CH1)  ──► P-ASD Pump PWM (12V diaphragm pump)          │  │
+│  │  PA0  (TIM2_CH1)  ──► P-ASD Pump PWM (12V diaphragm pump)│  │
 │  │  Solenoids V1-V6: driven by PCF8574 I2C GPIO expander              │  │
 │  │    on Driver PCB (I2C1, addr 0x20, outputs P0-P5)                  │  │
 │  │  I2C1 (PB6/PB7)   ──► ADS1015 Pressure Sensor (addr 0x48)         │  │
