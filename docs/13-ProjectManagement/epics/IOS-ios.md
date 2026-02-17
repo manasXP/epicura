@@ -41,14 +41,14 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 - [ ] MVVM architecture with @Observable view models
 - [ ] Networking layer: async/await HTTP client, JWT token management, auto-refresh
 - [ ] Login/register screens connected to backend auth API
-- [ ] Tab bar navigation: Home, Recipes, Cook, Profile
+- [ ] Tab bar navigation: Recipe, Favourite, Session, Profile
 - [ ] SwiftLint configured; CI pipeline runs lint + build + test
 
 **Tasks:**
 - [ ] `IOS-SET.01a` — Create Xcode project; configure SwiftUI App lifecycle, deployment target iOS 17
 - [ ] `IOS-SET.01b` — Create networking layer: URLSession wrapper, JWT storage (Keychain), token refresh
 - [ ] `IOS-SET.01c` — Implement auth flow: login, register, token persistence, auto-login
-- [ ] `IOS-SET.01d` — Create tab bar navigation with Home, Recipes, Cook, Profile tabs
+- [ ] `IOS-SET.01d` — Create tab bar navigation with Recipe, Favourite, Session, Profile tabs
 - [ ] `IOS-SET.01e` — Configure SwiftLint; create GitHub Actions CI workflow
 
 ---
@@ -181,6 +181,32 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 - [ ] `IOS-USR.01c` — Implement preferences screen with local + cloud sync
 - [ ] `IOS-USR.01d` — Implement device management: list, unpair, rename
 - [ ] `IOS-USR.01e` — Implement settings: notifications, units, logout, account deletion
+
+---
+
+### IOS-LIVE.01: Live Activity — Cooking Progress on Lock Screen & Dynamic Island
+- **Sprint:** [[sprint-11|Sprint 11]]
+- **Priority:** P1
+- **Points:** 5
+- **Blocked by:** [[IOS-ios#IOS-COK.01|IOS-COK.01]]
+- **Blocks:** None
+
+**Acceptance Criteria:**
+- [ ] Live Activity starts when cooking session begins (WebSocket event or local push)
+- [ ] Lock Screen: recipe name, current stage, temperature (current/target), progress bar, time remaining
+- [ ] Dynamic Island compact: recipe name + time remaining
+- [ ] Dynamic Island expanded: recipe name, stage, temperature gauge, progress bar, time remaining
+- [ ] Real-time updates via ActivityKit push token notifications
+- [ ] Live Activity ends on cooking complete/fail/abort with final status
+- [ ] Tapping deep-links to cooking session screen
+- [ ] Stale activity alert if no update in 60s
+
+**Tasks:**
+- [ ] `IOS-LIVE.01a` — Define `CookingActivityAttributes` (static: recipe name/image; dynamic: stage, temp, progress, timeRemaining)
+- [ ] `IOS-LIVE.01b` — Implement Lock Screen Live Activity layout
+- [ ] `IOS-LIVE.01c` — Implement Dynamic Island compact and expanded views
+- [ ] `IOS-LIVE.01d` — Wire ActivityKit start/update/end to cooking WebSocket events
+- [ ] `IOS-LIVE.01e` — Implement APNs push token updates for background refresh
 
 ---
 

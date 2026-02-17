@@ -77,7 +77,7 @@ Both iOS and Android apps use the MVVM (Model-View-ViewModel) pattern with a sha
 | Priority | Feature | iOS | Android |
 |----------|---------|-----|---------|
 | **P0** | BLE pairing + WiFi provisioning | Core Bluetooth | CompanionDeviceManager |
-| **P0** | User auth (register, login, JWT) | URLSession | Retrofit/OkHttp |
+| **P0** | User auth (phone+OTP primary, email fallback) | URLSession | Retrofit/OkHttp |
 | **P0** | Recipe browsing + detail view | SwiftUI List/Grid | LazyColumn/LazyGrid |
 | **P0** | Live cooking progress (WebSocket) | URLSessionWebSocketTask | OkHttp WebSocket |
 | **P0** | Push notifications | APNs | FCM |
@@ -266,7 +266,7 @@ This palette matches the Kivy touchscreen UI colors defined in [[../04-UserInter
 | Pattern | iOS (SwiftUI) | Android (Compose) |
 |---------|--------------|-------------------|
 | Navigation | `NavigationStack` + `NavigationLink` | `NavHost` + `NavController` |
-| Tab Bar | `TabView` | `NavigationBar` (Material 3) |
+| Tab Bar | `TabView` (Recipe, Favourite, Session, Profile) | `NavigationBar` (Material 3) (Recipe, Favourite, Session, Profile) |
 | Pull to Refresh | `.refreshable` modifier | `PullToRefreshBox` |
 | Haptics | `UIImpactFeedbackGenerator` | `HapticFeedback` compose |
 | System Theme | `@Environment(\.colorScheme)` | `isSystemInDarkTheme()` |

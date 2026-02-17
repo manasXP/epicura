@@ -232,18 +232,19 @@ gh api graphql -f query='query {
 
 | Epic | Option ID |
 |------|-----------|
-| PCB | `df416011` |
-| EMB | `8bcbbf6e` |
-| THR | `09ee8075` |
-| ARM | `7727f91e` |
-| CV | `47af4594` |
-| RCP | `a5528d36` |
-| UI | `a426c27b` |
-| BE | `f43267cb` |
-| IOS | `e428f2cb` |
-| AND | `73ea0c3d` |
-| ADM | `ac5a8ff0` |
-| INT | `0a261ddc` |
+| PCB | `8203536b` |
+| EMB | `f3240268` |
+| THR | `b66d5bba` |
+| ARM | `832b12d6` |
+| CV | `32ac1868` |
+| RCP | `82971625` |
+| UI | `1dd69618` |
+| BE | `1667d462` |
+| IOS | `1201f22f` |
+| AND | `bb117488` |
+| ADM | `e5a55951` |
+| INT | `e2f6a7f7` |
+| UX | `9898d825` |
 
 ### Rules
 

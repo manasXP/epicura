@@ -12,7 +12,7 @@ aliases: [Epic Index, Epics]
 
 # Epics — Index
 
-Twelve subsystem-based epics spanning a 6-week pre-sprint PCB phase and 12 two-week sprints.
+Thirteen subsystem-based epics spanning a 6-week pre-sprint PCB phase and 12 two-week sprints.
 
 ## Epic Summary
 
@@ -30,7 +30,8 @@ Twelve subsystem-based epics spanning a 6-week pre-sprint PCB phase and 12 two-w
 | **AND** — Android App (Kotlin/Compose) | [[AND-android]] | 7 | ~30 | 8–12 | Android Developer |
 | **ADM** — Admin Portal (Next.js) | [[ADM-admin]] | 5 | ~22 | 10–12 | Web Developer |
 | **INT** — Integration & Validation | [[INT-integration]] | 5 | ~24 | 11–12 | All Team |
-| | | **~82** | **~367** | | |
+| **UX** — User Experience Design | [[UX-ux]] | 7 | ~18 | Parallel | UX / Frontend |
+| | | **~89** | **~385** | | |
 
 ## Dependency Order
 

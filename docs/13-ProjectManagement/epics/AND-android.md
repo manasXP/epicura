@@ -41,14 +41,14 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 - [ ] MVVM with Hilt DI, Retrofit + OkHttp for networking, Kotlin Serialization
 - [ ] JWT token management: encrypted SharedPreferences, auto-refresh interceptor
 - [ ] Login/register screens connected to backend auth API
-- [ ] Bottom navigation: Home, Recipes, Cook, Profile
+- [ ] Bottom navigation: Recipe, Favourite, Session, Profile
 - [ ] ktlint configured; CI pipeline runs lint + build + test
 
 **Tasks:**
 - [ ] `AND-SET.01a` — Create Gradle project; configure Compose, Hilt, Retrofit, Navigation Compose
 - [ ] `AND-SET.01b` — Create networking layer: Retrofit client, JWT interceptor, token storage (EncryptedSharedPreferences)
 - [ ] `AND-SET.01c` — Implement auth flow: login, register, token persistence, auto-login
-- [ ] `AND-SET.01d` — Create bottom navigation with NavHost and 4 tabs
+- [ ] `AND-SET.01d` — Create bottom navigation with NavHost: Recipe, Favourite, Session, Profile tabs
 - [ ] `AND-SET.01e` — Configure ktlint; create GitHub Actions CI workflow
 
 ---
@@ -181,6 +181,31 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 - [ ] `AND-USR.01c` — Implement preferences with DataStore persistence + cloud sync
 - [ ] `AND-USR.01d` — Implement device management screen
 - [ ] `AND-USR.01e` — Implement settings with notification toggle, units, logout, account deletion
+
+---
+
+### AND-LIVE.01: Glance Widget — Cooking Progress App Widget (Jetpack Glance)
+- **Sprint:** [[sprint-11|Sprint 11]]
+- **Priority:** P1
+- **Points:** 5
+- **Blocked by:** [[AND-android#AND-COK.01|AND-COK.01]]
+- **Blocks:** None
+
+**Acceptance Criteria:**
+- [ ] Glance widget: recipe name, current stage, temperature (current/target), progress bar, time remaining
+- [ ] Near real-time updates via WorkManager + foreground service broadcast
+- [ ] Pulsing indicator when active; static idle state when no session
+- [ ] Widget sizes: small (2x1 — recipe name + time), medium (3x2 — full info)
+- [ ] Tapping deep-links to cooking session screen
+- [ ] Auto-clears to idle on cooking complete/abort
+- [ ] Idle fallback: "No active cooking" with last session summary
+
+**Tasks:**
+- [ ] `AND-LIVE.01a` — Create `CookingGlanceWidget` with `GlanceAppWidget` and Compose-style layout
+- [ ] `AND-LIVE.01b` — Implement small (2x1) and medium (3x2) widget size variants
+- [ ] `AND-LIVE.01c` — Wire `GlanceAppWidgetManager.updateAll()` to cooking foreground service
+- [ ] `AND-LIVE.01d` — Implement `GlanceStateDefinition` backed by DataStore for widget state
+- [ ] `AND-LIVE.01e` — Implement idle/active/completed widget states
 
 ---
 

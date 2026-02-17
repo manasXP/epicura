@@ -18,7 +18,7 @@ status: Draft
 
 ## Authentication
 
-All endpoints except `/auth/register` and `/auth/login` require a valid JWT access token in the `Authorization` header:
+All endpoints except `/auth/register`, `/auth/login`, `/auth/otp/request`, and `/auth/otp/verify` require a valid JWT access token in the `Authorization` header:
 
 ```
 Authorization: Bearer <access_token>
@@ -171,6 +171,79 @@ Authenticate and receive tokens.
 curl -X POST https://api.epicura.io/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"user@example.com","password":"securePassword123"}'
+```
+
+#### `POST /auth/otp/request`
+
+Request a one-time password sent via SMS to the user's phone number. This is the **primary authentication method** for mobile apps. Register-on-first-login: if the phone number is not yet registered, a new account is created on successful OTP verification.
+
+**Request:**
+```json
+{
+  "phone": "+919876543210"
+}
+```
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "data": {
+    "message": "OTP sent successfully",
+    "expires_in_seconds": 300,
+    "retry_after_seconds": 30
+  }
+}
+```
+
+**Errors:**
+- `VALIDATION_ERROR` (400) — Invalid phone number format
+- `RATE_LIMITED` (429) — Too many OTP requests (max 5 per phone per hour)
+
+```bash
+curl -X POST https://api.epicura.io/api/v1/auth/otp/request \
+  -H "Content-Type: application/json" \
+  -d '{"phone":"+919876543210"}'
+```
+
+#### `POST /auth/otp/verify`
+
+Verify an OTP and receive JWT tokens. If the phone number is new, a user account is created automatically (register-on-first-login).
+
+**Request:**
+```json
+{
+  "phone": "+919876543210",
+  "otp": "123456"
+}
+```
+
+**Response (200):**
+```json
+{
+  "success": true,
+  "data": {
+    "user": {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "phone": "+919876543210",
+      "name": null,
+      "role": "user",
+      "is_new_user": true
+    },
+    "access_token": "eyJhbGciOiJIUzI1NiIs...",
+    "refresh_token": "eyJhbGciOiJIUzI1NiIs..."
+  }
+}
+```
+
+**Errors:**
+- `INVALID_CREDENTIALS` (401) — Wrong or expired OTP
+- `RATE_LIMITED` (429) — Too many failed attempts (max 5 per OTP)
+
+```bash
+curl -X POST https://api.epicura.io/api/v1/auth/otp/verify \
+  -H "Content-Type: application/json" \
+  -d '{"phone":"+919876543210","otp":"123456"}'
 ```
 
 #### `POST /auth/refresh`
