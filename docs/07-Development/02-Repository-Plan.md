@@ -17,7 +17,7 @@ Six repositories covering all Epicura subsystems: documentation + PCB design, fi
 
 | Repository | Language / Stack | Primary Epics | Owner |
 |-----------|-----------------|---------------|-------|
-| `epicura` | Markdown + KiCAD 8 | All (docs), PCB | All team / PCB Engineer |
+| `epicura` | Markdown + KiCAD 9 | All (docs), PCB | All team / PCB Engineer |
 | `epicura-firmware` | C (FreeRTOS, STM32 HAL, MISRA subset) | EMB, THR, ARM | Embedded Engineer |
 | `epicura-cm5` | Python (Docker Compose) | EMB, CV, RCP, UI | Software Engineer |
 | `epicura-api` | TypeScript (Fastify + Next.js monorepo) | BE, ADM | Backend + Web Engineer |
@@ -72,7 +72,7 @@ epicura/
 
 **Conventions:**
 - Documentation in Markdown with Obsidian wiki-link syntax
-- PCB files in KiCAD 8 format under `pcb/`
+- PCB files in KiCAD 9 format under `pcb/`
 - Gerbers exported and committed for each fabrication order
 - Datasheets stored alongside PCB files for reference
 - Changes reviewed via PR for significant updates

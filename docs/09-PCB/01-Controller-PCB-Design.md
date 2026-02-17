@@ -17,10 +17,10 @@ This document covers the design of the custom controller PCB for Epicura. This b
 |------|--------|-------|
 | **Controller PCB** (this document) | Custom design required | STM32G474RE + peripherals, 160x90mm |
 | **Driver PCB** | Custom design required | Power conversion + actuator drivers (see [[Driver-PCB-Design]]) |
-| **CM5 IO Board (CM5IO)** | Custom design required | CM5 carrier board, 160x90mm to match stack |
+| **CM5 IO Board (CM5IO)** | Off-the-shelf (Raspberry Pi official) | Commercial carrier board; no custom PCB needed |
 | **Microwave induction surface** | Commercial module with CAN port (see [[../05-Subsystems/09-Induction-Heating\|Induction Heating]]) | Self-contained coil + driver; controlled via CAN bus |
 
-The three boards (CM5IO, Controller, Driver) form a stackable architecture connected via 2x20-pin 2.54mm board-to-board headers, all sharing a uniform 160x90mm footprint. The Controller PCB sits in the middle of the stack — it connects upward to the CM5IO board via SPI (J1) and downward to the Driver PCB via a stacking connector (J_STACK). All real-time control, sensor acquisition, and safety monitoring runs on this controller board. Servo PWM and actuator GPIO signals pass through J_STACK to the Driver PCB where power electronics drive the actual actuators.
+The CM5IO board is an off-the-shelf Raspberry Pi carrier board that sits on top of the stack. The two custom boards (Controller, Driver) form a stackable pair connected via a 2x20-pin 2.54mm board-to-board header, sharing a uniform 160x90mm footprint. The Controller PCB connects upward to the CM5IO board via SPI (J1 ribbon cable) and downward to the Driver PCB via a stacking connector (J_STACK). All real-time control, sensor acquisition, and safety monitoring runs on this controller board. Servo PWM and actuator GPIO signals pass through J_STACK to the Driver PCB where power electronics drive the actual actuators.
 
 ---
 

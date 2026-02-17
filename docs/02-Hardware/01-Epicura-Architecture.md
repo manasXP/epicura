@@ -861,7 +861,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 | Category | Component | Quantity | Est. Unit Cost (USD) | Est. Total (USD) |
 |----------|-----------|----------|---------------------|-------------------|
 | **Compute** | Raspberry Pi CM5 (4GB) | 1 | $45 | $45 |
-| | CM5 IO Board (or custom carrier) | 1 | $35 | $35 |
+| | CM5 IO Board (off-the-shelf) | 1 | $35 | $35 |
 | | MicroSD 32GB | 1 | $10 | $10 |
 | **MCU** | STM32G474RE Nucleo Board (proto) | 1 | $20 | $20 |
 | | STM32G474RE IC (production) | 1 | $8 | $8 |
@@ -897,7 +897,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 
 **Estimated Prototype BOM Total: $700 - $800 USD**
 
-*Note: Production BOM would be lower per unit at volume. Prototype uses dev boards (Nucleo, CM5 IO Board) that would be replaced with custom carrier PCBs.*
+*Note: Production BOM would be lower per unit at volume. Prototype uses Nucleo dev board that would be replaced with bare STM32G474RE on the controller PCB. The CM5 IO Board is used as-is (off-the-shelf) in both prototype and production.*
 
 ---
 

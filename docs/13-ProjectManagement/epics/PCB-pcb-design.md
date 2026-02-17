@@ -8,47 +8,63 @@ aliases: [PCB Epic, PCB Design Epic]
 > | Date | Author | Change |
 > |------|--------|--------|
 > | 2026-02-16 | Manas Pradhan | Initial version — 6 stories across pre-sprint phase |
+> | 2026-02-17 | Manas Pradhan | Split >5pt stories for sprint-sized delivery |
 
 # Epic: PCB — PCB Design & Fabrication
 
-Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160×90mm) and the Power/Actuator Driver Board (160×90mm). This epic has no upstream dependencies and must complete before Sprint 2 to unblock embedded firmware development.
+Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160×90mm) and the Power/Actuator Driver Board (160×90mm). The CM5 IO Board is off-the-shelf (Raspberry Pi official) and requires no custom design. This epic has no upstream dependencies and must complete before Sprint 2 to unblock embedded firmware development.
 
 ## Story Summary
 
 | Module | Stories | Points | Sprints |
 |--------|:-------:|:------:|---------|
-| CTL — Controller Board | 2 | 13 | Pre-Sprint W1–W3 |
-| DRV — Driver Board | 2 | 13 | Pre-Sprint W1–W3 |
+| CTL — Controller Board | 3 | 13 | Pre-Sprint W1–W3 |
+| DRV — Driver Board | 3 | 13 | Pre-Sprint W1–W3 |
 | FAB — Fabrication & Assembly | 2 | 8 | Pre-Sprint W4–W6 |
-| **Total** | **6** | **~34** | |
+| **Total** | **8** | **~34** | |
 
 ---
 
 ## Pre-Sprint — Controller Board Design (Weeks -6 to -4)
 
-### PCB-CTL.01: Controller PCB schematic — STM32G474RE, power regulation, debug headers
+### PCB-CTL.01: Controller PCB schematic — STM32G474RE core, power regulation, debug headers
 - **Sprint:** Pre-Sprint (Weeks -6 to -5)
 - **Priority:** P0
-- **Points:** 8
+- **Points:** 5
 - **Blocked by:** None
-- **Blocks:** [[PCB-pcb-design#PCB-CTL.02|PCB-CTL.02]], [[PCB-pcb-design#PCB-FAB.01|PCB-FAB.01]]
+- **Blocks:** [[PCB-pcb-design#PCB-CTL.01b|PCB-CTL.01b]]
 
 **Acceptance Criteria:**
-- [ ] STM32G474RE pinout fully allocated: SPI (CM5), UART (debug), I2C (MLX90614, ADS1015), FDCAN1 (induction), PWM (servo, pumps, fans), ADC (NTC), GPIO (solenoids, e-stop)
+- [ ] STM32G474RE pinout allocated for SPI (CM5), UART (debug), I2C (MLX90614, ADS1015), FDCAN1 (induction), PWM (servo, pumps, fans)
 - [ ] Power section: 24V input, 5V buck (AP63205, 2A) for CM5IO, 3.3V LDO (AMS1117) for STM32
 - [ ] SWD debug header (TC2030-IDC) and UART debug header present
-- [ ] CM5IO SPI interface connector (2×10 pin header) with level shifting if needed
 - [ ] Decoupling capacitors per STM32 datasheet recommendations
-- [ ] ERC passes with zero errors in KiCAD
 
 **Tasks:**
 - [ ] `PCB-CTL.01a` — Create KiCAD project; import STM32G474RE, AP63205, AMS1117 symbols and footprints
 - [ ] `PCB-CTL.01b` — Design power section: 24V→5V buck (AP63205) + 5V→3.3V LDO (AMS1117)
 - [ ] `PCB-CTL.01c` — Wire STM32 peripherals: SPI1 (CM5), USART1 (debug), I2C1 (sensors), FDCAN1 (induction)
 - [ ] `PCB-CTL.01d` — Wire PWM outputs: TIM1 (servo), TIM2 (pump), TIM3 (fan), TIM4 (spare)
+
+---
+
+### PCB-CTL.01b: Controller PCB schematic — ADC, GPIO, connector interface, ERC validation
+- **Sprint:** Pre-Sprint (Weeks -6 to -5)
+- **Priority:** P0
+- **Points:** 3
+- **Blocked by:** [[PCB-pcb-design#PCB-CTL.01|PCB-CTL.01]]
+- **Blocks:** [[PCB-pcb-design#PCB-CTL.02|PCB-CTL.02]], [[PCB-pcb-design#PCB-FAB.01|PCB-FAB.01]]
+
+**Acceptance Criteria:**
+- [ ] ADC channels allocated for NTC thermistors and current sensing
+- [ ] GPIO allocated for 6× P-ASD solenoid valves + 2× SLD solenoid valves, e-stop input, safety relay output
+- [ ] CM5IO SPI interface connector (2×10 pin header) with level shifting if needed
+- [ ] ERC passes with zero errors in KiCAD
+
+**Tasks:**
 - [ ] `PCB-CTL.01e` — Add ADC channels for NTC thermistors, current sensing
 - [ ] `PCB-CTL.01f` — Add GPIO for solenoid valve control (6× P-ASD + 2× SLD), e-stop input, safety relay output
-- [ ] `PCB-CTL.01g` — Run ERC; fix all errors; generate netlist
+- [ ] `PCB-CTL.01g` — Add CM5IO SPI connector with level shifting; run ERC; fix all errors; generate netlist
 
 ---
 
@@ -56,7 +72,7 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160�
 - **Sprint:** Pre-Sprint (Weeks -5 to -4)
 - **Priority:** P0
 - **Points:** 5
-- **Blocked by:** [[PCB-pcb-design#PCB-CTL.01|PCB-CTL.01]]
+- **Blocked by:** [[PCB-pcb-design#PCB-CTL.01b|PCB-CTL.01b]]
 - **Blocks:** [[PCB-pcb-design#PCB-FAB.01|PCB-FAB.01]]
 
 **Acceptance Criteria:**
@@ -80,27 +96,40 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160�
 
 ## Pre-Sprint — Driver Board Design (Weeks -6 to -4)
 
-### PCB-DRV.01: Driver PCB schematic — motor drivers, solenoid drivers, power MOSFETs
+### PCB-DRV.01: Driver PCB schematic — motor drivers, power regulation
 - **Sprint:** Pre-Sprint (Weeks -6 to -5)
 - **Priority:** P0
-- **Points:** 8
+- **Points:** 5
 - **Blocked by:** None
-- **Blocks:** [[PCB-pcb-design#PCB-DRV.02|PCB-DRV.02]], [[PCB-pcb-design#PCB-FAB.01|PCB-FAB.01]]
+- **Blocks:** [[PCB-pcb-design#PCB-DRV.01b|PCB-DRV.01b]]
 
 **Acceptance Criteria:**
 - [ ] DRV8876 H-bridge driver for 2× CID linear actuators (12V, 3.5A per channel)
 - [ ] TB6612FNG dual H-bridge for 2× peristaltic pumps (12V, 1.2A per channel)
-- [ ] IRLZ44N MOSFET circuits for 6× P-ASD solenoid valves + 1× diaphragm pump + 2× SLD solenoid valves
-- [ ] Flyback diodes on all inductive loads
 - [ ] 12V input from 24V→12V buck converter (LM2596 or equivalent)
-- [ ] Board-to-board connector to Controller PCB (signal interface)
-- [ ] ERC passes with zero errors
 
 **Tasks:**
 - [ ] `PCB-DRV.01a` — Create KiCAD project; import DRV8876, TB6612FNG, IRLZ44N symbols/footprints
 - [ ] `PCB-DRV.01b` — Design 24V→12V buck converter section (LM2596, 3A)
 - [ ] `PCB-DRV.01c` — Design DRV8876 circuit for CID linear actuators with current limiting
 - [ ] `PCB-DRV.01d` — Design TB6612FNG circuit for SLD peristaltic pumps with PWM speed control
+
+---
+
+### PCB-DRV.01b: Driver PCB schematic — MOSFET drivers, protection, connector interface
+- **Sprint:** Pre-Sprint (Weeks -6 to -5)
+- **Priority:** P0
+- **Points:** 3
+- **Blocked by:** [[PCB-pcb-design#PCB-DRV.01|PCB-DRV.01]]
+- **Blocks:** [[PCB-pcb-design#PCB-DRV.02|PCB-DRV.02]], [[PCB-pcb-design#PCB-FAB.01|PCB-FAB.01]]
+
+**Acceptance Criteria:**
+- [ ] IRLZ44N MOSFET circuits for 6× P-ASD solenoid valves + 1× diaphragm pump + 2× SLD solenoid valves
+- [ ] Flyback diodes on all inductive loads
+- [ ] Board-to-board connector to Controller PCB (signal interface)
+- [ ] ERC passes with zero errors
+
+**Tasks:**
 - [ ] `PCB-DRV.01e` — Design MOSFET driver circuits for solenoid valves and diaphragm pump
 - [ ] `PCB-DRV.01f` — Add flyback diodes (1N4007) on all inductive loads; add bulk capacitors
 - [ ] `PCB-DRV.01g` — Design board-to-board connector interface (PWM, GPIO, enable signals from controller)
@@ -112,7 +141,7 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160�
 - **Sprint:** Pre-Sprint (Weeks -5 to -4)
 - **Priority:** P0
 - **Points:** 5
-- **Blocked by:** [[PCB-pcb-design#PCB-DRV.01|PCB-DRV.01]]
+- **Blocked by:** [[PCB-pcb-design#PCB-DRV.01b|PCB-DRV.01b]]
 - **Blocks:** [[PCB-pcb-design#PCB-FAB.01|PCB-FAB.01]]
 
 **Acceptance Criteria:**

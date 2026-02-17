@@ -1,7 +1,7 @@
 (kicad_sch
   (version 20231120)
   (generator "eeschema")
-  (generator_version "8.0")
+  (generator_version "9.0")
   (uuid "a1b2c3d4-e5f6-7890-abcd-ef1234567890")
   (paper "A3")
   (title_block
@@ -370,7 +370,7 @@
         (pin passive line (at 7.62 -3.81 180) (length 3.81) (name "~" (effects (font (size 1.27 1.27)))) (number "24" (effects (font (size 1.27 1.27)))))
         (pin passive line (at -5.08 -6.35 0) (length 3.81) (name "~" (effects (font (size 1.27 1.27)))) (number "25" (effects (font (size 1.27 1.27)))))
         (pin passive line (at 7.62 -6.35 180) (length 3.81) (name "~" (effects (font (size 1.27 1.27)))) (number "26" (effects (font (size 1.27 1.27)))))
-        (pin passive line (at -5.08 -8.89 0) (length 3.81) (name "~" (effects (font (size 1.27 1.27)))) (number "27" (effects (font (size 1.27 1.27))))
+        (pin passive line (at -5.08 -8.89 0) (length 3.81) (name "~" (effects (font (size 1.27 1.27)))) (number "27" (effects (font (size 1.27 1.27)))))
         (pin passive line (at 7.62 -8.89 180) (length 3.81) (name "~" (effects (font (size 1.27 1.27)))) (number "28" (effects (font (size 1.27 1.27)))))
         (pin passive line (at -5.08 -11.43 0) (length 3.81) (name "~" (effects (font (size 1.27 1.27)))) (number "29" (effects (font (size 1.27 1.27)))))
         (pin passive line (at 7.62 -11.43 180) (length 3.81) (name "~" (effects (font (size 1.27 1.27)))) (number "30" (effects (font (size 1.27 1.27)))))

@@ -1,7 +1,7 @@
 (kicad_pcb
   (version 20240108)
-  (generator "kicad" "8.0")
-  (generator_version "8.0")
+  (generator "kicad" "9.0")
+  (generator_version "9.0")
 
   (general
     (thickness 1.6)

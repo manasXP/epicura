@@ -47,7 +47,7 @@ This document provides detailed resource allocation across all project phases, i
 **Deliverables:**
 - Controller PCB schematic + layout (KiCad files)
 - Driver PCB schematic + layout (KiCad files)
-- CM5IO PCB schematic + layout (KiCad files)
+- CM5IO Board is off-the-shelf (no PCB design needed)
 - Gerber files for JLCPCB submission
 - BOM with part numbers (Mouser/Digikey)
 - Assembly drawings

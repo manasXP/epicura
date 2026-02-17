@@ -1,6 +1,6 @@
 (kicad_project
   (version 20231231)
-  (generator "kicad" "8.0")
+  (generator "kicad" "9.0")
   (project
     (name "controller-board")
   )

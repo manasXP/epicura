@@ -28,7 +28,7 @@ The Driver PCB is the power electronics and actuator interface board in Epicura'
          │ 24V DC from Mean Well PSU
 ```
 
-All three boards share a uniform 160x90mm footprint with M3 mounting holes at identical positions, connected via 2x20-pin 2.54mm board-to-board headers. The Driver PCB sits at the bottom of the stack, closest to the PSU, and distributes power and actuator connections.
+The CM5IO board is an off-the-shelf Raspberry Pi carrier board that sits on top. The two custom boards (Controller, Driver) share a uniform 160x90mm footprint with M3 mounting holes at identical positions, connected via a 2x20-pin 2.54mm board-to-board header. The Driver PCB sits at the bottom of the stack, closest to the PSU, and distributes power and actuator connections.
 
 ### Scope
 
@@ -36,7 +36,7 @@ All three boards share a uniform 160x90mm footprint with M3 mounting holes at id
 |------|--------|-------|
 | **Driver PCB** (this document) | Custom design required | Power conversion + actuator drivers |
 | **Controller PCB** | Custom design required | STM32G474RE + sensors (see [[Controller-PCB-Design]]) |
-| **CM5 IO Board (CM5IO)** | Custom design required | CM5 carrier board, 160x90mm to match stack |
+| **CM5 IO Board (CM5IO)** | Off-the-shelf (Raspberry Pi official) | Commercial carrier board; no custom PCB needed |
 | **Mean Well PSU** | Commercial (LRS-75-24) | 24V 3.2A input to Driver PCB |
 
 ---
