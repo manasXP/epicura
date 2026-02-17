@@ -154,9 +154,107 @@ docs/
     └── 06-Weekly-Status-Report-Template  Status report template
 ```
 
+## Story Workflow — GitHub Project as Single Source of Truth
+
+All story tracking happens exclusively through **GitHub Project #3** (`manasXP/epicura`). Do NOT use local todo files, TaskCreate, or any other local tracking. The GitHub project is the single source of truth.
+
+### GitHub Project IDs
+
+| Resource | ID |
+|----------|-----|
+| Project | `PVT_kwHOAD5QWs4BPXSp` |
+| Status field | `PVTSSF_lAHOAD5QWs4BPXSpzg9yy_8` |
+| Epic field | `PVTSSF_lAHOAD5QWs4BPXSpzg90S9I` |
+
+### Status Options
+
+| Status | Option ID | When |
+|--------|-----------|------|
+| **Todo** | `f75ad846` | Default — story is in backlog |
+| **In Progress** | `47fc9ee4` | Work has started on the story |
+| **Done** | `98236657` | All AC fulfilled and unit tests pass |
+
+### Workflow When Assigned a Story
+
+1. **Before starting work** — Move the story to "In Progress":
+   ```
+   gh api graphql -f query='mutation {
+     updateProjectV2ItemFieldValue(input: {
+       projectId: "PVT_kwHOAD5QWs4BPXSp"
+       itemId: "<ITEM_ID>"
+       fieldId: "PVTSSF_lAHOAD5QWs4BPXSpzg9yy_8"
+       value: {singleSelectOptionId: "47fc9ee4"}
+     }) { projectV2Item { id } }
+   }'
+   ```
+
+2. **During development** — Read the issue body for acceptance criteria and tasks:
+   ```
+   gh issue view <NUMBER> --repo manasXP/epicura
+   ```
+
+3. **On completion** — Only after ALL acceptance criteria are met AND unit tests pass, move to "Done":
+   ```
+   gh api graphql -f query='mutation {
+     updateProjectV2ItemFieldValue(input: {
+       projectId: "PVT_kwHOAD5QWs4BPXSp"
+       itemId: "<ITEM_ID>"
+       fieldId: "PVTSSF_lAHOAD5QWs4BPXSpzg9yy_8"
+       value: {singleSelectOptionId: "98236657"}
+     }) { projectV2Item { id } }
+   }'
+   ```
+
+4. **Close the issue** after marking Done:
+   ```
+   gh issue close <NUMBER> --repo manasXP/epicura
+   ```
+
+### Finding the Project Item ID for an Issue
+
+To get the project item ID needed for status updates:
+```
+gh api graphql -f query='query {
+  node(id: "PVT_kwHOAD5QWs4BPXSp") {
+    ... on ProjectV2 {
+      items(first: 100) {
+        nodes {
+          id
+          content { ... on Issue { number } }
+        }
+      }
+    }
+  }
+}' | python3 -c "import json,sys; [print(n['id']) for n in json.load(sys.stdin)['data']['node']['items']['nodes'] if n.get('content',{}).get('number')==ISSUE_NUM]"
+```
+
+### Epic Field Option IDs
+
+| Epic | Option ID |
+|------|-----------|
+| PCB | `df416011` |
+| EMB | `8bcbbf6e` |
+| THR | `09ee8075` |
+| ARM | `7727f91e` |
+| CV | `47af4594` |
+| RCP | `a5528d36` |
+| UI | `a426c27b` |
+| BE | `f43267cb` |
+| IOS | `e428f2cb` |
+| AND | `73ea0c3d` |
+| ADM | `ac5a8ff0` |
+| INT | `0a261ddc` |
+
+### Rules
+
+- **NEVER** track progress locally (no `__todo.md`, no TaskCreate/TaskUpdate for story tracking)
+- **ALWAYS** read the GitHub issue for the current acceptance criteria before starting work
+- **ALWAYS** move status to "In Progress" before writing any code
+- **NEVER** mark "Done" unless all acceptance criteria checkboxes can be checked off and tests pass
+- If blocked, add a comment to the GitHub issue explaining the blocker
+
 ## Workspace Conventions
 
 - `__init.md` — Project definition and requirements
-- `__todo.md` — Project task tracking
 - `docs/` — Structured documentation
 - Follow the Obsidian vault conventions from the parent `CLAUDE.md` for note formatting and linking
