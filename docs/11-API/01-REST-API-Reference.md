@@ -302,9 +302,9 @@ List published recipes with optional filtering.
 | `page` | integer | 1 | Page number |
 | `limit` | integer | 20 | Items per page (max 50) |
 | `category` | string | — | Filter by category (`dal`, `curry`, `rice`, etc.) |
-| `cuisine` | string | — | Filter by cuisine |
+| `cuisine` | string | — | Filter by cuisine: `indian`, `italian`, `american`, `chinese`, `mexican`, `korean`, `thai`, `asian`, `global` |
 | `difficulty` | string | — | Filter by difficulty (`easy`, `medium`, `hard`) |
-| `tags` | string | — | Comma-separated tag filter (`vegetarian,quick`) |
+| `tags` | string | — | Comma-separated tag filter: `vegan`, `healthy`, `vegetarian`, `protein-rich`, `stir-fry`, `gluten-free`, `quick`. Use `all` or omit for no filter |
 | `search` | string | — | Full-text search query |
 | `sort` | string | `name` | Sort field (`name`, `time_minutes`, `created_at`) |
 | `order` | string | `asc` | Sort order (`asc`, `desc`) |
@@ -323,6 +323,12 @@ List published recipes with optional filtering.
       "time_minutes": 35,
       "servings": 4,
       "tags": ["vegetarian", "protein-rich"],
+      "nutrition": {
+        "calories": 320,
+        "protein_g": 18,
+        "carbs_g": 42,
+        "fats_g": 8
+      },
       "image_url": "https://cdn.epicura.io/recipes/dal-tadka.jpg",
       "version": 2
     }
@@ -358,6 +364,12 @@ Get full recipe details including `recipe_data` (stages, ingredients).
     "time_minutes": 35,
     "servings": 4,
     "tags": ["vegetarian", "protein-rich"],
+    "nutrition": {
+      "calories": 320,
+      "protein_g": 18,
+      "carbs_g": 42,
+      "fats_g": 8
+    },
     "image_url": "https://cdn.epicura.io/recipes/dal-tadka.jpg",
     "version": 2,
     "recipe_data": {
@@ -394,7 +406,13 @@ Create a new recipe.
   "difficulty": "medium",
   "time_minutes": 45,
   "servings": 4,
-  "tags": ["vegetarian", "rich"],
+  "tags": ["vegetarian", "protein-rich"],
+  "nutrition": {
+    "calories": 420,
+    "protein_g": 22,
+    "carbs_g": 28,
+    "fats_g": 24
+  },
   "recipe_data": {
     "stages": [ ... ]
   }
@@ -651,7 +669,11 @@ Get current user profile and preferences.
     "preferences": {
       "language": "en_IN",
       "spice_level": 3,
-      "default_servings": 4,
+      "salt_level": 3,
+      "oil_level": 3,
+      "diet": "no_restrictions",
+      "cuisines": ["indian", "italian", "thai", "mexican"],
+      "default_servings": 2,
       "allergens": ["mustard"],
       "theme": "light",
       "notifications_enabled": true
@@ -670,6 +692,11 @@ Update profile and preferences.
   "name": "Manas P.",
   "preferences": {
     "spice_level": 4,
+    "salt_level": 2,
+    "oil_level": 3,
+    "diet": "vegetarian",
+    "cuisines": ["indian", "italian", "thai"],
+    "default_servings": 2,
     "allergens": ["mustard", "nuts"],
     "language": "hi_IN"
   }

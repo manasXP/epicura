@@ -78,15 +78,16 @@ JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Cover
 - **Blocks:** None
 
 **Acceptance Criteria:**
-- [ ] Grid layout of recipe cards (2 columns)
-- [ ] Each card: image, name, time, difficulty badge
+- [ ] List layout of recipe cards (horizontal card: food bowl image on left, details on right)
+- [ ] Each card: food image in bowl (left), name, time, difficulty badge, nutrition per serving (Protein g, Carbs g, Fats g, Calories kcal)
 - [ ] Search bar with placeholder text
-- [ ] Filter chips: cuisine, difficulty, time
+- [ ] Tag filter chips (horizontally scrollable): All Recipes, Vegan, Healthy, Vegetarian, Protein Rich, Stir Fry, Gluten Free, Quick Recipe
+- [ ] Cuisine filter chips (second row): Indian, Italian, American, Chinese, Mexican, Korean, Thai, Asian, Global
 - [ ] Pull-down refresh animation (simulated)
 
 **Tasks:**
-- [ ] `UX-RCP.01a` — Implement RecipeScreen.jsx with grid and search
-- [ ] `UX-RCP.01b` — Implement RecipeCard.jsx reusable card component
+- [ ] `UX-RCP.01a` — Implement RecipeScreen.jsx with list layout, tag filters, and cuisine filters
+- [ ] `UX-RCP.01b` — Implement RecipeCard.jsx with horizontal layout (bowl image left, details + nutrition right)
 
 ---
 

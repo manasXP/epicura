@@ -72,32 +72,42 @@ status: Draft
 │ ◄ Back         Browse Recipes        🔍      │
 ├──────────────────────────────────────────────┤
 │                                              │
-│  [ Dal ] [ Curry ] [ Rice ] [ Pasta ] [Soup] │
+│ [All] [Vegan] [Healthy] [Vegetarian] [Pro..] │
+│ [Indian] [Italian] [American] [Chinese] [..] │
 │                                              │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐    │
-│  │          │  │          │  │          │    │
-│  │ Dal Tadka│  │Dal Makhni│  │  Sambar  │    │
-│  │ 35 min   │  │ 40 min   │  │ 45 min   │    │
-│  │ Easy ●○○ │  │ Med ●●○  │  │ Med ●●○  │    │
-│  └──────────┘  └──────────┘  └──────────┘    │
-│                                              │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐    │
-│  │          │  │          │  │          │    │
-│  │Chana Dal │  │ Toor Dal │  │Moong Dal │    │
-│  │ 50 min   │  │ 30 min   │  │ 25 min   │    │
-│  │ Med ●●○  │  │ Easy ●○○ │  │ Easy ●○○ │    │
-│  └──────────┘  └──────────┘  └──────────┘    │
+│  ┌──────────────────────────────────────┐    │
+│  │ ┌────────┐  Dal Tadka               │    │
+│  │ │ (food  │  35 min · Easy ●○○       │    │
+│  │ │  bowl) │  P:18g C:42g F:8g 320cal │    │
+│  │ └────────┘                           │    │
+│  └──────────────────────────────────────┘    │
+│  ┌──────────────────────────────────────┐    │
+│  │ ┌────────┐  Dal Makhni              │    │
+│  │ │ (food  │  40 min · Med ●●○        │    │
+│  │ │  bowl) │  P:14g C:38g F:12g 350cal│    │
+│  │ └────────┘                           │    │
+│  └──────────────────────────────────────┘    │
+│  ┌──────────────────────────────────────┐    │
+│  │ ┌────────┐  Sambar                  │    │
+│  │ │ (food  │  45 min · Med ●●○        │    │
+│  │ │  bowl) │  P:12g C:48g F:6g 290cal │    │
+│  │ └────────┘                           │    │
+│  └──────────────────────────────────────┘    │
 │                                              │
 │         [ Load More... ]                     │
 └──────────────────────────────────────────────┘
 ```
 
 **Elements:**
-- Category filter tabs (Dal, Curry, Rice, Pasta, Soup, etc.)
+- **Filter chips (top row):** All Recipes, Vegan, Healthy, Vegetarian, Protein Rich, Stir Fry, Gluten Free, Quick Recipe (horizontally scrollable)
+- **Cuisine tabs (second row):** Indian, Italian, American, Chinese, Mexican, Korean, Thai, Asian, Global
 - Search bar with text input
-- Grid of recipe cards with photo placeholder, name, time, difficulty
+- Recipe cards in list layout:
+  - Food image in bowl on the **left side** of the card
+  - Recipe name, time, difficulty on the right
+  - **Nutrition per serving** displayed below: Protein (g), Carbs (g), Fats (g), Calories (kcal)
 - Difficulty indicator: Easy/Medium/Hard with dots
-- Scrollable grid, "Load More" or infinite scroll
+- Scrollable list, "Load More" or infinite scroll
 
 ---
 
@@ -549,11 +559,56 @@ Epicura uses native mobile development: **SwiftUI** (iOS) and **Jetpack Compose*
 
 ### Key Screens
 
-1. **Recipe Browse** - Grid layout, category filters, search, difficulty/time badges
-2. **Recipe Detail** - Ingredients, spice customization, allergen flags, remote start
+1. **Recipe Browse** - List layout with food bowl image on left, tag filters (Vegan/Healthy/Vegetarian/Protein Rich/Stir Fry/Gluten Free/Quick), cuisine filters (Indian/Italian/American/Chinese/Mexican/Korean/Thai/Asian/Global), nutrition per serving (Protein/Carbs/Fats/Calories)
+2. **Recipe Detail** - Ingredients, spice customization, allergen flags, nutrition breakdown, remote start
 3. **Live Cook View** - MJPEG camera stream, temperature gauge, stage progress, notifications
 4. **History** - List of past cooks with date, rating, duration, recipe name
-5. **Settings** - Device pairing, spice preferences, allergen profile, notifications
+5. **Profile / Settings** - Food preferences, device pairing, allergen profile, notifications
+6. **Food Preferences** (within Profile tab) — Dedicated section for dietary and taste customization:
+
+```
+┌──────────────────────────────────────────────┐
+│ ◄ Back            Profile                    │
+├──────────────────────────────────────────────┤
+│                                              │
+│  ──── Food Preferences ────                 │
+│                                              │
+│  Diet                                        │
+│  [ Vegetarian | Vegan | Pescatarian | ●None ]│
+│                                              │
+│  Preferred Cuisines                          │
+│  [●Indian] [●Italian] [●Thai] [Chinese]     │
+│  [American] [●Mexican] [Korean] [Global]    │
+│                                              │
+│  Seasoning Levels                            │
+│  Spice  [─────────●─────────] 3             │
+│  Salt   [─────────●─────────] 3             │
+│  Oil    [─────────●─────────] 3             │
+│                                              │
+│  Typical Servings     [ − ]  2  [ + ]       │
+│                                              │
+│  ──── Allergen Profile ────                 │
+│  [ ] Nuts     [ ] Dairy    [✓] Mustard      │
+│  [ ] Gluten   [ ] Soy      [ ] Sesame       │
+│                                              │
+│  ──── Device & Account ────                 │
+│  Paired Device        EPIC-001 (Online)     │
+│  Notifications        [  ON  ]              │
+│  Theme                [ Light     ▼ ]       │
+│                                              │
+└──────────────────────────────────────────────┘
+```
+
+**Food Preferences Fields:**
+
+| Control | Type | Options / Range | Default |
+|---------|------|-----------------|---------|
+| Diet | Single-select segmented | Vegetarian, Vegan, Pescatarian, No Restrictions | No Restrictions |
+| Preferred Cuisines | Multi-select chip group | Indian, Italian, Thai, Chinese, American, Mexican, Korean, Global | Indian, Italian, Thai, Mexican |
+| Spice Level | 5-point discrete slider | 1 (Mild) – 5 (Hot) | 3 |
+| Salt Level | 5-point discrete slider | 1 (Low) – 5 (High) | 3 |
+| Oil Level | 5-point discrete slider | 1 (Light) – 5 (Rich) | 3 |
+| Typical Servings | Stepper (spinner) | 1 – 4 | 2 |
 6. **Device Pairing** - BLE scan, WiFi provisioning, cloud account linking
 7. **Device Status** - Firmware versions, connection status, sensor health
 

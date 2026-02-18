@@ -102,19 +102,23 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 - **Blocks:** None
 
 **Acceptance Criteria:**
-- [ ] Recipe list: LazyVGrid with thumbnail, name, time, difficulty badges
+- [ ] Recipe list: horizontal card layout with food bowl image on left, name/time/difficulty on right
+- [ ] Nutrition per serving on each card: Protein (g), Carbs (g), Fats (g), Calories (kcal)
+- [ ] Tag filter chips (horizontally scrollable): All Recipes, Vegan, Healthy, Vegetarian, Protein Rich, Stir Fry, Gluten Free, Quick Recipe
+- [ ] Cuisine filter chips (second row): Indian, Italian, American, Chinese, Mexican, Korean, Thai, Asian, Global
 - [ ] Recipe detail: full image, ingredient list, step preview, nutrition info
-- [ ] Search: text search with debounce, filters (cuisine, difficulty, time)
+- [ ] Search: text search with debounce
 - [ ] Favorites: heart toggle, persisted locally and synced to cloud
 - [ ] Pull-to-refresh and infinite scroll pagination
 - [ ] "Start Cooking" button sends command to device via API
 
 **Tasks:**
-- [ ] `IOS-RCP.01a` — Implement recipe list view with LazyVGrid and async image loading
-- [ ] `IOS-RCP.01b` — Implement recipe detail view with ingredient and step sections
-- [ ] `IOS-RCP.01c` — Implement search with debounce and filter chips
-- [ ] `IOS-RCP.01d` — Implement favorites with local persistence (SwiftData) and cloud sync
-- [ ] `IOS-RCP.01e` — Implement "Start Cooking" button with device command API call
+- [ ] `IOS-RCP.01a` — Implement recipe list with horizontal card layout (bowl image left, details + nutrition right)
+- [ ] `IOS-RCP.01b` — Implement tag and cuisine filter chip rows
+- [ ] `IOS-RCP.01c` — Implement recipe detail view with ingredient, step, and nutrition sections
+- [ ] `IOS-RCP.01d` — Implement search with debounce
+- [ ] `IOS-RCP.01e` — Implement favorites with local persistence (SwiftData) and cloud sync
+- [ ] `IOS-RCP.01f` — Implement "Start Cooking" button with device command API call
 
 ---
 

@@ -25,10 +25,14 @@ The cloud schema is designed to complement the [[../03-Software/04-Controller-So
 │ email            │  │    │ user_id (FK)     │───┐   │ user_id (FK)     │───┐
 │ password_hash    │  │    │ language         │   │   │ platform         │   │
 │ name             │  │    │ spice_level      │   │   │ token            │   │
-│ role             │  │    │ default_servings │   │   │ created_at       │   │
-│ created_at       │  │    │ allergens        │   │   └──────────────────┘   │
-│ updated_at       │  │    │ theme            │   │                          │
-└──────────────────┘  │    └──────────────────┘   │                          │
+│ role             │  │    │ salt_level       │   │   │ created_at       │   │
+│ created_at       │  │    │ oil_level        │   │   └──────────────────┘   │
+│ updated_at       │  │    │ diet             │   │                          │
+└──────────────────┘  │    │ cuisines         │   │                          │
+                      │    │ default_servings │   │                          │
+                      │    │ allergens        │   │                          │
+                      │    │ theme            │   │                          │
+                      │    └──────────────────┘   │                          │
                       │                            │                          │
           ┌───────────┴──────────────┐             │                          │
           │                          │             │                          │
@@ -66,12 +70,16 @@ The cloud schema is designed to complement the [[../03-Software/04-Controller-So
 │ name             │       │ target           │                              │
 │ category         │       │ version          │                              │
 │ cuisine          │       │ channel          │                              │
-│ recipe_data (J)  │       │ binary_url       │                              │
-│ tags             │       │ checksum         │                              │
-│ difficulty       │       │ release_notes    │                              │
-│ time_minutes     │       │ is_mandatory     │                              │
-│ image_url        │       │ created_at       │                              │
-│ version          │       └──────────────────┘                              │
+│ calories         │       │ binary_url       │                              │
+│ protein_g        │       │ checksum         │                              │
+│ carbs_g          │       │ release_notes    │                              │
+│ fats_g           │       │ is_mandatory     │                              │
+│ recipe_data (J)  │       │ created_at       │                              │
+│ tags             │       └──────────────────┘                              │
+│ difficulty       │                                                         │
+│ time_minutes     │                                                         │
+│ image_url        │                                                         │
+│ version          │                                                         │
 │ is_published     │                                                         │
 │ created_at       │             users.id ◄── user_preferences.user_id       │
 │ updated_at       │             users.id ◄── push_tokens.user_id ───────────┘
@@ -104,7 +112,11 @@ The cloud schema is designed to complement the [[../03-Software/04-Controller-So
 | `user_id` | `uuid` | FK → `users.id`, UNIQUE, NOT NULL | One preferences row per user |
 | `language` | `varchar(10)` | default `'en_IN'` | UI language code |
 | `spice_level` | `integer` | default `3`, CHECK 1-5 | Default spice level |
-| `default_servings` | `integer` | default `4`, CHECK 1-8 | Default serving count |
+| `salt_level` | `integer` | default `3`, CHECK 1-5 | Default salt level |
+| `oil_level` | `integer` | default `3`, CHECK 1-5 | Default oil level |
+| `diet` | `varchar(20)` | default `'no_restrictions'` | `vegetarian`, `vegan`, `pescatarian`, `no_restrictions` |
+| `cuisines` | `text[]` | default `'{indian,italian,thai,mexican}'` | Preferred cuisine tags |
+| `default_servings` | `integer` | default `2`, CHECK 1-4 | Default serving count |
 | `allergens` | `text[]` | default `'{}'` | Array of allergen tags |
 | `theme` | `varchar(10)` | default `'light'` | `light` or `dark` |
 | `notifications_enabled` | `boolean` | default `true` | Push notification preference |
@@ -135,13 +147,17 @@ The cloud schema is designed to complement the [[../03-Software/04-Controller-So
 | `id` | `uuid` | PK, default `gen_random_uuid()` | Recipe identifier |
 | `name` | `varchar(200)` | NOT NULL | Recipe display name |
 | `category` | `varchar(50)` | NOT NULL | `dal`, `curry`, `rice`, `pasta`, `soup`, etc. |
-| `cuisine` | `varchar(50)` | default `'indian'` | Cuisine type |
+| `cuisine` | `varchar(50)` | default `'indian'` | Cuisine: `indian`, `italian`, `american`, `chinese`, `mexican`, `korean`, `thai`, `asian`, `global` |
 | `recipe_data` | `jsonb` | NOT NULL | Full recipe definition (stages, ingredients, temps) |
-| `tags` | `text[]` | default `'{}'` | Searchable tags: `vegetarian`, `spicy`, `quick`, etc. |
+| `tags` | `text[]` | default `'{}'` | Filter tags: `vegan`, `healthy`, `vegetarian`, `protein-rich`, `stir-fry`, `gluten-free`, `quick` |
 | `difficulty` | `varchar(10)` | NOT NULL | `easy`, `medium`, `hard` |
 | `time_minutes` | `integer` | NOT NULL | Total estimated cooking time |
 | `servings` | `integer` | NOT NULL, default `4` | Default serving count |
-| `image_url` | `text` | | Recipe photo URL (S3/R2) |
+| `calories` | `real` | | Calories per serving (kcal) |
+| `protein_g` | `real` | | Protein per serving (g) |
+| `carbs_g` | `real` | | Carbohydrates per serving (g) |
+| `fats_g` | `real` | | Fats per serving (g) |
+| `image_url` | `text` | | Recipe photo URL (S3/R2) — food in bowl, displayed on left of recipe card |
 | `version` | `integer` | NOT NULL, default `1` | Recipe version (incremented on edit) |
 | `is_published` | `boolean` | NOT NULL, default `false` | Visible to users when true |
 | `created_by` | `uuid` | FK → `users.id` | Admin who created the recipe |
@@ -305,6 +321,9 @@ CREATE INDEX idx_recipes_tags ON recipes USING GIN (tags);
 -- Allergen array search
 CREATE INDEX idx_prefs_allergens ON user_preferences USING GIN (allergens);
 
+-- Cuisine preferences array search
+CREATE INDEX idx_prefs_cuisines ON user_preferences USING GIN (cuisines);
+
 -- Telemetry payload search
 CREATE INDEX idx_telemetry_payload ON telemetry_events USING GIN (payload jsonb_path_ops);
 ```
@@ -397,3 +416,4 @@ Migration files are stored in `packages/db/migrations/` and version-controlled. 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
+| 1.1 | 2026-02-17 | Manas Pradhan | Added nutrition columns (calories, protein_g, carbs_g, fats_g) to recipes; updated cuisine/tag values |

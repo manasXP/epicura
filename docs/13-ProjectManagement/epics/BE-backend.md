@@ -78,7 +78,7 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 
 **Acceptance Criteria:**
 - [ ] CRUD endpoints for recipes at `/api/recipes` with pagination and search
-- [ ] Recipe schema: name, cuisine, servings, cook_time, difficulty, ingredients (JSONB), steps (JSONB), image_url
+- [ ] Recipe schema: name, cuisine, servings, cook_time, difficulty, ingredients (JSONB), steps (JSONB), image_url, nutrition (calories, protein_g, carbs_g, fats_g)
 - [ ] Recipe versioning: version number incremented on update; sync endpoint with `since_version` param
 - [ ] Admin-only create/update/delete; public read access with auth
 

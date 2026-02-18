@@ -83,7 +83,7 @@ Both iOS and Android apps use the MVVM (Model-View-ViewModel) pattern with a sha
 | **P0** | Push notifications | APNs | FCM |
 | **P1** | MJPEG camera stream | AVFoundation | MediaCodec |
 | **P1** | Cooking history + ratings | SwiftData | Room |
-| **P1** | User preferences + allergen profile | SwiftData | DataStore + Room |
+| **P1** | Food preferences (diet, cuisines, seasoning levels, servings) + allergen profile | SwiftData | DataStore + Room |
 | **P1** | Offline recipe cache | SwiftData | Room |
 | **P1** | Appliance management (rename, status) | REST API | REST API |
 | **P2** | Recipe search (full-text) | REST API | REST API |
@@ -228,7 +228,7 @@ Target: 10-15 fps at 640x480 resolution.
 |------|---------------|----------------|
 | **Recipes** | Cache all published recipes in local DB | Cloud → Device |
 | **Cooking History** | Store locally, upload to cloud | Device → Cloud |
-| **User Preferences** | Store locally, sync on change | Bidirectional |
+| **User Preferences** | Store locally (diet, cuisines, seasoning levels, servings, allergens), sync on change | Bidirectional |
 | **Recipe Images** | Disk cache with LRU eviction | Cloud → Device |
 | **Push Tokens** | Register/refresh on app launch | Device → Cloud |
 
@@ -271,6 +271,20 @@ This palette matches the Kivy touchscreen UI colors defined in [[../04-UserInter
 | Haptics | `UIImpactFeedbackGenerator` | `HapticFeedback` compose |
 | System Theme | `@Environment(\.colorScheme)` | `isSystemInDarkTheme()` |
 | Typography | SF Pro (system) | Roboto / Material 3 type scale |
+
+### Recipe Card Layout
+
+Recipe cards in the list use a horizontal layout:
+- **Left:** Food image in a bowl (square thumbnail, rounded corners)
+- **Right:** Recipe name, cooking time, difficulty badge
+- **Bottom-right:** Nutrition per serving — Protein (g), Carbs (g), Fats (g), Calories (kcal)
+
+### Recipe List Filters
+
+| Filter Layer | Options |
+|-------------|---------|
+| **Tag filters** (horizontally scrollable chips) | All Recipes, Vegan, Healthy, Vegetarian, Protein Rich, Stir Fry, Gluten Free, Quick Recipe |
+| **Cuisine filters** (horizontally scrollable chips) | Indian, Italian, American, Chinese, Mexican, Korean, Thai, Asian, Global |
 
 ---
 

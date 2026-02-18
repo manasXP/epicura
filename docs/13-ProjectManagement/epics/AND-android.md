@@ -102,19 +102,23 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 - **Blocks:** None
 
 **Acceptance Criteria:**
-- [ ] Recipe list: LazyVerticalGrid with Coil async image, name, time, difficulty
-- [ ] Recipe detail: full image, ingredient list, step preview
-- [ ] Search with debounce, filter chips (cuisine, difficulty, time range)
+- [ ] Recipe list: horizontal card layout with food bowl image on left, name/time/difficulty on right
+- [ ] Nutrition per serving on each card: Protein (g), Carbs (g), Fats (g), Calories (kcal)
+- [ ] Tag filter chips (horizontally scrollable): All Recipes, Vegan, Healthy, Vegetarian, Protein Rich, Stir Fry, Gluten Free, Quick Recipe
+- [ ] Cuisine filter chips (second row): Indian, Italian, American, Chinese, Mexican, Korean, Thai, Asian, Global
+- [ ] Recipe detail: full image, ingredient list, step preview, nutrition info
+- [ ] Search with debounce
 - [ ] Favorites: toggle with local Room DB + cloud sync
 - [ ] Pull-to-refresh and pagination
 - [ ] "Start Cooking" sends command to device
 
 **Tasks:**
-- [ ] `AND-RCP.01a` — Implement recipe list with LazyVerticalGrid and Coil image loading
-- [ ] `AND-RCP.01b` — Implement recipe detail screen with expandable sections
-- [ ] `AND-RCP.01c` — Implement search with debounce and filter composables
-- [ ] `AND-RCP.01d` — Implement favorites with Room persistence and cloud sync
-- [ ] `AND-RCP.01e` — Implement "Start Cooking" with device command API
+- [ ] `AND-RCP.01a` — Implement recipe list with horizontal card layout (bowl image left, details + nutrition right)
+- [ ] `AND-RCP.01b` — Implement tag and cuisine filter chip rows
+- [ ] `AND-RCP.01c` — Implement recipe detail screen with expandable sections and nutrition
+- [ ] `AND-RCP.01d` — Implement search with debounce
+- [ ] `AND-RCP.01e` — Implement favorites with Room persistence and cloud sync
+- [ ] `AND-RCP.01f` — Implement "Start Cooking" with device command API
 
 ---
 
