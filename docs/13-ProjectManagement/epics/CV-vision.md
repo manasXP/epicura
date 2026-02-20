@@ -32,6 +32,7 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 - **Sprint:** [[sprint-06|Sprint 6]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#126](https://github.com/manasXP/epicura/issues/126)
 - **Blocked by:** [[EMB-embedded#EMB-SET.02|EMB-SET.02]], [[EMB-embedded#EMB-SET.03|EMB-SET.03]]
 - **Blocks:** [[CV-vision#CV-PRE.01|CV-PRE.01]]
 
@@ -56,6 +57,7 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 - **Sprint:** [[sprint-06|Sprint 6]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#129](https://github.com/manasXP/epicura/issues/129)
 - **Blocked by:** [[CV-vision#CV-CAM.01|CV-CAM.01]]
 - **Blocks:** [[CV-vision#CV-MDL.01|CV-MDL.01]]
 
@@ -81,6 +83,7 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 - **Sprint:** [[sprint-07|Sprint 7]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#132](https://github.com/manasXP/epicura/issues/132)
 - **Blocked by:** [[CV-vision#CV-PRE.01|CV-PRE.01]]
 - **Blocks:** [[CV-vision#CV-MDL.02|CV-MDL.02]]
 
@@ -99,6 +102,7 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 - **Sprint:** [[sprint-07|Sprint 7]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#135](https://github.com/manasXP/epicura/issues/135)
 - **Blocked by:** [[CV-vision#CV-MDL.01|CV-MDL.01]]
 - **Blocks:** [[CV-vision#CV-DET.01|CV-DET.01]], [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]]
 
@@ -120,6 +124,7 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 - **Sprint:** [[sprint-07|Sprint 7]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#139](https://github.com/manasXP/epicura/issues/139)
 - **Blocked by:** [[CV-vision#CV-MDL.02|CV-MDL.02]]
 - **Blocks:** [[CV-vision#CV-DET.02|CV-DET.02]], [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]]
 
@@ -140,6 +145,7 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 - **Sprint:** [[sprint-07|Sprint 7]]
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#142](https://github.com/manasXP/epicura/issues/142)
 - **Blocked by:** [[CV-vision#CV-DET.01|CV-DET.01]]
 - **Blocks:** [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]]
 

@@ -32,6 +32,7 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 - **Sprint:** [[sprint-03|Sprint 3]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#109](https://github.com/manasXP/epicura/issues/109)
 - **Blocked by:** [[EMB-embedded#EMB-SET.01|EMB-SET.01]]
 - **Blocks:** [[THR-thermal#THR-CAN.02|THR-CAN.02]], [[THR-thermal#THR-PID.01|THR-PID.01]], [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]]
 
@@ -51,6 +52,7 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 - **Sprint:** [[sprint-03|Sprint 3]]
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#111](https://github.com/manasXP/epicura/issues/111)
 - **Blocked by:** [[THR-thermal#THR-CAN.01|THR-CAN.01]]
 - **Blocks:** [[THR-thermal#THR-PID.01|THR-PID.01]], [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]]
 
@@ -71,6 +73,7 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 - **Sprint:** [[sprint-03|Sprint 3]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#115](https://github.com/manasXP/epicura/issues/115)
 - **Blocked by:** [[EMB-embedded#EMB-COM.01|EMB-COM.01]], [[THR-thermal#THR-CAN.01|THR-CAN.01]]
 - **Blocks:** [[THR-thermal#THR-PID.02|THR-PID.02]], [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]], [[INT-integration#INT-SYS.01|INT-SYS.01]]
 
@@ -93,6 +96,7 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 - **Sprint:** [[sprint-03|Sprint 3]] → [[sprint-04|Sprint 4]]
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#118](https://github.com/manasXP/epicura/issues/118)
 - **Blocked by:** [[THR-thermal#THR-PID.01|THR-PID.01]]
 - **Blocks:** [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]], [[INT-integration#INT-SYS.01|INT-SYS.01]]
 
@@ -112,6 +116,7 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 - **Sprint:** [[sprint-04|Sprint 4]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#121](https://github.com/manasXP/epicura/issues/121)
 - **Blocked by:** [[EMB-embedded#EMB-SAF.01|EMB-SAF.01]], [[THR-thermal#THR-PID.01|THR-PID.01]]
 - **Blocks:** [[INT-integration#INT-SAF.01|INT-SAF.01]]
 
@@ -136,6 +141,7 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 - **Sprint:** [[sprint-04|Sprint 4]]
 - **Priority:** P1
 - **Points:** 5
+- **GitHub:** [#124](https://github.com/manasXP/epicura/issues/124)
 - **Blocked by:** [[EMB-embedded#EMB-SET.01|EMB-SET.01]]
 - **Blocks:** None
 

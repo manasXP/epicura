@@ -33,6 +33,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 - **Sprint:** [[sprint-04|Sprint 4]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#119](https://github.com/manasXP/epicura/issues/119)
 - **Blocked by:** [[EMB-embedded#EMB-SET.01|EMB-SET.01]], [[EMB-embedded#EMB-COM.01|EMB-COM.01]]
 - **Blocks:** [[ARM-actuation#ARM-SRV.02|ARM-SRV.02]], [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]], [[INT-integration#INT-SYS.01|INT-SYS.01]]
 
@@ -53,6 +54,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 - **Sprint:** [[sprint-04|Sprint 4]]
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#120](https://github.com/manasXP/epicura/issues/120)
 - **Blocked by:** [[ARM-actuation#ARM-SRV.01|ARM-SRV.01]]
 - **Blocks:** [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]], [[INT-integration#INT-SYS.01|INT-SYS.01]]
 
@@ -75,6 +77,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 - **Sprint:** [[sprint-05|Sprint 5]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#122](https://github.com/manasXP/epicura/issues/122)
 - **Blocked by:** [[EMB-embedded#EMB-SET.01|EMB-SET.01]]
 - **Blocks:** [[ARM-actuation#ARM-ASD.02|ARM-ASD.02]], [[RCP-recipe#RCP-DSP.01|RCP-DSP.01]], [[ARM-actuation#ARM-CAL.01|ARM-CAL.01]]
 
@@ -96,6 +99,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 - **Sprint:** [[sprint-05|Sprint 5]]
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#123](https://github.com/manasXP/epicura/issues/123)
 - **Blocked by:** [[ARM-actuation#ARM-ASD.01|ARM-ASD.01]]
 - **Blocks:** [[RCP-recipe#RCP-DSP.01|RCP-DSP.01]], [[ARM-actuation#ARM-CAL.01|ARM-CAL.01]]
 
@@ -115,6 +119,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 - **Sprint:** [[sprint-05|Sprint 5]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#125](https://github.com/manasXP/epicura/issues/125)
 - **Blocked by:** [[EMB-embedded#EMB-SET.01|EMB-SET.01]]
 - **Blocks:** [[RCP-recipe#RCP-DSP.01|RCP-DSP.01]], [[ARM-actuation#ARM-CAL.01|ARM-CAL.01]]
 
@@ -139,6 +144,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 - **Sprint:** [[sprint-06|Sprint 6]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#127](https://github.com/manasXP/epicura/issues/127)
 - **Blocked by:** [[EMB-embedded#EMB-SET.01|EMB-SET.01]]
 - **Blocks:** [[ARM-actuation#ARM-SLD.02|ARM-SLD.02]], [[RCP-recipe#RCP-DSP.01|RCP-DSP.01]], [[ARM-actuation#ARM-CAL.01|ARM-CAL.01]]
 
@@ -160,6 +166,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 - **Sprint:** [[sprint-06|Sprint 6]]
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#128](https://github.com/manasXP/epicura/issues/128)
 - **Blocked by:** [[ARM-actuation#ARM-SLD.01|ARM-SLD.01]]
 - **Blocks:** [[RCP-recipe#RCP-DSP.01|RCP-DSP.01]], [[ARM-actuation#ARM-CAL.01|ARM-CAL.01]]
 
@@ -183,6 +190,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 - **Sprint:** [[sprint-06|Sprint 6]]
 - **Priority:** P1
 - **Points:** 5
+- **GitHub:** [#130](https://github.com/manasXP/epicura/issues/130)
 - **Blocked by:** [[ARM-actuation#ARM-ASD.01|ARM-ASD.01]], [[ARM-actuation#ARM-CID.01|ARM-CID.01]], [[ARM-actuation#ARM-SLD.01|ARM-SLD.01]]
 - **Blocks:** [[RCP-recipe#RCP-DSP.01|RCP-DSP.01]]
 

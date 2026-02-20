@@ -32,6 +32,7 @@ aliases: [UI Epic, Touchscreen Epic]
 - **Sprint:** [[sprint-09|Sprint 9]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#138](https://github.com/manasXP/epicura/issues/138)
 - **Blocked by:** [[EMB-embedded#EMB-SET.02|EMB-SET.02]], [[EMB-embedded#EMB-SET.03|EMB-SET.03]]
 - **Blocks:** [[UI-touchscreen#UI-RCP.01|UI-RCP.01]], [[UI-touchscreen#UI-COK.01|UI-COK.01]], [[UI-touchscreen#UI-MNT.01|UI-MNT.01]]
 
@@ -57,6 +58,7 @@ aliases: [UI Epic, Touchscreen Epic]
 - **Sprint:** [[sprint-09|Sprint 9]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#141](https://github.com/manasXP/epicura/issues/141)
 - **Blocked by:** [[UI-touchscreen#UI-SET.01|UI-SET.01]], [[RCP-recipe#RCP-FMT.01|RCP-FMT.01]]
 - **Blocks:** None
 
@@ -82,6 +84,7 @@ aliases: [UI Epic, Touchscreen Epic]
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#143](https://github.com/manasXP/epicura/issues/143)
 - **Blocked by:** [[UI-touchscreen#UI-SET.01|UI-SET.01]], [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]]
 - **Blocks:** [[UI-touchscreen#UI-COK.02|UI-COK.02]]
 
@@ -104,6 +107,7 @@ aliases: [UI Epic, Touchscreen Epic]
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#144](https://github.com/manasXP/epicura/issues/144)
 - **Blocked by:** [[UI-touchscreen#UI-COK.01|UI-COK.01]]
 - **Blocks:** [[INT-integration#INT-SYS.01|INT-SYS.01]]
 
@@ -124,6 +128,7 @@ aliases: [UI Epic, Touchscreen Epic]
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P1
 - **Points:** 5
+- **GitHub:** [#145](https://github.com/manasXP/epicura/issues/145)
 - **Blocked by:** [[UI-touchscreen#UI-SET.01|UI-SET.01]]
 - **Blocks:** None
 

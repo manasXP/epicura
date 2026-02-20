@@ -33,6 +33,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 - **Sprint:** [[sprint-01|Sprint 1]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#100](https://github.com/manasXP/epicura/issues/100)
 - **Blocked by:** [[PCB-pcb-design#PCB-FAB.02|PCB-FAB.02]]
 - **Blocks:** [[EMB-embedded#EMB-SET.01b|EMB-SET.01b]]
 
@@ -52,6 +53,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 - **Sprint:** [[sprint-01|Sprint 1]]
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#102](https://github.com/manasXP/epicura/issues/102)
 - **Blocked by:** [[EMB-embedded#EMB-SET.01|EMB-SET.01]]
 - **Blocks:** [[THR-thermal#THR-CAN.01|THR-CAN.01]], [[ARM-actuation#ARM-SRV.01|ARM-SRV.01]], All STM32-dependent stories
 
@@ -73,6 +75,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 - **Sprint:** [[sprint-01|Sprint 1]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#103](https://github.com/manasXP/epicura/issues/103)
 - **Blocked by:** [[PCB-pcb-design#PCB-FAB.02|PCB-FAB.02]]
 - **Blocks:** [[EMB-embedded#EMB-SET.02b|EMB-SET.02b]]
 
@@ -92,6 +95,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 - **Sprint:** [[sprint-01|Sprint 1]]
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#105](https://github.com/manasXP/epicura/issues/105)
 - **Blocked by:** [[EMB-embedded#EMB-SET.02|EMB-SET.02]]
 - **Blocks:** [[CV-vision#CV-CAM.01|CV-CAM.01]], [[RCP-recipe#RCP-FMT.01|RCP-FMT.01]], [[UI-touchscreen#UI-SET.01|UI-SET.01]]
 
@@ -111,6 +115,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 - **Sprint:** [[sprint-01|Sprint 1]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#106](https://github.com/manasXP/epicura/issues/106)
 - **Blocked by:** [[EMB-embedded#EMB-SET.01|EMB-SET.01]], [[EMB-embedded#EMB-SET.02|EMB-SET.02]]
 - **Blocks:** [[EMB-embedded#EMB-COM.02|EMB-COM.02]]
 
@@ -133,6 +138,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 - **Sprint:** [[sprint-01|Sprint 1]]
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#108](https://github.com/manasXP/epicura/issues/108)
 - **Blocked by:** [[EMB-embedded#EMB-COM.01|EMB-COM.01]]
 - **Blocks:** [[THR-thermal#THR-PID.01|THR-PID.01]], [[ARM-actuation#ARM-SRV.01|ARM-SRV.01]], [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]]
 
@@ -152,6 +158,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 - **Sprint:** [[sprint-02|Sprint 2]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#110](https://github.com/manasXP/epicura/issues/110)
 - **Blocked by:** [[EMB-embedded#EMB-SET.02|EMB-SET.02]]
 - **Blocks:** [[CV-vision#CV-CAM.01|CV-CAM.01]], [[RCP-recipe#RCP-FMT.01|RCP-FMT.01]], [[UI-touchscreen#UI-SET.01|UI-SET.01]]
 
@@ -177,6 +184,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 - **Sprint:** [[sprint-02|Sprint 2]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#113](https://github.com/manasXP/epicura/issues/113)
 - **Blocked by:** [[EMB-embedded#EMB-SET.01|EMB-SET.01]]
 - **Blocks:** [[THR-thermal#THR-SAF.01|THR-SAF.01]], [[INT-integration#INT-SAF.01|INT-SAF.01]]
 
@@ -202,6 +210,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 - **Sprint:** [[sprint-02|Sprint 2]]
 - **Priority:** P1
 - **Points:** 5
+- **GitHub:** [#114](https://github.com/manasXP/epicura/issues/114)
 - **Blocked by:** [[EMB-embedded#EMB-SET.02|EMB-SET.02]]
 - **Blocks:** [[INT-integration#INT-LCH.01|INT-LCH.01]]
 
@@ -227,6 +236,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 - **Sprint:** [[sprint-12|Sprint 12]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#117](https://github.com/manasXP/epicura/issues/117)
 - **Blocked by:** [[INT-integration#INT-SYS.01|INT-SYS.01]]
 - **Blocks:** [[INT-integration#INT-LCH.01|INT-LCH.01]]
 

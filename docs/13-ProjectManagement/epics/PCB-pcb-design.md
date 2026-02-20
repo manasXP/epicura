@@ -31,6 +31,7 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160Ã
 - **Sprint:** Pre-Sprint (Weeks -6 to -5)
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#97](https://github.com/manasXP/epicura/issues/97)
 - **Blocked by:** None
 - **Blocks:** [[PCB-pcb-design#PCB-CTL.01b|PCB-CTL.01b]]
 
@@ -52,6 +53,7 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160Ã
 - **Sprint:** Pre-Sprint (Weeks -6 to -5)
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#98](https://github.com/manasXP/epicura/issues/98)
 - **Blocked by:** [[PCB-pcb-design#PCB-CTL.01|PCB-CTL.01]]
 - **Blocks:** [[PCB-pcb-design#PCB-CTL.02|PCB-CTL.02]], [[PCB-pcb-design#PCB-FAB.01|PCB-FAB.01]]
 
@@ -72,6 +74,7 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160Ã
 - **Sprint:** Pre-Sprint (Weeks -5 to -4)
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#99](https://github.com/manasXP/epicura/issues/99)
 - **Blocked by:** [[PCB-pcb-design#PCB-CTL.01b|PCB-CTL.01b]]
 - **Blocks:** [[PCB-pcb-design#PCB-FAB.01|PCB-FAB.01]]
 
@@ -100,6 +103,7 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160Ã
 - **Sprint:** Pre-Sprint (Weeks -6 to -5)
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#101](https://github.com/manasXP/epicura/issues/101)
 - **Blocked by:** None
 - **Blocks:** [[PCB-pcb-design#PCB-DRV.01b|PCB-DRV.01b]]
 
@@ -120,6 +124,7 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160Ã
 - **Sprint:** Pre-Sprint (Weeks -6 to -5)
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#104](https://github.com/manasXP/epicura/issues/104)
 - **Blocked by:** [[PCB-pcb-design#PCB-DRV.01|PCB-DRV.01]]
 - **Blocks:** [[PCB-pcb-design#PCB-DRV.02|PCB-DRV.02]], [[PCB-pcb-design#PCB-FAB.01|PCB-FAB.01]]
 
@@ -141,6 +146,7 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160Ã
 - **Sprint:** Pre-Sprint (Weeks -5 to -4)
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#107](https://github.com/manasXP/epicura/issues/107)
 - **Blocked by:** [[PCB-pcb-design#PCB-DRV.01b|PCB-DRV.01b]]
 - **Blocks:** [[PCB-pcb-design#PCB-FAB.01|PCB-FAB.01]]
 
@@ -168,6 +174,7 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160Ã
 - **Sprint:** Pre-Sprint (Weeks -4 to -2)
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#112](https://github.com/manasXP/epicura/issues/112)
 - **Blocked by:** [[PCB-pcb-design#PCB-CTL.02|PCB-CTL.02]], [[PCB-pcb-design#PCB-DRV.02|PCB-DRV.02]]
 - **Blocks:** [[PCB-pcb-design#PCB-FAB.02|PCB-FAB.02]]
 
@@ -191,6 +198,7 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160Ã
 - **Sprint:** Pre-Sprint (Weeks -2 to -1)
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#116](https://github.com/manasXP/epicura/issues/116)
 - **Blocked by:** [[PCB-pcb-design#PCB-FAB.01|PCB-FAB.01]]
 - **Blocks:** [[EMB-embedded#EMB-SET.01|EMB-SET.01]]
 

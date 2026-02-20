@@ -32,6 +32,7 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 - **Sprint:** [[sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#131](https://github.com/manasXP/epicura/issues/131)
 - **Blocked by:** [[EMB-embedded#EMB-SET.02|EMB-SET.02]], [[EMB-embedded#EMB-SET.03|EMB-SET.03]]
 - **Blocks:** [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]], [[BE-backend#BE-RCP.01|BE-RCP.01]]
 
@@ -56,6 +57,7 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 - **Sprint:** [[sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#133](https://github.com/manasXP/epicura/issues/133)
 - **Blocked by:** [[EMB-embedded#EMB-COM.01|EMB-COM.01]], [[THR-thermal#THR-PID.01|THR-PID.01]], [[ARM-actuation#ARM-SRV.01|ARM-SRV.01]], [[CV-vision#CV-MDL.02|CV-MDL.02]], [[CV-vision#CV-DET.02|CV-DET.02]], [[RCP-recipe#RCP-FMT.01|RCP-FMT.01]]
 - **Blocks:** [[RCP-recipe#RCP-FSM.02|RCP-FSM.02]]
 
@@ -77,6 +79,7 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 - **Sprint:** [[sprint-08|Sprint 8]] → [[sprint-09|Sprint 9]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#134](https://github.com/manasXP/epicura/issues/134)
 - **Blocked by:** [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]]
 - **Blocks:** [[UI-touchscreen#UI-COK.01|UI-COK.01]], [[INT-integration#INT-SYS.01|INT-SYS.01]]
 
@@ -99,6 +102,7 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 - **Sprint:** [[sprint-09|Sprint 9]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#136](https://github.com/manasXP/epicura/issues/136)
 - **Blocked by:** [[ARM-actuation#ARM-ASD.01|ARM-ASD.01]], [[ARM-actuation#ARM-CID.01|ARM-CID.01]], [[ARM-actuation#ARM-SLD.01|ARM-SLD.01]], [[ARM-actuation#ARM-CAL.01|ARM-CAL.01]]
 - **Blocks:** [[RCP-recipe#RCP-DSP.02|RCP-DSP.02]]
 
@@ -118,6 +122,7 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 - **Sprint:** [[sprint-09|Sprint 9]]
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#137](https://github.com/manasXP/epicura/issues/137)
 - **Blocked by:** [[RCP-recipe#RCP-DSP.01|RCP-DSP.01]]
 - **Blocks:** [[INT-integration#INT-SYS.01|INT-SYS.01]]
 
@@ -138,6 +143,7 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 - **Sprint:** [[sprint-09|Sprint 9]]
 - **Priority:** P1
 - **Points:** 5
+- **GitHub:** [#140](https://github.com/manasXP/epicura/issues/140)
 - **Blocked by:** [[BE-backend#BE-RCP.01|BE-RCP.01]]
 - **Blocks:** None
 
