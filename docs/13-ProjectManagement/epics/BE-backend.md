@@ -22,9 +22,9 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 | RCP — Recipe API | 2 | 8 | 6 |
 | DEV — Device Management | 2 | 8 | 7 |
 | MQT — MQTT Cloud Bridge | 1 | 5 | 7 |
-| USR — User Management | 1 | 5 | 8 |
+| USR — User Management | 2 | 8 | 8 |
 | LCH — Launch | 1 | 5 | 10 |
-| **Total** | **9** | **~38** | |
+| **Total** | **10** | **~41** | |
 
 ---
 
@@ -34,6 +34,7 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 - **Sprint:** [[sprint-05|Sprint 5]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#57](https://github.com/manasXP/epicura/issues/57)
 - **Blocked by:** None
 - **Blocks:** [[BE-backend#BE-SET.02|BE-SET.02]], All subsequent BE stories
 
@@ -54,6 +55,7 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 - **Sprint:** [[sprint-05|Sprint 5]]
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#58](https://github.com/manasXP/epicura/issues/58)
 - **Blocked by:** [[BE-backend#BE-SET.01|BE-SET.01]]
 - **Blocks:** [[BE-backend#BE-RCP.01|BE-RCP.01]], [[BE-backend#BE-DEV.01|BE-DEV.01]]
 
@@ -73,6 +75,7 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 - **Sprint:** [[sprint-06|Sprint 6]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#59](https://github.com/manasXP/epicura/issues/59)
 - **Blocked by:** [[BE-backend#BE-SET.02|BE-SET.02]]
 - **Blocks:** [[BE-backend#BE-RCP.02|BE-RCP.02]]
 
@@ -93,6 +96,7 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 - **Sprint:** [[sprint-06|Sprint 6]]
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#60](https://github.com/manasXP/epicura/issues/60)
 - **Blocked by:** [[BE-backend#BE-RCP.01|BE-RCP.01]]
 - **Blocks:** [[RCP-recipe#RCP-SYN.01|RCP-SYN.01]], [[IOS-ios#IOS-RCP.01|IOS-RCP.01]], [[AND-android#AND-RCP.01|AND-RCP.01]], [[ADM-admin#ADM-RCP.01|ADM-RCP.01]]
 
@@ -115,6 +119,7 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 - **Sprint:** [[sprint-07|Sprint 7]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#61](https://github.com/manasXP/epicura/issues/61)
 - **Blocked by:** [[BE-backend#BE-SET.02|BE-SET.02]]
 - **Blocks:** [[BE-backend#BE-DEV.02|BE-DEV.02]]
 
@@ -134,6 +139,7 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 - **Sprint:** [[sprint-07|Sprint 7]]
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#62](https://github.com/manasXP/epicura/issues/62)
 - **Blocked by:** [[BE-backend#BE-DEV.01|BE-DEV.01]]
 - **Blocks:** [[IOS-ios#IOS-BLE.01|IOS-BLE.01]], [[AND-android#AND-BLE.01|AND-BLE.01]], [[ADM-admin#ADM-DEV.01|ADM-DEV.01]]
 
@@ -154,6 +160,7 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 - **Sprint:** [[sprint-07|Sprint 7]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#63](https://github.com/manasXP/epicura/issues/63)
 - **Blocked by:** [[BE-backend#BE-DEV.01|BE-DEV.01]]
 - **Blocks:** [[ADM-admin#ADM-DEV.01|ADM-DEV.01]]
 
@@ -178,6 +185,7 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 - **Sprint:** [[sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#65](https://github.com/manasXP/epicura/issues/65)
 - **Blocked by:** [[BE-backend#BE-SET.01|BE-SET.01]]
 - **Blocks:** [[IOS-ios#IOS-USR.01|IOS-USR.01]], [[AND-android#AND-USR.01|AND-USR.01]], [[ADM-admin#ADM-USR.01|ADM-USR.01]]
 
@@ -197,10 +205,34 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 
 ---
 
+### BE-USR.02: Food preferences DB columns and API fields
+- **Sprint:** [[sprint-08|Sprint 8]]
+- **Priority:** P1
+- **Points:** 3
+- **GitHub:** [#54](https://github.com/manasXP/epicura/issues/54)
+- **Blocked by:** [[BE-backend#BE-SET.01|BE-SET.01]]
+- **Blocks:** [[IOS-ios#IOS-USR.02|IOS-USR.02]], [[AND-android#AND-USR.02|AND-USR.02]]
+
+**Acceptance Criteria:**
+- [ ] Drizzle migration adds `diet`, `cuisines`, `salt_level`, `oil_level` columns with correct defaults and constraints
+- [ ] `default_servings` default changed to `2`, CHECK constraint changed to `1-4`
+- [ ] GIN index created on `cuisines` column
+- [ ] `GET /users/me` response includes `diet`, `cuisines`, `salt_level`, `oil_level` in preferences object
+- [ ] `PUT /users/me` accepts and validates `diet` (enum), `cuisines` (array), `salt_level` (1-5), `oil_level` (1-5), `default_servings` (1-4)
+- [ ] API tests cover new fields
+
+**Tasks:**
+- [ ] `BE-USR.02a` — Create Drizzle migration for new columns and updated constraints
+- [ ] `BE-USR.02b` — Update preferences GET/PUT handlers and Zod validation schemas
+- [ ] `BE-USR.02c` — Write API tests for new food preference fields
+
+---
+
 ### BE-LCH.01: Production deployment — hosting, monitoring, security hardening
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#67](https://github.com/manasXP/epicura/issues/67)
 - **Blocked by:** [[BE-backend#BE-USR.01|BE-USR.01]]
 - **Blocks:** [[INT-integration#INT-LCH.01|INT-LCH.01]]
 
@@ -235,6 +267,7 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 | BE-DEV.02 | IOS-BLE.01, AND-BLE.01, ADM-DEV.01 | Device API for pairing and monitoring |
 | BE-MQT.01 | ADM-DEV.01 | MQTT bridge for real-time device data |
 | BE-USR.01 | IOS-USR.01, AND-USR.01, ADM-USR.01 | User API for profiles and history |
+| BE-USR.02 | IOS-USR.02, AND-USR.02 | Food preferences API for mobile apps |
 | BE-LCH.01 | INT-LCH.01 | Production backend for launch |
 
 ### What blocks BE
@@ -249,6 +282,7 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 | BE-DEV.02 | BE-DEV.01 | Needs device tables and registration |
 | BE-MQT.01 | BE-DEV.01 | Needs device table and API |
 | BE-USR.01 | BE-SET.01 | Needs auth module |
+| BE-USR.02 | BE-SET.01 | Needs auth module and user table |
 | BE-LCH.01 | BE-USR.01 | Needs all features complete |
 
 ---

@@ -22,8 +22,8 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 | BLE — BLE Pairing | 2 | 8 | 8 |
 | RCP — Recipe Browsing | 1 | 5 | 9 |
 | COK — Live Cooking | 2 | 8 | 10 |
-| USR — User Profile | 1 | 5 | 11 |
-| **Total** | **7** | **~30** | |
+| USR — User Profile | 2 | 8 | 11 |
+| **Total** | **8** | **~33** | |
 
 ---
 
@@ -33,6 +33,7 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 - **Sprint:** [[sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#64](https://github.com/manasXP/epicura/issues/64)
 - **Blocked by:** [[BE-backend#BE-SET.01|BE-SET.01]]
 - **Blocks:** [[IOS-ios#IOS-BLE.01|IOS-BLE.01]], [[IOS-ios#IOS-RCP.01|IOS-RCP.01]]
 
@@ -57,6 +58,7 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 - **Sprint:** [[sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#66](https://github.com/manasXP/epicura/issues/66)
 - **Blocked by:** [[IOS-ios#IOS-SET.01|IOS-SET.01]], [[BE-backend#BE-DEV.01|BE-DEV.01]]
 - **Blocks:** [[IOS-ios#IOS-BLE.02|IOS-BLE.02]]
 
@@ -77,6 +79,7 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 - **Sprint:** [[sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#68](https://github.com/manasXP/epicura/issues/68)
 - **Blocked by:** [[IOS-ios#IOS-BLE.01|IOS-BLE.01]]
 - **Blocks:** [[IOS-ios#IOS-COK.01|IOS-COK.01]]
 
@@ -98,6 +101,7 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 - **Sprint:** [[sprint-09|Sprint 9]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#69](https://github.com/manasXP/epicura/issues/69)
 - **Blocked by:** [[IOS-ios#IOS-SET.01|IOS-SET.01]], [[BE-backend#BE-RCP.01|BE-RCP.01]]
 - **Blocks:** None
 
@@ -126,6 +130,7 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#70](https://github.com/manasXP/epicura/issues/70)
 - **Blocked by:** [[IOS-ios#IOS-BLE.02|IOS-BLE.02]]
 - **Blocks:** [[IOS-ios#IOS-COK.02|IOS-COK.02]]
 
@@ -147,6 +152,7 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#71](https://github.com/manasXP/epicura/issues/71)
 - **Blocked by:** [[IOS-ios#IOS-COK.01|IOS-COK.01]]
 - **Blocks:** None
 
@@ -169,6 +175,7 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 - **Sprint:** [[sprint-11|Sprint 11]]
 - **Priority:** P1
 - **Points:** 5
+- **GitHub:** [#72](https://github.com/manasXP/epicura/issues/72)
 - **Blocked by:** [[BE-backend#BE-USR.01|BE-USR.01]]
 - **Blocks:** None
 
@@ -188,10 +195,35 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 
 ---
 
+### IOS-USR.02: Food Preferences UI — diet, cuisines, seasoning, servings
+- **Sprint:** [[sprint-11|Sprint 11]]
+- **Priority:** P1
+- **Points:** 3
+- **GitHub:** [#55](https://github.com/manasXP/epicura/issues/55)
+- **Blocked by:** [[BE-backend#BE-USR.02|BE-USR.02]], [[IOS-ios#IOS-SET.01|IOS-SET.01]]
+- **Blocks:** None
+
+**Acceptance Criteria:**
+- [ ] Diet: single-select segmented control (Vegetarian, Vegan, Pescatarian, No Restrictions; default: No Restrictions)
+- [ ] Preferred Cuisines: multi-select chip group (Indian, Italian, Thai, Chinese, American, Mexican, Korean, Global; defaults: Indian, Italian, Thai, Mexican)
+- [ ] Seasoning Levels: three 5-point discrete sliders for Spice, Salt, Oil (default: 3 each)
+- [ ] Typical Servings: stepper control, range 1–4 (default: 2)
+- [ ] Changes save locally to SwiftData immediately
+- [ ] Changes sync to cloud via `PUT /users/me` with debounce (500ms)
+
+**Tasks:**
+- [ ] `IOS-USR.02a` — Create `FoodPreferencesView` with diet segmented picker and cuisine chip grid
+- [ ] `IOS-USR.02b` — Implement seasoning level sliders (spice/salt/oil) with discrete steps
+- [ ] `IOS-USR.02c` — Implement servings stepper and wire all controls to ViewModel
+- [ ] `IOS-USR.02d` — Implement SwiftData model and cloud sync for food preferences
+
+---
+
 ### IOS-LIVE.01: Live Activity — Cooking Progress on Lock Screen & Dynamic Island
 - **Sprint:** [[sprint-11|Sprint 11]]
 - **Priority:** P1
 - **Points:** 5
+- **GitHub:** [#50](https://github.com/manasXP/epicura/issues/50)
 - **Blocked by:** [[IOS-ios#IOS-COK.01|IOS-COK.01]]
 - **Blocks:** None
 
@@ -233,6 +265,7 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 | IOS-COK.01 | IOS-BLE.02 | Needs paired device for streaming |
 | IOS-COK.02 | IOS-COK.01 | Needs live cooking view |
 | IOS-USR.01 | BE-USR.01 | Needs user API |
+| IOS-USR.02 | BE-USR.02, IOS-SET.01 | Needs food preferences API + app scaffold |
 
 ---
 

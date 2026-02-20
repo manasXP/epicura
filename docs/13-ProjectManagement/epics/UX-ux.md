@@ -22,9 +22,9 @@ JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Cover
 | RCP — Recipe Browsing | 1 | 3 | — |
 | FAV — Favourites | 1 | 2 | — |
 | SES — Session / History | 1 | 3 | — |
-| PRO — Profile | 1 | 3 | — |
+| PRO — Profile | 2 | 6 | — |
 | LIVE — Mini Progress | 1 | 2 | — |
-| **Total** | **7** | **~18** | |
+| **Total** | **8** | **~21** | |
 
 ---
 
@@ -142,6 +142,30 @@ JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Cover
 
 **Tasks:**
 - [ ] `UX-PRO.01a` — Implement ProfileScreen.jsx with user info, preferences, and settings
+
+---
+
+## UX-PRO.02: Food Preferences section mock (JSX)
+
+- **Priority:** P1
+- **Points:** 3
+- **GitHub:** [#53](https://github.com/manasXP/epicura/issues/53)
+- **Blocked by:** [[UX-ux#UX-TAB.01|UX-TAB.01]]
+- **Blocks:** [[IOS-ios#IOS-USR.02|IOS-USR.02]], [[AND-android#AND-USR.02|AND-USR.02]]
+
+**Acceptance Criteria:**
+- [ ] Diet selector: single-select segmented control — `Vegetarian | Vegan | Pescatarian | No Restrictions` (default: No Restrictions)
+- [ ] Preferred Cuisines: multi-select chip group — `Indian | Italian | Thai | Chinese | American | Mexican | Korean | Global` (defaults: Indian, Italian, Thai, Mexican selected)
+- [ ] Seasoning Levels: three 5-point discrete sliders for Spice, Salt, Oil (default: 3 each)
+- [ ] Typical Servings: stepper (spinner) control, range 1–4 (default: 2)
+- [ ] Liquid Glass styling consistent with other UX mocks
+- [ ] All controls are interactive and update local state
+
+**Tasks:**
+- [ ] `UX-PRO.02a` — Implement diet segmented control component
+- [ ] `UX-PRO.02b` — Implement cuisine multi-select chip group
+- [ ] `UX-PRO.02c` — Implement seasoning level sliders (spice/salt/oil)
+- [ ] `UX-PRO.02d` — Implement servings stepper and integrate into ProfileScreen.jsx
 
 ---
 

@@ -22,8 +22,8 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 | BLE — BLE Pairing | 2 | 8 | 8 |
 | RCP — Recipe Browsing | 1 | 5 | 9 |
 | COK — Live Cooking | 2 | 8 | 10 |
-| USR — User Profile | 1 | 5 | 11 |
-| **Total** | **7** | **~30** | |
+| USR — User Profile | 2 | 8 | 11 |
+| **Total** | **8** | **~33** | |
 
 ---
 
@@ -33,6 +33,7 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 - **Sprint:** [[sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#73](https://github.com/manasXP/epicura/issues/73)
 - **Blocked by:** [[BE-backend#BE-SET.01|BE-SET.01]]
 - **Blocks:** [[AND-android#AND-BLE.01|AND-BLE.01]], [[AND-android#AND-RCP.01|AND-RCP.01]]
 
@@ -57,6 +58,7 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 - **Sprint:** [[sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#74](https://github.com/manasXP/epicura/issues/74)
 - **Blocked by:** [[AND-android#AND-SET.01|AND-SET.01]], [[BE-backend#BE-DEV.01|BE-DEV.01]]
 - **Blocks:** [[AND-android#AND-BLE.02|AND-BLE.02]]
 
@@ -77,6 +79,7 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 - **Sprint:** [[sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#75](https://github.com/manasXP/epicura/issues/75)
 - **Blocked by:** [[AND-android#AND-BLE.01|AND-BLE.01]]
 - **Blocks:** [[AND-android#AND-COK.01|AND-COK.01]]
 
@@ -98,6 +101,7 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 - **Sprint:** [[sprint-09|Sprint 9]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#76](https://github.com/manasXP/epicura/issues/76)
 - **Blocked by:** [[AND-android#AND-SET.01|AND-SET.01]], [[BE-backend#BE-RCP.01|BE-RCP.01]]
 - **Blocks:** None
 
@@ -126,6 +130,7 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#77](https://github.com/manasXP/epicura/issues/77)
 - **Blocked by:** [[AND-android#AND-BLE.02|AND-BLE.02]]
 - **Blocks:** [[AND-android#AND-COK.02|AND-COK.02]]
 
@@ -148,6 +153,7 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#78](https://github.com/manasXP/epicura/issues/78)
 - **Blocked by:** [[AND-android#AND-COK.01|AND-COK.01]]
 - **Blocks:** None
 
@@ -169,6 +175,7 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 - **Sprint:** [[sprint-11|Sprint 11]]
 - **Priority:** P1
 - **Points:** 5
+- **GitHub:** [#79](https://github.com/manasXP/epicura/issues/79)
 - **Blocked by:** [[BE-backend#BE-USR.01|BE-USR.01]]
 - **Blocks:** None
 
@@ -188,10 +195,35 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 
 ---
 
+### AND-USR.02: Food Preferences UI — diet, cuisines, seasoning, servings
+- **Sprint:** [[sprint-11|Sprint 11]]
+- **Priority:** P1
+- **Points:** 3
+- **GitHub:** [#56](https://github.com/manasXP/epicura/issues/56)
+- **Blocked by:** [[BE-backend#BE-USR.02|BE-USR.02]], [[AND-android#AND-SET.01|AND-SET.01]]
+- **Blocks:** None
+
+**Acceptance Criteria:**
+- [ ] Diet: single-select segmented button (Vegetarian, Vegan, Pescatarian, No Restrictions; default: No Restrictions)
+- [ ] Preferred Cuisines: multi-select FilterChip group (Indian, Italian, Thai, Chinese, American, Mexican, Korean, Global; defaults: Indian, Italian, Thai, Mexican)
+- [ ] Seasoning Levels: three 5-point discrete Slider composables for Spice, Salt, Oil (default: 3 each)
+- [ ] Typical Servings: stepper control, range 1–4 (default: 2)
+- [ ] Changes save locally to DataStore immediately
+- [ ] Changes sync to cloud via `PUT /users/me` with debounce (500ms)
+
+**Tasks:**
+- [ ] `AND-USR.02a` — Create `FoodPreferencesScreen` composable with diet segmented button and cuisine FilterChips
+- [ ] `AND-USR.02b` — Implement seasoning level Slider composables (spice/salt/oil) with discrete steps
+- [ ] `AND-USR.02c` — Implement servings stepper and wire all controls to ViewModel
+- [ ] `AND-USR.02d` — Implement DataStore model and cloud sync for food preferences
+
+---
+
 ### AND-LIVE.01: Glance Widget — Cooking Progress App Widget (Jetpack Glance)
 - **Sprint:** [[sprint-11|Sprint 11]]
 - **Priority:** P1
 - **Points:** 5
+- **GitHub:** [#51](https://github.com/manasXP/epicura/issues/51)
 - **Blocked by:** [[AND-android#AND-COK.01|AND-COK.01]]
 - **Blocks:** None
 
@@ -230,6 +262,7 @@ None — Android app is a leaf node.
 | AND-COK.01 | AND-BLE.02 | Needs paired device |
 | AND-COK.02 | AND-COK.01 | Needs live cooking view |
 | AND-USR.01 | BE-USR.01 | Needs user API |
+| AND-USR.02 | BE-USR.02, AND-SET.01 | Needs food preferences API + app scaffold |
 
 ---
 
