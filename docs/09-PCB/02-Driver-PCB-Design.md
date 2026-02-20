@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-20
-version: 6.0
+version: 7.0
 status: Draft
 ---
 
@@ -760,7 +760,7 @@ Inner copper: 1 oz (35µm) for planes
 │                                                                          │
 │  ┌──────────────────────────────────────────────────────────────────┐    │
 │  │                    OUTPUT CONNECTORS                             │    │
-│  │  J_SERVO_MAIN  J_PASD  J_FAN1-2  J_LACT[1-2]                     │    │
+│  │  J_SERVO_MAIN  J_PASD  J_FAN  J_CID                               │    │
 │  │  J_SLD  J_CAN  J_24V_IN  J_12V_UPS  J_BUZZER                    │    │
 │  └──────────────────────────────────────────────────────────────────┘    │
 │                                                                          │
@@ -841,14 +841,16 @@ All six solenoid valves and the diaphragm pump are combined into a single connec
 | 15 | GND | Common ground |
 | 16 | GND | Common ground |
 
-### CID Subsystem Connectors (2 total)
+### CID Subsystem Connector (1 connector)
 
-**J_CID_LACT1, J_CID_LACT2 — Linear Actuators (2x 2-pin JST-XH 2.5mm)**
+**J_CID — Combined CID Linear Actuators (1x 4-pin JST-XH 2.5mm)**
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
-| 1 | OUT1 | DRV8876 output 1 |
-| 2 | OUT2 | DRV8876 output 2 |
+| 1 | LACT1_OUT1 | DRV8876 #1 output 1 (actuator 1) |
+| 2 | LACT1_OUT2 | DRV8876 #1 output 2 (actuator 1) |
+| 3 | LACT2_OUT1 | DRV8876 #2 output 1 (actuator 2) |
+| 4 | LACT2_OUT2 | DRV8876 #2 output 2 (actuator 2) |
 
 ### SLD Subsystem Connectors (1 connector)
 
@@ -879,17 +881,14 @@ All six solenoid valves and the diaphragm pump are combined into a single connec
 | 2 | 6.5V | Red wire (from MP1584EN #2) |
 | 3 | Signal | Orange wire (PA8 via J_STACK) |
 
-**J_FAN1, J_FAN2 — Exhaust Fans (2x 2-pin JST-XH 2.5mm)**
+**J_FAN — Combined Exhaust Fans (1x 4-pin JST-XH 2.5mm)**
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
-| 1 | 12V | Fan power (switched by MOSFET) |
-| 2 | FAN1_OUT | Drain side of IRLML6344 #1 (PA6 via J_STACK Pin 27) |
-
-| Pin | Signal | Notes |
-|-----|--------|-------|
-| 1 | 12V | Fan power (switched by MOSFET) |
-| 2 | FAN2_OUT | Drain side of IRLML6344 #2 (PB10 via J_STACK Pin 28) |
+| 1 | 12V_FAN1 | Fan 1 power (switched by IRLML6344 #1, PA6 via J_STACK Pin 27) |
+| 2 | FAN1_OUT | Fan 1 drain |
+| 3 | 12V_FAN2 | Fan 2 power (switched by IRLML6344 #2, PB10 via J_STACK Pin 28) |
+| 4 | FAN2_OUT | Fan 2 drain |
 
 **J_BUZZER — Piezo Buzzer (2-pin JST-PH 2.0mm)**
 
@@ -1134,8 +1133,8 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 | J_SERVO_MAIN | Pin header 3-pin | 2.54mm | 1 | $0.05 | DS3225 servo |
 | J_SLD | JST-XH 12-pin | 2.5mm pitch | 1 | $0.40 | SLD combined (2× pumps + 2× solenoids + HX711 pot load cell) |
 | J_PASD | JST-XH 16-pin | 2.5mm pitch | 1 | $0.60 | P-ASD combined (6× solenoids + 1× pump + 2× GND) |
-| J_FAN1-2 | JST-XH 2-pin | 2.5mm pitch | 2 | $0.10 | Exhaust fans |
-| J_LACT1-2 | JST-XH 2-pin | 2.5mm pitch | 2 | $0.10 | Linear actuators |
+| J_FAN | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | Exhaust fans (combined) |
+| J_CID | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | CID linear actuators (combined) |
 | J_CAN | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | CAN bus to microwave surface |
 | J_BUZZER | JST-PH 2-pin | 2.0mm pitch | 1 | $0.08 | Piezo buzzer |
 | BZ1 | MLT-5030 or generic | 12mm piezo | 1 | $0.80 | Active piezo buzzer 5V |
@@ -1259,3 +1258,4 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 | 4.0 | 2026-02-20 | Manas Pradhan | Added 12V UPS-backed DC input (J_12V_UPS) with TPS54531 12V→5V 5A buck converter replacing MP1584EN #3; added 24V power failure detection via voltage divider + COMP2 on PA1; J_STACK pin 16 now PWR_FAIL; added POWER_FAIL SPI message (0x14) and power failure state machine; updated BOM, thermal analysis, and block diagram |
 | 5.0 | 2026-02-20 | Manas Pradhan | Moved pot load cell (HX711) from Controller PCB J_LC to Driver PCB J_SLD; J_STACK pins 17-18 now HX711_SCK/HX711_DOUT; J_SLD expanded from 8-pin to 12-pin (added HX711 SCK, DOUT, 3.3V, GND) |
 | 6.0 | 2026-02-20 | Manas Pradhan | Moved entire CAN subsystem (ISO1050DUB, decoupling caps, termination resistor, J_CAN) from Controller PCB; J_STACK pins 19-20 now FDCAN1_RX/TX; added CAN transceiver circuit section, J_CAN connector, isolation creepage layout rule; updated BOM (+$3.79) |
+| 7.0 | 2026-02-20 | Manas Pradhan | Merged J_FAN1 + J_FAN2 into single J_FAN (4-pin JST-XH); merged J_CID_LACT1 + J_CID_LACT2 into single J_CID (4-pin JST-XH); reduces connector count by 2 |
