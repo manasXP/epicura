@@ -32,6 +32,7 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#87](https://github.com/manasXP/epicura/issues/87)
 - **Blocked by:** [[BE-backend#BE-SET.01|BE-SET.01]]
 - **Blocks:** [[ADM-admin#ADM-RCP.01|ADM-RCP.01]], [[ADM-admin#ADM-DEV.01|ADM-DEV.01]], [[ADM-admin#ADM-USR.01|ADM-USR.01]]
 
@@ -55,6 +56,7 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#88](https://github.com/manasXP/epicura/issues/88)
 - **Blocked by:** [[ADM-admin#ADM-SET.01|ADM-SET.01]], [[BE-backend#BE-RCP.01|BE-RCP.01]]
 - **Blocks:** [[ADM-admin#ADM-RCP.02|ADM-RCP.02]]
 
@@ -74,6 +76,7 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#89](https://github.com/manasXP/epicura/issues/89)
 - **Blocked by:** [[ADM-admin#ADM-RCP.01|ADM-RCP.01]]
 - **Blocks:** None
 
@@ -93,6 +96,7 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 - **Sprint:** [[sprint-11|Sprint 11]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#90](https://github.com/manasXP/epicura/issues/90)
 - **Blocked by:** [[ADM-admin#ADM-SET.01|ADM-SET.01]], [[BE-backend#BE-DEV.01|BE-DEV.01]], [[BE-backend#BE-MQT.01|BE-MQT.01]]
 - **Blocks:** None
 
@@ -116,6 +120,7 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 - **Sprint:** [[sprint-12|Sprint 12]]
 - **Priority:** P1
 - **Points:** 5
+- **GitHub:** [#91](https://github.com/manasXP/epicura/issues/91)
 - **Blocked by:** [[ADM-admin#ADM-SET.01|ADM-SET.01]], [[BE-backend#BE-USR.01|BE-USR.01]]
 - **Blocks:** None
 
