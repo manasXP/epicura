@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-20
-version: 7.0
+version: 8.0
 status: Draft
 ---
 
@@ -53,7 +53,7 @@ The CM5IO board is an off-the-shelf Raspberry Pi carrier board that sits on top 
          │    │                           │                │
          │    │  I2C1 (PB6/PB7) ───────────── J_IR: MLX90614
          │    │                           │                │
-         │    │  GPIO (PC0/PC1) ───────────── J_LC: HX711
+         │    │  GPIO (PC0/PC1) ───────────── J_STACK: HX711 (via Driver PCB)
          │    │                           │                │
          │    │  ADC2 (PA4/PA5) ───────────── J_NTC: NTC Inputs
          │    │                           │                │
@@ -203,8 +203,8 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 | PB13 | SPI2_SCK | CM5 SCLK | Input | J_CM5 | Comms |
 | PB14 | SPI2_MISO | CM5 MISO | Output | J_CM5 | Comms |
 | PB15 | SPI2_MOSI | CM5 MOSI | Input | J_CM5 | Comms |
-| PC0 | GPIO | HX711 SCK (pot) | Output | J_LC | Sensors |
-| PC1 | GPIO | HX711 DOUT (pot) | Input | J_LC | Sensors |
+| PC0 | GPIO | HX711 SCK (pot) | Output | J_STACK Pin 17 | Sensors |
+| PC1 | GPIO | HX711 DOUT (pot) | Input | J_STACK Pin 18 | Sensors |
 | PC2 | GPIO | CID Linear Actuator 2 PH | Output | J_STACK Pin 24 | CID |
 | PC3 | GPIO | SLD Pump 1 PWM | Output | J_STACK Pin 29 | SLD |
 | PC4 | GPIO | SLD Pump 1 DIR | Output | J_STACK Pin 30 | SLD |
@@ -425,15 +425,6 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 | 3 | VCC | 3.3V | — |
 | 4 | GND | GND | — |
 
-### J_LC — HX711 Load Cell ADC (JST-XH 2.5mm, 4-pin)
-
-| Pin | Signal | STM32 Pin | Notes |
-|-----|--------|-----------|-------|
-| 1 | SCK | PC0 (GPIO) | Clock output to HX711 |
-| 2 | DOUT | PC1 (GPIO) | Data input from HX711 |
-| 3 | VCC | 3.3V | HX711 supply |
-| 4 | GND | GND | — |
-
 ### J_NTC — NTC Thermistor Inputs (JST-XH 2.5mm, 4-pin)
 
 | Pin | Signal | STM32 Pin | Notes |
@@ -456,13 +447,6 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 
 > [!note]
 > PB3 is shared between SPI IRQ and SWD SWO. A solder jumper (SJ1) selects between the two. Default position: IRQ. Set to SWO for debug tracing only.
-
-### J_PWR — Power Input (JST-XH 2.5mm, 2-pin)
-
-| Pin | Signal | Notes |
-|-----|--------|-------|
-| 1 | +5V | From J_STACK 5V rail (UPS-backed, TPS54531 on Driver PCB) |
-| 2 | GND | Power ground |
 
 ### J_SAFE — Safety I/O (JST-XH 2.5mm, 4-pin)
 
@@ -498,7 +482,7 @@ The stacking connector passes 24V power, ground, 5V/3.3V references, all servo P
 | 13 | 3.3V | Power | 14 | 3.3V | Power |
 | **P-ASD Subsystem (Pins 15-20, 39)** ||||
 | 15 | PASD_PUMP_PWM (PA0) | Out | 16 | PWR_FAIL (PA1) | Out |
-| 17 | Reserved (was PASD_SOL2) | — | 18 | Reserved (was PASD_SOL3) | — |
+| 17 | HX711_SCK (PC0) | Out | 18 | HX711_DOUT (PC1) | In |
 | 19 | Reserved (was PASD_SOL4) | — | 20 | Reserved (was PASD_SOL5) | — |
 | **CID Subsystem (Pins 21-26)** ||||
 | 21 | CID_LACT1_EN (PA10) | Out | 22 | CID_LACT1_PH (PB4) | Out |
@@ -681,14 +665,14 @@ Material: FR4 (Tg 150°C minimum)
 │  │   STM32G474RE  │  │  SPI + Debug   │  │  Power    │  │
 │  │   + Crystal    │  │  Connectors    │  │  LDO +    │  │
 │  │   + Decoupling │  │  (J_CM5, J_SWD)      │  │  Input    │  │
-│  │                │  │                │  │  (J_PWR)    │  │
+│  │                │  │                │  │  (J_STACK)    │  │
 │  │  DIGITAL ZONE  │  │  COMM ZONE     │  │ PWR ZONE  │  │
 │  └────────────────┘  └────────────────┘  └───────────┘  │
 │                                                         │
 │  ┌────────────────┐  ┌────────────────┐  ┌───────────┐  │
 │  │  CAN + I2C     │  │  ADC + Sensors │  │  Safety   │  │
 │  │  Connectors    │  │  Connectors    │  │  Relay    │  │
-│  │  (J_CAN, J_IR)      │  │  (J_LC, J_NTC)      │  │  E-Stop   │  │
+│  │  (J_CAN, J_IR)      │  │  (J_NTC)      │  │  E-Stop   │  │
 │  │                │  │                │  │  (J_SAFE)    │  │
 │  │  BUS ZONE      │  │  SENSOR ZONE   │  │ SAFETY    │  │
 │  └────────────────┘  └────────────────┘  └───────────┘  │
@@ -792,10 +776,8 @@ Material: FR4 (Tg 150°C minimum)
 | J_CM5 | 2x20 pin socket | 2.54mm, 8.5mm stacking | 1 | $0.80 | CM5IO GPIO header receptor (SPI, IRQ, LED data, 5V power) |
 | J_CAN | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | CAN bus to microwave surface |
 | J_IR | JST-SH 4-pin | 1.0mm pitch | 1 | $0.20 | MLX90614 I2C |
-| J_LC | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | HX711 load cell ADC |
 | J_NTC | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | NTC thermistor inputs |
 | J_SWD | Pin header 2x5 | 1.27mm pitch | 1 | $0.30 | SWD debug |
-| J_PWR | JST-XH 2-pin | 2.5mm pitch | 1 | $0.10 | 5V power input |
 | J_SAFE | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | Safety I/O |
 | J_LED | JST-XH 3-pin | 2.5mm pitch | 1 | $0.12 | LED ring (5V_SW + DATA + GND) |
 | J_STACK | 2x20 pin header | 2.54mm, 11mm stacking | 1 | $0.80 | Stacking connector to Driver PCB |
@@ -875,3 +857,4 @@ Material: FR4 (Tg 150°C minimum)
 | 5.0 | 2026-02-20 | Manas Pradhan | Replaced non-isolated CAN transceiver (SN65HVD230/MCP2551) with ISO1050DUB isolated CAN transceiver (5 kV RMS galvanic isolation); J2 pin 3 changed from GND to GND_ISO; added creepage ≥6.4mm layout rule for isolation barrier; updated power budget (+15 mA on 3.3V); added ISO1050 + decoupling caps to BOM |
 | 6.0 | 2026-02-20 | Manas Pradhan | Renamed all connectors from numeric (J1-J11) to descriptive names: J_SPI, J_CAN, J_IR, J_LC, J_NTC, J_SWD, J_PWR, J_SAFE; removed J3 (servo connector now via J_STACK to Driver PCB) |
 | 7.0 | 2026-02-20 | Manas Pradhan | Replaced J_SPI (6-pin JST-SH + ribbon cable) with J_CM5 (2x20 pin socket) that mates directly with CM5IO 40-pin GPIO header; 5V from J_STACK now feeds CM5IO through J_CM5 pins 2/4; LED ring data (GPIO18) routes through J_CM5 pin 12 instead of jumper wire; eliminates ribbon cable between Controller PCB and CM5IO |
+| 8.0 | 2026-02-20 | Manas Pradhan | Removed J_LC (HX711 load cell connector); pot load cell signals (PC0/PC1) now route via J_STACK pins 17-18 to Driver PCB J_SLD connector; removed J_PWR (redundant, 5V comes via J_STACK) |

@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-20
-version: 4.0
+version: 5.0
 status: Draft
 ---
 
@@ -616,7 +616,7 @@ The INA219 shares the I2C1 bus with the MLX90614 IR thermometer (0x5A) on the Co
 | 13 | 3.3V | Power | 14 | 3.3V | Power |
 | **P-ASD Subsystem (Pins 15-20, 39)** ||||
 | 15 | PASD_PUMP_PWM (PA0) | In | 16 | PWR_FAIL (PA1) | Out |
-| 17 | Reserved (was PASD_SOL2) | — | 18 | Reserved (was PASD_SOL3) | — |
+| 17 | HX711_SCK (PC0) | In | 18 | HX711_DOUT (PC1) | Out |
 | 19 | Reserved (was PASD_SOL4) | — | 20 | Reserved (was PASD_SOL5) | — |
 | **CID Subsystem (Pins 21-26)** ||||
 | 21 | CID_LACT1_EN (PA10) | In | 22 | CID_LACT1_PH (PB4) | In |
@@ -799,7 +799,7 @@ All six solenoid valves and the diaphragm pump are combined into a single connec
 
 ### SLD Subsystem Connectors (1 connector)
 
-**J_SLD — Combined SLD Connector (1x 8-pin JST-XH 2.5mm)**
+**J_SLD — Combined SLD + Pot Load Cell Connector (1x 12-pin JST-XH 2.5mm)**
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
@@ -811,6 +811,10 @@ All six solenoid valves and the diaphragm pump are combined into a single connec
 | 6 | SOL1_OUT | Oil solenoid drain (PA7) |
 | 7 | 12V_SOL2 | Water solenoid power (switched) |
 | 8 | SOL2_OUT | Water solenoid drain (PA9) |
+| 9 | HX711_SCK | Clock output to HX711 (PC0 via J_STACK Pin 17) |
+| 10 | HX711_DOUT | Data input from HX711 (PC1 via J_STACK Pin 18) |
+| 11 | 3.3V | HX711 supply |
+| 12 | GND | HX711 ground |
 
 ### Main Actuators (3 total)
 
@@ -1069,7 +1073,7 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 | J_24V_IN | XT30 or JST-VH 2-pin | 2.5mm pitch | 1 | $0.40 | 24V DC input |
 | J_12V_UPS | XT30 2-pin | 2.5mm pitch | 1 | $0.40 | 12V UPS-backed DC input |
 | J_SERVO_MAIN | Pin header 3-pin | 2.54mm | 1 | $0.05 | DS3225 servo |
-| J_SLD | JST-XH 8-pin | 2.5mm pitch | 1 | $0.30 | SLD combined (2× pumps + 2× solenoids) |
+| J_SLD | JST-XH 12-pin | 2.5mm pitch | 1 | $0.40 | SLD combined (2× pumps + 2× solenoids + HX711 pot load cell) |
 | J_PASD | JST-XH 16-pin | 2.5mm pitch | 1 | $0.60 | P-ASD combined (6× solenoids + 1× pump + 2× GND) |
 | J_FAN1-2 | JST-XH 2-pin | 2.5mm pitch | 2 | $0.10 | Exhaust fans |
 | J_LACT1-2 | JST-XH 2-pin | 2.5mm pitch | 2 | $0.10 | Linear actuators |
@@ -1192,3 +1196,4 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 | 2.0 | 2026-02-16 | Manas Pradhan | Replaced ASD (3× SG90 servo + 3× vibration motor) with P-ASD (6× solenoid valve + 1× diaphragm pump); updated 12V rail load, J_STACK pinout, connector definitions, BOM, and thermal analysis |
 | 3.0 | 2026-02-16 | Manas Pradhan | Added PCF8574 I2C GPIO expander (addr 0x20) for P-ASD solenoid control; solenoid MOSFET gates now driven by PCF8574 P0-P5 instead of direct STM32 GPIO; freed 6 STM32 pins; J_STACK pins 16-20, 39 now Reserved |
 | 4.0 | 2026-02-20 | Manas Pradhan | Added 12V UPS-backed DC input (J_12V_UPS) with TPS54531 12V→5V 5A buck converter replacing MP1584EN #3; added 24V power failure detection via voltage divider + COMP2 on PA1; J_STACK pin 16 now PWR_FAIL; added POWER_FAIL SPI message (0x14) and power failure state machine; updated BOM, thermal analysis, and block diagram |
+| 5.0 | 2026-02-20 | Manas Pradhan | Moved pot load cell (HX711) from Controller PCB J_LC to Driver PCB J_SLD; J_STACK pins 17-18 now HX711_SCK/HX711_DOUT; J_SLD expanded from 8-pin to 12-pin (added HX711 SCK, DOUT, 3.3V, GND) |
