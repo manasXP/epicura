@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-16
-version: 2.0
+version: 3.0
 status: Draft
 ---
 
@@ -199,7 +199,7 @@ An off-the-shelf 12V UPS powers the 5V rail (CM5 + STM32) independently of the 2
 | STM32 <-> IR Sensor | I2C | 100 kHz | STM32 I2C1 <-> MLX90614 | Temperature readings |
 | STM32 <-> Load Cells | SPI-like GPIO | 10-80 Hz | STM32 GPIO <-> HX711 | Weight measurements |
 | STM32 <-> Servos | PWM | 50Hz | STM32 TIM1/TIM2 <-> servo signal | Arm + gate positions |
-| STM32 <-> Microwave Surface | CAN 2.0B | 500 kbps | STM32 FDCAN1 (PB8/PB9) <-> module CAN port | Induction power control via CAN |
+| STM32 <-> Microwave Surface | CAN 2.0B | 500 kbps | STM32 FDCAN1 (PB8/PB9) via J_STACK → Driver PCB ISO1050DUB → J_CAN <-> module CAN port | Induction power control via CAN; 5 kV isolation on Driver PCB |
 | STM32 <-> Exhaust Fan | PWM | 25 kHz | STM32 TIM4 CH3 <-> fan 4-pin | Fume extraction speed |
 | CM5 <-> WiFi | 802.11ac | Up to 867 Mbps | Onboard CM5 radio | App, cloud, OTA |
 | CM5 <-> BT | BLE 5.0 | 2 Mbps | Onboard CM5 radio | Initial app pairing, proximity |
@@ -222,3 +222,4 @@ An off-the-shelf 12V UPS powers the 5V rail (CM5 + STM32) independently of the 2
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
 | 2.0 | 2026-02-16 | Manas Pradhan | Update power budget and dispensing accuracy for P-ASD pneumatic redesign |
+| 3.0 | 2026-02-20 | Manas Pradhan | Updated CAN interface row: transceiver (ISO1050DUB) now on Driver PCB, FDCAN1 signals route via J_STACK pins 19-20 |
