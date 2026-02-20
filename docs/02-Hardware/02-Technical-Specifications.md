@@ -138,12 +138,33 @@ The primary cooking element is a commercial microwave induction surface — a se
 | **Maximum Draw** | <2,000W (1,800W induction + 75W system) |
 | **Fuse Rating** | 10A (IEC C14 inlet with integrated fuse) |
 | **PSU** | Mean Well LRS-75-24 (24V / 3.2A / 76.8W) |
-| **24V Rail** | 24V / 3.2A — main bus from PSU; feeds CM5IO+CM5, controller, relay coils |
-| **5V Rail** | 5V (buck from 24V) — CM5IO onboard regulator feeds CM5; separate buck for servo rail, LED ring |
-| **3.3V Rail** | 3.3V / 500mA (LDO from CM5IO 5V via 40-pin) — STM32, sensors, I2C devices |
+| **24V Rail** | 24V / 3.2A — main bus from PSU; feeds actuators (12V, 6.5V rails), induction CAN control, safety relay |
+| **12V UPS Input** | 12V DC from off-the-shelf UPS — feeds TPS54531 12V→5V 5A buck on Driver PCB |
+| **5V Rail** | 5V / 5A (UPS-backed, from TPS54531) — CM5, STM32 controller (via 3.3V LDO), LED ring, buzzer |
+| **3.3V Rail** | 3.3V / 500mA (LDO from 5V on Controller PCB) — STM32, sensors, I2C devices |
 | **Standby Power** | <5W (CM5 idle, display off, induction off) |
 | **PSU Type** | Mean Well enclosed AC-DC, single 24V output |
 | **Efficiency** | >87% at full load (Mean Well LRS-75 series) |
+
+### 12V UPS Recommended Specifications
+
+An off-the-shelf 12V UPS powers the 5V rail (CM5 + STM32) independently of the 24V PSU, allowing the system to detect AC power loss, save cooking state, and gracefully pause.
+
+| Parameter | Minimum | Recommended | Notes |
+|-----------|---------|-------------|-------|
+| Output Voltage | 12V DC | 12V DC (regulated) | Must be within TPS54531 input range (3.5-28V) |
+| Output Current | 3A | 5A | 5V rail peak is ~4A; headroom for inrush |
+| Battery Capacity | 7Ah (84Wh) | 9Ah (108Wh) | At ~20W load (CM5 + STM32 + display), 7Ah gives ~25 min runtime |
+| Battery Type | Sealed lead-acid (SLA) | Lithium iron phosphate (LiFePO4) | LiFePO4: lighter, longer cycle life, flat discharge curve |
+| Charging | Integrated (AC mains) | Integrated with auto-switchover | UPS charges from AC; switches to battery on AC loss |
+| Switchover Time | <20ms | <10ms | Must be faster than CM5's hold-up (bulk caps provide ~50ms) |
+| Output Connector | Bare wire or barrel jack | XT30 (to match J_12V_UPS) | Adapter cable may be needed |
+| Form Factor | — | Compact, <2kg | Must fit inside or adjacent to Epicura enclosure |
+
+**Example products:** Mini DC UPS modules (e.g., "12V 5A UPS module" on AliExpress/Amazon, ~$15-30) that accept 12V AC adapter input, contain a LiFePO4 or Li-ion battery pack, and provide uninterrupted 12V output with automatic switchover.
+
+> [!tip]
+> During AC power failure, only the 5V rail (CM5 + STM32 + display) remains powered. The 24V rail (actuators, induction) goes down immediately. The STM32 detects 24V loss via COMP2 comparator (<100µs), disables all actuators, and notifies the CM5 to save state. At ~20W idle draw, a 7Ah 12V battery provides approximately 25 minutes — enough time to save state and wait for power restoration. If power returns within 5 minutes, cooking auto-resumes; otherwise the user is prompted.
 
 ### Power Budget Breakdown
 
