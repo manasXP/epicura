@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-20
-version: 7.0
+version: 8.0
 status: Draft
 ---
 
@@ -9,7 +9,7 @@ status: Draft
 
 ## Overview
 
-The Driver PCB is the power electronics and actuator interface board in Epicura's 3-board stackable architecture. It receives low-level PWM and GPIO signals from the Controller PCB (STM32G474RE) through a 2x20 stacking connector and converts them into high-current drive signals for all actuators — servos, solenoids, linear actuators, peristaltic pumps, diaphragm pump, and the exhaust fan.
+The Driver PCB is the power electronics and actuator interface board in Epicura's 3-board stackable architecture. It receives low-level PWM and GPIO signals from the Controller PCB (STM32G474RE) through a 2x20 stacking connector and converts them into high-current drive signals for all actuators — BLDC stirring motor, solenoids, linear actuators, peristaltic pumps, diaphragm pump, and the exhaust fan.
 
 ### 3-Board Stackable Architecture
 
@@ -72,10 +72,15 @@ The CM5IO board is an off-the-shelf Raspberry Pi carrier board that sits on top.
         ┌─────────┼──────────┐           │
         │         │          │           │
     ┌───▼───┐ ┌──▼──┐  ┌───▼────┐  ┌───▼───┐
-    │2x Sol │ │Fan  │  │2x Lin  │  │DS3225 │
-    │IRLML  │ │IRLML│  │Act     │  │Servo  │
-    │6344   │ │6344 │  │DRV8876 │  │Direct │
+    │2x Sol │ │Fan  │  │2x Lin  │  │(Future│
+    │IRLML  │ │IRLML│  │Act     │  │ use)  │
+    │6344   │ │6344 │  │DRV8876 │  │       │
     └───────┘ └─────┘  └────────┘  └───────┘
+
+                   ┌──────────────┐
+         24V ──────┤  J_BLDC      │──── 24V BLDC Motor (integrated ESC)
+                   │  (6-pin)     │     PWM+EN+DIR from J_STACK pins 37,39,40
+                   └──────────────┘
                                                ┌───────────────┐
                                                │P-ASD: 6x Sol │
                                                │+ 1x Pump     │
@@ -107,7 +112,7 @@ All control signals arrive from Controller PCB via 2x20 stacking connector (J_ST
 
 ## Power Conversion
 
-Two MP1584EN synchronous buck converters step down the 24V input to 12V and 6.5V rails for actuators and servo. A separate TPS54531 buck converter generates the 5V rail from a UPS-backed 12V DC input, ensuring the CM5 and STM32 remain powered during AC outages. The MP1584EN was selected for its wide input range (4.5-28V), high efficiency (up to 92%), and compact SOT-23-8 package with minimal external components.
+Two MP1584EN synchronous buck converters step down the 24V input to 12V and 6.5V rails for actuators. A separate TPS54531 buck converter generates the 5V rail from a UPS-backed 12V DC input, ensuring the CM5 and STM32 remain powered during AC outages. The MP1584EN was selected for its wide input range (4.5-28V), high efficiency (up to 92%), and compact SOT-23-8 package with minimal external components.
 
 ### 24V → 12V Rail (MP1584EN #1)
 
@@ -128,14 +133,14 @@ Two MP1584EN synchronous buck converters step down the 24V input to 12V and 6.5V
 |-----------|-------|
 | Output Voltage | 6.5V |
 | Max Current | 3A |
-| Load | DS3225 main stirring servo (stall current ~2.5A) |
+| Load | Available for future use (was DS3225 servo) |
 | Inductor | 22µH, CDRH104R (Sumida), Isat > 4A |
 | Output Cap | 2x 22µF MLCC (X5R, 16V) + 470µF electrolytic (10V, low-ESR) |
 | Feedback Resistors | R_top = 71.5k, R_bot = 10k → 6.52V |
 | Protection | 3A polyfuse + SMBJ6.5A TVS on output |
 
 > [!note]
-> The DS3225 servo is rated for 4.8-6.8V. Running at 6.5V provides maximum torque (25 kg·cm) while staying within safe limits. The 470µF bulk capacitor absorbs stall current transients without drooping the rail.
+> The 6.5V rail is retained for future use. The DS3225 servo has been replaced with a 24V BLDC motor with integrated driver/ESC, powered directly from the 24V rail via J_BLDC. The MP1584EN #2 and its output components remain populated but unloaded.
 
 ### 12V UPS → 5V Rail (TPS54531)
 
@@ -188,7 +193,8 @@ A voltage divider on the 24V rail feeds the STM32's internal analog comparator (
 |------|--------|------------|----------|----------|-------|
 | 5V (5A max) | 12V UPS → TPS54531 | 1.5 | 4.0 | 20% | CM5 (3A peak) + Controller (0.17A) + buzzer + LED |
 | 12V (3A max) | 24V → MP1584EN #1 | 1.9 | 3.0 | 0% | Actuators only (not needed during power fail) |
-| 6.5V (3A max) | 24V → MP1584EN #2 | 0.5 | 2.5 | 17% | Servo only (not needed during power fail) |
+| 6.5V (3A max) | 24V → MP1584EN #2 | 0 | 0 | 100% | Available for future use (was DS3225 servo) |
+| 24V direct (BLDC) | 24V input | 1.0 | 3.0 | — | BLDC stirring motor (integrated ESC, via J_BLDC) |
 | **24V input** | **Mean Well PSU** | **~2.0** | **~2.5** | Within PSU 3.2A rating | Reduced (5V rail no longer on 24V) |
 | **12V UPS input** | **External UPS** | **1.5** | **4.0** | Within 5A fuse | UPS-backed, stays live during AC outage |
 
@@ -196,28 +202,37 @@ A voltage divider on the 24V rail feeds the STM32's internal analog comparator (
 
 ## Actuator Driver Circuits
 
-### DS3225 Main Stirring Servo
+### 24V BLDC Motor with Integrated Driver
 
-The DS3225 (25 kg·cm, metal gear) connects directly to the 6.5V rail. No H-bridge is needed — standard hobby servos accept a PWM signal and have an internal driver.
+The stirring mechanism uses a 24V BLDC motor with integrated driver/ESC, connected directly to the 24V rail. The motor accepts a 10 kHz PWM signal for speed control, plus digital EN (enable) and DIR (direction) signals. No external H-bridge or buck converter is needed — the integrated ESC handles commutation and power switching.
 
 ```
-6.5V Rail ──┬── 470µF Bulk Cap ──┬── J_SERVO_MAIN Pin 2 (VCC, red)
-            │                    │
-            └── SMBJ6.5A TVS ───┘
-                                 │
-                                GND ── J_SERVO_MAIN Pin 1 (GND, brown)
+24V Rail ──┬── J_BLDC Pin 1 (24V)
+           │
+          GND ── J_BLDC Pin 2 (GND)
 
-PA8 (TIM1_CH1) ── via J_STACK ── 33R ── J_SERVO_MAIN Pin 3 (Signal, orange)
+J_STACK Pin 37 (BLDC_PWM, PA8) ── 100R ── J_BLDC Pin 3 (PWM)
+J_STACK Pin 39 (BLDC_EN, PA4)  ── 100R ── J_BLDC Pin 4 (EN)
+J_STACK Pin 40 (BLDC_DIR, PA5) ── 100R ── J_BLDC Pin 5 (DIR)
+                                           J_BLDC Pin 6 (FG) ── NC (tachometer, deferred)
 ```
 
 | Parameter | Value |
 |-----------|-------|
-| PWM Frequency | 50 Hz |
-| Pulse Width | 500-2500 µs |
-| Supply | 6.5V from MP1584EN #2 |
-| Bulk Cap | 470µF 10V electrolytic (low-ESR) |
-| TVS | SMBJ6.5A on 6.5V rail |
-| Signal Protection | 33Ω series resistor |
+| Motor | 24V BLDC, 30-50 kg-cm, integrated ESC (model TBD) |
+| PWM Frequency | 10 kHz |
+| Duty Cycle Range | 0-100% (speed proportional) |
+| EN Pin | Digital high = motor enabled, low = disabled |
+| DIR Pin | Digital high = CW, low = CCW |
+| FG Pin | Tachometer feedback (NC for prototype; PA3 reserved for future) |
+| Supply | 24V direct from PSU rail |
+| Typical Current | ~2A |
+| Peak Current | ~3A (stall/startup) |
+| Signal Protection | 100Ω series resistors on PWM, EN, DIR lines |
+| Gate Pull-down | 10kΩ on EN (motor disabled during boot) |
+
+> [!warning]
+> The BLDC motor draws up to 3A peak from the 24V rail. Combined with other 24V loads, the Mean Well LRS-75-24 (3.2A) may be tight. Monitor total 24V current via INA219; consider upgrading to LRS-100-24 (4.2A) if headroom is insufficient.
 
 ### P-ASD Solenoid Valves (6×)
 
@@ -539,7 +554,7 @@ PA0 (TIM2_CH1) ── via J_STACK Pin 15 ── 100R ── Gate
 | Rail | Polyfuse | TVS Diode | Notes |
 |------|----------|-----------|-------|
 | 12V | 1.5A (0805) | SMBJ12A | Protects solenoid/fan/actuator branch |
-| 6.5V | 3A (1206) | SMBJ6.5A | Protects DS3225 servo branch |
+| 6.5V | 3A (1206) | SMBJ6.5A | Available for future use (was DS3225 servo branch) |
 | 5V | — | — | Protected at UPS input (F5 + D_UPS2); TPS54531 has integrated OCP |
 
 ### MOSFET Gate Safety
@@ -680,15 +695,15 @@ J_STACK Pin 19 (FDCAN1_RX, PB8) ◄── RXD ┘
 | 33 | SLD_SOL1_EN (PA7) | In | 34 | SLD_SOL2_EN (PA9) | In |
 | 35 | I2C1_SCL (PB6) | Bidir | 36 | I2C1_SDA (PB7) | Bidir |
 | **Main Actuators & Audio (Pins 37-40)** ||||
-| 37 | MAIN_SERVO_PWM (PA8) | In | 38 | BUZZER_PWM (PA11) | In |
-| 39 | Reserved (was PASD_SOL6) | — | 40 | GND | Power |
+| 37 | BLDC_PWM (PA8) | In | 38 | BUZZER_PWM (PA11) | In |
+| 39 | BLDC_EN (PA4) | In | 40 | BLDC_DIR (PA5) | In |
 
 ### Pin Group Summary
 
 | Group | Pins | Count | Purpose |
 |-------|------|-------|---------|
 | 24V Power | 1-4 | 4 | Paralleled for 12A total capacity (4x 3A) |
-| GND | 5-10, 25-26, 40 | 9 | Low-impedance ground return (6 main + 2 CID + 1 main actuators) |
+| GND | 5-10, 25-26 | 8 | Low-impedance ground return (6 main + 2 CID) |
 | 5V | 11-12 | 2 | 5V reference/supply passthrough |
 | 3.3V | 13-14 | 2 | Logic-level reference passthrough |
 | **P-ASD** (Seasoning) | 15 | 1 | 1× pump PWM (PA0); solenoids V1-V6 via PCF8574 (I2C1, 0x20) on Driver PCB |
@@ -696,10 +711,10 @@ J_STACK Pin 19 (FDCAN1_RX, PB8) ◄── RXD ┘
 | **CID** (Coarse) | 21-26 | 6 | 2× actuator EN/PH (PA10/PB4, PB5/PC2), 2× GND |
 | **Exhaust Fans** | 27-28 | 2 | FAN1 (PA6), FAN2 (PB10) |
 | **SLD** (Liquid) | 29-36 | 8 | 2× pump PWM/DIR (PC3-PC6), 2× solenoid (PA7, PA9), I2C (INA219) |
-| **Main** (Arm/Audio) | 37-38, 40 | 3 | Main servo (PA8), buzzer (PA11), 1× GND |
+| **Main** (Arm/Audio) | 37-40 | 4 | BLDC motor PWM+EN+DIR (PA8, PA4, PA5), buzzer (PA11) |
 
 > [!note]
-> Subsystem grouping enables modular wiring harnesses. P-ASD pump PWM on pin 15; solenoids V1-V6 are driven locally by a PCF8574 I2C GPIO expander on the Driver PCB (no J_STACK pins needed). CID signals (21-26) together, exhaust fans (27-28) together, etc. Dedicated GND pins (25-26 for CID, 40 for main actuators) improve current return paths for high-power actuators.
+> Subsystem grouping enables modular wiring harnesses. P-ASD pump PWM on pin 15; solenoids V1-V6 are driven locally by a PCF8574 I2C GPIO expander on the Driver PCB (no J_STACK pins needed). CID signals (21-26) together, exhaust fans (27-28) together, etc. Dedicated GND pins (25-26 for CID) improve current return paths for high-power actuators. BLDC motor signals (PWM, EN, DIR) on pins 37, 39, 40.
 
 > [!warning]
 > The 24V pins carry up to 3A total from the PSU. Four paralleled pins provide adequate current capacity, but traces on both boards must be sized for ≥1A per pin (minimum 0.5mm / 20 mil trace width on 2oz copper).
@@ -760,7 +775,7 @@ Inner copper: 1 oz (35µm) for planes
 │                                                                          │
 │  ┌──────────────────────────────────────────────────────────────────┐    │
 │  │                    OUTPUT CONNECTORS                             │    │
-│  │  J_SERVO_MAIN  J_PASD  J_FAN  J_CID                               │    │
+│  │  J_BLDC  J_PASD  J_FAN  J_CID                               │    │
 │  │  J_SLD  J_CAN  J_24V_IN  J_12V_UPS  J_BUZZER                    │    │
 │  └──────────────────────────────────────────────────────────────────┘    │
 │                                                                          │
@@ -873,13 +888,16 @@ All six solenoid valves and the diaphragm pump are combined into a single connec
 
 ### Main Actuators (3 total)
 
-**J_MAIN_SERVO — DS3225 Stirring Servo (3-pin header, 2.54mm)**
+**J_BLDC — 24V BLDC Stirring Motor (6-pin JST-XH 2.5mm)**
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
-| 1 | GND | Brown wire |
-| 2 | 6.5V | Red wire (from MP1584EN #2) |
-| 3 | Signal | Orange wire (PA8 via J_STACK) |
+| 1 | 24V | Direct from 24V rail |
+| 2 | GND | Power ground |
+| 3 | PWM | 10 kHz speed control (PA8 via J_STACK Pin 37, 100Ω series) |
+| 4 | EN | Enable (PA4 via J_STACK Pin 39, 100Ω series) |
+| 5 | DIR | Direction CW/CCW (PA5 via J_STACK Pin 40, 100Ω series) |
+| 6 | FG | Tachometer feedback (NC for prototype) |
 
 **J_FAN — Combined Exhaust Fans (1x 4-pin JST-XH 2.5mm)**
 
@@ -925,6 +943,8 @@ The Driver PCB introduces 14 new STM32 pin assignments (beyond the existing Cont
 | PC4 | Available | GPIO | Pump 1 Direction (AIN1) | Output | TB6612 AIN1 |
 | PC5 | Available | GPIO | Pump 2 Speed (PWMB) | Output | TB6612 PWMB |
 | PC6 | Available | GPIO | Pump 2 Direction (BIN1) | Output | TB6612 BIN1 |
+| PA4 | Available (was NTC Coil) | GPIO | BLDC Motor EN | Output | J_BLDC pin 4 via J_STACK |
+| PA5 | Available (was NTC Ambient) | GPIO | BLDC Motor DIR | Output | J_BLDC pin 5 via J_STACK |
 | PA11 | Reserved (USB) | TIM1_CH4 | Piezo Buzzer PWM | Output | J_BUZZER via MOSFET |
 | ~~PC7~~ | ~~Available~~ | ~~GPIO~~ | ~~P-ASD Solenoid V3~~ | ~~Output~~ | ~~Removed — now via PCF8574~~ |
 | ~~PD2~~ | ~~Available~~ | ~~GPIO~~ | ~~P-ASD Solenoid V4~~ | ~~Output~~ | ~~Removed — now via PCF8574~~ |
@@ -987,7 +1007,7 @@ The following SPI message types are added to the CM5 ↔ STM32 protocol for Driv
 
 | Timer | Existing Use | New Channels |
 |-------|-------------|--------------|
-| TIM1 | CH1: DS3225 servo (PA8) | CH3: Linear Actuator 1 PWM (PA10), CH4: Buzzer PWM (PA11) |
+| TIM1 | CH1: BLDC motor PWM (PA8, 10 kHz) | CH3: Linear Actuator 1 PWM (PA10), CH4: Buzzer PWM (PA11) |
 | TIM3 | Unused | CH1: Exhaust Fan 1 PWM (PA6, 25 kHz) |
 | TIM2 | Previously ASD SG90 servos (removed) | CH1: P-ASD pump PWM (PA0, 25 kHz); PB10 for Fan 2 uses software/GPIO-based PWM at 25 kHz |
 
@@ -1115,14 +1135,12 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 | **Flyback Diodes** | | | | | |
 | D6-D16 | SS14 | SMA | 11 | $0.10 | SLD sol 1-2, fan 1-2, P-ASD sol V1-V6, P-ASD pump |
 | **Passive Components** | | | | | |
-| R_GATE (x16) | 100Ω | 0402 | 16 | $0.01 | Gate/input series resistors (11 MOSFETs + 1 buzzer + 4 H-bridge inputs) |
+| R_GATE (x19) | 100Ω | 0402 | 19 | $0.01 | Gate/input series resistors (11 MOSFETs + 1 buzzer + 4 H-bridge inputs + 3 BLDC) |
 | R_PD (x16) | 10kΩ | 0402 | 16 | $0.01 | Gate/enable pull-downs |
 | R_FB (x6) | Various (10k-140k) | 0402 | 6 | $0.01 | Buck converter feedback dividers |
 | R_SENSE (x2) | 1kΩ | 0402 | 2 | $0.01 | DRV8876 IPROPI sense |
-| R_SIG (x1) | 33Ω | 0402 | 1 | $0.01 | Servo signal series termination (1 main DS3225) |
 | C_IN (x3) | 10µF ceramic | 0805 (25V) | 3 | $0.15 | Buck input bypass |
 | C_OUT (x6) | 22µF ceramic | 0805 (25V/16V/10V) | 6 | $0.12 | Buck output filter (2 per rail) |
-| C_BULK1 | 470µF electrolytic | 10x10mm (10V) | 1 | $0.30 | DS3225 servo bulk |
 | C_BULK3 | 100µF electrolytic | 8x8mm (25V) | 1 | $0.20 | 12V rail bulk |
 | C_DEC (x10) | 100nF ceramic | 0402 | 10 | $0.01 | IC decoupling |
 | C_IC (x3) | 10µF ceramic | 0805 | 3 | $0.10 | DRV8876/TB6612 VM bypass |
@@ -1130,7 +1148,7 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 | J_STACK | 2x20 pin socket | 2.54mm, 11mm stacking | 1 | $0.80 | Stacking to Controller PCB |
 | J_24V_IN | XT30 or JST-VH 2-pin | 2.5mm pitch | 1 | $0.40 | 24V DC input |
 | J_12V_UPS | XT30 2-pin | 2.5mm pitch | 1 | $0.40 | 12V UPS-backed DC input |
-| J_SERVO_MAIN | Pin header 3-pin | 2.54mm | 1 | $0.05 | DS3225 servo |
+| J_BLDC | JST-XH 6-pin | 2.5mm pitch | 1 | $0.15 | 24V BLDC motor (PWM+EN+DIR+FG+24V+GND) |
 | J_SLD | JST-XH 12-pin | 2.5mm pitch | 1 | $0.40 | SLD combined (2× pumps + 2× solenoids + HX711 pot load cell) |
 | J_PASD | JST-XH 16-pin | 2.5mm pitch | 1 | $0.60 | P-ASD combined (6× solenoids + 1× pump + 2× GND) |
 | J_FAN | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | Exhaust fans (combined) |
@@ -1178,7 +1196,7 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 ### Assembly Notes
 
 - All ICs and passives are SMT (top side preferred)
-- Through-hole: 2.54mm pin headers for servo connectors, XT30 for power input
+- Through-hole: JST-XH connectors, XT30 for power input
 - Stacking connector (2x20 socket) on bottom side of board
 - Reflow for SMT, then wave or hand-solder through-hole components
 - Mark pin 1 of J_STACK with silkscreen triangle on both top and bottom layers
@@ -1220,7 +1238,7 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 - [ ] 6.5V rail measures 6.5V ±3% under 500mA dummy load
 - [ ] 5V rail measures 5.0V ±3% under 500mA dummy load
 - [ ] INA219 responds at I2C address 0x40 (I2C scan from STM32)
-- [ ] Each servo connector outputs correct PWM voltage on oscilloscope
+- [ ] J_BLDC PWM output verified on oscilloscope (10 kHz, 3.3V logic)
 - [ ] Solenoid MOSFETs switch correctly (GPIO high = solenoid energized)
 - [ ] DRV8876 drives linear actuator in both directions (PH toggle test)
 - [ ] TB6612FNG drives pump motor with variable speed (PWMA/PWMB sweep)
@@ -1236,7 +1254,7 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 - [[../02-Hardware/Epicura-Architecture|Epicura Architecture]] — System-level wiring and block diagrams
 - [[../02-Hardware/02-Technical-Specifications|Technical Specifications]] — Induction, sensors, power specs
 - [[../05-Subsystems/09-Induction-Heating|Induction Heating]] — Microwave surface module (CAN bus, separate from Driver PCB)
-- [[../05-Subsystems/10-Robotic-Arm|Robotic Arm]] — DS3225 servo arm patterns and control
+- [[../05-Subsystems/10-Robotic-Arm|Robotic Arm]] — BLDC motor arm patterns and control
 - [[../05-Subsystems/03-Ingredient-Dispensing|Ingredient Dispensing]] — ASD/CID/SLD dispensing subsystems
 - [[../05-Subsystems/13-Exhaust-Fume-Management|Exhaust & Fume Management]] — Exhaust fan control
 - [[../08-Components/02-Actuation-Components|Actuation Components]] — Servo and actuator BOM
@@ -1259,3 +1277,4 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 | 5.0 | 2026-02-20 | Manas Pradhan | Moved pot load cell (HX711) from Controller PCB J_LC to Driver PCB J_SLD; J_STACK pins 17-18 now HX711_SCK/HX711_DOUT; J_SLD expanded from 8-pin to 12-pin (added HX711 SCK, DOUT, 3.3V, GND) |
 | 6.0 | 2026-02-20 | Manas Pradhan | Moved entire CAN subsystem (ISO1050DUB, decoupling caps, termination resistor, J_CAN) from Controller PCB; J_STACK pins 19-20 now FDCAN1_RX/TX; added CAN transceiver circuit section, J_CAN connector, isolation creepage layout rule; updated BOM (+$3.79) |
 | 7.0 | 2026-02-20 | Manas Pradhan | Merged J_FAN1 + J_FAN2 into single J_FAN (4-pin JST-XH); merged J_CID_LACT1 + J_CID_LACT2 into single J_CID (4-pin JST-XH); reduces connector count by 2 |
+| 8.0 | 2026-02-20 | Manas Pradhan | Replaced DS3225 servo with 24V BLDC motor (integrated ESC); deleted servo circuit section, added BLDC circuit section; J_SERVO_MAIN→J_BLDC (6-pin JST-XH); J_STACK pins 39→BLDC_EN (PA4), 40→BLDC_DIR (PA5); 6.5V rail now unloaded (future use); removed C_BULK1 (470µF), R_SIG (33Ω); GND count 9→8 |

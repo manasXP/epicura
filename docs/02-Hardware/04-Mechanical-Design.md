@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
-modified: 2026-02-15
-version: 1.0
+modified: 2026-02-20
+version: 2.0
 status: Draft
 ---
 
@@ -75,7 +75,7 @@ status: Draft
 │    │    ┌────────┐                     ┌─────────┐     │     │
 │    │    │ Camera │                     │  Arm    │     │     │
 │    │    │ + LED  │                     │  Motor  │     │     │
-│    │    │ Ring   │                     │ (DS3225)│     │     │
+│    │    │ Ring   │                     │ (BLDC) │     │     │
 │    │    └───┬────┘                     └────┬────┘     │     │
 │    │        │                               │          │     │
 │    └────────┼───────────────────────────────┼──────────┘     │
@@ -174,8 +174,8 @@ status: Draft
     ┌──────────────────────────────────────────────────────┐ ─┬─
     │            Gantry (Camera + Arm Motor)                │  │
     │    ┌────────┐                        ┌──────────┐    │  │
-    │    │ Camera │                        │ DS3225   │    │  │
-    │    │ + LEDs │        Arm Shaft       │ Servo    │    │  │
+    │    │ Camera │                        │ BLDC    │    │  │
+    │    │ + LEDs │        Arm Shaft       │ Motor   │    │  │
     │    └────┬───┘        ▼               └────┬─────┘    │  │
     │         │   ┌────────────────────┐        │          │  │
     ├─────────┼───┤  Pot + Food Zone   ├────────┼──────────┤  │
@@ -282,9 +282,9 @@ status: Draft
 │    │              Gantry Bridge                    │     │
 │    │                                               │     │
 │    │   ┌─────────┐                 ┌────────────┐  │     │
-│    │   │ Camera  │   Gantry Arm    │  DS3225    │  │     │
-│    │   │ Module  │◄───────────────►│  Servo     │  │     │
-│    │   │ + LED   │                 │  Motor     │  │     │
+│    │   │ Camera  │   Gantry Arm    │  BLDC     │  │     │
+│    │   │ Module  │◄───────────────►│  Motor    │  │     │
+│    │   │ + LED   │                 │  (24V)    │  │     │
 │    │   └─────────┘                 └─────┬──────┘  │     │
 │    │                                     │         │     │
 │    └─────────────────────────────────────┼─────────┘     │
@@ -313,7 +313,7 @@ status: Draft
 
 | Parameter | Value |
 |-----------|-------|
-| Actuator | DS3225 digital servo (25 kg-cm torque) |
+| Actuator | 24V BLDC motor with integrated ESC (30-50 kg-cm torque) |
 | Rotation | 360 degrees continuous (modified servo or stepper alternative) |
 | Speed Range | 10-60 RPM (adjustable via recipe) |
 | Shaft Material | 304 stainless steel, 8mm diameter |
@@ -406,7 +406,7 @@ See [[../05-Subsystems/03-Ingredient-Dispensing|Ingredient Dispensing System]] f
 | PSU (switch-mode) | 15-30W (at full load, ~85% efficient) | Rear-bottom |
 | CM5 compute module | 3-5W | Rear-top |
 | STM32 + sensors | <1W | Side |
-| Servo motors (stall) | 5-15W (intermittent) | Top gantry |
+| BLDC stirring motor | 12-48W (intermittent) | Top gantry |
 
 ### Cooling Strategy
 
@@ -577,3 +577,4 @@ Optional automated cleaning: fill pot with water, heat to 60C, stir for 5 minute
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
+| 2.0 | 2026-02-20 | Manas Pradhan | Replaced DS3225 servo references with 24V BLDC motor |

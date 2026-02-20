@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
-modified: 2026-02-15
-version: 1.0
+modified: 2026-02-20
+version: 2.0
 status: Draft
 ---
 
@@ -111,10 +111,10 @@ status: Draft
 
 ### Robotic Arm Safety (ISO 13482 Principles)
 - **Collaborative robot approach:** Low force, limited speed, soft materials
-- **Maximum arm torque:** Limited to 2 N.m via servo current limit
+- **Maximum arm torque:** Limited to 2 N.m via BLDC motor current limit (INA219 monitoring)
 - **Maximum arm speed:** 60 RPM (stirring), 30 RPM (dispensing)
 - **Finger guard:** Physical barrier around stirring zone when lid open
-- **Force limiting:** Servo stalls at obstruction rather than forcing through
+- **Force limiting:** BLDC motor EN disabled on current spike (stall detection via INA219)
 
 ### Pot Interlock System
 ```
@@ -331,3 +331,4 @@ status: Draft
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
+| 2.0 | 2026-02-20 | Manas Pradhan | Updated robotic arm safety references: DS3225 servo → BLDC motor with INA219 current monitoring |

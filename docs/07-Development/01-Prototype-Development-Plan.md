@@ -157,7 +157,7 @@ This document outlines the comprehensive plan for building a functional Epicura 
 #### Tasks
 
 **Week 8: Servo Arm Assembly**
-- [ ] Acquire DS3225 servo motor (25 kg.cm, metal gear)
+- [ ] Acquire 24V BLDC motor (30-50 kg.cm, integrated ESC)
 - [ ] Design mounting bracket (3D print, PETG or aluminum)
 - [ ] Fabricate stainless steel shaft (8mm diameter, 250mm length)
 - [ ] Attach food-grade silicone paddle to shaft end
@@ -165,7 +165,7 @@ This document outlines the comprehensive plan for building a functional Epicura 
 - [ ] Wire servo to STM32 PWM output (TIM1 or TIM2)
 
 **Week 9: Stirring Patterns**
-- [ ] Implement 5 stirring patterns on STM32:
+- [ ] Implement 5 stirring patterns on STM32 (BLDC motor speed control):
   - Circular (continuous rotation, adjustable speed)
   - Back-and-forth (180° sweep)
   - Scraping (edge-following pattern)
@@ -188,8 +188,8 @@ This document outlines the comprehensive plan for building a functional Epicura 
 │          Arm & Sensor Assembly           │
 │                                          │
 │         ┌──────┐                         │
-│         │Servo │ DS3225                  │
-│         │Motor │ (25 kg.cm)              │
+│         │BLDC  │ 24V, integrated ESC     │
+│         │Motor │ (30-50 kg.cm)           │
 │         └──┬───┘                         │
 │            │ Shaft (SS, 8mm)             │
 │            │                             │
@@ -504,7 +504,7 @@ This document outlines the comprehensive plan for building a functional Epicura 
 | Category | Items | Estimated Cost |
 |----------|-------|----------------|
 | Compute | CM5 + carrier board + STM32 Nucleo dev board | $200-300 |
-| Actuation | DS3225 servo + ASD servos + CID actuators + SLD pumps/solenoids + induction hob | $200-300 |
+| Actuation | 24V BLDC motor + ASD servos + CID actuators + SLD pumps/solenoids + induction hob | $200-300 |
 | Sensors | IMX219 camera + MLX90614 + 4x load cells + HX711 | $80-120 |
 | Mechanical | 3D printing (PETG filament) + stainless steel shaft + fasteners + brackets | $100-200 |
 | Display | 10.1" IPS touchscreen (HDMI + I2C touch) | $80-120 |
@@ -527,7 +527,7 @@ This document outlines the comprehensive plan for building a functional Epicura 
 | Mechanical assembly issues | Low | Medium | Iterate 3D prints rapidly; consult maker community; use off-the-shelf brackets where possible |
 | CM5 performance bottleneck | Low | Medium | Optimize TFLite inference (INT8 quantization); offload preprocessing to GPU; consider Jetson Nano as backup |
 | Integration complexity | High | High | Test each subsystem independently before integrating; define clear interfaces (UART protocol, API); CI/CD for CM5 software |
-| Servo arm reliability | Medium | Medium | Use metal-gear servo (DS3225); add mechanical end-stops; monitor servo current for early failure detection |
+| Servo arm reliability | Medium | Medium | Use BLDC motor with integrated ESC; add mechanical end-stops; monitor motor current for early failure detection |
 | Recipe state machine bugs | Medium | Medium | Extensive unit testing; timeout fallbacks on every state; manual override via UI |
 
 ### Schedule Risks

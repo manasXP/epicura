@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-20
-version: 5.0
+version: 6.0
 status: Draft
 ---
 
@@ -18,8 +18,8 @@ This document details the actuation subsystem components for the Epicura kitchen
 │                    Actuation Subsystem                          │
 │                                                                 │
 │  ┌──────────────┐         ┌──────────────┐                     │
-│  │  STM32G474RE │─── PWM ►│  DS3225      │                     │
-│  │  (Controller)│         │  Servo Arm   │                     │
+│  │  STM32G474RE │── PWM+EN►│  24V BLDC    │                     │
+│  │  (Controller)│         │  Motor       │                     │
 │  │              │         └──────────────┘                     │
 │  │              │                                               │
 │  │              │── PWM  ►┌──────────────┐                     │
@@ -51,7 +51,7 @@ This document details the actuation subsystem components for the Epicura kitchen
 | Component | Part Number | Qty | Unit Price | Subtotal | Supplier | Notes |
 |-----------|-------------|-----|------------|----------|----------|-------|
 | Microwave Induction Surface (1800W, CAN) | Commercial module | 1 | $60.00 | $60.00 | Supplier TBD | Self-contained module with CAN bus port; no teardown needed |
-| DS3225 Servo Motor (25 kg.cm) | DS3225 | 1 | $15.00 | $15.00 | Amazon / AliExpress | Main stirring arm; metal gear, waterproof rated |
+| 24V BLDC Motor w/ Integrated ESC | TBD (24V, 30-50 kg-cm) | 1 | $25.00 | $25.00 | AliExpress | Main stirring arm; brushless, continuous rotation, integrated driver |
 | 12V Micro Diaphragm Pump — P-ASD | SC3701PM or equiv. | 1 | $15.00 | $15.00 | AliExpress | P-ASD air source, 3-4 L/min, <45 dB |
 | 12V NC Solenoid Valve (mini) — P-ASD | Generic 12V, 2-3mm orifice | 6 | $3.50 | $21.00 | AliExpress | P-ASD cartridge air valves, <20 ms response |
 | Accumulator (100mL aluminum) — P-ASD | Custom/generic | 1 | $8.00 | $8.00 | AliExpress | P-ASD pressure reservoir, 1.5 bar max |
@@ -90,7 +90,7 @@ This document details the actuation subsystem components for the Epicura kitchen
 | Item | Cost |
 |------|------|
 | Microwave Induction Surface (CAN) | $60.00 |
-| DS3225 Servo (main arm) | $15.00 |
+| 24V BLDC Motor (main arm) | $25.00 |
 | P-ASD Pneumatic System (pump, valves, accumulator, regulator, sensor, tubing, cartridges, relief valve) | $90.00 |
 | Linear Actuators — CID (2x) | $16.00 |
 | Peristaltic Pumps — SLD (2x) | $20.00 |
@@ -106,7 +106,7 @@ This document details the actuation subsystem components for the Epicura kitchen
 | Connectors + Wiring | $17.00 |
 | Exhaust Fan + Filtration | $22.50 |
 | Piezo Buzzer + MOSFET | $0.85 |
-| **Category Subtotal** | **$290.48** |
+| **Category Subtotal** | **$300.48** |
 
 ---
 
@@ -120,12 +120,14 @@ This document details the actuation subsystem components for the Epicura kitchen
   - Safety relay on AC mains provides system-level hard disconnect
   - Module-internal pot detection and thermal cutoff
 
-### DS3225 Servo Selection
-- **25 kg.cm torque** at 6V provides sufficient force for thick curries and dals
-- **Metal gears** for durability (plastic gears strip under load)
-- **IP66 waterproof** rated (important for kitchen environment)
-- PWM control: 500-2500 us pulse, 50 Hz frequency
-- Continuous rotation not needed; 270° range sufficient for stirring patterns
+### 24V BLDC Motor Selection
+- **30-50 kg-cm torque** provides ample margin for thick curries and dals
+- **Brushless design** eliminates brush wear, better thermal handling for sustained operation
+- **True continuous rotation** — no servo modification needed
+- **Integrated ESC** — no external H-bridge or buck converter required
+- **Direct 24V operation** — powered from main PSU rail; 6.5V buck converter (MP1584EN #2) retained for future use
+- Control: 10 kHz PWM (speed) + EN (enable) + DIR (direction) from STM32
+- **Specific model TBD** — document generically as "24V BLDC, 30-50 kg-cm, integrated ESC"
 
 ### P-ASD Pneumatic System
 - **Puff-dosing mechanism**: pressurized air bursts through sealed cartridges
@@ -153,7 +155,7 @@ This document details the actuation subsystem components for the Epicura kitchen
 | Item | Prototype | Production (1000 qty) | Savings |
 |------|-----------|----------------------|---------|
 | Microwave surface | $60 | $40 (bulk) | 33% |
-| DS3225 | $15 | $8 (bulk) | 47% |
+| 24V BLDC motor | $25 | $15 (bulk) | 40% |
 | P-ASD system (pump+valves+cartridges) | $90 | $50 (bulk) | 44% |
 | Linear actuators x2 (CID) | $16 | $8 (bulk) | 50% |
 | Peristaltic pumps x2 (SLD) | $20 | $10 (bulk) | 50% |
@@ -186,3 +188,4 @@ This document details the actuation subsystem components for the Epicura kitchen
 | 3.0 | 2026-02-16 | Manas Pradhan | Added PCF8574 I2C GPIO expander ($0.50) for P-ASD solenoid control |
 | 4.0 | 2026-02-20 | Manas Pradhan | Moved CAN transceiver (now ISO1050DUB) to Compute Modules; replaced with CAN termination + decoupling passives ($0.13); subtotal $289.85 → $286.98 |
 | 5.0 | 2026-02-20 | Manas Pradhan | Moved ISO1050DUB ($3.50) back from Compute Modules to Actuation (now on Driver PCB); subtotal $286.98 → $290.48 |
+| 6.0 | 2026-02-20 | Manas Pradhan | Replaced DS3225 servo ($15) with 24V BLDC motor w/ integrated ESC ($25); net +$10; subtotal $290.48→$300.48 |

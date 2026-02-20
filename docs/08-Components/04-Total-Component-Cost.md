@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-20
-version: 6.0
+version: 7.0
 status: Draft
 ---
 
@@ -18,9 +18,9 @@ This document provides a consolidated view of all component costs for the Epicur
 | Category | Subtotal | % of Total | Details |
 |----------|----------|------------|---------|
 | [[01-Compute-Module-Components|Compute Modules]] | $196.00 | 25% | CM5, STM32, display, cables |
-| [[02-Actuation-Components|Actuation]] | $282.35 | 36% | Induction hob, P-ASD pneumatic system + PCF8574 I2C expander, CID linear actuators, SLD pumps/solenoids/load cell, ISO1050DUB CAN transceiver, relays, exhaust fan, filters |
+| [[02-Actuation-Components|Actuation]] | $292.35 | 37% | Induction hob, P-ASD pneumatic system + PCF8574 I2C expander, CID linear actuators, SLD pumps/solenoids/load cell, ISO1050DUB CAN transceiver, 24V BLDC motor, relays, exhaust fan, filters |
 | [[03-Sensor-Components|Sensors]] | $62.70 | 8% | Camera, IR thermo, load cells |
-| **Component Total** | **$541.05** | **69%** | Electronic components only |
+| **Component Total** | **$551.05** | **69%** | Electronic components only |
 
 ---
 
@@ -36,12 +36,12 @@ This document provides a consolidated view of all component costs for the Epicur
 | 10.1" IPS Display | $80.00 |
 | Storage + Cables | $25.00 |
 
-### Actuation ($282.35)
+### Actuation ($292.35)
 
 | Item | Cost |
 |------|------|
 | Microwave Induction Surface (CAN) | $60.00 |
-| DS3225 Servo (main arm) | $15.00 |
+| 24V BLDC Motor (main arm) | $25.00 |
 | P-ASD Pneumatic System (pump, valves, accumulator, regulator, sensor, tubing, cartridges, relief valve, PCF8574) | $90.50 |
 | Linear Actuators — CID (2x) | $16.00 |
 | Peristaltic Pumps — SLD (2x) | $20.00 |
@@ -88,10 +88,10 @@ This document provides a consolidated view of all component costs for the Epicur
 
 | Category | Cost |
 |----------|------|
-| Electronic Components | $541.05 |
+| Electronic Components | $551.05 |
 | Mechanical / Other | $250.00 |
-| **Total BOM (Prototype)** | **$791.05** |
-| **With Contingency (+20%)** | **~$949** |
+| **Total BOM (Prototype)** | **$801.05** |
+| **With Contingency (+20%)** | **~$961** |
 | **With Tools & Consumables** | **$1,100-1,350** |
 
 ---
@@ -107,7 +107,7 @@ This document provides a consolidated view of all component costs for the Epicur
 | P-ASD system (pump+valves+cartridges) | $90.00 | $50.00 | Bulk pricing, simplified assembly |
 | Linear Actuators — CID (2x) | $16.00 | $8.00 | Bulk pricing |
 | Pumps + Solenoids — SLD | $28.00 | $14.00 | Bulk pricing |
-| DS3225 Main Arm Servo | $15.00 | $8.00 | Bulk pricing |
+| 24V BLDC Stirring Motor | $25.00 | $15.00 | Bulk pricing |
 | Sensors (all) | $62.70 | $35.00 | Direct from manufacturer, MOQ pricing |
 | Enclosure | $80.00 (3D print) | $15.00 (injection mold) | Mold cost amortized over production run |
 | PCBs | $40.00 (prototype) | $8.00 (panel production) | Integrated carrier + interface board |
@@ -117,7 +117,7 @@ This document provides a consolidated view of all component costs for the Epicur
 | Wiring / Connectors | $30.00 | $10.00 | Custom harness, bulk connectors |
 | Exhaust + Filters | $22.50 | $8.00 (OEM blower + bulk filters) | Custom blower + injection-molded housing |
 | Other (CAN, relays, drivers, load cell, cables, buzzer) | $94.85 | $20.00 (integrated into PCB + bulk) | Small components absorbed into custom PCB at volume |
-| **Total Unit** | **~$791** | **~$335** | **~58% cost reduction** |
+| **Total Unit** | **~$801** | **~$342** | **~57% cost reduction** |
 
 ---
 
@@ -149,7 +149,7 @@ This document provides a consolidated view of all component costs for the Epicur
 │  └─ Mechanical (6%)     ██████                                           │
 │  └─ PCBs/PSU (9%)       █████████                                        │
 │                                                                          │
-│  Total Prototype BOM: ~$791                                              │
+│  Total Prototype BOM: ~$801                                              │
 └────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -234,3 +234,4 @@ This document provides a consolidated view of all component costs for the Epicur
 | 4.0 | 2026-02-20 | Manas Pradhan | Moved CAN transceiver from Actuation to Compute (ISO1050DUB $3.50 replaces $3.00 non-isolated); updated all totals; prototype BOM ~$793 |
 | 5.0 | 2026-02-20 | Manas Pradhan | Removed NTC thermistors ($2.00) and divider resistors ($0.20) from sensors; coil temp via CAN, ambient not needed; prototype BOM ~$791 |
 | 6.0 | 2026-02-20 | Manas Pradhan | Moved ISO1050DUB ($3.50) from Compute Modules to Actuation (now on Driver PCB); Compute $199.50→$196.00, Actuation $278.85→$282.35; component total unchanged ($541.05) |
+| 7.0 | 2026-02-20 | Manas Pradhan | Replaced DS3225 servo ($15) with 24V BLDC motor ($25); Actuation $282.35→$292.35; component total $541.05→$551.05; prototype BOM $791.05→$801.05 |

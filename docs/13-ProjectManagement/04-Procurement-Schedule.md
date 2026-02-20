@@ -165,7 +165,7 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 | Item | Part Number | Description | Qty | Supplier | Unit Cost | Lead Time | Order By |
 |------|-------------|-------------|-----|----------|-----------|-----------|----------|
-| DS3225 Servo | DS3225MG | 25kg·cm metal gear 270° | 2 | Amazon B07VPFR7KZ | $15 | 5 days | Week 6 |
+| BLDC Motor | 24V DC, 30-50 kg-cm, integrated ESC | Brushless motor with integrated ESC | 1 | Amazon / AliExpress | $25-35 | 5-10 days | Week 6 |
 | SS304 Shaft | - | 8mm dia x 250mm, SS304 rod | 1 | McMaster-Carr 8893K26 | $12 | 1 week | Week 5 |
 | Silicone Paddle | - | Food-grade silicone spatula blade | 2 | Amazon B08XXXXX | $8 | 3 days | Week 6 |
 | Aluminum Bracket | 6061-T6 | 3mm x 50mm x 100mm plate | 1 | McMaster-Carr 9246K12 | $15 | 1 week | Week 5 |

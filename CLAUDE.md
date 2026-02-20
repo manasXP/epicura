@@ -29,7 +29,7 @@ Design/documentation phase. Comprehensive documentation exists across 35+ docume
 | Load Cells | 4x strain gauge + HX711 | SPI to STM32 | Weight-based dispensing verification |
 | NTC Thermistors | 100K NTC | ADC to STM32 | Coil and ambient temp monitoring |
 | Microwave Induction Surface | 1,800W commercial module | CAN bus to STM32 FDCAN1 | Cooking heat source (self-contained coil + driver) |
-| Servo Arm | DS3225 (25kg·cm) | PWM from STM32 | Stirring and scraping |
+| BLDC Stirring Motor | 24V BLDC (30-50 kg·cm, integrated ESC) | PWM (10kHz) + EN + DIR from STM32 | Stirring and scraping |
 | Display | 10" 1280x800 capacitive | DSI/HDMI to CM5 | Kivy touchscreen UI |
 | P-ASD (Pneumatic Seasoning Dispenser) | 1× 12V diaphragm pump + 6× 12V NC solenoid valves + ADS1015 pressure sensor | PWM+GPIO+I2C from STM32 | Pneumatic puff-dosing, 6× sealed 60 mL cartridges |
 | CID (Coarse Ingredient Dispenser) | 2× 12V DC linear actuators | GPIO+PWM from STM32 | Push-plate slider trays for vegetables, dal, meat |

@@ -324,7 +324,7 @@ The bridge service runs as a Python Docker container and handles all communicati
 
 | Peripheral | Driver | Usage |
 |------------|--------|-------|
-| PWM (TIM/HRTIM) | STM32 HAL TIM | Servo control (DS3225, SG90) |
+| PWM (TIM/HRTIM) | STM32 HAL TIM | Motor control (BLDC, SG90 servos) |
 | ADC | STM32 HAL ADC + DMA | Temperature sensors, current sensing |
 | SPI | STM32 HAL SPI | Thermocouple interface (MAX31855) |
 | I2C | STM32 HAL I2C | Load cells (HX711), IR thermometer |

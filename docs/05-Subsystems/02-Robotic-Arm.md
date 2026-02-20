@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
-modified: 2026-02-15
-version: 1.0
+modified: 2026-02-20
+version: 2.0
 status: Draft
 ---
 
@@ -9,7 +9,7 @@ status: Draft
 
 ## Overview
 
-The robotic arm is a single-axis rotary stirring mechanism mounted above the cooking pot on a gantry frame. It provides autonomous stirring, scraping, and folding actions driven by the recipe state machine. The arm is controlled by the STM32 real-time controller via PWM and communicates with the CM5 application processor for pattern selection and speed commands.
+The robotic arm is a single-axis rotary stirring mechanism mounted above the cooking pot on a gantry frame. It provides autonomous stirring, scraping, and folding actions driven by the recipe state machine. The arm is driven by a 24V BLDC motor with integrated ESC, controlled by the STM32 via PWM speed control, EN (enable), and DIR (direction) signals, and communicates with the CM5 application processor for pattern selection and speed commands.
 
 ## Arm Assembly Design
 
@@ -19,7 +19,7 @@ The robotic arm is a single-axis rotary stirring mechanism mounted above the coo
 - **Motion:** 360-degree continuous rotation around the vertical axis
 - **Depth:** Fixed paddle depth in V1 (adjustable via manual set screw during setup)
 - **Paddle:** Removable silicone or nylon blade, heat-resistant, food-safe
-- **Drive:** Servo motor at top of gantry, coupled to a vertical drive shaft through a bearing and seal
+- **Drive:** 24V BLDC motor at top of gantry, coupled to a vertical drive shaft through a bearing and seal
 
 ### Assembly Diagram
 
@@ -28,8 +28,9 @@ The robotic arm is a single-axis rotary stirring mechanism mounted above the coo
 │                 GANTRY TOP                  │
 │                                             │
 │            ┌──────────────┐                 │
-│            │ Servo Motor  │ ◄── PWM from STM32
-│            │ (DS3225)     │                 │
+│            │ BLDC Motor   │ ◄── PWM+EN+DIR from STM32
+│            │ (24V, integ. │                 │
+│            │  ESC)        │                 │
 │            └──────┬───────┘                 │
 │                   │                         │
 │            ┌──────┴───────┐                 │
@@ -62,26 +63,34 @@ The robotic arm is a single-axis rotary stirring mechanism mounted above the coo
 └─────────────────────────────────────────────┘
 ```
 
-## Servo Selection
+## Motor Selection
 
-### Comparison Table
+### BLDC Motor Specifications
 
-| Parameter | DS3225 (Recommended) | MG996R (Alternative) |
-|-----------|---------------------|---------------------|
-| Stall Torque | 25 kg-cm (at 6.8V) | 13 kg-cm (at 6V) |
-| Operating Voltage | 5.0 - 8.4V | 4.8 - 7.2V |
-| Speed (no load) | 0.16 s/60deg (at 6.8V) | 0.17 s/60deg (at 6V) |
-| Rotation | 360-degree continuous (modded) | 360-degree continuous (modded) |
-| Gear Type | Metal (25T spline) | Metal (25T spline) |
-| Interface | Standard PWM (50Hz) | Standard PWM (50Hz) |
-| Weight | 65g | 55g |
-| IP Rating | None (requires housing) | None (requires housing) |
-| Price (approx.) | $12-15 USD | $5-8 USD |
-| Recommendation | **Primary choice** -- higher torque handles thick curry loads | Backup option for lighter dishes |
+| Parameter | Value |
+|-----------|-------|
+| Motor Type | 24V brushless DC (BLDC) with integrated driver/ESC |
+| Supply Voltage | 24V DC (direct from PSU rail) |
+| Stall Torque | 30-50 kg-cm (model TBD) |
+| Speed Range | 0-300 RPM (proportional to PWM duty cycle) |
+| Control Interface | PWM (10 kHz, 0-100% duty) + EN (digital) + DIR (digital) |
+| Tachometer | FG output (deferred; PA3 reserved for future use) |
+| Gear Type | Planetary gearbox (integrated) |
+| IP Rating | IP54 or better recommended (kitchen environment) |
+| Weight | ~200-400g (varies by model) |
+| Price (approx.) | $20-30 USD |
 
 ### Selection Rationale
 
-The DS3225 is selected as the primary servo due to its 25 kg-cm stall torque, which provides sufficient margin for stirring thick Indian gravies (dal makhani, paneer butter masala) where resistance can reach 10-15 kg-cm. The MG996R serves as a cost-reduced alternative for recipes involving thinner liquids (rasam, sambar) where lower torque is acceptable.
+The 24V BLDC motor replaces the DS3225 hobby servo for the following advantages:
+
+- **True continuous rotation** — no modification needed (servos require continuous-rotation mod)
+- **Higher torque** — 30-50 kg-cm vs 25 kg-cm for DS3225, better margin for thick Indian gravies
+- **Better thermal handling** — brushless design eliminates brush wear and reduces heat buildup during sustained operation
+- **No gear wear** — planetary gearbox more durable than servo spur gears under continuous load
+- **Direct 24V operation** — eliminates the dedicated 6.5V buck converter (MP1584EN #2 retained for future use)
+- **Speed feedback** — FG (tachometer) output available for closed-loop speed control (deferred to post-prototype)
+- **Direction control** — hardware DIR pin for instant CW/CCW switching (no pulse-width manipulation)
 
 ## Materials
 
@@ -134,14 +143,13 @@ Reverse:     ┌────CW────┐┌───CCW────┐┌�
 
 | Parameter | Value |
 |-----------|-------|
-| PWM Frequency | 50 Hz (standard servo protocol) |
-| PWM Period | 20 ms |
-| Pulse Width Range | 500 - 2500 us |
-| Neutral (stop) | 1500 us |
-| Full CW Speed | 2500 us |
-| Full CCW Speed | 500 us |
-| Speed Resolution | ~10 us steps (200 discrete speed levels) |
-| STM32 Timer | TIM1 or TIM2 (16-bit, 50Hz output compare) |
+| PWM Frequency | 10 kHz |
+| Duty Cycle Range | 0-100% |
+| Speed at 0% duty | Stopped |
+| Speed at 100% duty | ~300 RPM (max, motor-dependent) |
+| EN Pin | PA4 (GPIO) — high = enabled, low = disabled |
+| DIR Pin | PA5 (GPIO) — high = CW, low = CCW |
+| STM32 Timer | TIM1_CH1 (PA8), ARR=16999, PSC=0 at 170 MHz → 10 kHz |
 
 ### Speed Ramping
 
@@ -180,19 +188,23 @@ Target Speed
 ### PWM Hardware Configuration
 
 ```c
-// Timer configuration for servo PWM
-// STM32G4 TIM1 Channel 1, 50Hz output
-TIM1->PSC  = (SystemCoreClock / 1000000) - 1;  // 1us resolution
-TIM1->ARR  = 20000 - 1;                         // 20ms period (50Hz)
-TIM1->CCR1 = 1500;                               // Initial: stopped (neutral)
+// Timer configuration for BLDC motor PWM
+// STM32G4 TIM1 Channel 1, 10 kHz output
+TIM1->PSC  = 0;                                   // No prescaler (170 MHz)
+TIM1->ARR  = 17000 - 1;                           // 10 kHz period
+TIM1->CCR1 = 0;                                   // Initial: stopped (0% duty)
+
+// GPIO configuration for BLDC EN and DIR
+// PA4 = BLDC_EN (output, default LOW = disabled)
+// PA5 = BLDC_DIR (output, default LOW = CW)
 ```
 
 ### Command Protocol (CM5 to STM32)
 
 | Command | Code | Parameters | Response | Description |
 |---------|------|------------|----------|-------------|
-| SET_PATTERN | 0x20 | pattern_id (1 byte), speed (2 bytes, RPM) | ACK/NAK | Set stirring pattern and speed |
-| SET_SPEED | 0x21 | speed (2 bytes, RPM, signed for direction) | ACK/NAK | Direct speed override |
+| SET_PATTERN | 0x20 | pattern_id (1 byte), speed (2 bytes, RPM), direction (1 byte: 0=CW, 1=CCW) | ACK/NAK | Set stirring pattern, speed, and direction |
+| SET_SPEED | 0x21 | speed (2 bytes, RPM), direction (1 byte: 0=CW, 1=CCW) | ACK/NAK | Direct speed and direction override |
 | STOP | 0x22 | none | ACK | Immediately stop arm (with decel ramp) |
 | HOME | 0x23 | none | ACK | Return to home position |
 | STATUS | 0x24 | none | status_byte, current_rpm, position | Query arm status |
@@ -202,7 +214,7 @@ TIM1->CCR1 = 1500;                               // Initial: stopped (neutral)
 
 | Task | Priority | Stack Size | Update Rate | Description |
 |------|----------|------------|-------------|-------------|
-| Motor Control | 3 (high) | 256 words | 50 Hz (20ms) | PWM update, speed ramping, pattern execution |
+| Motor Control | 3 (high) | 256 words | 50 Hz (20ms) | BLDC PWM duty cycle + EN/DIR GPIO update, speed ramping, pattern execution |
 | Home Seek | 2 (medium) | 128 words | On-demand | Calibration sequence on boot or command |
 | Stall Monitor | 3 (high) | 128 words | 10 Hz | Current monitoring for stall detection |
 
@@ -212,8 +224,8 @@ TIM1->CCR1 = 1500;                               // Initial: stopped (neutral)
 
 | Safety Feature | Detection Method | Threshold | Action |
 |----------------|------------------|-----------|--------|
-| Stall Detection | Motor current monitoring via ADC | >2.0A sustained for 500ms | Stop motor, retry up to 3 times, then error |
-| Over-Torque | Current spike detection | >3.0A instantaneous | Immediate stop, log event |
+| Stall Detection | INA219 24V rail current spike or FG dropout (future) | >3.0A sustained for 500ms | Disable EN, retry up to 3 times, then error |
+| Over-Torque | INA219 current spike detection | >4.0A instantaneous | Immediate EN disable, log event |
 | Thermal Protection | Motor current monitoring (thermal proxy) | Sustained high current | Reduce speed 50%, alert if threshold exceeded |
 | Mechanical Guard | Physical shroud above pot rim | - | Prevents finger access to paddle zone |
 
@@ -223,7 +235,7 @@ TIM1->CCR1 = 1500;                               // Initial: stopped (neutral)
 ┌─────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
 │ Stall   │    │ Stop     │    │ Wait     │    │ Retry    │
 │ Detected│──► │ Motor    │──► │ 2s       │──► │ Reverse  │
-│ (>2.0A) │    │          │    │          │    │ 180 deg  │
+│ (>3.0A) │    │          │    │          │    │ 180 deg  │
 └─────────┘    └──────────┘    └──────────┘    └─────┬────┘
                                                       │
                                               ┌───────▼───────┐
@@ -283,7 +295,7 @@ TIM1->CCR1 = 1500;                               // Initial: stopped (neutral)
 
 ### Prototype Validation Checklist
 
-- [ ] Servo drives paddle through 360-degree rotation smoothly
+- [ ] BLDC motor drives paddle through 360-degree rotation smoothly
 - [ ] Twist-lock paddle attachment holds securely during vigorous stirring
 - [ ] Stall detection triggers within 500ms of blockage
 - [ ] Speed ramping prevents visible splashing at all pattern transitions
@@ -302,7 +314,7 @@ TIM1->CCR1 = 1500;                               // Initial: stopped (neutral)
 - [[12-Vision-System|Vision System]]
 - [[../06-Compliance/06-Safety-Compliance|Safety & Compliance]]
 
-#epicura #robotic-arm #subsystem #servo-control
+#epicura #robotic-arm #subsystem #bldc-motor
 
 ---
 
@@ -311,3 +323,4 @@ TIM1->CCR1 = 1500;                               // Initial: stopped (neutral)
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
+| 2.0 | 2026-02-20 | Manas Pradhan | Replaced DS3225 servo with 24V BLDC motor (integrated ESC); updated motor selection, PWM config (10 kHz), control interface (PWM+EN+DIR), command protocol (added direction param), stall detection (INA219-based), and testing procedures |

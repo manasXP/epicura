@@ -29,7 +29,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 
 ## Phase 1 — Robotic Arm (Sprint 4)
 
-### ARM-SRV.01: Servo arm control — PWM driver, stirring patterns, smooth motion
+### ARM-SRV.01: BLDC motor control — PWM driver, stirring patterns, smooth motion
 - **Sprint:** [[sprint-04|Sprint 4]]
 - **Priority:** P0
 - **Points:** 5
@@ -38,19 +38,19 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 - **Blocks:** [[ARM-actuation#ARM-SRV.02|ARM-SRV.02]], [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]], [[INT-integration#INT-SYS.01|INT-SYS.01]]
 
 **Acceptance Criteria:**
-- [ ] DS3225 servo controlled via PWM (50 Hz, 500–2500µs pulse width)
+- [ ] 24V BLDC motor controlled via PWM (10 kHz, 0–100% duty) + EN (PA4) + DIR (PA5)
 - [ ] 4 stirring patterns implemented: circular, figure-eight, scrape-bottom, fold
 - [ ] Smooth acceleration/deceleration ramps to prevent food splashing
 - [ ] Home position (arm retracted) command for dispensing and idle states
 
 **Tasks:**
-- [ ] `ARM-SRV.01a` — Configure TIM1 PWM for servo: 50 Hz, resolution for 500–2500µs range
-- [ ] `ARM-SRV.01b` — Implement servo position control with acceleration/deceleration profiles
+- [ ] `ARM-SRV.01a` — Configure TIM1 PWM for BLDC: 10 kHz (ARR=16999, PSC=0), PA4 (EN), PA5 (DIR) GPIO
+- [ ] `ARM-SRV.01b` — Implement BLDC speed control with acceleration/deceleration profiles
 - [ ] `ARM-SRV.01c` — Implement stirring patterns: circular (continuous sweep), figure-eight, scrape (slow bottom pass), fold (alternating direction)
 
 ---
 
-### ARM-SRV.02: Servo arm feedback — stall detection, SPI commands, testing
+### ARM-SRV.02: BLDC motor feedback — stall detection, SPI commands, testing
 - **Sprint:** [[sprint-04|Sprint 4]]
 - **Priority:** P0
 - **Points:** 3
@@ -59,14 +59,14 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 - **Blocks:** [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]], [[INT-integration#INT-SYS.01|INT-SYS.01]]
 
 **Acceptance Criteria:**
-- [ ] Stall detection via current sensing: if servo draws >2A for >500ms, halt and alert
-- [ ] SPI commands implemented: SET_ANGLE, SET_PATTERN, HOME, STOP
-- [ ] Position commands accepted via SPI from CM5: angle (0–270°), speed (1–10), pattern ID
+- [ ] Stall detection via INA219 current monitoring: if motor draws >3A for >500ms, disable EN and alert
+- [ ] SPI commands implemented: SET_SPEED, SET_PATTERN, HOME, STOP (with direction param)
+- [ ] Speed/direction commands accepted via SPI from CM5: speed (RPM), direction (CW/CCW), pattern ID
 - [ ] Each pattern tested with a pot of water; no splashing and smooth motion verified
 
 **Tasks:**
-- [ ] `ARM-SRV.02a` — Implement stall detection via ADC current sense on servo power line
-- [ ] `ARM-SRV.02b` — Implement SPI command handler for servo: SET_ANGLE, SET_PATTERN, HOME, STOP
+- [ ] `ARM-SRV.02a` — Implement stall detection via INA219 24V current monitoring
+- [ ] `ARM-SRV.02b` — Implement SPI command handler for BLDC: SET_SPEED, SET_PATTERN, HOME, STOP
 - [ ] `ARM-SRV.02c` — Test each pattern with a pot of water; verify no splashing and smooth motion
 
 ---

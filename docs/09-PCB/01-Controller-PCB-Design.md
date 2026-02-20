@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-20
-version: 10.0
+version: 11.0
 status: Draft
 ---
 
@@ -45,7 +45,7 @@ The CM5IO board is an off-the-shelf Raspberry Pi carrier board that sits on top 
          │    │                           │                │
          │    │  FDCAN1 (PB8/PB9) ─────────── J_STACK: CAN to Driver PCB ISO1050
          │    │                           │                │
-         │    │  TIM1_CH1 (PA8) ───────────── J_STACK: DS3225 Servo (via Driver PCB)
+         │    │  TIM1_CH1 (PA8) ───────────── J_STACK: BLDC Motor PWM (10 kHz, via Driver PCB)
          │    │                           │                │
          │    │  TIM2_CH1 (PA0) ──────────── J_STACK: P-ASD Pump PWM
          │    │  (P-ASD solenoids V1-V6 via PCF8574 on Driver PCB,
@@ -55,7 +55,8 @@ The CM5IO board is an off-the-shelf Raspberry Pi carrier board that sits on top 
          │    │                           │                │
          │    │  GPIO (PC0/PC1) ───────────── J_STACK: HX711 (via Driver PCB)
          │    │                           │                │
-         │    │  PA4/PA5 ─────────────────── Available (was NTC inputs)
+         │    │  PA4 (GPIO) ──────────────── J_STACK: BLDC Motor EN (via Driver PCB)
+│    │  PA5 (GPIO) ──────────────── J_STACK: BLDC Motor DIR (via Driver PCB)
          │    │                           │                │
          │    │  GPIO (PB0) ───────────────── Q1: Safety Relay Driver
          │    │  GPIO (PB1) ◄──────────────── SW1: Pot Detection
@@ -98,10 +99,11 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 │  │  500 kbps, isolation on Driver PCB                        │  │
 │  └─────────────────────────────────┘                           │
 │                                                                │
-│  ┌─── PWM: Main Servo Arm ────────┐                           │
-│  │  PA8  (TIM1_CH1)  ──► DS3225 Signal (orange wire)         │  │
-│  │  50 Hz, 500-2500 us pulse width                            │  │
-│  └─────────────────────────────────┘                           │
+│  ┌─── PWM+GPIO: BLDC Stirring Motor ─┐                        │
+│  │  PA8  (TIM1_CH1)  ──► BLDC Motor PWM (10 kHz, speed)      │  │
+│  │  PA4  (GPIO)      ──► BLDC Motor EN (enable)               │  │
+│  │  PA5  (GPIO)      ──► BLDC Motor DIR (CW/CCW)              │  │
+│  └─────────────────────────────────────┘                        │
 │                                                                │
 │  ┌─── P-ASD: Pneumatic Seasoning Dispenser ─┐                           │
 │  │  PA0  (TIM2_CH1)  ──► P-ASD Pump PWM (12V diaphragm pump)│  │
@@ -127,8 +129,7 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 │  └─────────────────────────────────┘                           │
 │                                                                │
 │  ┌─── Reserved / Available ───────┐                           │
-│  │  PA4  ── Available (was NTC Coil)                          │  │
-│  │  PA5  ── Available (was NTC Ambient)                       │  │
+│  │  (PA4, PA5 now assigned to BLDC Motor EN/DIR above)        │  │
 │  └─────────────────────────────────┘                           │
 │                                                                │
 │  ┌─── GPIO: Safety & Control ─────┐                           │
@@ -179,14 +180,14 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 | PA1 | COMP2_INP | 24V Power Fail Detection (COMP2) | Input | J_STACK Pin 16 (PWR_FAIL output) | Power |
 | PA2 | GPIO | LED Ring Power Enable | Output | J_LED (via Q2/Q3 MOSFET) | Illumination |
 | PA3 | — | Available (was P-ASD Sol V5) | — | — | — |
-| PA4 | — | Available (was NTC Coil) | — | — | — |
-| PA5 | — | Available (was NTC Ambient) | — | — | — |
+| PA4 | GPIO | BLDC Motor EN | Output | J_STACK Pin 39 | Main |
+| PA5 | GPIO | BLDC Motor DIR | Output | J_STACK Pin 40 | Main |
 | PA6 | TIM3_CH1 | Exhaust Fan 1 PWM | Output | J_STACK Pin 27 | Exhaust |
 | PA7 | GPIO | SLD Solenoid 1 Enable | Output | J_STACK Pin 33 | SLD |
-| PA8 | TIM1_CH1 | Main Servo (DS3225) | Output | J_STACK Pin 37 | Main |
+| PA8 | TIM1_CH1 | BLDC Motor PWM (10 kHz) | Output | J_STACK Pin 37 | Main |
 | PA9 | GPIO | SLD Solenoid 2 Enable | Output | J_STACK Pin 34 | SLD |
 | PA10 | TIM1_CH3/GPIO | CID Linear Actuator 1 EN | Output | J_STACK Pin 21 | CID |
-| PA11 | TIM1_CH4 | Buzzer PWM | Output | J_STACK Pin 39 | Main |
+| PA11 | TIM1_CH4 | Buzzer PWM | Output | J_STACK Pin 38 | Main |
 | PA13 | SWDIO | SWD Debug | Bidir | J_SWD | Debug |
 | PA14 | SWCLK | SWD Debug | Input | J_SWD | Debug |
 | PB0 | GPIO | Safety Relay | Output | Q1 | Safety |
@@ -261,7 +262,7 @@ The controller PCB receives 5V DC via J_STACK pins 11-12 from the Driver PCB's T
 | **Total 3.3V** | **~90** | **~166** | Well within LDO capacity |
 
 > [!note]
-> Servo motors (DS3225) are powered from a separate 24V→6.5V buck converter on the Driver PCB, not from this 3.3V LDO. The 5V rail is sourced from a UPS-backed 12V→5V converter (TPS54531) on the Driver PCB, ensuring the controller and CM5 stay powered during AC outages. The 5V rail passes through the Controller PCB upward to the CM5IO via J_CM5 pins 2/4 (up to 3A for CM5 peak load). Only the PWM signal lines route through the controller PCB.
+> The BLDC stirring motor is powered directly from the 24V rail on the Driver PCB (integrated ESC). The 6.5V buck converter (MP1584EN #2) is retained for future use. The 5V rail is sourced from a UPS-backed 12V→5V converter (TPS54531) on the Driver PCB, ensuring the controller and CM5 stay powered during AC outages. The 5V rail passes through the Controller PCB upward to the CM5IO via J_CM5 pins 2/4 (up to 3A for CM5 peak load). Only the PWM signal lines route through the controller PCB.
 
 ### Decoupling
 
@@ -472,16 +473,16 @@ The stacking connector passes 24V power, ground, 5V/3.3V references, all servo P
 | 31 | SLD_PUMP2_PWM (PC5) | Out | 32 | SLD_PUMP2_DIR (PC6) | Out |
 | 33 | SLD_SOL1_EN (PA7) | Out | 34 | SLD_SOL2_EN (PA9) | Out |
 | 35 | I2C1_SCL (PB6) | Bidir | 36 | I2C1_SDA (PB7) | Bidir |
-| **Main Actuators & Audio (Pins 37-38, 40)** ||||
-| 37 | MAIN_SERVO_PWM (PA8) | Out | 38 | BUZZER_PWM (PA11) | Out |
-| 39 | Reserved (was PASD_SOL6) | — | 40 | GND | Power |
+| **Main Actuators & Audio (Pins 37-40)** ||||
+| 37 | BLDC_PWM (PA8) | Out | 38 | BUZZER_PWM (PA11) | Out |
+| 39 | BLDC_EN (PA4) | Out | 40 | BLDC_DIR (PA5) | Out |
 
 #### Pin Group Summary
 
 | Group | Pins | Count | Purpose |
 |-------|------|-------|---------|
 | 24V Power | 1-4 | 4 | 24V from PSU (paralleled for 12A capacity) |
-| GND | 5-10, 25-26, 40 | 9 | Low-impedance ground return |
+| GND | 5-10, 25-26 | 8 | Low-impedance ground return |
 | 5V | 11-12 | 2 | 5V passthrough |
 | 3.3V | 13-14 | 2 | Logic reference |
 | **P-ASD** (Seasoning) | 15 | 1 | 1× pump PWM (solenoids via PCF8574 on Driver PCB, I2C1) |
@@ -489,7 +490,7 @@ The stacking connector passes 24V power, ground, 5V/3.3V references, all servo P
 | **CID** (Coarse) | 21-26 | 6 | 2× actuator EN/PH, 2× GND |
 | **Exhaust Fans** | 27-28 | 2 | 2× fan PWM (independent speed control, 120mm) |
 | **SLD** (Liquid) | 29-36 | 8 | 2× pump PWM/DIR, 2× solenoid, I2C (INA219) |
-| **Main** (Arm/Audio) | 37-38, 40 | 3 | Main servo, buzzer, 1× GND |
+| **Main** (Arm/Audio) | 37-40 | 4 | BLDC motor (PWM+EN+DIR), buzzer |
 
 > [!note]
 > Subsystem grouping enables modular wiring harnesses. All signals for ASD run together (pins 15-20), all CID signals together (21-28), etc. Servo and actuator external connectors are on the Driver PCB, not the Controller PCB. The Controller PCB only carries low-level PWM/GPIO signals.
@@ -811,3 +812,4 @@ Material: FR4 (Tg 150°C minimum)
 | 8.0 | 2026-02-20 | Manas Pradhan | Removed J_LC (HX711 load cell connector); pot load cell signals (PC0/PC1) now route via J_STACK pins 17-18 to Driver PCB J_SLD connector; removed J_PWR (redundant, 5V comes via J_STACK) |
 | 9.0 | 2026-02-20 | Manas Pradhan | Removed J_NTC and both NTC thermistors (coil temp reported via CAN by induction module; ambient NTC not needed); freed PA4/PA5; removed ADC filter circuit, related BOM items (R14-R15, C14-C15), and ADC layout rule |
 | 10.0 | 2026-02-20 | Manas Pradhan | Moved entire CAN subsystem (ISO1050DUB, decoupling caps, termination resistor, J_CAN) to Driver PCB; FDCAN1 logic signals (PB8/PB9) now route via J_STACK pins 19-20; removed CAN isolation creepage rule from Controller PCB layout |
+| 11.0 | 2026-02-20 | Manas Pradhan | Replaced DS3225 servo with 24V BLDC motor (integrated ESC); PA8 now 10 kHz PWM (was 50 Hz); PA4→BLDC_EN, PA5→BLDC_DIR; J_STACK pins 39-40 reassigned from Reserved/GND to BLDC_EN/BLDC_DIR; GND count 9→8 |

@@ -46,7 +46,7 @@ An autonomous countertop kitchen robot that cooks one-pot meals using AI vision,
 | IR Thermometer | MLX90614 | Non-contact food surface temp |
 | Load Cells | 4× strain gauge + HX711 | Weight-based dispensing verification |
 | Induction Surface | 1,800W commercial module | CAN bus controlled cooking heat |
-| Servo Arm | DS3225 (25 kg·cm) | Stirring and scraping |
+| Servo Arm | 24V BLDC motor (integrated ESC) | Stirring and scraping |
 | Display | 10" 1280×800 capacitive | Kivy touchscreen UI |
 
 ## Software Stack

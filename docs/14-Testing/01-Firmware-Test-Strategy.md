@@ -43,7 +43,7 @@ Testing strategy for the STM32G474RE real-time control firmware: PID controller,
 | Test Area | Setup | Verification |
 |-----------|-------|-------------|
 | PID + MLX90614 | IR sensor aimed at heated target | PID converges to setpoint ±2°C within 60s |
-| Servo driver | DS3225 servo on fixture | Sweep 0°–270°, verify position via potentiometer feedback |
+| Servo driver | 24V BLDC motor on fixture | Spin through full speed range, verify velocity and direction via back-EMF feedback |
 | CAN bus | CAN analyzer (e.g., PCAN-USB) | Send power command, verify response frame within 10ms |
 | SPI protocol | CM5 SPI master (loopback or CM5 dev board) | Bidirectional message exchange, CRC verified |
 | Load cells (SLD) | Calibrated test weights | 4× load cell readings within ±2g of known weight |

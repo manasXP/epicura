@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
-modified: 2026-02-16
-version: 3.0
+modified: 2026-02-20
+version: 4.0
 status: Draft
 ---
 
@@ -162,14 +162,14 @@ An off-the-shelf 12V UPS powers the 5V rail (CM5 + STM32) independently of the 2
 | Induction heater | 600 | 1,800 |
 | CM5 + camera + display | 15 | 25 |
 | STM32 + sensors | 2 | 3 |
-| Servo arm (stirring) | 5 | 15 |
+| BLDC stirring motor | 12 | 48 |
 | P-ASD pump + solenoids | 1 | 10 |
 | CID linear actuators (x2) | 0 | 5 |
 | SLD pumps (x2) + solenoids (x2) | 0 | 16 |
 | LED ring | 2 | 5 |
 | Exhaust fan | 1 | 3 |
 | PSU losses | 10 | 30 |
-| **Total** | **637** | **1,894** |
+| **Total** | **644** | **1,927** |
 
 ## Performance Requirements
 
@@ -198,7 +198,7 @@ An off-the-shelf 12V UPS powers the 5V rail (CM5 + STM32) independently of the 2
 | CM5 <-> Touch | I2C | 400 kHz | CM5 I2C1 <-> touch controller | Touch input events |
 | STM32 <-> IR Sensor | I2C | 100 kHz | STM32 I2C1 <-> MLX90614 | Temperature readings |
 | STM32 <-> Load Cells | SPI-like GPIO | 10-80 Hz | STM32 GPIO <-> HX711 | Weight measurements |
-| STM32 <-> Servos | PWM | 50Hz | STM32 TIM1/TIM2 <-> servo signal | Arm + gate positions |
+| STM32 <-> BLDC Motor | PWM + GPIO | 10 kHz + digital | STM32 TIM1_CH1 (PA8) + PA4 (EN) + PA5 (DIR) | Stirring motor speed, enable, direction |
 | STM32 <-> Microwave Surface | CAN 2.0B | 500 kbps | STM32 FDCAN1 (PB8/PB9) via J_STACK → Driver PCB ISO1050DUB → J_CAN <-> module CAN port | Induction power control via CAN; 5 kV isolation on Driver PCB |
 | STM32 <-> Exhaust Fan | PWM | 25 kHz | STM32 TIM4 CH3 <-> fan 4-pin | Fume extraction speed |
 | CM5 <-> WiFi | 802.11ac | Up to 867 Mbps | Onboard CM5 radio | App, cloud, OTA |
@@ -223,3 +223,4 @@ An off-the-shelf 12V UPS powers the 5V rail (CM5 + STM32) independently of the 2
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
 | 2.0 | 2026-02-16 | Manas Pradhan | Update power budget and dispensing accuracy for P-ASD pneumatic redesign |
 | 3.0 | 2026-02-20 | Manas Pradhan | Updated CAN interface row: transceiver (ISO1050DUB) now on Driver PCB, FDCAN1 signals route via J_STACK pins 19-20 |
+| 4.0 | 2026-02-20 | Manas Pradhan | Replaced DS3225 servo with 24V BLDC motor in communication interfaces and power budget; servo PWM row → BLDC PWM+EN+DIR row |

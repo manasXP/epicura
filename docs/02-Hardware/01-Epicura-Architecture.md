@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
-modified: 2026-02-15
-version: 2.0
+modified: 2026-02-20
+version: 3.0
 status: Draft
 ---
 
@@ -62,9 +62,9 @@ This document provides the comprehensive hardware architecture, wiring diagrams,
           │   └────────┘ └──────────┘      └──────────────┘ │             │   │
           │                                                  └──────────────┘   │
           │   ┌────────┐ ┌──────────┐      ┌──────────────┐ ┌──────────────┐   │
-          │   │WiFi    │ │eMMC/SD   │      │DS3225 Main   │ │ASD SG90 x3  │   │
-          │   │802.11ac│ │8-16GB    │      │Servo Arm     │ │CID LinAct x2│   │
-          │   │BLE 5.0 │ │Storage   │      │(Stirring)    │ │SLD Pumps x2 │   │
+          │   │WiFi    │ │eMMC/SD   │      │24V BLDC      │ │ASD SG90 x3  │   │
+          │   │802.11ac│ │8-16GB    │      │Stirring Motor│ │CID LinAct x2│   │
+          │   │BLE 5.0 │ │Storage   │      │(integrated)  │ │SLD Pumps x2 │   │
           │   └────────┘ └──────────┘      └──────────────┘ └──────────────┘   │
           │                                                                     │
           │   ┌────────────────────────────────────────────────────────────┐    │
@@ -86,7 +86,7 @@ This document provides the comprehensive hardware architecture, wiring diagrams,
 | IR Thermometer | MLX90614ESF-BAA | I2C | STM32 I2C1 | Non-contact food surface temperature |
 | Load Cell ADC | HX711 | SPI-like GPIO | STM32 GPIO | 24-bit weight measurement from strain gauges |
 | Strain Gauges | 4x 5kg load cells | Wheatstone bridge | HX711 | Weight sensing under pot platform |
-| Main Servo Motor | DS3225 25kg-cm | PWM (50Hz) | STM32 TIM1 CH1 (PA8) | Stirring arm rotation |
+| BLDC Stirring Motor | 24V BLDC (integrated ESC) | PWM (10kHz) + EN + DIR | STM32 PA8 + PA4 + PA5 | Stirring arm rotation |
 | ASD Gate Servos | SG90 (x3) | PWM (50Hz) | STM32 TIM2 CH1-3 (PA0-PA2) | Seasoning dispenser gates |
 | ASD Vibration Motors | ERM 3V (x3) | GPIO | STM32 PC7, PD2, PA3 via MOSFET | Anti-clog mechanism (one per hopper) |
 | CID Linear Actuators | 12V DC (x2) via DRV8876 | GPIO (EN/PH) | STM32 PA10/PB4, PB5/PC2 | Coarse ingredient push-plate sliders |
@@ -215,10 +215,11 @@ STM32G474RE (LQFP-64)
 │  │  Bit rate: 500 kbps, isolation + termination on Driver PCB │
 │  └─────────────────────────────────┘                           │
 │                                                                │
-│  ┌─── PWM: Main Servo Arm ────────┐                           │
-│  │  PA8  (TIM1_CH1)  ──► DS3225 Signal (orange wire)          │
-│  │  50Hz, 500-2500us pulse width                               │
-│  └─────────────────────────────────┘                           │
+│  ┌─── PWM+GPIO: BLDC Stirring Motor ─┐                        │
+│  │  PA8  (TIM1_CH1)  ──► BLDC Motor PWM (10 kHz speed)        │
+│  │  PA4  (GPIO)      ──► BLDC Motor EN (enable)               │
+│  │  PA5  (GPIO)      ──► BLDC Motor DIR (CW/CCW)              │
+│  └─────────────────────────────────────┘                        │
 │                                                                │
 │  ┌─── P-ASD Subsystem (Pneumatic Seasoning Dispenser) ──┐     │
 │  │  PA0  (TIM2_CH1)  ──► P-ASD Diaphragm Pump PWM           │
@@ -593,7 +594,7 @@ STM32 controls the module via CAN bus (FDCAN1).
 | AC direct | Microwave induction surface | 600 | 1,800 | Self-contained module, own AC inlet |
 | 24V (via CM5IO reg) | CM5 compute module | 8 | 15 | CM5IO onboard buck to 5V, includes eMMC, WiFi, camera |
 | 24V (via CM5IO reg) | Display backlight | 3 | 5 | Fed from CM5IO board 5V/12V rail |
-| 24V → 5V buck | DS3225 servo | 3 | 12 | 5-7.4V via buck, peak during stall |
+| 24V direct | BLDC stirring motor | 12 | 48 | 24V direct to integrated ESC, ~0.5A typical, ~2A peak |
 | 24V → 5V buck | ASD SG90 servos (x3) | 0.5 | 3 | 4.8-6V via same buck |
 | 24V → 12V | CID linear actuators (x2) | 0 | 5 | 12V, only during dispense |
 | 24V → 12V | SLD peristaltic pumps (x2) | 0 | 6 | 12V, only during dispense |
@@ -732,7 +733,7 @@ The dispensing system comprises three subsystems. See [[../05-Subsystems/03-Ingr
 - **CID**: Pins 21-26 (2× actuator EN/PH, 2× GND)
 - **Exhaust Fans**: Pins 27-28 (FAN1 PWM, FAN2 PWM)
 - **SLD**: Pins 29-36 (2× pump PWM/DIR, 2× solenoid, I2C for INA219)
-- **Main**: Pins 37-40 (main servo, buzzer, reserved, GND)
+- **Main**: Pins 37-40 (BLDC motor PWM+EN+DIR, buzzer)
 
 ---
 
@@ -870,7 +871,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 | | HX711 breakout board | 1 | $3 | $3 |
 | | 5kg load cells | 4 | $4 | $16 |
 | | Reed switch (pot detect — backup/optional) | 1 | $1 | $1 |
-| **Actuators** | DS3225 25kg servo (main arm) | 1 | $20 | $20 |
+| **Actuators** | 24V BLDC motor w/ integrated ESC | 1 | $25 | $25 |
 | | SG90 micro servos (ASD gates) | 3 | $3 | $9 |
 | | ERM vibration motors (ASD anti-clog) | 3 | $2 | $6 |
 | | 12V DC linear actuators (CID) | 2 | $8 | $16 |
@@ -929,7 +930,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 - [ ] CAN off command stops heating within 500ms
 
 ### Servo System
-- [ ] Main arm (DS3225) rotates full 360 degrees smoothly
+- [ ] Main arm (24V BLDC motor) rotates full 360 degrees smoothly
 - [ ] Stirring speed controllable from 10-60 RPM
 - [ ] Arm torque sufficient to stir thick curry/dal
 - [ ] Each ASD gate servo (SG90) opens/closes reliably
@@ -978,7 +979,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 
 - **E-Stop Button:** Red mushroom-head button on front panel. Normally-closed contact wired to STM32 interrupt AND safety relay. Pressing E-stop: (1) STM32 sends CAN off to module, (2) relay disconnects AC to microwave surface, (3) servos return to safe position.
 - **Pot Detection Interlock:** Handled internally by microwave surface module. Module will not heat without compatible pot detected. Status reported via CAN.
-- **Pinch Protection:** Arm mechanism has limited torque (DS3225 stall current fused). Arm speed limited in firmware to prevent splash/injury.
+- **Pinch Protection:** Arm mechanism has limited torque (BLDC motor current monitored via INA219). Arm speed limited in firmware to prevent splash/injury.
 
 ### Overcurrent Protection
 
@@ -1011,3 +1012,4 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
 | 2.0 | 2026-02-20 | Manas Pradhan | Updated CAN bus architecture: ISO1050DUB transceiver and J_CAN connector moved from Controller PCB to Driver PCB; FDCAN1 logic signals route via J_STACK pins 19-20; updated block diagrams, wiring, safety notes, and J_STACK organization |
+| 3.0 | 2026-02-20 | Manas Pradhan | Replaced DS3225 servo with 24V BLDC motor (integrated ESC); updated component list, STM32 pin allocation (PA4→BLDC_EN, PA5→BLDC_DIR, PA8→10kHz PWM), power budget, J_STACK pinout, and BOM |

@@ -16,7 +16,7 @@ aliases: [STM32 Spec, MCU Spec]
 
 ## 1 Overview
 
-The STM32G474RE is the real-time motor/sensor controller and safety guardian for Epicura. It runs FreeRTOS with four primary tasks: PID temperature control (10 Hz), servo motor drive (50 Hz), sensor polling (10 Hz), and CM5 communications (20 Hz). It owns all safety-critical paths including the heater relay, E-stop handling, and watchdog supervision.
+The STM32G474RE is the real-time motor/sensor controller and safety guardian for Epicura. It runs FreeRTOS with four primary tasks: PID temperature control (10 Hz), BLDC motor drive (50 Hz task rate), sensor polling (10 Hz), and CM5 communications (20 Hz). It owns all safety-critical paths including the heater relay, E-stop handling, and watchdog supervision.
 
 ### 1.1 Hardware Summary
 
@@ -61,9 +61,9 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 
 | ID | Requirement | Priority | Acceptance Criteria |
 |----|-------------|----------|---------------------|
-| FR-MCU-010 | Drive main servo (DS3225) at 50 Hz PWM via TIM1_CH1 (PA8) | Must | 500–2500 µs pulse width range |
-| FR-MCU-011 | Support stir patterns: circular, figure-8, scrape, fold | Must | Pattern selected by CM5 command (0x02) |
-| FR-MCU-012 | Stall detection via current monitoring | Should | Alert CM5 if servo draws >2 A for >500 ms |
+| FR-MCU-010 | Drive BLDC stirring motor at 10 kHz PWM via TIM1_CH1 (PA8) + PA4 (EN) + PA5 (DIR) | Must | 0–100% duty cycle speed, digital enable/direction |
+| FR-MCU-011 | Support stir patterns: circular, figure-8, scrape, fold (via duty cycle + DIR toggle) | Must | Pattern selected by CM5 command (0x02), direction param added |
+| FR-MCU-012 | Stall detection via INA219 24V current spike or FG dropout (future) | Should | Alert CM5 if motor draws >3 A for >500 ms |
 | FR-MCU-013 | Drive P-ASD: pump PWM via TIM2_CH1 (PA0), 6× solenoid via PCF8574 I2C GPIO expander (I2C1, addr 0x20, outputs P0-P5) | Must | Pump: 25 kHz PWM speed control; Solenoids: digital on/off via I2C write to PCF8574 → MOSFET gates |
 | FR-MCU-014 | Motor control task at 50 Hz (20 ms period) | Must | Highest priority FreeRTOS task |
 
@@ -146,11 +146,11 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 | **PA1** | — | Available | Freed (was P-ASD solenoid V1, now via PCF8574) |
 | **PA2** | — | Available | Freed (was P-ASD solenoid V2, now via PCF8574) |
 | **PA3** | — | Available | Freed (was P-ASD solenoid V5, now via PCF8574) |
-| **PA4** | — | Available | Freed (was NTC coil, now via CAN) |
-| **PA5** | — | Available | Freed (was NTC ambient, removed) |
+| **PA4** | GPIO output | Digital | BLDC motor EN (enable, via J_STACK Pin 39) |
+| **PA5** | GPIO output | Digital | BLDC motor DIR (direction, via J_STACK Pin 40) |
 | **PA6** | TIM3_CH1 | PWM 25 kHz | Exhaust fan 1 |
 | **PA7** | GPIO output | Digital | Solenoid 1 enable (SLD, via IRLML6344) |
-| **PA8** | TIM1_CH1 | PWM 50 Hz | Main servo DS3225 |
+| **PA8** | TIM1_CH1 | PWM 10 kHz | BLDC stirring motor (speed) |
 | **PA9** | GPIO output | Digital | Solenoid 2 enable (SLD, via IRLML6344) |
 | **PA10** | GPIO output | Digital | CID linear actuator 1 EN (DRV8876) |
 | **PA11** | TIM1_CH4 | PWM | Piezo buzzer |
@@ -224,7 +224,7 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 
 | Task | Rate | Period | Priority | Stack | Description |
 |------|------|--------|----------|-------|-------------|
-| Motor Control | 50 Hz | 20 ms | Highest (4) | 512 B | Servo PWM updates, stir patterns |
+| Motor Control | 50 Hz | 20 ms | Highest (4) | 512 B | BLDC PWM duty + EN/DIR GPIO updates, stir patterns |
 | Safety Monitor | 10 Hz | 100 ms | Highest (4) | 256 B | Thermal limits, E-stop, watchdog kick |
 | PID Control | 10 Hz | 100 ms | High (3) | 512 B | Read IR + CAN coil temp, compute PID, send CAN |
 | Sensor Poll | 10 Hz | 100 ms | Medium (2) | 512 B | Load cells, INA219, aggregate telemetry |
