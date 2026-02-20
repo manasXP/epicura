@@ -9,6 +9,7 @@ aliases: [PCB Epic, PCB Design Epic]
 > |------|--------|--------|
 > | 2026-02-16 | Manas Pradhan | Initial version — 6 stories across pre-sprint phase |
 > | 2026-02-17 | Manas Pradhan | Split >5pt stories for sprint-sized delivery |
+> | 2026-02-20 | Manas Pradhan | Moved CAN subsystem (ISO1050DUB, J_CAN) from Controller to Driver PCB; updated schematic tasks accordingly |
 
 # Epic: PCB — PCB Design & Fabrication
 
@@ -36,7 +37,7 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160�
 - **Blocks:** [[PCB-pcb-design#PCB-CTL.01b|PCB-CTL.01b]]
 
 **Acceptance Criteria:**
-- [ ] STM32G474RE pinout allocated for SPI (CM5), UART (debug), I2C (MLX90614, ADS1015), FDCAN1 (induction), PWM (servo, pumps, fans)
+- [ ] STM32G474RE pinout allocated for SPI (CM5), UART (debug), I2C (MLX90614, ADS1015), FDCAN1 (via J_STACK to Driver PCB ISO1050), PWM (servo, pumps, fans)
 - [ ] Power section: 24V input, 5V buck (AP63205, 2A) for CM5IO, 3.3V LDO (AMS1117) for STM32
 - [ ] SWD debug header (TC2030-IDC) and UART debug header present
 - [ ] Decoupling capacitors per STM32 datasheet recommendations
@@ -44,7 +45,7 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160�
 **Tasks:**
 - [ ] `PCB-CTL.01a` — Create KiCAD project; import STM32G474RE, AP63205, AMS1117 symbols and footprints
 - [ ] `PCB-CTL.01b` — Design power section: 24V→5V buck (AP63205) + 5V→3.3V LDO (AMS1117)
-- [ ] `PCB-CTL.01c` — Wire STM32 peripherals: SPI1 (CM5), USART1 (debug), I2C1 (sensors), FDCAN1 (induction)
+- [ ] `PCB-CTL.01c` — Wire STM32 peripherals: SPI1 (CM5), USART1 (debug), I2C1 (sensors), FDCAN1 PB8/PB9 to J_STACK pins 19-20 (CAN transceiver on Driver PCB)
 - [ ] `PCB-CTL.01d` — Wire PWM outputs: TIM1 (servo), TIM2 (pump), TIM3 (fan), TIM4 (spare)
 
 ---
@@ -91,7 +92,7 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160�
 - [ ] `PCB-CTL.02a` — Define board outline and mounting hole placement; set up JLCPCB design rules
 - [ ] `PCB-CTL.02b` — Place components: STM32 center, power section upper-left, connectors at edges
 - [ ] `PCB-CTL.02c` — Route power traces (24V, 5V, 3.3V) with appropriate widths
-- [ ] `PCB-CTL.02d` — Route signal traces: SPI, UART, I2C, CAN, PWM, ADC, GPIO
+- [ ] `PCB-CTL.02d` — Route signal traces: SPI, UART, I2C, PWM, ADC, GPIO, FDCAN1 to J_STACK (no CAN transceiver on controller — moved to Driver PCB)
 - [ ] `PCB-CTL.02e` — Add ground and power planes; verify copper pours
 - [ ] `PCB-CTL.02f` — Run DRC; export Gerbers, BOM, and pick-and-place files
 
@@ -111,12 +112,14 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160�
 - [ ] DRV8876 H-bridge driver for 2× CID linear actuators (12V, 3.5A per channel)
 - [ ] TB6612FNG dual H-bridge for 2× peristaltic pumps (12V, 1.2A per channel)
 - [ ] 12V input from 24V→12V buck converter (LM2596 or equivalent)
+- [ ] ISO1050DUB isolated CAN transceiver (5 kV RMS) with J_CAN connector for microwave induction surface; FDCAN1_RX/TX from J_STACK pins 19-20
 
 **Tasks:**
-- [ ] `PCB-DRV.01a` — Create KiCAD project; import DRV8876, TB6612FNG, IRLZ44N symbols/footprints
+- [ ] `PCB-DRV.01a` — Create KiCAD project; import DRV8876, TB6612FNG, IRLZ44N, ISO1050DUB symbols/footprints
 - [ ] `PCB-DRV.01b` — Design 24V→12V buck converter section (LM2596, 3A)
 - [ ] `PCB-DRV.01c` — Design DRV8876 circuit for CID linear actuators with current limiting
 - [ ] `PCB-DRV.01d` — Design TB6612FNG circuit for SLD peristaltic pumps with PWM speed control
+- [ ] `PCB-DRV.01e2` — Design ISO1050DUB CAN transceiver circuit: VCC1=3.3V, VCC2=5V, TXD/RXD from J_STACK pins 19-20, CANH/CANL to J_CAN, 120Ω termination, ≥6.4mm creepage between isolated and non-isolated zones
 
 ---
 
@@ -155,7 +158,8 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160�
 - [ ] Board dimensions 160×90mm with 4× M3 mounting holes (matching controller board)
 - [ ] High-current traces (12V, motor drivers) sized for max current (≥1mm width for 3A)
 - [ ] Thermal pads and vias under DRV8876 and LM2596 for heat dissipation
-- [ ] Motor/solenoid connectors at board edges for wire routing
+- [ ] Motor/solenoid connectors at board edges for wire routing; J_CAN near board edge for cable access
+- [ ] ISO1050DUB isolation: ≥6.4mm creepage between GND1/GND2 zones, slot/gap in ground plane under IC
 - [ ] DRC passes with JLCPCB 4-layer design rules
 
 **Tasks:**
