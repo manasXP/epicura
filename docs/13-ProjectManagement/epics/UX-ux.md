@@ -32,6 +32,7 @@ JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Cover
 
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#80](https://github.com/manasXP/epicura/issues/80)
 - **Blocked by:** None
 - **Blocks:** [[UX-ux#UX-TAB.01|UX-TAB.01]]
 
@@ -54,6 +55,7 @@ JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Cover
 
 - **Priority:** P0
 - **Points:** 2
+- **GitHub:** [#81](https://github.com/manasXP/epicura/issues/81)
 - **Blocked by:** [[UX-ux#UX-AUTH.01|UX-AUTH.01]]
 - **Blocks:** All screen stories
 
@@ -74,6 +76,7 @@ JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Cover
 
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#82](https://github.com/manasXP/epicura/issues/82)
 - **Blocked by:** [[UX-ux#UX-TAB.01|UX-TAB.01]]
 - **Blocks:** None
 
@@ -95,6 +98,7 @@ JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Cover
 
 - **Priority:** P1
 - **Points:** 2
+- **GitHub:** [#83](https://github.com/manasXP/epicura/issues/83)
 - **Blocked by:** [[UX-ux#UX-TAB.01|UX-TAB.01]]
 - **Blocks:** None
 
@@ -113,6 +117,7 @@ JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Cover
 
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#84](https://github.com/manasXP/epicura/issues/84)
 - **Blocked by:** [[UX-ux#UX-TAB.01|UX-TAB.01]], [[UX-ux#UX-LIVE.01|UX-LIVE.01]]
 - **Blocks:** None
 
@@ -131,6 +136,7 @@ JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Cover
 
 - **Priority:** P1
 - **Points:** 3
+- **GitHub:** [#85](https://github.com/manasXP/epicura/issues/85)
 - **Blocked by:** [[UX-ux#UX-TAB.01|UX-TAB.01]]
 - **Blocks:** None
 
@@ -173,6 +179,7 @@ JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Cover
 
 - **Priority:** P0
 - **Points:** 2
+- **GitHub:** [#86](https://github.com/manasXP/epicura/issues/86)
 - **Blocked by:** None
 - **Blocks:** [[UX-ux#UX-SES.01|UX-SES.01]]
 
@@ -191,6 +198,7 @@ JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Cover
 
 - **Priority:** P1
 - **Points:** 3
+- **GitHub:** [#52](https://github.com/manasXP/epicura/issues/52)
 - **Blocked by:** [[UX-ux#UX-LIVE.01|UX-LIVE.01]]
 - **Blocks:** None
 
