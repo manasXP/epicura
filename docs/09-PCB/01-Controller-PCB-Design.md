@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-20
-version: 5.0
+version: 7.0
 status: Draft
 ---
 
@@ -20,7 +20,7 @@ This document covers the design of the custom controller PCB for Epicura. This b
 | **CM5 IO Board (CM5IO)** | Off-the-shelf (Raspberry Pi official) | Commercial carrier board; no custom PCB needed |
 | **Microwave induction surface** | Commercial module with CAN port (see [[../05-Subsystems/09-Induction-Heating\|Induction Heating]]) | Self-contained coil + driver; controlled via CAN bus |
 
-The CM5IO board is an off-the-shelf Raspberry Pi carrier board that sits on top of the stack. The two custom boards (Controller, Driver) form a stackable pair connected via a 2x20-pin 2.54mm board-to-board header, sharing a uniform 160x90mm footprint. The Controller PCB connects upward to the CM5IO board via SPI (J1 ribbon cable) and downward to the Driver PCB via a stacking connector (J_STACK). All real-time control, sensor acquisition, and safety monitoring runs on this controller board. Servo PWM and actuator GPIO signals pass through J_STACK to the Driver PCB where power electronics drive the actual actuators.
+The CM5IO board is an off-the-shelf Raspberry Pi carrier board that sits on top of the stack. The two custom boards (Controller, Driver) form a stackable pair connected via 2x20-pin 2.54mm board-to-board headers, sharing a uniform 160x90mm footprint. The Controller PCB connects upward to the CM5IO board via **J_CM5** (2x20 pin socket that mates directly with the CM5IO's 40-pin GPIO header — SPI, IRQ, LED data, 5V power, and GND all route through this single connector) and downward to the Driver PCB via **J_STACK**. All real-time control, sensor acquisition, and safety monitoring runs on this controller board. Servo PWM and actuator GPIO signals pass through J_STACK to the Driver PCB where power electronics drive the actual actuators. The UPS-backed 5V rail from J_STACK is fed upward through J_CM5 to power the CM5IO and CM5 module.
 
 ---
 
@@ -40,28 +40,28 @@ The CM5IO board is an off-the-shelf Raspberry Pi carrier board that sits on top 
          │    │      STM32G474RE          │                │
          │    │       (LQFP-64)           │                │
          │    │                           │                │
-         │    │  SPI2 ◄─────────────────────── J1: SPI to CM5
-         │    │  PB3 (IRQ) ────────────────── J1: IRQ to CM5
+         │    │  SPI2 ◄─────────────────────── J_CM5: SPI to CM5 (pins 19,21,23,24)
+         │    │  PB3 (IRQ) ────────────────── J_CM5: IRQ to CM5 (pin 7)
          │    │                           │                │
-         │    │  FDCAN1 (PB8/PB9) ─────────── J2: CAN to Microwave Surface
+         │    │  FDCAN1 (PB8/PB9) ─────────── J_CAN: CAN to Microwave Surface
          │    │                           │                │
-         │    │  TIM1_CH1 (PA8) ───────────── J3: DS3225 Servo
+         │    │  TIM1_CH1 (PA8) ───────────── J_STACK: DS3225 Servo (via Driver PCB)
          │    │                           │                │
          │    │  TIM2_CH1 (PA0) ──────────── J_STACK: P-ASD Pump PWM
          │    │  (P-ASD solenoids V1-V6 via PCF8574 on Driver PCB,
          │    │   I2C1 addr 0x20 — no direct GPIO needed)
          │    │                           │                │
-         │    │  I2C1 (PB6/PB7) ───────────── J6: MLX90614
+         │    │  I2C1 (PB6/PB7) ───────────── J_IR: MLX90614
          │    │                           │                │
-         │    │  GPIO (PC0/PC1) ───────────── J7: HX711
+         │    │  GPIO (PC0/PC1) ───────────── J_LC: HX711
          │    │                           │                │
-         │    │  ADC2 (PA4/PA5) ───────────── J8: NTC Inputs
+         │    │  ADC2 (PA4/PA5) ───────────── J_NTC: NTC Inputs
          │    │                           │                │
          │    │  GPIO (PB0) ───────────────── Q1: Safety Relay Driver
          │    │  GPIO (PB1) ◄──────────────── SW1: Pot Detection
          │    │  GPIO (PB2) ◄──────────────── SW2: E-Stop
          │    │                           │                │
-         │    │  SWD (PA13/PA14) ──────────── J9: Debug Header
+         │    │  SWD (PA13/PA14) ──────────── J_SWD: Debug Header
          │    │                           │                │
          │    │  PC13 ─────────────────────── D1: Status LED
          │    │                           │                │
@@ -95,7 +95,7 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 │  ┌─── CAN: Microwave Surface ─────┐                           │
 │  │  PB8  (FDCAN1_RX) ◄── ISO1050 TXD (isolated CAN xcvr)    │  │
 │  │  PB9  (FDCAN1_TX) ──► ISO1050 RXD (isolated CAN xcvr)    │  │
-│  │  500 kbps, 120Ω term, 5kV isolation barrier on J2         │  │
+│  │  500 kbps, 120Ω term, 5kV isolation barrier on J_CAN         │  │
 │  └─────────────────────────────────┘                           │
 │                                                                │
 │  ┌─── PWM: Main Servo Arm ────────┐                           │
@@ -148,7 +148,7 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 │  │  PA2  (GPIO)     ──► Q2 gate (2N7002, N-MOSFET)          │  │
 │  │       Q2 drain ──► Q3 gate (SI2301, P-MOSFET)            │  │
 │  │       Q3 switches 5V to LED ring via J_LED                │  │
-│  │       Data line: CM5 GPIO18 → J_LED pin 2 (passthrough)  │  │
+│  │       Data: CM5 GPIO18 → J_CM5 pin 12 → J_LED pin 2     │  │
 │  └─────────────────────────────────┘                           │
 │                                                                │
 │  ┌─── Reserved / Unused ──────────┐                           │
@@ -179,32 +179,32 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 | PA1 | COMP2_INP | 24V Power Fail Detection (COMP2) | Input | J_STACK Pin 16 (PWR_FAIL output) | Power |
 | PA2 | GPIO | LED Ring Power Enable | Output | J_LED (via Q2/Q3 MOSFET) | Illumination |
 | PA3 | — | Available (was P-ASD Sol V5) | — | — | — |
-| PA4 | ADC2_IN17 | NTC Coil | Input | J8 | Sensors |
-| PA5 | ADC2_IN13 | NTC Ambient | Input | J8 | Sensors |
+| PA4 | ADC2_IN17 | NTC Coil | Input | J_NTC | Sensors |
+| PA5 | ADC2_IN13 | NTC Ambient | Input | J_NTC | Sensors |
 | PA6 | TIM3_CH1 | Exhaust Fan 1 PWM | Output | J_STACK Pin 27 | Exhaust |
 | PA7 | GPIO | SLD Solenoid 1 Enable | Output | J_STACK Pin 33 | SLD |
 | PA8 | TIM1_CH1 | Main Servo (DS3225) | Output | J_STACK Pin 37 | Main |
 | PA9 | GPIO | SLD Solenoid 2 Enable | Output | J_STACK Pin 34 | SLD |
 | PA10 | TIM1_CH3/GPIO | CID Linear Actuator 1 EN | Output | J_STACK Pin 21 | CID |
 | PA11 | TIM1_CH4 | Buzzer PWM | Output | J_STACK Pin 39 | Main |
-| PA13 | SWDIO | SWD Debug | Bidir | J9 | Debug |
-| PA14 | SWCLK | SWD Debug | Input | J9 | Debug |
+| PA13 | SWDIO | SWD Debug | Bidir | J_SWD | Debug |
+| PA14 | SWCLK | SWD Debug | Input | J_SWD | Debug |
 | PB0 | GPIO | Safety Relay | Output | Q1 | Safety |
 | PB1 | GPIO | Pot Detection | Input | SW1 | Safety |
 | PB2 | GPIO (EXTI) | E-Stop | Input | SW2 | Safety |
-| PB3 | GPIO | IRQ to CM5 | Output | J1 | Comms |
+| PB3 | GPIO | IRQ to CM5 | Output | J_CM5 | Comms |
 | PB4 | GPIO | CID Linear Actuator 1 PH | Output | J_STACK Pin 22 | CID |
 | PB5 | GPIO | CID Linear Actuator 2 EN | Output | J_STACK Pin 23 | CID |
-| PB6 | I2C1_SCL | MLX90614/INA219 | Output | J6, J_STACK Pin 35 | Sensors |
-| PB7 | I2C1_SDA | MLX90614/INA219 | Bidir | J6, J_STACK Pin 36 | Sensors |
+| PB6 | I2C1_SCL | MLX90614/INA219 | Output | J_IR, J_STACK Pin 35 | Sensors |
+| PB7 | I2C1_SDA | MLX90614/INA219 | Bidir | J_IR, J_STACK Pin 36 | Sensors |
 | PB10 | TIM2_CH3 | Exhaust Fan 2 PWM | Output | J_STACK Pin 28 | Exhaust |
 | PB11 | — | Available (was P-ASD Sol V6) | — | — | — |
-| PB12 | SPI2_NSS | CM5 CE0 | Input | J1 | Comms |
-| PB13 | SPI2_SCK | CM5 SCLK | Input | J1 | Comms |
-| PB14 | SPI2_MISO | CM5 MISO | Output | J1 | Comms |
-| PB15 | SPI2_MOSI | CM5 MOSI | Input | J1 | Comms |
-| PC0 | GPIO | HX711 SCK (pot) | Output | J7 | Sensors |
-| PC1 | GPIO | HX711 DOUT (pot) | Input | J7 | Sensors |
+| PB12 | SPI2_NSS | CM5 CE0 | Input | J_CM5 | Comms |
+| PB13 | SPI2_SCK | CM5 SCLK | Input | J_CM5 | Comms |
+| PB14 | SPI2_MISO | CM5 MISO | Output | J_CM5 | Comms |
+| PB15 | SPI2_MOSI | CM5 MOSI | Input | J_CM5 | Comms |
+| PC0 | GPIO | HX711 SCK (pot) | Output | J_LC | Sensors |
+| PC1 | GPIO | HX711 DOUT (pot) | Input | J_LC | Sensors |
 | PC2 | GPIO | CID Linear Actuator 2 PH | Output | J_STACK Pin 24 | CID |
 | PC3 | GPIO | SLD Pump 1 PWM | Output | J_STACK Pin 29 | SLD |
 | PC4 | GPIO | SLD Pump 1 DIR | Output | J_STACK Pin 30 | SLD |
@@ -220,7 +220,7 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 
 ### Input
 
-The controller PCB receives 5V DC via J_STACK pins 11-12 from the Driver PCB's TPS54531 buck converter, which is powered from a UPS-backed 12V DC input. This ensures the STM32 remains powered during AC outages. A 3.3V LDO regulates this down for the STM32 and all 3.3V peripherals. No onboard buck converter is needed.
+The controller PCB receives 5V DC via J_STACK pins 11-12 from the Driver PCB's TPS54531 buck converter, which is powered from a UPS-backed 12V DC input. This ensures the STM32 remains powered during AC outages. A 3.3V LDO regulates this down for the STM32 and all 3.3V peripherals. No onboard buck converter is needed. The 5V rail is also fed upward through J_CM5 pins 2 and 4 to power the CM5IO board and CM5 module, eliminating the need for a separate USB-C power input on the CM5IO.
 
 ### Regulator Circuit
 
@@ -263,7 +263,7 @@ The controller PCB receives 5V DC via J_STACK pins 11-12 from the Driver PCB's T
 | **Total 3.3V** | **~105** | **~186** | Well within LDO capacity |
 
 > [!note]
-> Servo motors (DS3225) are powered from a separate 24V→6.5V buck converter on the Driver PCB, not from this 3.3V LDO. The 5V rail is sourced from a UPS-backed 12V→5V converter (TPS54531) on the Driver PCB, ensuring the controller stays powered during AC outages. Only the PWM signal lines route through the controller PCB.
+> Servo motors (DS3225) are powered from a separate 24V→6.5V buck converter on the Driver PCB, not from this 3.3V LDO. The 5V rail is sourced from a UPS-backed 12V→5V converter (TPS54531) on the Driver PCB, ensuring the controller and CM5 stay powered during AC outages. The 5V rail passes through the Controller PCB upward to the CM5IO via J_CM5 pins 2/4 (up to 3A for CM5 peak load). Only the PWM signal lines route through the controller PCB.
 
 ### Decoupling
 
@@ -278,24 +278,29 @@ The controller PCB receives 5V DC via J_STACK pins 11-12 from the Driver PCB's T
 
 ### Physical Connection
 
-The CM5 IO Board's GPIO header connects to J1 on the controller PCB via a 7-wire ribbon cable or JST-SH connector.
+The CM5 IO Board's 40-pin GPIO header mates directly with **J_CM5** on the Controller PCB — a 2x20 pin socket (2.54mm pitch) that receives all 40 pins. No ribbon cable is needed; the boards stack directly. SPI, IRQ, LED ring data, 5V power, and GND all route through this single connector.
 
 ```
-CM5 IO Board (GPIO Header)              Controller PCB (J1)
+CM5 IO Board (40-pin GPIO Header)       Controller PCB (J_CM5, 2x20 socket)
 ┌───────────────────────┐                ┌───────────────────────┐
-│                       │                │                       │
-│  GPIO8  (CE0)   Pin 24├───────────────►│Pin 1  PB12 (SPI2_NSS) │
-│  GPIO9  (MISO)  Pin 21│◄───────────────┤Pin 2  PB14 (SPI2_MISO)│
-│  GPIO10 (MOSI)  Pin 19├───────────────►│Pin 3  PB15 (SPI2_MOSI)│
-│  GPIO11 (SCLK)  Pin 23├───────────────►│Pin 4  PB13 (SPI2_SCK) │
-│  GPIO4  (IRQ)   Pin  7│◄───────────────┤Pin 5  PB3  (IRQ)      │
-│  GND            Pin 25├───────────────►│Pin 6  GND             │
-│  3.3V           Pin  1├───── (N/C) ────┤       (not connected) │
+│                       │   stacking     │                       │
+│  Pin  2  (5V)         ├◄──────────────┤ 5V out (UPS-backed)   │
+│  Pin  4  (5V)         ├◄──────────────┤ 5V out (UPS-backed)   │
+│  Pin  7  (GPIO4)      │◄──────────────┤ PB3  (IRQ, act-low)   │
+│  Pin 12  (GPIO18)     ├──────────────►│ LED ring data (pass)  │
+│  Pin 19  (GPIO10/MOSI)├──────────────►│ PB15 (SPI2_MOSI)     │
+│  Pin 21  (GPIO9/MISO) │◄──────────────┤ PB14 (SPI2_MISO)     │
+│  Pin 23  (GPIO11/SCLK)├──────────────►│ PB13 (SPI2_SCK)      │
+│  Pin 24  (GPIO8/CE0)  ├──────────────►│ PB12 (SPI2_NSS)      │
+│  Pin 6,9,14,20,25,    │               │                       │
+│  30,34,39 (GND)       ├──────────────►│ GND                   │
+│  (all other pins)     ├───── N/C ─────┤ (not connected)       │
 │                       │                │                       │
 └───────────────────────┘                └───────────────────────┘
 
-Cable: 7-wire flat ribbon or JST-SH, length <30cm
+Connection: Direct board-to-board stacking (no cable)
 Logic level: 3.3V on both sides (no level shifter needed)
+5V direction: Controller PCB → CM5IO (UPS-backed power)
 ```
 
 ### SPI Configuration
@@ -381,18 +386,25 @@ The CM5 (master) initiates all SPI transactions. The STM32 (slave) asserts the I
 
 ## Connector Definitions
 
-### J1 — SPI to CM5 (JST-SH 1.0mm, 6-pin)
+### J_CM5 — CM5IO GPIO Header Receptor (2x20 pin socket, 2.54mm)
 
-| Pin | Signal | STM32 Pin | Direction |
-|-----|--------|-----------|-----------|
-| 1 | NSS | PB12 | In (from CM5) |
-| 2 | MISO | PB14 | Out (to CM5) |
-| 3 | MOSI | PB15 | In (from CM5) |
-| 4 | SCK | PB13 | In (from CM5) |
-| 5 | IRQ | PB3 | Out (to CM5) |
-| 6 | GND | GND | — |
+Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed below are actively routed on the Controller PCB; all other pins pass through unconnected.
 
-### J2 — CAN Bus to Microwave Surface (JST-XH 2.5mm, 4-pin)
+| GPIO Pin | Signal | STM32 Pin / Destination | Direction | Purpose |
+|----------|--------|------------------------|-----------|---------|
+| 2, 4 | 5V | 5V rail (from J_STACK, UPS-backed) | Out to CM5IO | Powers CM5IO + CM5 module |
+| 6, 9, 14, 20, 25, 30, 34, 39 | GND | GND | Power | Common ground |
+| 7 | GPIO4 | PB3 (GPIO) | Out to CM5 | Data-ready IRQ (active-low, 10us pulse) |
+| 12 | GPIO18 | J_LED pin 2 (passthrough) | Out from CM5 | WS2812B LED ring data |
+| 19 | GPIO10 (MOSI) | PB15 (SPI2_MOSI) | In from CM5 | SPI data to STM32 |
+| 21 | GPIO9 (MISO) | PB14 (SPI2_MISO) | Out to CM5 | SPI data from STM32 |
+| 23 | GPIO11 (SCLK) | PB13 (SPI2_SCK) | In from CM5 | SPI clock |
+| 24 | GPIO8 (CE0) | PB12 (SPI2_NSS) | In from CM5 | SPI chip select (active-low) |
+
+> [!note]
+> The 5V pins (2, 4) are driven by the Controller PCB from the UPS-backed 5V rail received via J_STACK. This means the CM5 module is powered through the same UPS-backed supply as the STM32, ensuring both processors stay alive during AC outages. The CM5IO's USB-C port can still be used for debug console access but is not the primary power source.
+
+### J_CAN — CAN Bus to Microwave Surface (JST-XH 2.5mm, 4-pin)
 
 | Pin | Signal | STM32 Pin | Notes |
 |-----|--------|-----------|-------|
@@ -402,9 +414,9 @@ The CM5 (master) initiates all SPI transactions. The STM32 (slave) asserts the I
 | 4 | +5V (optional) | — | Transceiver power (if needed by module) |
 
 > [!note]
-> STM32 FDCAN1 pins PB8 (RX) and PB9 (TX) connect to an **ISO1050DUB isolated CAN transceiver** (TI, SOIC-8) on the controller PCB. The ISO1050 provides 5 kV RMS galvanic isolation (reinforced per UL 1577) between the STM32 logic side (VCC1 = 3.3V, GND1 = system ground) and the CAN bus side (VCC2 = 5V, GND2 = isolated bus ground). This isolation protects the STM32 and control electronics from ground bounce and EMI transients generated by the 1,800W induction module's IGBT switching, and satisfies IEC 60335 requirements for galvanic isolation between mains-connected power electronics and low-voltage control circuits. The transceiver drives CAN_H/CAN_L to J2. 120Ω termination resistor on-board. CAN cable shield connects to GND_ISO at the Controller PCB end only (single-point ground).
+> STM32 FDCAN1 pins PB8 (RX) and PB9 (TX) connect to an **ISO1050DUB isolated CAN transceiver** (TI, SOIC-8) on the controller PCB. The ISO1050 provides 5 kV RMS galvanic isolation (reinforced per UL 1577) between the STM32 logic side (VCC1 = 3.3V, GND1 = system ground) and the CAN bus side (VCC2 = 5V, GND2 = isolated bus ground). This isolation protects the STM32 and control electronics from ground bounce and EMI transients generated by the 1,800W induction module's IGBT switching, and satisfies IEC 60335 requirements for galvanic isolation between mains-connected power electronics and low-voltage control circuits. The transceiver drives CAN_H/CAN_L to J_CAN. 120Ω termination resistor on-board. CAN cable shield connects to GND_ISO at the Controller PCB end only (single-point ground).
 
-### J6 — MLX90614 I2C (JST-SH 1.0mm, 4-pin)
+### J_IR — MLX90614 I2C (JST-SH 1.0mm, 4-pin)
 
 | Pin | Signal | STM32 Pin | Notes |
 |-----|--------|-----------|-------|
@@ -413,7 +425,7 @@ The CM5 (master) initiates all SPI transactions. The STM32 (slave) asserts the I
 | 3 | VCC | 3.3V | — |
 | 4 | GND | GND | — |
 
-### J7 — HX711 Load Cell ADC (JST-XH 2.5mm, 4-pin)
+### J_LC — HX711 Load Cell ADC (JST-XH 2.5mm, 4-pin)
 
 | Pin | Signal | STM32 Pin | Notes |
 |-----|--------|-----------|-------|
@@ -422,7 +434,7 @@ The CM5 (master) initiates all SPI transactions. The STM32 (slave) asserts the I
 | 3 | VCC | 3.3V | HX711 supply |
 | 4 | GND | GND | — |
 
-### J8 — NTC Thermistor Inputs (JST-XH 2.5mm, 4-pin)
+### J_NTC — NTC Thermistor Inputs (JST-XH 2.5mm, 4-pin)
 
 | Pin | Signal | STM32 Pin | Notes |
 |-----|--------|-----------|-------|
@@ -431,7 +443,7 @@ The CM5 (master) initiates all SPI transactions. The STM32 (slave) asserts the I
 | 3 | 3.3V | 3.3V | Top of voltage dividers |
 | 4 | GND | GND | — |
 
-### J9 — SWD Debug (10-pin 1.27mm Cortex Debug or 6-pin TagConnect)
+### J_SWD — SWD Debug (10-pin 1.27mm Cortex Debug or 6-pin TagConnect)
 
 | Pin | Signal | STM32 Pin |
 |-----|--------|-----------|
@@ -445,14 +457,14 @@ The CM5 (master) initiates all SPI transactions. The STM32 (slave) asserts the I
 > [!note]
 > PB3 is shared between SPI IRQ and SWD SWO. A solder jumper (SJ1) selects between the two. Default position: IRQ. Set to SWO for debug tracing only.
 
-### J10 — Power Input (JST-XH 2.5mm, 2-pin)
+### J_PWR — Power Input (JST-XH 2.5mm, 2-pin)
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
 | 1 | +5V | From J_STACK 5V rail (UPS-backed, TPS54531 on Driver PCB) |
 | 2 | GND | Power ground |
 
-### J11 — Safety I/O (JST-XH 2.5mm, 4-pin)
+### J_SAFE — Safety I/O (JST-XH 2.5mm, 4-pin)
 
 | Pin | Signal | STM32 Pin | Notes |
 |-----|--------|-----------|-------|
@@ -526,8 +538,8 @@ The stacking connector passes 24V power, ground, 5V/3.3V references, all servo P
 
 ### ESD Protection
 
-- TVS diode array (e.g., PRTR5V0U2X) on J1 SPI lines
-- TVS diodes on J11 safety inputs (E-stop, pot detection)
+- TVS diode array (e.g., PRTR5V0U2X) on J_CM5 SPI lines
+- TVS diodes on J_SAFE safety inputs (E-stop, pot detection)
 - All external connectors have series 33 ohm resistors on signal lines
 
 ### Relay Driver (Q1)
@@ -611,7 +623,7 @@ A high-side P-MOSFET switch controls 5V power to the WS2812B LED ring. An N-MOSF
                                          │
                                     R19: 10k pull-down to GND
 
-CM5 GPIO18 ──────── J_LED Pin 2 (DATA, signal passthrough)
+CM5 GPIO18 ── J_CM5 Pin 12 ── J_LED Pin 2 (DATA, PCB trace passthrough)
 GND ─────────────── J_LED Pin 3 (GND)
 ```
 
@@ -629,7 +641,7 @@ GND ─────────────── J_LED Pin 3 (GND)
 | Default State | OFF (Q2 gate pulled low → Q3 gate pulled to 5V → P-MOSFET off) |
 
 > [!note]
-> The WS2812B data line from CM5 GPIO18 connects to J_LED pin 2 via a short jumper wire from the CM5IO GPIO header. This signal is a passthrough on the Controller PCB — no buffering or level shifting needed (WS2812B accepts 3.3V logic at 5V supply). The STM32 controls only the power enable; the CM5 handles pixel data via `rpi_ws281x` Python library.
+> The WS2812B data line from CM5 GPIO18 routes through J_CM5 pin 12 to J_LED pin 2 via a PCB trace on the Controller PCB — no external jumper wire needed. No buffering or level shifting required (WS2812B accepts 3.3V logic at 5V supply). The STM32 controls only the power enable; the CM5 handles pixel data via `rpi_ws281x` Python library.
 
 ---
 
@@ -668,16 +680,16 @@ Material: FR4 (Tg 150°C minimum)
 │  ┌────────────────┐  ┌────────────────┐  ┌───────────┐  │
 │  │   STM32G474RE  │  │  SPI + Debug   │  │  Power    │  │
 │  │   + Crystal    │  │  Connectors    │  │  LDO +    │  │
-│  │   + Decoupling │  │  (J1, J9)      │  │  Input    │  │
-│  │                │  │                │  │  (J10)    │  │
+│  │   + Decoupling │  │  (J_CM5, J_SWD)      │  │  Input    │  │
+│  │                │  │                │  │  (J_PWR)    │  │
 │  │  DIGITAL ZONE  │  │  COMM ZONE     │  │ PWR ZONE  │  │
 │  └────────────────┘  └────────────────┘  └───────────┘  │
 │                                                         │
 │  ┌────────────────┐  ┌────────────────┐  ┌───────────┐  │
 │  │  CAN + I2C     │  │  ADC + Sensors │  │  Safety   │  │
 │  │  Connectors    │  │  Connectors    │  │  Relay    │  │
-│  │  (J2, J6)      │  │  (J7, J8)      │  │  E-Stop   │  │
-│  │                │  │                │  │  (J11)    │  │
+│  │  (J_CAN, J_IR)      │  │  (J_LC, J_NTC)      │  │  E-Stop   │  │
+│  │                │  │                │  │  (J_SAFE)    │  │
 │  │  BUS ZONE      │  │  SENSOR ZONE   │  │ SAFETY    │  │
 │  └────────────────┘  └────────────────┘  └───────────┘  │
 │                                                         │
@@ -710,7 +722,7 @@ Material: FR4 (Tg 150°C minimum)
 
 - **Target size:** 160mm x 90mm (matches CM5IO and Driver PCB in 3-board stack)
 - **Mounting:** 4x M3 mounting holes at corners (3.2mm drill), positions match stack
-- **Connector placement:** SPI (J1) and sensors on board edges; J_STACK centered on one long edge (bottom side, mates with Driver PCB)
+- **Connector placement:** J_CM5 (CM5IO stacking) on top edge, sensors on side edges; J_STACK centered on one long edge (bottom side, mates with Driver PCB)
 - **Layer 2 GND plane:** Continuous, no cuts or splits under STM32
 
 ---
@@ -736,7 +748,7 @@ Material: FR4 (Tg 150°C minimum)
 ### Assembly
 
 - All components SMT (both sides if needed, prefer top-side only)
-- Through-hole: 2.54mm pin headers for J3 (DS3225 servo), J_STACK (stacking connector), and J9 (debug)
+- Through-hole: 2.54mm pin headers for J_STACK (stacking connector) and J_SWD (debug)
 - Reflow soldering for SMT components
 - Hand-solder through-hole headers after reflow
 
@@ -777,14 +789,14 @@ Material: FR4 (Tg 150°C minimum)
 | SW1 | Tactile switch | 6x6mm | 1 | $0.05 | Reset button |
 | SJ1 | Solder jumper | 0603 pad | 1 | — | IRQ/SWO select |
 | **Connectors** | | | | | |
-| J1 | JST-SH 6-pin | 1.0mm pitch | 1 | $0.30 | SPI to CM5 |
-| J2 | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | CAN bus to microwave surface |
-| J6 | JST-SH 4-pin | 1.0mm pitch | 1 | $0.20 | MLX90614 I2C |
-| J7 | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | HX711 |
-| J8 | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | NTC inputs |
-| J9 | Pin header 2x5 | 1.27mm pitch | 1 | $0.30 | SWD debug |
-| J10 | JST-XH 2-pin | 2.5mm pitch | 1 | $0.10 | 5V power input |
-| J11 | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | Safety I/O |
+| J_CM5 | 2x20 pin socket | 2.54mm, 8.5mm stacking | 1 | $0.80 | CM5IO GPIO header receptor (SPI, IRQ, LED data, 5V power) |
+| J_CAN | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | CAN bus to microwave surface |
+| J_IR | JST-SH 4-pin | 1.0mm pitch | 1 | $0.20 | MLX90614 I2C |
+| J_LC | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | HX711 load cell ADC |
+| J_NTC | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | NTC thermistor inputs |
+| J_SWD | Pin header 2x5 | 1.27mm pitch | 1 | $0.30 | SWD debug |
+| J_PWR | JST-XH 2-pin | 2.5mm pitch | 1 | $0.10 | 5V power input |
+| J_SAFE | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | Safety I/O |
 | J_LED | JST-XH 3-pin | 2.5mm pitch | 1 | $0.12 | LED ring (5V_SW + DATA + GND) |
 | J_STACK | 2x20 pin header | 2.54mm, 11mm stacking | 1 | $0.80 | Stacking connector to Driver PCB |
 | U_CAN | ISO1050DUB | SOIC-8 | 1 | $3.50 | TI isolated CAN transceiver, 5kV RMS, CAN 2.0B up to 1 Mbps |
@@ -861,3 +873,5 @@ Material: FR4 (Tg 150°C minimum)
 | 3.0 | 2026-02-16 | Manas Pradhan | Moved P-ASD solenoid control from 6× direct GPIO (PA1/PA2/PA3/PC7/PD2/PB11) to PCF8574 I2C GPIO expander on Driver PCB; freed 6 STM32 pins; J_STACK pins 16-20, 39 now Reserved |
 | 4.0 | 2026-02-20 | Manas Pradhan | Reassigned PA1 to COMP2 for 24V power failure detection; J_STACK pin 16 now PWR_FAIL (active-low output); added POWER_FAIL (0x14) and POWER_TELEMETRY (0x13) SPI messages; updated 5V source from CM5IO to J_STACK (UPS-backed TPS54531 on Driver PCB); added LED ring power switch (PA2 → Q2/Q3 P-MOSFET high-side) with J_LED 3-pin connector |
 | 5.0 | 2026-02-20 | Manas Pradhan | Replaced non-isolated CAN transceiver (SN65HVD230/MCP2551) with ISO1050DUB isolated CAN transceiver (5 kV RMS galvanic isolation); J2 pin 3 changed from GND to GND_ISO; added creepage ≥6.4mm layout rule for isolation barrier; updated power budget (+15 mA on 3.3V); added ISO1050 + decoupling caps to BOM |
+| 6.0 | 2026-02-20 | Manas Pradhan | Renamed all connectors from numeric (J1-J11) to descriptive names: J_SPI, J_CAN, J_IR, J_LC, J_NTC, J_SWD, J_PWR, J_SAFE; removed J3 (servo connector now via J_STACK to Driver PCB) |
+| 7.0 | 2026-02-20 | Manas Pradhan | Replaced J_SPI (6-pin JST-SH + ribbon cable) with J_CM5 (2x20 pin socket) that mates directly with CM5IO 40-pin GPIO header; 5V from J_STACK now feeds CM5IO through J_CM5 pins 2/4; LED ring data (GPIO18) routes through J_CM5 pin 12 instead of jumper wire; eliminates ribbon cable between Controller PCB and CM5IO |
