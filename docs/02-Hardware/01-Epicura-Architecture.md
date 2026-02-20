@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-15
-version: 1.0
+version: 2.0
 status: Draft
 ---
 
@@ -210,10 +210,9 @@ STM32G474RE (LQFP-64)
 │  └──────────────────────────────────────────────────────┘     │
 │                                                                │
 │  ┌─── CAN: Microwave Surface ─────┐                           │
-│  │  PB8  (FDCAN1_RX) ◄── Module CAN_TX                       │
-│  │  PB9  (FDCAN1_TX) ──► Module CAN_RX                       │
-│  │  Bit rate: 500 kbps, 120Ω termination                     │
-│  │  + external CAN transceiver (SN65HVD230)                   │
+│  │  PB8  (FDCAN1_RX) ◄── J_STACK Pin 19 → Driver PCB ISO1050│
+│  │  PB9  (FDCAN1_TX) ──► J_STACK Pin 20 → Driver PCB ISO1050│
+│  │  Bit rate: 500 kbps, isolation + termination on Driver PCB │
 │  └─────────────────────────────────┘                           │
 │                                                                │
 │  ┌─── PWM: Main Servo Arm ────────┐                           │
@@ -279,9 +278,9 @@ STM32G474RE (LQFP-64)
 │                                                                │
 │  Note: All actuator signals route via J_STACK connector to     │
 │  Driver PCB where power electronics drive the actuators.       │
-│  J_STACK organized by subsystem: ASD (pins 15-20), CID (21-26),│
-│  Exhaust (27-28), SLD (29-36), Main (37-40) for modular       │
-│  wiring harnesses.                                             │
+│  J_STACK organized by subsystem: ASD (pin 15), CAN (pins 19-20),│
+│  CID (21-26), Exhaust (27-28), SLD (29-36), Main (37-40) for  │
+│  modular wiring harnesses.                                     │
 └────────────────────────────────────────────────────────────────┘
 ```
 
@@ -459,30 +458,30 @@ SPI Configuration:
   Cable:      6-wire JST-SH, <30cm length
 ```
 
-### CAN Bus Wiring (Microwave Surface + Optional CM5)
+### CAN Bus Wiring (Microwave Surface)
 
-CAN bus is used primarily for controlling the microwave induction surface module. The STM32's FDCAN1 connects to the module's CAN port. Optionally, the CM5 can also join the CAN bus via an SPI-CAN bridge for direct module monitoring.
+CAN bus is used for controlling the microwave induction surface module. The STM32's FDCAN1 logic signals (PB8/PB9) route via J_STACK pins 19-20 to the **Driver PCB**, where an ISO1050DUB isolated CAN transceiver (5 kV RMS) converts them to differential CAN_H/CAN_L signals on J_CAN.
 
 ```
-Microwave Surface              STM32G474RE              CM5 (optional)
-(built-in CAN port)            (built-in FDCAN1)        (via SPI1-CAN MCP2515)
-┌──────────────────┐           ┌──────────────────┐     ┌──────────────────┐
-│  Onboard         │           │  FDCAN1          │     │  SPI1 ──► MCP2515│
-│  CAN controller  │           │  │               │     │           │      │
-│           │      │           │  CAN Transceiver │     │       MCP2551    │
-│           │      │           │  │               │     │           │      │
-│  CAN_H ──┼──────┼───────────┼──┼───────────────┼─────┼──┼── CAN_H       │
-│  CAN_L ──┼──────┼───────────┼──┼───────────────┼─────┼──┼── CAN_L       │
-│  GND ────┼──────┼───────────┼──┼───────────────┼─────┼──┼── GND         │
-│           │      │           │                  │     │                  │
-│       120 ohm    │           │  (no termination │     │  120 ohm         │
-│      termination │           │   — mid-bus node)│     │  termination     │
-└──────────────────┘           └──────────────────┘     └──────────────────┘
+Microwave Surface              Driver PCB                    Controller PCB
+(built-in CAN port)            (ISO1050DUB + J_CAN)          (STM32 FDCAN1)
+┌──────────────────┐           ┌──────────────────────┐      ┌──────────────────┐
+│  Onboard         │           │  ISO1050DUB          │      │  FDCAN1          │
+│  CAN controller  │           │  (5kV isolation)     │      │                  │
+│           │      │           │       │              │      │  PB8 (RX) ◄─────┼── J_STACK Pin 19
+│  CAN_H ──┼──────┼───────────┼── CANH│              │      │  PB9 (TX) ──────┼── J_STACK Pin 20
+│  CAN_L ──┼──────┼───────────┼── CANL│   R_TERM     │      │                  │
+│  GND ────┼──────┼───────────┼── GND_ISO  120Ω      │      │  3.3V logic      │
+│           │      │           │                      │      │  (no isolation   │
+│       120 ohm    │           │  VCC1=3.3V VCC2=5V   │      │   needed here)   │
+│      termination │           │  (from J_STACK)      │      │                  │
+└──────────────────┘           └──────────────────────┘      └──────────────────┘
 
 CAN Configuration:
   Bit Rate:    500 kbps (standard CAN 2.0B)
-  Termination: 120 ohm at each end of bus (module + last node)
-  Nodes:       Microwave surface (required), STM32 (required), CM5 (optional)
+  Termination: 120 ohm at each end (module + Driver PCB)
+  Isolation:   ISO1050DUB on Driver PCB (5 kV RMS, ≥6.4mm creepage)
+  Nodes:       Microwave surface (required), STM32 via Driver PCB (required)
 ```
 
 ### Message Protocol (SPI or CAN)
@@ -632,11 +631,17 @@ The microwave induction surface is a self-contained commercial module with its o
 └────────────────────────────┼───────────────────────────────┘
                              │
                     ┌────────▼────────┐
+                    │  Driver PCB     │
+                    │  ISO1050DUB     │
+                    │  (5kV isolation)│
+                    │  + 120Ω term   │
+                    │  + J_CAN conn  │
+                    └────────┬────────┘
+                             │ J_STACK Pins 19-20
+                    ┌────────▼────────┐
                     │  STM32 FDCAN1   │
                     │  PB8 (CAN_RX)  │
                     │  PB9 (CAN_TX)  │
-                    │  + CAN xcvr    │
-                    │  + 120Ω term   │
                     └─────────────────┘
 
 System Safety:
@@ -723,6 +728,7 @@ The dispensing system comprises three subsystems. See [[../05-Subsystems/03-Ingr
 
 **J_STACK Connector Organization:**
 - **P-ASD**: Pin 15 (pump PWM); solenoids V1-V6 via PCF8574 on Driver PCB (I2C1, no J_STACK pins needed)
+- **CAN**: Pins 19-20 (FDCAN1_RX/TX → Driver PCB ISO1050DUB → J_CAN)
 - **CID**: Pins 21-26 (2× actuator EN/PH, 2× GND)
 - **Exhaust Fans**: Pins 27-28 (FAN1 PWM, FAN2 PWM)
 - **SLD**: Pins 29-36 (2× pump PWM/DIR, 2× solenoid, I2C for INA219)
@@ -958,7 +964,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 
 ### Electrical Safety
 
-- **Galvanic Isolation:** The microwave induction surface is a self-contained AC module — no mains voltage reaches the controller PCB. CAN bus provides galvanic separation between module and logic circuits. PSU provides transformer-isolated DC outputs.
+- **Galvanic Isolation:** The microwave induction surface is a self-contained AC module — no mains voltage reaches the controller or driver PCBs. The ISO1050DUB isolated CAN transceiver on the Driver PCB provides 5 kV RMS galvanic isolation between the CAN bus and STM32 logic. PSU provides transformer-isolated DC outputs.
 - **Earth Bonding:** Metal enclosure parts connected to AC earth via IEC C14 inlet. Chassis ground bonded to PSU earth.
 - **Fuse Protection:** 10A ceramic fuse in IEC C14 inlet. Self-resetting PTC fuse on 5V rail (3A).
 
@@ -1004,3 +1010,4 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
+| 2.0 | 2026-02-20 | Manas Pradhan | Updated CAN bus architecture: ISO1050DUB transceiver and J_CAN connector moved from Controller PCB to Driver PCB; FDCAN1 logic signals route via J_STACK pins 19-20; updated block diagrams, wiring, safety notes, and J_STACK organization |
