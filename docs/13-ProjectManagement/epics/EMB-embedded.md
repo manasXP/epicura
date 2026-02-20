@@ -191,7 +191,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 **Acceptance Criteria:**
 - [ ] E-stop button triggers hardware interrupt; STM32 de-energizes all actuators within 100ms
 - [ ] Safety relay cuts AC power to induction module on e-stop or watchdog timeout
-- [ ] Thermal cutoff: if any NTC reads >150°C or IR reads >300°C, immediate shutdown
+- [ ] Thermal cutoff: if CAN coil temp >150°C or IR reads >300°C, immediate shutdown
 - [ ] Watchdog timeout (STM32 hung) triggers safety relay open
 - [ ] All safety states logged via UART; recovery requires manual reset
 - [ ] Safety state machine: NORMAL → ALERT → SHUTDOWN → RECOVERY
@@ -199,7 +199,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 **Tasks:**
 - [ ] `EMB-SAF.01a` — Configure e-stop GPIO as EXTI interrupt (falling edge, highest priority)
 - [ ] `EMB-SAF.01b` — Implement emergency shutdown routine: disable all PWM, open all solenoids, open safety relay
-- [ ] `EMB-SAF.01c` — Implement thermal monitoring in Sensor task: NTC and IR threshold checks
+- [ ] `EMB-SAF.01c` — Implement thermal monitoring in Sensor task: CAN coil temp and IR threshold checks
 - [ ] `EMB-SAF.01d` — Wire watchdog timeout to safety relay via dedicated GPIO (fail-safe: relay opens on MCU reset)
 - [ ] `EMB-SAF.01e` — Implement safety state machine with transition logging
 - [ ] `EMB-SAF.01f` — Test all safety paths: e-stop press, thermal overshoot, watchdog timeout

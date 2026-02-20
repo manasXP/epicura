@@ -214,7 +214,7 @@ TIM1->CCR1 = 1500;                               // Initial: stopped (neutral)
 |----------------|------------------|-----------|--------|
 | Stall Detection | Motor current monitoring via ADC | >2.0A sustained for 500ms | Stop motor, retry up to 3 times, then error |
 | Over-Torque | Current spike detection | >3.0A instantaneous | Immediate stop, log event |
-| Thermal Protection | Motor housing NTC (optional) | >80 C motor case | Reduce speed 50%, alert if >100 C |
+| Thermal Protection | Motor current monitoring (thermal proxy) | Sustained high current | Reduce speed 50%, alert if threshold exceeded |
 | Mechanical Guard | Physical shroud above pot rim | - | Prevents finger access to paddle zone |
 
 ### Stall Recovery Sequence

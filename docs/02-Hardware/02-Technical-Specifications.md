@@ -35,11 +35,11 @@ The primary cooking element is a commercial microwave induction surface — a se
 ### PID Control Parameters
 
 - **Setpoint Source:** Recipe state machine (via CM5 command)
-- **Feedback:** IR thermometer (primary), NTC thermistor (secondary/safety)
+- **Feedback:** IR thermometer (primary), CAN coil temperature (secondary/safety)
 - **Loop Rate:** 10Hz (100ms period)
 - **Output:** Power level command (0-100%) via CAN bus to microwave surface module
 - **Overshoot Protection:** Maximum 10C above setpoint triggers power reduction
-- **Safety Cutoff:** NTC >280C or IR >270C triggers immediate shutdown
+- **Safety Cutoff:** CAN coil over-temp or IR >270C triggers immediate shutdown
 
 ## Sensor Specifications
 
@@ -86,17 +86,6 @@ The primary cooking element is a commercial microwave induction surface — a se
 | Excitation | 5V from HX711 on-chip regulator |
 | Purpose | Ingredient weight, evaporation tracking, pot detection |
 
-### NTC Thermistors
-
-| Parameter | Value |
-|-----------|-------|
-| Type | NTC 100k ohm at 25C (B25/85 = 3950K typical) |
-| Quantity | 2 (coil temperature + ambient enclosure) |
-| Interface | Voltage divider with 100k ohm reference resistor, STM32 ADC |
-| ADC Resolution | 12-bit STM32 internal ADC |
-| Range | 0-300C (coil), 0-80C (ambient) |
-| Accuracy | +/-2C (with Steinhart-Hart calibration) |
-| Purpose | Coil over-temperature protection, ambient monitoring |
 
 ## Data Storage
 
@@ -120,7 +109,7 @@ The primary cooking element is a commercial microwave induction surface — a se
 ### Cooking Logs
 
 - **Format:** SQLite database
-- **Fields:** Timestamp, recipe ID, step transitions, temperatures (IR + NTC), weights, durations, errors, user feedback
+- **Fields:** Timestamp, recipe ID, step transitions, temperatures (IR + CAN coil), weights, durations, errors, user feedback
 - **Retention:** Last 500 cook sessions (~50 MB)
 - **Export:** JSON via app or USB
 
@@ -209,7 +198,6 @@ An off-the-shelf 12V UPS powers the 5V rail (CM5 + STM32) independently of the 2
 | CM5 <-> Touch | I2C | 400 kHz | CM5 I2C1 <-> touch controller | Touch input events |
 | STM32 <-> IR Sensor | I2C | 100 kHz | STM32 I2C1 <-> MLX90614 | Temperature readings |
 | STM32 <-> Load Cells | SPI-like GPIO | 10-80 Hz | STM32 GPIO <-> HX711 | Weight measurements |
-| STM32 <-> NTC | ADC | 1 Hz | STM32 ADC1 CH0/CH1 | Thermistor voltages |
 | STM32 <-> Servos | PWM | 50Hz | STM32 TIM1/TIM2 <-> servo signal | Arm + gate positions |
 | STM32 <-> Microwave Surface | CAN 2.0B | 500 kbps | STM32 FDCAN1 (PB8/PB9) <-> module CAN port | Induction power control via CAN |
 | STM32 <-> Exhaust Fan | PWM | 25 kHz | STM32 TIM4 CH3 <-> fan 4-pin | Fume extraction speed |

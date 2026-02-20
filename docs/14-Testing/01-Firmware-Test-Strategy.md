@@ -22,14 +22,14 @@ Testing strategy for the STM32G474RE real-time control firmware: PID controller,
 | Module | Key Test Cases |
 |--------|---------------|
 | `pid_controller` | Proportional response, integral windup / anti-windup, derivative kick suppression, output clamping (0–100%), setpoint step response convergence |
-| `calibration` | NTC resistance-to-temperature lookup, load cell ADC-to-grams conversion, zero-offset calibration, out-of-range input handling |
+| `calibration` | Load cell ADC-to-grams conversion, zero-offset calibration, out-of-range input handling |
 | `spi_protocol` | Frame packing/unpacking, CRC16 calculation and verification, invalid frame rejection, buffer overflow protection |
 | `can_interface` | CAN frame construction for power set commands, status response parsing, fault code decoding |
 | `dispenser_asd` | Solenoid valve sequencing for puff-dosing, pressure threshold logic, cartridge selection |
 | `dispenser_cid` | Linear actuator travel limits, push-plate sequencing |
 | `dispenser_sld` | Peristaltic pump flow rate calculation, load-cell closed-loop dispensing, level alert thresholds |
 | `safety_manager` | Over-temperature cutoff logic, watchdog feed timing, e-stop relay state transitions, interlock validation |
-| `sensor_manager` | MLX90614 I2C read parsing, HX711 SPI read parsing, NTC ADC averaging, sensor timeout detection |
+| `sensor_manager` | MLX90614 I2C read parsing, HX711 SPI read parsing, CAN coil temp parsing, sensor timeout detection |
 
 **Approach:**
 - Abstract HAL behind interfaces (`hal_gpio.h`, `hal_adc.h`, etc.) so unit tests can inject mock HAL implementations
@@ -99,7 +99,7 @@ steps:
 
 - **PID test vectors:** Step response profiles (ramp, overshoot, steady-state) as CSV, compared against expected output
 - **CAN test frames:** Known-good CAN frames captured from microwave induction module datasheet
-- **Calibration tables:** NTC R-vs-T lookup table validated against manufacturer data
+- **Calibration tables:** Load cell ADC-to-grams lookup validated against reference weights
 
 ---
 
@@ -114,7 +114,7 @@ Per IEC 60335-1 and ISO 13482 requirements:
 | E-stop | Assert e-stop GPIO | AC relay opens, all actuators stop, state = FAULT |
 | Servo stall detection | Block servo mechanically | Motor current limit triggers stop within 2s |
 | CAN bus timeout | Disconnect CAN | Induction power = 0, fault raised within 1s |
-| Power-on self-test | Boot with faulty sensor (disconnected NTC) | System refuses to enter COOK state |
+| Power-on self-test | Boot with faulty sensor (disconnected IR) | System refuses to enter COOK state |
 
 ---
 

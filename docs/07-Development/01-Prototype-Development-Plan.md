@@ -50,7 +50,7 @@ This document outlines the comprehensive plan for building a functional Epicura 
 - [ ] Create FreeRTOS project with basic task structure
 - [ ] Test GPIO output (LED blink)
 - [ ] Test UART communication (serial terminal echo)
-- [ ] Test ADC input (read NTC thermistor voltage)
+- [ ] Test CAN bus (receive induction module status)
 - [ ] Test PWM output (servo signal generation)
 
 **Week 3: Inter-Processor Communication**
@@ -108,7 +108,7 @@ This document outlines the comprehensive plan for building a functional Epicura 
 
 **Week 7: PID Controller & Sensors**
 - [ ] Wire MLX90614 IR thermometer to STM32 I2C bus
-- [ ] Wire NTC thermistor (100k) to STM32 ADC via voltage divider
+- [ ] Verify CAN bus coil temperature reporting from induction module
 - [ ] Calibrate MLX90614 against reference thermometer (0-250°C range)
 - [ ] Implement PID controller on STM32 (FreeRTOS task, 10 Hz loop)
 - [ ] Tune PID gains: step response test (ambient → 100°C, 100°C → simmer at 85°C)
@@ -118,9 +118,9 @@ This document outlines the comprehensive plan for building a functional Epicura 
 ┌─────────────────────────────────────────────────────────┐
 │              Induction Control Loop                     │
 │                                                         │
-│  Target Temp ──► PID ──► Duty Cycle ──► Relay/PWM       │
-│       │          ▲                         │            │
-│       │          │                         ▼            │
+│  Target Temp ──► PID ──► CAN Power ──► Induction Module │
+│       │          ▲           Cmd            │           │
+│       │          │                          ▼           │
 │       │     Error Calc              Induction Coil      │
 │       │          │                         │            │
 │       │          │                         ▼            │
@@ -128,10 +128,10 @@ This document outlines the comprehensive plan for building a functional Epicura 
 │       │     │ MLX90614   │◄───────────│  Pot   │        │
 │       └────►│ IR Sensor  │  (infrared)│        │        │
 │             └────────────┘            └────────┘        │
-│                                            │            │
+│                  ▲                         │            │
 │             ┌────────────┐                 │            │
-│             │ NTC (coil) │◄────────────────┘            │
-│             │ (safety)   │  (conduction)                │
+│             │ CAN Coil   │◄────────────────┘            │
+│             │Temp (CAN)  │  (CAN HEAT_STATUS)           │
 │             └────────────┘                              │
 └─────────────────────────────────────────────────────────┘
 ```
@@ -505,7 +505,7 @@ This document outlines the comprehensive plan for building a functional Epicura 
 |----------|-------|----------------|
 | Compute | CM5 + carrier board + STM32 Nucleo dev board | $200-300 |
 | Actuation | DS3225 servo + ASD servos + CID actuators + SLD pumps/solenoids + induction hob | $200-300 |
-| Sensors | IMX219 camera + MLX90614 + 4x load cells + NTC + HX711 | $80-120 |
+| Sensors | IMX219 camera + MLX90614 + 4x load cells + HX711 | $80-120 |
 | Mechanical | 3D printing (PETG filament) + stainless steel shaft + fasteners + brackets | $100-200 |
 | Display | 10.1" IPS touchscreen (HDMI + I2C touch) | $80-120 |
 | Power | Bench PSU + prototype PSU board + cables + connectors | $50-80 |

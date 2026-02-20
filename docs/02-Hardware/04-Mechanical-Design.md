@@ -451,7 +451,7 @@ Dual-fan push-pull configuration:
 - **Silicone thermal pad** or **aluminum shield** between microwave surface module and PSU compartment
 - **Air gap** (minimum 10mm) between microwave surface module and PSU
 - **Operating ambient range:** 0-40C (indoor kitchen environment)
-- **Maximum internal temp:** 70C at any PCB location (NTC ambient monitors this)
+- **Maximum internal temp:** 70C at any PCB location (exhaust fan manages airflow)
 
 ### Cooking Fume Exhaust
 

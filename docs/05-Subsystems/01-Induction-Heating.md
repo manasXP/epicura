@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-20
-version: 2.0
+version: 3.0
 status: Draft
 ---
 
@@ -91,10 +91,10 @@ AC Mains (220-240V 50Hz)
 |-----------|-------|
 | Protocol | CAN 2.0B |
 | Bit Rate | 500 kbps |
-| Transceiver | Onboard in module; STM32 side uses FDCAN1 + ISO1050DUB isolated CAN transceiver on Controller PCB (5 kV RMS galvanic isolation) |
+| Transceiver | Onboard in module; STM32 side uses FDCAN1 + ISO1050DUB isolated CAN transceiver on **Driver PCB** (5 kV RMS galvanic isolation) |
 | Termination | 120 ohm at each end (module + STM32 side) |
 | Connector | Standard CAN connector on module (CAN_H, CAN_L, GND) |
-| Wiring | Twisted pair, shielded, <1m length; shield connects to GND_ISO at Controller PCB end only (single-point ground) |
+| Wiring | Twisted pair, shielded, <1m length; shield connects to GND_ISO at Driver PCB end only (single-point ground) |
 
 ### CAN Message Protocol (Heater)
 
@@ -208,7 +208,6 @@ Temp (C)
 | Source | Measurement | Interface | Range | Accuracy | Role |
 |--------|-------------|-----------|-------|----------|------|
 | MLX90614 IR Thermometer | Food surface temperature | I2C (STM32) | -70 to +380 C | +/- 0.5 C | Primary PID feedback |
-| NTC Thermistor (Ambient) | Enclosure air temperature | ADC (STM32) | 0-80 C | +/- 2 C | Thermal management |
 | Module CAN Status | Coil temperature, fault flags | CAN (STM32 FDCAN1) | Module-reported | Module accuracy | Module health monitoring |
 
 ### Sensor Priority Logic
@@ -231,7 +230,7 @@ Safety is handled at two levels:
 
 1. **Module-internal:** The microwave surface has its own safety circuits (pot detection, thermal fuse, overcurrent) that operate independently of the STM32. These cannot be overridden by external CAN commands.
 2. **System-level:** The STM32 monitors temperature via IR sensor and module CAN status, and can command the module off via CAN or cut AC power via the safety relay.
-3. **Galvanic isolation:** The ISO1050DUB isolated CAN transceiver on the Controller PCB provides 5 kV RMS galvanic isolation between the STM32 control electronics and the CAN bus connected to the induction module. This prevents ground bounce and EMI transients from the module's high-power IGBT switching from coupling into the logic ground, and satisfies IEC 60335 reinforced insulation requirements.
+3. **Galvanic isolation:** The ISO1050DUB isolated CAN transceiver on the **Driver PCB** provides 5 kV RMS galvanic isolation between the STM32 control electronics and the CAN bus connected to the induction module. This prevents ground bounce and EMI transients from the module's high-power IGBT switching from coupling into the logic ground, and satisfies IEC 60335 reinforced insulation requirements.
 
 > [!warning] Critical Safety Section
 > The module's internal safety interlocks operate independently of the STM32 and cannot be overridden. The safety relay provides a system-level hard disconnect.
@@ -244,7 +243,7 @@ Safety is handled at two levels:
 | Module | Thermal cutoff (internal) | Coil over-temperature | Module shuts down internally | <100ms |
 | Module | Overcurrent (internal) | Excessive coil current | Module shuts down internally | <10us |
 | System | Safety relay | E-stop, STM32 fault, CM5 heartbeat loss | Relay opens, cuts AC to module | <100ms |
-| System | STM32 CAN command | IR temp >270C, NTC ambient >70C | Send HEAT_ON_OFF=0 via CAN | <100ms |
+| System | STM32 CAN command | IR temp >270C or module coil over-temp via CAN | Send HEAT_ON_OFF=0 via CAN | <100ms |
 | System | STM32 watchdog | Firmware hang | STM32 resets, relay opens (fail-safe) | 1s |
 
 ### Safe State Definition
@@ -353,3 +352,4 @@ Power (W)
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
 | 2.0 | 2026-02-20 | Manas Pradhan | Updated CAN transceiver to ISO1050DUB (isolated); added isolation barrier to block diagram; added galvanic isolation safety note; updated wiring for single-point ground on CAN shield |
+| 3.0 | 2026-02-20 | Manas Pradhan | Updated ISO1050DUB location from Controller PCB to Driver PCB; CAN cable connects to J_CAN on Driver PCB |

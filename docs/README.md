@@ -19,7 +19,7 @@ Welcome to the comprehensive documentation for the Epicura autonomous kitchen ro
 #### 02. Hardware
 2. **[[02-Hardware/02-Technical-Specifications|Technical Specifications]]** - Induction, robotic arm, sensors, and performance requirements
 3. **[[02-Hardware/Epicura-Architecture|Epicura Architecture]]** - System block diagrams and hardware wiring
-4. **[[02-Hardware/05-Sensors-Acquisition|Sensors & Acquisition]]** - Camera, IR thermometer, load cells, and NTC probes
+4. **[[02-Hardware/05-Sensors-Acquisition|Sensors & Acquisition]]** - Camera, IR thermometer, and load cells
 5. **[[02-Hardware/07-Mechanical-Design|Mechanical Design]]** - Enclosure, arm mechanism, and industrial design
 
 #### 03. Software
@@ -54,7 +54,7 @@ Welcome to the comprehensive documentation for the Epicura autonomous kitchen ro
 #### 09. Components (BOM)
 18. **[[08-Components/01-Compute-Module-Components|Compute Module Components]]** - Raspberry Pi CM5, STM32, carrier boards
 19. **[[08-Components/02-Actuation-Components|Actuation Components]]** - Servo motors, induction driver, solenoids
-20. **[[08-Components/03-Sensor-Components|Sensor Components]]** - Camera, IR thermometer, NTC probes, load cells
+20. **[[08-Components/03-Sensor-Components|Sensor Components]]** - Camera, IR thermometer, load cells
 21. **[[08-Components/04-Total-Component-Cost|Total Component Cost]]** - Full BOM and cost analysis ($614 prototype)
 
 #### 10. PCB Design
@@ -189,7 +189,7 @@ Start with:
 Start with:
 1. [[02-Hardware/02-Technical-Specifications|Technical Specifications]] - System requirements and power budget
 2. [[02-Hardware/01-Epicura-Architecture|Epicura Architecture]] - Block diagrams and wiring
-3. [[02-Hardware/03-Sensors-Acquisition|Sensors & Acquisition]] - Camera, thermal, and load cell design
+3. [[02-Hardware/03-Sensors-Acquisition|Sensors & Acquisition]] - Camera, IR thermometer, and load cell design
 4. [[02-Hardware/04-Mechanical-Design|Mechanical Design]] - Enclosure, arm mechanism, and thermal management
 
 ### For Software Engineers
@@ -222,7 +222,7 @@ Start with:
 
 - **Autonomous Cooking** - Hands-off operation after ingredient loading; state machine recipe execution
 - **AI Vision Monitoring** - Overhead HD camera with TFLite edge AI for food color/texture analysis and cooking stage detection
-- **Induction PID Control** - 1,800W microwave induction surface (CAN-controlled) with closed-loop PID, sear at 250°C, simmer at 60°C, ±5°C accuracy
+- **Induction PID Control** - 1,800W induction cooktop with CAN coil temp + IR temperature feedback
 - **Robotic Stirring Arm** - Single-axis servo arm (STM32-driven) with multiple stir patterns and auto-scraping
 - **Three-Subsystem Dispensing** - ASD (3 servo-gated seasoning hoppers), CID (2 linear actuator coarse trays), SLD (2 peristaltic pump liquid channels with dedicated per-reservoir load cells + low-level alerts)
 - **Touchscreen + Companion Apps** - 10" Kivy touchscreen on device, native mobile apps (iOS + Android) for remote control and live camera feed
@@ -244,10 +244,10 @@ Start with:
 
 ### Hardware Subsystems
 - **Compute Platform** - Raspberry Pi CM5 (AI/vision/UI) + STM32 (motor/arm control)
-- **Induction Heater** - 1,800W induction cooktop with NTC + IR temperature feedback
+- **Induction Heater** - 1,800W induction cooktop with CAN coil temp + IR temperature feedback
 - **Display** - 10" 1280x800 capacitive touchscreen (Kivy interface)
 - **Robotic Arm** - Single-axis servo arm for stirring and ingredient dispensing
-- **Vision System** - Overhead HD camera + IR thermometer + load cells
+- **CAN + IR Sensors** - Overhead HD camera + IR thermometer + load cells
 - **Ingredient Dispensing** - ASD (seasoning servos) + CID (linear actuator sliders) + SLD (peristaltic pumps + solenoids)
 
 ### Software Subsystems
@@ -271,7 +271,7 @@ Start with:
 │  │  10" Touchscreen     │        │  Induction Heater    │           │
 │  │  HD Camera           │        │  Servo Arm           │           │
 │  │  WiFi/BT             │        │  Load Cells          │           │
-│  │                      │        │  NTC + IR Sensors    │           │
+│  │                      │        │  CAN + IR Sensors    │           │
 │  └──────────────────────┘        └──────────────────────┘           │
 └─────────────────────────────────────────────────────────────────────┘
 ```

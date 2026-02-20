@@ -18,7 +18,7 @@ This project encompasses the following major subsystems:
 
 - [[../02-Hardware/02-Technical-Specifications|Technical Specifications]] - Induction, robotic arm, sensors, and power budget
 - [[../02-Hardware/Epicura-Architecture|Epicura Architecture]] - System block diagrams and hardware wiring
-- [[../02-Hardware/05-Sensors-Acquisition|Sensors & Acquisition]] - Camera, IR thermometer, load cells, and NTC probes
+- [[../02-Hardware/05-Sensors-Acquisition|Sensors & Acquisition]] - Camera, IR thermometer, and load cells
 - [[../02-Hardware/07-Mechanical-Design|Mechanical Design]] - Enclosure, arm mechanism, and industrial design
 - [[../03-Software/04-Controller-Software-Architecture|Controller & Software Architecture]] - Dual-processor software modules and recipe state machine
 - [[../03-Software/08-Tech-Stack|Tech Stack]] - Hardware platforms, software frameworks, and tools
@@ -46,7 +46,7 @@ This project encompasses the following major subsystems:
 
 ### Precision Control
 - PID-controlled induction heating with dynamic temperature range (60-250°C)
-- Dual temperature sensing: NTC contact probe + IR non-contact thermometer
+- IR non-contact thermometer + CAN coil temperature from induction module
 - Sear at 200-250°C, simmer at 60-100°C with ±5°C accuracy
 - Dynamic power management to stay within 2kW household limit
 
@@ -115,8 +115,8 @@ This project encompasses the following major subsystems:
 │     └──────────────┘ └──────────────┘    └────────────┘ └──────────────┘  │
 │                                                                            │
 │     ┌──────────────┐ ┌──────────────┐    ┌────────────┐ ┌──────────────┐  │
-│     │ WiFi / BT    │ │ IR Thermo-   │    │ NTC Temp   │ │ Ingredient   │  │
-│     │ Module       │ │ meter        │    │ Probe      │ │ Hoppers      │  │
+│     │ WiFi / BT    │ │ IR Thermo-   │    │ Load       │ │ Ingredient   │  │
+│     │ Module       │ │ meter        │    │ Cells      │ │ Hoppers      │  │
 │     │              │ │              │    │            │ │ (4-6 compt.) │  │
 │     └──────────────┘ └──────────────┘    └────────────┘ └──────────────┘  │
 │                                                                            │
@@ -140,7 +140,6 @@ This project encompasses the following major subsystems:
                        │            ┌───────▼───────┐           │
                        │            │  HD Camera    │           │
                        │            │  IR Thermo    │           │
-                       │            │  NTC Probe    │           │
                        │            │  Load Cells   │           │
                        │            └───────────────┘           │
                        │                                        │

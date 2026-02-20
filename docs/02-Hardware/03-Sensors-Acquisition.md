@@ -14,8 +14,6 @@ status: Draft
 | Camera (IMX219/477) | CMOS image sensor | MIPI CSI-2 (2-lane) | 1080p @ 30fps | N/A (pixel-level) | 2 Hz (CV frames) | CM5 CSI port |
 | IR Thermometer (MLX90614) | Non-contact thermopile | I2C (0x5A) | -70 to +380C | +/-0.5C | 10 Hz | STM32 I2C1 |
 | Load Cells (4x 5kg) | Strain gauge (Wheatstone bridge) | SPI-like via HX711 | 0-20 kg total | +/-1g | 10 Hz | STM32 GPIO |
-| NTC Thermistor (coil) | Negative temp coeff. resistor | STM32 ADC (voltage divider) | 0-300C | +/-2C | 1 Hz | STM32 ADC1 CH0 |
-| NTC Thermistor (ambient) | Negative temp coeff. resistor | STM32 ADC (voltage divider) | 0-80C | +/-2C | 1 Hz | STM32 ADC1 CH1 |
 | Pot Detection | Reed switch / Hall effect | Digital GPIO | On/Off | N/A | Interrupt-driven | STM32 GPIO |
 
 ---
@@ -356,96 +354,6 @@ float hx711_read_grams(int32_t tare_offset, float scale_factor) {
 
 ---
 
-## NTC Thermistors
-
-### Placement
-
-| Location | Purpose | Range | Response Required |
-|----------|---------|-------|-------------------|
-| Near microwave surface module | Enclosure hot-zone monitoring | 0-300C | <1s for safety cutoff |
-| Inside enclosure (rear) | Ambient air temperature | 0-80C | Slow (monitoring only) |
-
-### Voltage Divider Circuit
-
-```
-        3.3V (STM32 VREF)
-          │
-          │
-         ┌┴┐
-         │ │ R_ref (100k ohm, 1% tolerance)
-         │ │
-         └┬┘
-          │
-          ├──────────► STM32 ADC Input (PA4 or PA5)
-          │
-         ┌┴┐
-         │ │ NTC (100k ohm @ 25C)
-         │ │ (B25/85 = 3950K)
-         └┬┘
-          │
-         GND
-
-ADC voltage at midpoint:
-  V_adc = 3.3V * R_ntc / (R_ref + R_ntc)
-
-At 25C:  R_ntc = 100k, V_adc = 3.3 * 100/200 = 1.65V
-At 100C: R_ntc ~ 6.7k, V_adc = 3.3 * 6.7/106.7 = 0.207V
-At 200C: R_ntc ~ 0.8k, V_adc = 3.3 * 0.8/100.8 = 0.026V
-At 300C: R_ntc ~ 0.15k, V_adc = 3.3 * 0.15/100.15 = 0.005V
-
-Note: At very high temps (>250C), ADC resolution is poor.
-For coil safety, only need to detect "above threshold" reliably.
-Add low-pass RC filter: 10k + 100nF (fc = 160Hz) at ADC pin.
-```
-
-### Steinhart-Hart Temperature Conversion
-
-The Steinhart-Hart equation provides accurate temperature conversion across the full NTC range:
-
-```
-1/T = A + B*ln(R) + C*(ln(R))^3
-
-Where:
-  T = Temperature in Kelvin
-  R = NTC resistance in Ohms
-  A, B, C = Steinhart-Hart coefficients (from datasheet or calibration)
-
-Typical coefficients for 100k NTC (B=3950):
-  A = 0.7739211540e-3
-  B = 2.0886761507e-4
-  C = 0.8781285897e-7
-```
-
-```c
-// Steinhart-Hart conversion in STM32 firmware
-#include <math.h>
-
-#define SH_A  0.7739211540e-3f
-#define SH_B  2.0886761507e-4f
-#define SH_C  0.8781285897e-7f
-#define R_REF 100000.0f  // 100k reference resistor
-#define V_REF 3.3f
-#define ADC_MAX 4095.0f  // 12-bit ADC
-
-float ntc_read_temperature(uint16_t adc_raw) {
-    float v_adc = (adc_raw / ADC_MAX) * V_REF;
-    float r_ntc = R_REF * v_adc / (V_REF - v_adc);
-
-    float ln_r = logf(r_ntc);
-    float inv_t = SH_A + SH_B * ln_r + SH_C * ln_r * ln_r * ln_r;
-    float temp_c = (1.0f / inv_t) - 273.15f;
-
-    return temp_c;
-}
-```
-
-### ADC Channel Assignment
-
-| STM32 Pin | ADC Channel | Sensor | Sampling | Filtering |
-|-----------|-------------|--------|----------|-----------|
-| PA4 | ADC2_IN17 | NTC Coil | 1 Hz (oversampled 16x) | RC + SW moving average (4 samples) |
-| PA5 | ADC2_IN13 | NTC Ambient | 1 Hz (oversampled 16x) | RC + SW moving average (4 samples) |
-
 ---
 
 ## Pot Detection
@@ -549,7 +457,6 @@ The recipe engine on CM5 combines data from multiple sensors to determine the cu
 | Camera | 30 fps capture | 2 Hz CV inference | <500ms per frame |
 | IR Thermometer | 10 Hz read | 10 Hz to PID | <100ms |
 | Load Cells | 10 Hz read | 10 Hz to recipe engine | <100ms |
-| NTC Thermistors | 1 Hz read | 1 Hz to safety monitor | <1000ms |
 | Pot Detection | Interrupt-driven | Immediate (<1ms) | <1ms |
 
 ---
@@ -563,8 +470,6 @@ The recipe engine on CM5 combines data from multiple sensors to determine the cu
 | Camera | Frame received, not black/white | Valid histogram, >10% variance | Lens blocked, cable loose, module fault |
 | IR Thermometer | I2C ACK, reading in range | ACK on address, -20C < T < 350C | I2C bus fault, sensor damaged |
 | Load Cells | Zero drift check, range valid | Drift < 5g/hour, 0 < raw < 0xFFFFFF | Bridge wire break, HX711 fault |
-| NTC (coil) | ADC in valid range | 10 < ADC raw < 4000 | Open circuit, short circuit |
-| NTC (ambient) | ADC in valid range, plausible temp | 10C < T < 60C (reasonable ambient) | Sensor detached |
 | Pot Detection | State change matches expectations | Toggles when pot placed/removed | Switch stuck, magnet missing |
 
 ### Degradation Fallback Strategy
@@ -572,10 +477,8 @@ The recipe engine on CM5 combines data from multiple sensors to determine the cu
 | Primary Sensor Failed | Fallback Strategy | Limitations |
 |-----------------------|-------------------|-------------|
 | Camera fails | Timer-based cooking (no CV stage detection) | Cannot detect browning, must rely on time/temp |
-| IR thermometer fails | NTC coil temp + camera (color-based temp estimation) | Less accurate food temp, wider PID margins |
+| IR thermometer fails | CAN coil temp + camera (color-based temp estimation) | Less accurate food temp, wider PID margins |
 | Load cells fail | Timer-based dispensing (open gate for N seconds) | Cannot verify dispensed weight, +/-20% accuracy |
-| NTC coil fails | IR temp only + conservative power limits | No over-temp protection on coil, reduce max power to 70% |
-| Both IR and NTC fail | Emergency: reduce to warm (200W) and alert user | Cannot cook safely, prompt user to service unit |
 
 ---
 
@@ -610,13 +513,6 @@ The recipe engine on CM5 combines data from multiple sensors to determine the cu
 - [ ] Linearity: plot weight vs. reading for 5 points, R-squared >0.999
 - [ ] Temperature test: verify drift <5g over 0-40C ambient range
 - [ ] Dynamic test: dispense water into pot, verify weight tracks smoothly
-
-### NTC Thermistor Test Procedures
-
-- [ ] Read ambient temp, compare to reference (+/-2C)
-- [ ] Heat coil to 100C (external heater), compare NTC reading to thermocouple (+/-3C)
-- [ ] Safety cutoff test: heat above 280C threshold, verify STM32 triggers shutdown
-- [ ] Long-term drift: monitor over 8-hour cook cycle, verify <2C drift at stable temp
 
 ### Pot Detection Test Procedures
 

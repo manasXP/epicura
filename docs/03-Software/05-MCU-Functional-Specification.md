@@ -44,7 +44,7 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 | FR-MCU-003 | Overshoot protection: clamp at setpoint + 10 °C | Must | Integral windup reset when exceeded |
 | FR-MCU-004 | Temperature ramp control (°C/min configurable) | Should | Linear ramp from current to target |
 | FR-MCU-005 | Read IR thermometer (MLX90614) for food surface temp | Must | I2C @ 100 kHz, accuracy ±0.5 °C |
-| FR-MCU-006 | Read NTC thermistors for coil and ambient temp | Must | ADC channels PA4/PA5, Steinhart-Hart conversion |
+| FR-MCU-006 | Read coil temperature from induction module via CAN | Must | HEAT_STATUS message, coil_temp field |
 | FR-MCU-007 | Send power commands to induction module via CAN | Must | FDCAN1 @ 500 kbps, power level 0–1800 W |
 
 ### 2.2 Power Level Profiles
@@ -74,7 +74,7 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 | FR-MCU-020 | Read pot load cells (4× strain gauge + HX711) at 10 Hz | Must | Resolution ~1 g, total capacity 20 kg |
 | FR-MCU-021 | Read 2× SLD reservoir load cells (oil + water) at 10 Hz during dispensing | Must | Accuracy ±5% for closed-loop liquid dispensing; individual level monitoring with low-level alerts |
 | FR-MCU-022 | Read IR thermometer at 10 Hz | Must | MLX90614 via I2C1 (PB6/PB7) |
-| FR-MCU-023 | Read NTC thermistors at 10 Hz | Must | ADC2_IN17 (PA4) coil, ADC2_IN13 (PA5) ambient |
+| FR-MCU-023 | Parse coil temperature from CAN HEAT_STATUS | Must | Received at 10 Hz from induction module |
 | FR-MCU-024 | Read INA219 bus current monitor | Should | I2C1 @ address 0x40, 24 V rail monitoring |
 | FR-MCU-025 | Sensor polling task at 10 Hz (100 ms period) | Must | All sensor data available within each cycle |
 
@@ -129,7 +129,7 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 |----|-------------|----------|---------------------|
 | FR-MCU-050 | E-stop button (PB2, EXTI interrupt) → immediate shutdown | Must | <1 ms from button press to relay open |
 | FR-MCU-051 | Safety relay control (PB0 → MOSFET → relay) | Must | Cuts AC mains to induction module |
-| FR-MCU-052 | Thermal cutoff: IR >270 °C or NTC >280 °C → E_STOP | Must | Checked every 100 ms (sensor poll cycle) |
+| FR-MCU-052 | Thermal cutoff: IR >270 °C or CAN coil over-temp → E_STOP | Must | Checked every 100 ms (sensor poll cycle) |
 | FR-MCU-053 | Hardware watchdog (IWDG, 5 s timeout) | Must | Kick in main loop; timeout → full reset |
 | FR-MCU-054 | Pot detection via CAN (module-reported) | Must | No heat command if pot absent |
 | FR-MCU-055 | Boot-safe state: all actuator outputs OFF until initialized | Must | 100 kΩ pull-downs on MOSFET gates |
@@ -146,8 +146,8 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 | **PA1** | — | Available | Freed (was P-ASD solenoid V1, now via PCF8574) |
 | **PA2** | — | Available | Freed (was P-ASD solenoid V2, now via PCF8574) |
 | **PA3** | — | Available | Freed (was P-ASD solenoid V5, now via PCF8574) |
-| **PA4** | ADC2_IN17 | Analog in | NTC thermistor — coil temp |
-| **PA5** | ADC2_IN13 | Analog in | NTC thermistor — ambient temp |
+| **PA4** | — | Available | Freed (was NTC coil, now via CAN) |
+| **PA5** | — | Available | Freed (was NTC ambient, removed) |
 | **PA6** | TIM3_CH1 | PWM 25 kHz | Exhaust fan 1 |
 | **PA7** | GPIO output | Digital | Solenoid 1 enable (SLD, via IRLML6344) |
 | **PA8** | TIM1_CH1 | PWM 50 Hz | Main servo DS3225 |
@@ -226,7 +226,7 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 |------|------|--------|----------|-------|-------------|
 | Motor Control | 50 Hz | 20 ms | Highest (4) | 512 B | Servo PWM updates, stir patterns |
 | Safety Monitor | 10 Hz | 100 ms | Highest (4) | 256 B | Thermal limits, E-stop, watchdog kick |
-| PID Control | 10 Hz | 100 ms | High (3) | 512 B | Read IR/NTC, compute PID, send CAN |
+| PID Control | 10 Hz | 100 ms | High (3) | 512 B | Read IR + CAN coil temp, compute PID, send CAN |
 | Sensor Poll | 10 Hz | 100 ms | Medium (2) | 512 B | Load cells, INA219, aggregate telemetry |
 | CM5 Comms | 20 Hz | 50 ms | Medium (2) | 1024 B | SPI slave handler, command parser, telemetry TX |
 
@@ -245,9 +245,9 @@ CRITICAL ──[condition cleared within timeout]──→ WARNING
 
 | From | To | Trigger |
 |------|----|---------|
-| NORMAL | WARNING | NTC > 250 °C, or load cell drift > 50 g/min unexpected |
+| NORMAL | WARNING | CAN coil temp > 250 °C, or load cell drift > 50 g/min unexpected |
 | WARNING | CRITICAL | IR > 260 °C, or CAN fault from induction module |
-| CRITICAL | E_STOP | IR > 270 °C, NTC > 280 °C, E-stop button, CM5 heartbeat timeout (5 s) |
+| CRITICAL | E_STOP | IR > 270 °C, CAN coil over-temp, E-stop button, CM5 heartbeat timeout (5 s) |
 | E_STOP | NORMAL | Manual hardware reset (E-stop button released + PB2 debounce) |
 
 ### 4.4 Boot Sequence
@@ -325,7 +325,7 @@ See [[04-MPU-Functional-Specification#5.1 SPI Protocol]] for full frame definiti
 | Safety relay | PB0 → N-MOSFET → relay coil (NC relay, fail-safe open) | <5 ms |
 | Hardware watchdog (IWDG) | 5 s timeout, kicked in safety monitor task | 5 s (worst case) |
 | Thermal cutoff (IR) | MLX90614 > 270 °C → E_STOP | ≤100 ms (poll interval) |
-| Thermal cutoff (NTC) | NTC > 280 °C → E_STOP | ≤100 ms (poll interval) |
+| Thermal cutoff (CAN coil) | CAN coil over-temp → E_STOP | ≤500 ms (CAN status interval) |
 | CAN fault | No module response in 500 ms → reduce power | 500 ms |
 | CM5 heartbeat loss | No heartbeat for 5 s → safe state | 5 s |
 | Overcurrent | INA219 > threshold → warning/shutdown | ≤100 ms |
@@ -335,7 +335,7 @@ See [[04-MPU-Functional-Specification#5.1 SPI Protocol]] for full frame definiti
 | Fault Code | Name | Severity | Action |
 |------------|------|----------|--------|
 | 0x01 | OVER_TEMP_IR | Critical | E_STOP, cut relay, log |
-| 0x02 | OVER_TEMP_NTC | Critical | E_STOP, cut relay, log |
+| 0x02 | OVER_TEMP_COIL | Critical | E_STOP, cut relay, log |
 | 0x03 | E_STOP_PRESSED | Critical | E_STOP, cut relay, buzzer |
 | 0x04 | CAN_FAULT | Critical | Reduce power to 0, alert CM5 |
 | 0x05 | CM5_HEARTBEAT_LOSS | Critical | Safe state (hold temp at 0, stop servo) |

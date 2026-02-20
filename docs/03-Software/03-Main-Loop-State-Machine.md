@@ -148,7 +148,7 @@ sequenceDiagram
 | AWAITING_LOAD | PREHEATING | Weight confirmed | All required dispenser slots report weight ≥ recipe minimum |
 | AWAITING_LOAD | IDLE | User cancel | User taps "Cancel" before loading |
 | PREHEATING | DISPENSING | Temp threshold | IR sensor reads within ±5°C of stage target for 3 consecutive readings |
-| PREHEATING | ERROR | Timeout / fault | Temp not reached within `preheat_timeout` (default 300 s) or NTC over-temp |
+| PREHEATING | ERROR | Timeout / fault | Temp not reached within `preheat_timeout` (default 300 s) or CAN coil over-temp |
 | DISPENSING | COOKING | Weight converged | Load cell delta matches target ±10%, or fixed dispense time elapsed |
 | DISPENSING | ERROR | Jam / mismatch | No weight change after actuation, or weight exceeds 150% of target |
 | COOKING | MONITORING | Timer / CV | `duration_seconds` elapsed, or periodic CV check interval reached |
@@ -183,7 +183,7 @@ Any active cooking state (PREHEATING, DISPENSING, COOKING, MONITORING) can trans
 | Trigger | Source | Detection | Auto-Resume? | Details |
 |---------|--------|-----------|-------------|---------|
 | **AC Power Failure** | STM32 COMP2 (PA1) | `POWER_FAIL(state=1)` SPI message or PWR_FAIL GPIO on J_STACK pin 16 goes LOW | Yes, if <5 min | 24V rail drops below ~16.5V. STM32 immediately disables all actuators. CM5 saves state to PostgreSQL. UPS keeps CM5+STM32 alive. On power restore (`POWER_FAIL(state=0)` after 2s debounce), auto-resume if pause <5 min, else prompt user |
-| **Sensor Malfunction** | STM32 telemetry | IR temp reads out-of-range (< -10°C or > 400°C), NTC open/short circuit (ADC < 50 or > 4046), load cell HX711 timeout (no DOUT response), INA219 I2C NAK | No — user prompt | Sensor data unreliable. CM5 identifies which sensor failed from telemetry anomaly. Cooking cannot safely continue without correct readings. User prompted to check sensor connection and tap "Resume" |
+| **Sensor Malfunction** | STM32 telemetry | IR temp reads out-of-range (< -10°C or > 400°C), load cell HX711 timeout (no DOUT response), INA219 I2C NAK | No — user prompt | Sensor data unreliable. CM5 identifies which sensor failed from telemetry anomaly. Cooking cannot safely continue without correct readings. User prompted to check sensor connection and tap "Resume" |
 | **Actuator Malfunction** | STM32 telemetry / timeout | Servo stall detected (current spike with no position change), DRV8876 nFAULT asserted, peristaltic pump no flow (no weight delta after 5s of actuation), solenoid no pressure change (ADS1015 reading flat after valve open) | No — user prompt | Actuator failed to perform expected action. CM5 logs fault details. User prompted to inspect actuator and tap "Resume" |
 | **Induction Cooktop Error** | STM32 CAN bus | CAN error frame received, induction module reports fault code (overcurrent, overtemp, IGBT failure), or CAN bus timeout (no heartbeat for >2s) | Depends on fault | Transient faults (e.g., CAN timeout, momentary overtemp): auto-retry once after 5s, then pause. Permanent faults (IGBT failure): pause and prompt user. CAN bus offline: pause immediately |
 | **User Pause** | UI touch event | User taps "Pause" button on cooking screen | No — user must tap "Resume" | Manual pause for lid check, ingredient addition, etc. |

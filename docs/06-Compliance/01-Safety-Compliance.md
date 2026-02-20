@@ -76,7 +76,7 @@ status: Draft
 - **Primary fuse:** T10A 250V on mains input (slow-blow for induction inrush)
 - **Electronic current limit:** Internal to microwave induction surface module
 - **Thermal fuse:** Internal to microwave induction surface module
-- **NTC monitoring:** Continuous temperature monitoring with auto-shutoff at 200°C
+- **CAN coil temperature monitoring:** Induction module reports coil temp via CAN with auto-shutoff on over-temp
 
 ---
 
@@ -249,7 +249,7 @@ status: Draft
 | Food contamination | Medium | Medium | **Medium** | Food-safe materials, cleanable design, max 2-hour hold time alert, cleaning reminders |
 | Arm injury (pinch/cut) | Medium | Low | **Low** | Finger guard, servo torque limiting (2 N.m), pot interlock, lid interlock |
 | Boil-over (spill) | Medium | Medium | **Medium** | CV detection of bubbling, auto power reduction, drip tray, max fill line on pot |
-| Fire (overheating) | High | Low | **Medium** | Thermal fuse (240°C), NTC monitoring, max temp limit (200°C), auto shutoff timer |
+| Fire (overheating) | High | Low | **Medium** | Thermal fuse (240°C), CAN coil temp monitoring, max temp limit (200°C), auto shutoff timer |
 | Allergen cross-contact | Medium | Medium | **Medium** | Dedicated subsystems (ASD/CID/SLD), cleaning alerts between recipes, user allergen warnings in UI |
 | Water ingress | Medium | Low | **Low** | IPX1 rating (drip-proof), sealed electronics compartment, drain channels |
 | Tip-over (hot liquid spill) | High | Low | **Medium** | Non-slip feet, low center of gravity, 15° tilt test, max 3L fill volume |

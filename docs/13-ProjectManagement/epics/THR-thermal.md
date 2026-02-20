@@ -12,7 +12,7 @@ aliases: [THR Epic, Thermal Epic]
 
 # Epic: THR — Thermal & Induction Control
 
-CAN bus interface to the commercial microwave induction surface, closed-loop PID temperature control using IR and NTC feedback, thermal safety interlocks, and PWM exhaust fan control. Owned by **Embedded Engineer**.
+CAN bus interface to the commercial microwave induction surface, closed-loop PID temperature control using IR and CAN coil temperature feedback, thermal safety interlocks, and PWM exhaust fan control. Owned by **Embedded Engineer**.
 
 ## Story Summary
 
@@ -79,14 +79,14 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 
 **Acceptance Criteria:**
 - [ ] MLX90614 IR thermometer read via I2C at 10 Hz; value fed to PID as process variable
-- [ ] NTC thermistors (coil + ambient) read via ADC at 10 Hz with Steinhart-Hart conversion
+- [ ] Coil temperature received via CAN HEAT_STATUS at 10 Hz
 - [ ] PID loop runs at 100 Hz in dedicated FreeRTOS task (highest priority); default gains Kp=2.0, Ki=0.5, Kd=0.1
 - [ ] Anti-windup: integral term clamped when output saturated
 - [ ] PID output (0–100%) maps to CAN power command with rate limiting (max 10%/sec change)
 
 **Tasks:**
 - [ ] `THR-PID.01a` — Implement MLX90614 I2C driver: object temperature read, emissivity config
-- [ ] `THR-PID.01b` — Implement NTC ADC reading with Steinhart-Hart equation for temperature conversion
+- [ ] `THR-PID.01b` — Implement CAN coil temperature parsing from HEAT_STATUS message
 - [ ] `THR-PID.01c` — Implement PID controller: proportional, integral (with anti-windup), derivative (with low-pass filter)
 - [ ] `THR-PID.01d` — Map PID output to CAN power command; implement output rate limiting (max 10%/sec change)
 
@@ -107,7 +107,7 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 
 **Tasks:**
 - [ ] `THR-PID.02a` — Store PID gains in STM32 flash; implement SPI command to read/write gains
-- [ ] `THR-PID.02b` — Implement telemetry struct: setpoint, PV (IR), PV (NTC), output, error, integral; send via SPI at 1 Hz
+- [ ] `THR-PID.02b` — Implement telemetry struct: setpoint, PV (IR), PV (CAN coil), output, error, integral; send via SPI at 1 Hz
 - [ ] `THR-PID.02c` — Test PID performance: step response to 80°C, 120°C, 180°C; measure overshoot and settling time
 
 ---
@@ -122,7 +122,7 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 
 **Acceptance Criteria:**
 - [ ] Thermal runaway detection: if temperature rises >20°C/min above setpoint, trigger ALERT
-- [ ] Coil overtemperature: if NTC reads >150°C, immediately cut induction power
+- [ ] Coil overtemperature: if CAN coil temp >150°C, immediately cut induction power
 - [ ] Pan detection: if IR reads <30°C after 30 seconds at >50% power, assume no pan → shutdown
 - [ ] All thermal faults logged with timestamp, readings, and action taken
 - [ ] Recovery from ALERT requires temperature to return to setpoint ±10°C for 30 seconds

@@ -59,7 +59,7 @@ This document provides the comprehensive hardware architecture, wiring diagrams,
           │   │IMX219/ │ │10" Touch │      │Microwave     │ │  Sensors     │   │
           │   │IMX477  │ │Display   │      │Induction     │ │  MLX90614    │   │
           │   │Camera  │ │(DSI+I2C) │      │Surface (CAN) │ │  HX711      │   │
-          │   └────────┘ └──────────┘      └──────────────┘ │  NTC x2     │   │
+          │   └────────┘ └──────────┘      └──────────────┘ │             │   │
           │                                                  └──────────────┘   │
           │   ┌────────┐ ┌──────────┐      ┌──────────────┐ ┌──────────────┐   │
           │   │WiFi    │ │eMMC/SD   │      │DS3225 Main   │ │ASD SG90 x3  │   │
@@ -86,8 +86,6 @@ This document provides the comprehensive hardware architecture, wiring diagrams,
 | IR Thermometer | MLX90614ESF-BAA | I2C | STM32 I2C1 | Non-contact food surface temperature |
 | Load Cell ADC | HX711 | SPI-like GPIO | STM32 GPIO | 24-bit weight measurement from strain gauges |
 | Strain Gauges | 4x 5kg load cells | Wheatstone bridge | HX711 | Weight sensing under pot platform |
-| NTC Thermistor (coil) | 100k NTC 3950K | ADC voltage divider | STM32 ADC1 CH0 | Induction coil over-temp protection |
-| NTC Thermistor (ambient) | 100k NTC 3950K | ADC voltage divider | STM32 ADC1 CH1 | Enclosure ambient temperature |
 | Main Servo Motor | DS3225 25kg-cm | PWM (50Hz) | STM32 TIM1 CH1 (PA8) | Stirring arm rotation |
 | ASD Gate Servos | SG90 (x3) | PWM (50Hz) | STM32 TIM2 CH1-3 (PA0-PA2) | Seasoning dispenser gates |
 | ASD Vibration Motors | ERM 3V (x3) | GPIO | STM32 PC7, PD2, PA3 via MOSFET | Anti-clog mechanism (one per hopper) |
@@ -267,11 +265,6 @@ STM32G474RE (LQFP-64)
 │  ┌─── GPIO: Load Cells (HX711) ───┐                           │
 │  │  PC0  (GPIO)      ──► HX711 SCK (clock out)               │
 │  │  PC1  (GPIO)      ◄── HX711 DOUT (data in)                │
-│  └─────────────────────────────────┘                           │
-│                                                                │
-│  ┌─── ADC: NTC Thermistors ───────┐                           │
-│  │  PA4  (ADC2_IN17) ◄── NTC Coil divider midpoint           │
-│  │  PA5  (ADC2_IN13) ◄── NTC Ambient divider midpoint        │
 │  └─────────────────────────────────┘                           │
 │                                                                │
 │  ┌─── GPIO: Safety & Control ─────┐                           │
@@ -501,7 +494,7 @@ CAN Configuration:
 | 0x03 | DISPENSE | CM5 -> STM32 | Subsystem (ASD/CID/SLD), ID, grams/mode | Dispense via ASD servo, CID actuator, or SLD pump |
 | 0x04 | E_STOP | Bidirectional | - | Emergency shutdown command |
 | 0x10 | STATUS | STM32 -> CM5 | Bit flags: pot, arm, gates, heat | Current system status word |
-| 0x11 | TELEMETRY | STM32 -> CM5 | IR temp, NTC temps, weight, duty% | Periodic sensor data (10Hz) |
+| 0x11 | TELEMETRY | STM32 -> CM5 | IR temp, CAN coil temp, weight, duty% | Periodic sensor data (10Hz) |
 | 0x12 | HEARTBEAT | Bidirectional | Sequence number, uptime | Watchdog keepalive (1Hz) |
 | 0x13 | ACK/NACK | STM32 -> CM5 | Original msg ID, status code | Command acknowledgment |
 | 0x20 | SET_LED | CM5 -> STM32 | LED pattern, brightness | LED ring control (if on STM32) |
@@ -818,7 +811,6 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 
 - Keep I2C lines (MLX90614) short (<30cm), with 4.7k pull-ups near STM32
 - HX711 clock/data lines: shielded twisted pair if >20cm, ground guard traces
-- NTC ADC inputs: low-pass RC filter (10k + 100nF) at STM32 ADC pin
 - Camera CSI-2: differential pairs, matched length, <20cm FFC cable
 
 ### Power / Signal Ground Separation
@@ -871,7 +863,6 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 | **Sensors** | MLX90614ESF-BAA (IR thermo) | 1 | $12 | $12 |
 | | HX711 breakout board | 1 | $3 | $3 |
 | | 5kg load cells | 4 | $4 | $16 |
-| | 100k NTC thermistors | 2 | $1 | $2 |
 | | Reed switch (pot detect — backup/optional) | 1 | $1 | $1 |
 | **Actuators** | DS3225 25kg servo (main arm) | 1 | $20 | $20 |
 | | SG90 micro servos (ASD gates) | 3 | $3 | $9 |
@@ -945,8 +936,6 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 - [ ] IR: reads room temp object within +/-1C of reference thermometer
 - [ ] Load cells: tare on boot, measure 500g calibration weight within +/-5g
 - [ ] Load cells: track water evaporation over 30-minute simmer
-- [ ] NTC coil: reads ambient within +/-2C at room temp
-- [ ] NTC coil: tracks increasing temp during induction heating
 - [ ] Pot detection: reliably detects pot on/off
 
 ### Dispensing (ASD / CID / SLD)
@@ -977,7 +966,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 
 - **Module Thermal:** Microwave surface has internal thermal cutoff. Module reports coil temperature via CAN status.
 - **Food Over-Temperature:** IR thermometer monitors food surface. If >270C (beyond any recipe requirement), STM32 sends CAN off command and opens safety relay.
-- **Enclosure Thermal:** Ambient NTC monitors internal air temp. Warning at 60C, shutdown at 70C.
+- **Enclosure Thermal:** Exhaust fan provides ventilation. Module reports internal temp via CAN for enclosure monitoring.
 
 ### Mechanical Safety
 

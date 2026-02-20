@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-20
-version: 1.1
+version: 1.2
 status: Draft
 ---
 
@@ -26,8 +26,8 @@ This document details the compute subsystem components for the Epicura kitchen r
 │    CSI-2│  HDMI/DSI              PWM │  ADC  I2C              │
 │         │    │                    │  │    │    │               │
 │         ▼    ▼                    ▼  ▼    ▼    ▼               │
-│      Camera Display           Servos NTC  Load MLX            │
-│      IMX219 10.1"             Arm   Temp  Cell 90614          │
+│      Camera Display           Servos Load MLX                 │
+│      IMX219 10.1"             Arm   Cell  90614               │
 │             IPS               Gates       HX711               │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -46,7 +46,6 @@ This document details the compute subsystem components for the Epicura kitchen r
 | USB-C Cable (debug/power) | - | 1 | $5.00 | $5.00 | Generic | CM5 debug console and power delivery |
 | CSI-2 Ribbon Cable (15-pin) | 15-pin FFC, 200mm | 1 | $3.00 | $3.00 | Generic | Camera module to CM5 CSI connector |
 | HDMI Cable (flat ribbon) | Micro-HDMI to HDMI | 1 | $5.00 | $5.00 | Generic | CM5 to display connection |
-| ISO1050DUB (isolated CAN transceiver) | ISO1050DUBR | 1 | $3.50 | $3.50 | TI / Mouser | 5 kV RMS galvanic isolation, SOIC-8; CAN bus to induction module |
 
 ---
 
@@ -59,8 +58,7 @@ This document details the compute subsystem components for the Epicura kitchen r
 | STM32G474RE Nucleo | $18.00 |
 | 10.1" Display | $80.00 |
 | Cables | $13.00 |
-| ISO1050DUB (isolated CAN transceiver) | $3.50 |
-| **Category Subtotal** | **$199.50** |
+| **Category Subtotal** | **$196.00** |
 
 ---
 
@@ -84,7 +82,7 @@ This document details the compute subsystem components for the Epicura kitchen r
 - **Cortex-M4F @ 170 MHz** with FPU for PID calculations
 - **CAN-FD** peripheral (future production bus architecture)
 - **Advanced timers** (TIM1, TIM8) with complementary PWM for servo control
-- **12-bit ADC** (5 Msps) for NTC thermistor and load cell reading
+- **12-bit ADC** (5 Msps) for analog sensor reading
 - **UART** for CM5 communication link
 - Nucleo board provides ST-Link debugger and Arduino-compatible headers
 
@@ -124,3 +122,4 @@ This document details the compute subsystem components for the Epicura kitchen r
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
 | 1.1 | 2026-02-20 | Manas Pradhan | Added ISO1050DUB isolated CAN transceiver to component list and cost summary |
+| 1.2 | 2026-02-20 | Manas Pradhan | Moved ISO1050DUB ($3.50) to Actuation Components (now on Driver PCB); subtotal $199.50 → $196.00 |

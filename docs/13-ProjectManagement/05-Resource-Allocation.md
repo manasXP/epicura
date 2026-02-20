@@ -105,7 +105,7 @@ This document provides detailed resource allocation across all project phases, i
 
 | Role | Allocation | Tasks | Hours/Week |
 |------|------------|-------|------------|
-| Embedded Developer | 100% | PID controller, safety interlocks, NTC integration | 40 |
+| Embedded Developer | 100% | PID controller, safety interlocks, CAN coil temp integration | 40 |
 | Cook/Lab Assistant | 20% | Water boil tests, temperature logging | 8 |
 
 **Total:** 1.2 person-weeks per week × 2 weeks = **2.4 person-weeks**
@@ -619,7 +619,7 @@ Week 24: Sprint 12 (Validation) ← Integration complete
 ### Next Week Plan
 - Complete ST-004 (Power Distribution)
 - Begin ST-005 (CAN Integration)
-- Order Sprint 3 components (NTC, thermal fuse)
+- Order Sprint 3 components (thermal fuse)
 ```
 
 ---

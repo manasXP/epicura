@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
-modified: 2026-02-15
-version: 1.0
+modified: 2026-02-20
+version: 2.0
 status: Draft
 ---
 
@@ -41,11 +41,6 @@ This document details the sensing subsystem components for the Epicura kitchen r
 │  │LC││LC││LC││LC│ x4      │              │                   │
 │  └──┘└──┘└──┘└──┘         │              │                   │
 │                            │              │                   │
-│  ┌──────────────┐  ADC     │              │                   │
-│  │  NTC x2      │─────────►│              │                   │
-│  │  Thermistors │          │              │                   │
-│  └──────────────┘          │              │                   │
-│                            │              │                   │
 │  ┌──────────────┐  GPIO    │              │                   │
 │  │  Reed Switch │─────────►│              │                   │
 │  │  (Pot Detect)│          └──────────────┘                   │
@@ -76,7 +71,6 @@ This document details the sensing subsystem components for the Epicura kitchen r
 | IR Thermometer | MLX90614ESF-BAA | 1 | $12.00 | $12.00 | Mouser / DigiKey | Non-contact, I2C, 90° FOV, -70 to +380°C |
 | Load Cell (5kg) | CZL635 | 4 | $4.00 | $16.00 | Amazon / AliExpress | Wheatstone bridge, aluminum alloy |
 | HX711 ADC Module | HX711 breakout | 1 | $3.00 | $3.00 | Amazon / AliExpress | 24-bit, 80 SPS, SPI/GPIO interface |
-| NTC Thermistor (100k ohm) | NTCLE100E3104 | 2 | $1.00 | $2.00 | Mouser | Coil temp + ambient temp monitoring |
 
 ### Detection & Illumination
 
@@ -89,7 +83,6 @@ This document details the sensing subsystem components for the Epicura kitchen r
 
 | Component | Part Number | Qty | Unit Price | Subtotal | Supplier | Notes |
 |-----------|-------------|-----|------------|----------|----------|-------|
-| Resistors (10k ohm, NTC divider) | 0603, 1% | 2 | $0.10 | $0.20 | Any | Voltage divider for NTC thermistor ADC input |
 | Decoupling Caps (100nF) | 0603, X7R | 5 | $0.10 | $0.50 | Any | I2C/SPI line filtering and bypass |
 | Pull-up Resistors (4.7k ohm) | 0603, 1% | 2 | $0.10 | $0.20 | Any | I2C bus pull-ups for MLX90614 |
 
@@ -105,19 +98,18 @@ This document details the sensing subsystem components for the Epicura kitchen r
 | MLX90614 IR Thermometer | $12.00 |
 | Load Cells (4x CZL635) | $16.00 |
 | HX711 ADC | $3.00 |
-| NTC Thermistors (2x) | $2.00 |
 | Reed Switch | $1.00 |
 | LED Ring (WS2812B) | $5.00 |
-| Passive Components | $0.90 |
-| **Category Subtotal** | **$64.90** |
+| Passive Components | $0.70 |
+| **Category Subtotal** | **$62.70** |
 
 ### With IMX477 (Premium Option)
 
 | Item | Cost |
 |------|------|
 | IMX477 Camera | $50.00 |
-| All other sensors (same) | $39.90 |
-| **Category Subtotal** | **$89.90** |
+| All other sensors (same) | $37.70 |
+| **Category Subtotal** | **$87.70** |
 
 ---
 
@@ -151,12 +143,6 @@ This document details the sensing subsystem components for the Epicura kitchen r
 - **HX711 ADC:** 24-bit resolution, 80 SPS mode for responsive weight tracking
 - Calibration: 5-point (0, 500g, 1000g, 2000g, 3000g) with known weights
 
-### NTC Thermistor Usage
-- **NTC 1 (enclosure hot-zone):** Mounted near microwave surface module, safety monitoring at 200°C
-- **NTC 2 (ambient temperature):** Inside enclosure, used for temperature compensation
-- **Voltage divider:** 10k ohm series resistor, midpoint to STM32 ADC (12-bit)
-- **Steinhart-Hart equation** for accurate temperature conversion in firmware
-
 ---
 
 ## Related Documentation
@@ -177,3 +163,4 @@ This document details the sensing subsystem components for the Epicura kitchen r
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
+| 2.0 | 2026-02-20 | Manas Pradhan | Removed NTC thermistors (coil temp via CAN, ambient not needed); subtotal $64.90 → $62.70 |

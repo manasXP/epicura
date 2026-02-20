@@ -135,7 +135,7 @@ aliases: [UI Epic, Touchscreen Epic]
 **Acceptance Criteria:**
 - [ ] WiFi settings: scan, connect, forget networks; show signal strength
 - [ ] Calibration screen: trigger dispenser calibration, view results, last calibration date
-- [ ] Diagnostics screen: sensor readings (IR temp, NTC temps, load cells), actuator status, CAN bus status
+- [ ] Diagnostics screen: sensor readings (IR temp, CAN coil temp, load cells), actuator status, CAN bus status
 - [ ] System info: firmware version, device UUID, storage usage, uptime
 - [ ] Factory reset option (with double-confirmation)
 - [ ] OTA update check and install progress display

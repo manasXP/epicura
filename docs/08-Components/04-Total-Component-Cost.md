@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-20
-version: 4.0
+version: 6.0
 status: Draft
 ---
 
@@ -17,16 +17,16 @@ This document provides a consolidated view of all component costs for the Epicur
 
 | Category | Subtotal | % of Total | Details |
 |----------|----------|------------|---------|
-| [[01-Compute-Module-Components|Compute Modules]] | $199.50 | 25% | CM5, STM32, display, cables, ISO1050DUB isolated CAN transceiver |
-| [[02-Actuation-Components|Actuation]] | $278.85 | 35% | Induction hob, P-ASD pneumatic system + PCF8574 I2C expander, CID linear actuators, SLD pumps/solenoids/load cell, relays, exhaust fan, filters |
-| [[03-Sensor-Components|Sensors]] | $64.90 | 8% | Camera, IR thermo, load cells, NTC |
-| **Component Total** | **$543.25** | **69%** | Electronic components only |
+| [[01-Compute-Module-Components|Compute Modules]] | $196.00 | 25% | CM5, STM32, display, cables |
+| [[02-Actuation-Components|Actuation]] | $282.35 | 36% | Induction hob, P-ASD pneumatic system + PCF8574 I2C expander, CID linear actuators, SLD pumps/solenoids/load cell, ISO1050DUB CAN transceiver, relays, exhaust fan, filters |
+| [[03-Sensor-Components|Sensors]] | $62.70 | 8% | Camera, IR thermo, load cells |
+| **Component Total** | **$541.05** | **69%** | Electronic components only |
 
 ---
 
 ## Detailed Component Breakdown
 
-### Compute Modules ($199.50)
+### Compute Modules ($196.00)
 
 | Item | Cost |
 |------|------|
@@ -35,9 +35,8 @@ This document provides a consolidated view of all component costs for the Epicur
 | STM32G474RE Nucleo | $18.00 |
 | 10.1" IPS Display | $80.00 |
 | Storage + Cables | $25.00 |
-| ISO1050DUB (isolated CAN transceiver) | $3.50 |
 
-### Actuation ($194.85)
+### Actuation ($282.35)
 
 | Item | Cost |
 |------|------|
@@ -50,6 +49,7 @@ This document provides a consolidated view of all component costs for the Epicur
 | Load Cells + HX711 — SLD (2×) | $16.00 |
 | H-Bridge Driver — CID | $5.00 |
 | Limit Switches — CID (4x) | $2.00 |
+| ISO1050DUB (isolated CAN transceiver) | $3.50 |
 | CAN Termination + Decoupling | $0.13 |
 | Safety Relay Module (2x) | $6.00 |
 | Motor Driver Board | $8.00 |
@@ -57,7 +57,7 @@ This document provides a consolidated view of all component costs for the Epicur
 | Exhaust Fan + Filtration | $22.50 |
 | Piezo Buzzer + MOSFET | $0.85 |
 
-### Sensors ($64.90)
+### Sensors ($62.70)
 
 | Item | Cost |
 |------|------|
@@ -65,9 +65,8 @@ This document provides a consolidated view of all component costs for the Epicur
 | MLX90614 IR Thermometer | $12.00 |
 | Load Cells (4x CZL635) | $16.00 |
 | HX711 ADC | $3.00 |
-| NTC Thermistors (2x) | $2.00 |
 | Reed Switch + LED Ring | $6.00 |
-| Passive Components | $0.90 |
+| Passive Components | $0.70 |
 
 ---
 
@@ -89,10 +88,10 @@ This document provides a consolidated view of all component costs for the Epicur
 
 | Category | Cost |
 |----------|------|
-| Electronic Components | $543.25 |
+| Electronic Components | $541.05 |
 | Mechanical / Other | $250.00 |
-| **Total BOM (Prototype)** | **$793.25** |
-| **With Contingency (+20%)** | **~$952** |
+| **Total BOM (Prototype)** | **$791.05** |
+| **With Contingency (+20%)** | **~$949** |
 | **With Tools & Consumables** | **$1,100-1,350** |
 
 ---
@@ -109,7 +108,7 @@ This document provides a consolidated view of all component costs for the Epicur
 | Linear Actuators — CID (2x) | $16.00 | $8.00 | Bulk pricing |
 | Pumps + Solenoids — SLD | $28.00 | $14.00 | Bulk pricing |
 | DS3225 Main Arm Servo | $15.00 | $8.00 | Bulk pricing |
-| Sensors (all) | $64.90 | $35.00 | Direct from manufacturer, MOQ pricing |
+| Sensors (all) | $62.70 | $35.00 | Direct from manufacturer, MOQ pricing |
 | Enclosure | $80.00 (3D print) | $15.00 (injection mold) | Mold cost amortized over production run |
 | PCBs | $40.00 (prototype) | $8.00 (panel production) | Integrated carrier + interface board |
 | Power Supply | $30.00 | $12.00 | Integrated SMPS on main PCB |
@@ -118,7 +117,7 @@ This document provides a consolidated view of all component costs for the Epicur
 | Wiring / Connectors | $30.00 | $10.00 | Custom harness, bulk connectors |
 | Exhaust + Filters | $22.50 | $8.00 (OEM blower + bulk filters) | Custom blower + injection-molded housing |
 | Other (CAN, relays, drivers, load cell, cables, buzzer) | $94.85 | $20.00 (integrated into PCB + bulk) | Small components absorbed into custom PCB at volume |
-| **Total Unit** | **~$793** | **~$337** | **~57% cost reduction** |
+| **Total Unit** | **~$791** | **~$335** | **~58% cost reduction** |
 
 ---
 
@@ -150,7 +149,7 @@ This document provides a consolidated view of all component costs for the Epicur
 │  └─ Mechanical (6%)     ██████                                           │
 │  └─ PCBs/PSU (9%)       █████████                                        │
 │                                                                          │
-│  Total Prototype BOM: ~$793                                              │
+│  Total Prototype BOM: ~$791                                              │
 └────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -233,3 +232,5 @@ This document provides a consolidated view of all component costs for the Epicur
 | 2.0 | 2026-02-16 | Manas Pradhan | Update costs for P-ASD pneumatic redesign (+$84 to actuation); new prototype BOM ~$784 |
 | 3.0 | 2026-02-16 | Manas Pradhan | Added PCF8574 I2C GPIO expander (+$0.50); prototype BOM ~$785 |
 | 4.0 | 2026-02-20 | Manas Pradhan | Moved CAN transceiver from Actuation to Compute (ISO1050DUB $3.50 replaces $3.00 non-isolated); updated all totals; prototype BOM ~$793 |
+| 5.0 | 2026-02-20 | Manas Pradhan | Removed NTC thermistors ($2.00) and divider resistors ($0.20) from sensors; coil temp via CAN, ambient not needed; prototype BOM ~$791 |
+| 6.0 | 2026-02-20 | Manas Pradhan | Moved ISO1050DUB ($3.50) from Compute Modules to Actuation (now on Driver PCB); Compute $199.50→$196.00, Actuation $278.85→$282.35; component total unchanged ($541.05) |

@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-20
-version: 9.0
+version: 10.0
 status: Draft
 ---
 
@@ -43,7 +43,7 @@ The CM5IO board is an off-the-shelf Raspberry Pi carrier board that sits on top 
          │    │  SPI2 ◄─────────────────────── J_CM5: SPI to CM5 (pins 19,21,23,24)
          │    │  PB3 (IRQ) ────────────────── J_CM5: IRQ to CM5 (pin 7)
          │    │                           │                │
-         │    │  FDCAN1 (PB8/PB9) ─────────── J_CAN: CAN to Microwave Surface
+         │    │  FDCAN1 (PB8/PB9) ─────────── J_STACK: CAN to Driver PCB ISO1050
          │    │                           │                │
          │    │  TIM1_CH1 (PA8) ───────────── J_STACK: DS3225 Servo (via Driver PCB)
          │    │                           │                │
@@ -93,9 +93,9 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 │  └──────────────────────────────────────────────────────────┘  │
 │                                                                │
 │  ┌─── CAN: Microwave Surface ─────┐                           │
-│  │  PB8  (FDCAN1_RX) ◄── ISO1050 TXD (isolated CAN xcvr)    │  │
-│  │  PB9  (FDCAN1_TX) ──► ISO1050 RXD (isolated CAN xcvr)    │  │
-│  │  500 kbps, 120Ω term, 5kV isolation barrier on J_CAN         │  │
+│  │  PB8  (FDCAN1_RX) ◄── J_STACK Pin 19 → Driver PCB ISO1050│  │
+│  │  PB9  (FDCAN1_TX) ──► J_STACK Pin 20 → Driver PCB ISO1050│  │
+│  │  500 kbps, isolation on Driver PCB                        │  │
 │  └─────────────────────────────────┘                           │
 │                                                                │
 │  ┌─── PWM: Main Servo Arm ────────┐                           │
@@ -158,8 +158,8 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 │  │  PA12 (USB_DP)    ── Reserved for USB (future)            │  │
 │  │  PB4  (GPIO)      ── Available                            │  │
 │  │  PB5  (GPIO)      ── Available                            │  │
-│  │  PB8  (FDCAN1_RX)  ── CAN RX via ISO1050 (isolated)       │  │
-│  │  PB9  (FDCAN1_TX)  ── CAN TX via ISO1050 (isolated)       │  │
+│  │  PB8  (FDCAN1_RX)  ── CAN RX via J_STACK Pin 19 → Driver PCB ISO1050 │  │
+│  │  PB9  (FDCAN1_TX)  ── CAN TX via J_STACK Pin 20 → Driver PCB ISO1050 │  │
 │  └─────────────────────────────────┘                           │
 │                                                                │
 │  Debug: SWD via PA13 (SWDIO) / PA14 (SWCLK)                  │
@@ -258,8 +258,7 @@ The controller PCB receives 5V DC via J_STACK pins 11-12 from the Driver PCB's T
 | HX711 | 1.5 | 2 | 10 Hz mode |
 | I2C pull-ups (2x 4.7k) | 1.4 | 1.4 | At 3.3V |
 | Status LED | 5 | 10 | Via 330 ohm resistor |
-| ISO1050 (3.3V side) | 15 | 20 | Isolated CAN transceiver VCC1 |
-| **Total 3.3V** | **~105** | **~186** | Well within LDO capacity |
+| **Total 3.3V** | **~90** | **~166** | Well within LDO capacity |
 
 > [!note]
 > Servo motors (DS3225) are powered from a separate 24V→6.5V buck converter on the Driver PCB, not from this 3.3V LDO. The 5V rail is sourced from a UPS-backed 12V→5V converter (TPS54531) on the Driver PCB, ensuring the controller and CM5 stay powered during AC outages. The 5V rail passes through the Controller PCB upward to the CM5IO via J_CM5 pins 2/4 (up to 3A for CM5 peak load). Only the PWM signal lines route through the controller PCB.
@@ -364,7 +363,7 @@ The CM5 (master) initiates all SPI transactions. The STM32 (slave) asserts the I
 | DISPENSE_SLD | 0x07 | CM5 → STM32 | channel (uint8: OIL=1, WATER=2), target_g (uint16) |
 | E_STOP | 0x04 | CM5 → STM32 | reason_code (uint8) |
 | HEARTBEAT | 0x05 | Bidirectional | uptime_ms (uint32) |
-| TELEMETRY | 0x10 | STM32 → CM5 | ir_temp, ntc_temps, weight, duty_pct |
+| TELEMETRY | 0x10 | STM32 → CM5 | ir_temp, can_coil_temp, weight, duty_pct |
 | SENSOR_DATA | 0x11 | STM32 → CM5 | adc_values[], ir_temp, load_cells[] |
 | STATUS | 0x12 | STM32 → CM5 | safety_state, error_code, flags |
 | PURGE_PASD | 0x0B | CM5 → STM32 | cartridge_id (uint8: 1-6, or 0xFF=all) |
@@ -402,18 +401,6 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 
 > [!note]
 > The 5V pins (2, 4) are driven by the Controller PCB from the UPS-backed 5V rail received via J_STACK. This means the CM5 module is powered through the same UPS-backed supply as the STM32, ensuring both processors stay alive during AC outages. The CM5IO's USB-C port can still be used for debug console access but is not the primary power source.
-
-### J_CAN — CAN Bus to Microwave Surface (JST-XH 2.5mm, 4-pin)
-
-| Pin | Signal | STM32 Pin | Notes |
-|-----|--------|-----------|-------|
-| 1 | CAN_H | via CAN transceiver | CAN bus high |
-| 2 | CAN_L | via CAN transceiver | CAN bus low |
-| 3 | GND_ISO | GND2 (isolated) | Isolated bus ground (NOT system GND) |
-| 4 | +5V (optional) | — | Transceiver power (if needed by module) |
-
-> [!note]
-> STM32 FDCAN1 pins PB8 (RX) and PB9 (TX) connect to an **ISO1050DUB isolated CAN transceiver** (TI, SOIC-8) on the controller PCB. The ISO1050 provides 5 kV RMS galvanic isolation (reinforced per UL 1577) between the STM32 logic side (VCC1 = 3.3V, GND1 = system ground) and the CAN bus side (VCC2 = 5V, GND2 = isolated bus ground). This isolation protects the STM32 and control electronics from ground bounce and EMI transients generated by the 1,800W induction module's IGBT switching, and satisfies IEC 60335 requirements for galvanic isolation between mains-connected power electronics and low-voltage control circuits. The transceiver drives CAN_H/CAN_L to J_CAN. 120Ω termination resistor on-board. CAN cable shield connects to GND_ISO at the Controller PCB end only (single-point ground).
 
 ### J_IR — MLX90614 I2C (JST-SH 1.0mm, 4-pin)
 
@@ -473,7 +460,7 @@ The stacking connector passes 24V power, ground, 5V/3.3V references, all servo P
 | **P-ASD Subsystem (Pins 15-20, 39)** ||||
 | 15 | PASD_PUMP_PWM (PA0) | Out | 16 | PWR_FAIL (PA1) | Out |
 | 17 | HX711_SCK (PC0) | Out | 18 | HX711_DOUT (PC1) | In |
-| 19 | Reserved (was PASD_SOL4) | — | 20 | Reserved (was PASD_SOL5) | — |
+| 19 | FDCAN1_RX (PB8) | In | 20 | FDCAN1_TX (PB9) | Out |
 | **CID Subsystem (Pins 21-26)** ||||
 | 21 | CID_LACT1_EN (PA10) | Out | 22 | CID_LACT1_PH (PB4) | Out |
 | 23 | CID_LACT2_EN (PB5) | Out | 24 | CID_LACT2_PH (PC2) | Out |
@@ -498,6 +485,7 @@ The stacking connector passes 24V power, ground, 5V/3.3V references, all servo P
 | 5V | 11-12 | 2 | 5V passthrough |
 | 3.3V | 13-14 | 2 | Logic reference |
 | **P-ASD** (Seasoning) | 15 | 1 | 1× pump PWM (solenoids via PCF8574 on Driver PCB, I2C1) |
+| **CAN** (Induction) | 19-20 | 2 | FDCAN1_RX/TX to Driver PCB ISO1050 → microwave surface |
 | **CID** (Coarse) | 21-26 | 6 | 2× actuator EN/PH, 2× GND |
 | **Exhaust Fans** | 27-28 | 2 | 2× fan PWM (independent speed control, 120mm) |
 | **SLD** (Liquid) | 29-36 | 8 | 2× pump PWM/DIR, 2× solenoid, I2C (INA219) |
@@ -645,9 +633,9 @@ Material: FR4 (Tg 150°C minimum)
 │  └────────────────┘  └────────────────┘  └───────────┘  │
 │                                                         │
 │  ┌────────────────┐  ┌────────────────┐  ┌───────────┐  │
-│  │  CAN + I2C     │  │  Safety I/O    │  │  LED Ring │  │
-│  │  Connectors    │  │  (J_SAFE)      │  │  (J_LED)  │  │
-│  │  (J_CAN, J_IR) │  │                │  │           │  │
+│  │  I2C Sensor    │  │  Safety I/O    │  │  LED Ring │  │
+│  │  Connector     │  │  (J_SAFE)      │  │  (J_LED)  │  │
+│  │  (J_IR)        │  │                │  │           │  │
 │  │                │  │                │  │           │  │
 │  │  BUS ZONE      │  │  SAFETY ZONE   │  │ LED ZONE  │  │
 │  └────────────────┘  └────────────────┘  └───────────┘  │
@@ -673,7 +661,6 @@ Material: FR4 (Tg 150°C minimum)
 | GND plane | Unbroken under STM32 and analog section | Low-impedance return path |
 | I2C traces | Keep <30mm on board, pull-ups near STM32 | Minimize capacitance |
 | Safety relay | Creepage >2mm between 5V/12V and 3.3V logic | IEC 60335 clearance |
-| CAN isolation | Creepage ≥6.4mm between GND1 (system) and GND2 (bus) zones | IEC 60335 reinforced insulation; slot/gap in ground plane under ISO1050 |
 | Thermal pad | Via array under STM32 to GND plane (9 vias min) | Thermal dissipation |
 
 ### Board Dimensions
@@ -746,17 +733,11 @@ Material: FR4 (Tg 150°C minimum)
 | SJ1 | Solder jumper | 0603 pad | 1 | — | IRQ/SWO select |
 | **Connectors** | | | | | |
 | J_CM5 | 2x20 pin socket | 2.54mm, 8.5mm stacking | 1 | $0.80 | CM5IO GPIO header receptor (SPI, IRQ, LED data, 5V power) |
-| J_CAN | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | CAN bus to microwave surface |
 | J_IR | JST-SH 4-pin | 1.0mm pitch | 1 | $0.20 | MLX90614 I2C |
 | J_SWD | Pin header 2x5 | 1.27mm pitch | 1 | $0.30 | SWD debug |
 | J_SAFE | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | Safety I/O |
 | J_LED | JST-XH 3-pin | 2.5mm pitch | 1 | $0.12 | LED ring (5V_SW + DATA + GND) |
 | J_STACK | 2x20 pin header | 2.54mm, 11mm stacking | 1 | $0.80 | Stacking connector to Driver PCB |
-| U_CAN | ISO1050DUB | SOIC-8 | 1 | $3.50 | TI isolated CAN transceiver, 5kV RMS, CAN 2.0B up to 1 Mbps |
-| C_CAN1 | 100nF MLCC | 0402 | 1 | $0.01 | VCC1 decoupling (3.3V STM32 side) |
-| C_CAN2a | 100nF MLCC | 0402 | 1 | $0.01 | VCC2 high-freq decoupling (5V bus side) |
-| C_CAN2b | 10uF MLCC | 0805 | 1 | $0.11 | VCC2 bulk decoupling (5V bus side) |
-| R_TERM | 120 ohm | 0402 | 1 | $0.01 | CAN bus termination |
 | **PCB** | 4-layer, 160x90mm | FR4 ENIG | 1 | $4.50 | JLCPCB batch pricing (5 pcs) |
 
 **Estimated unit cost (components + PCB): ~$18 USD** (at single-unit prototype quantities; ~$10 at 100+ volume)
@@ -829,3 +810,4 @@ Material: FR4 (Tg 150°C minimum)
 | 7.0 | 2026-02-20 | Manas Pradhan | Replaced J_SPI (6-pin JST-SH + ribbon cable) with J_CM5 (2x20 pin socket) that mates directly with CM5IO 40-pin GPIO header; 5V from J_STACK now feeds CM5IO through J_CM5 pins 2/4; LED ring data (GPIO18) routes through J_CM5 pin 12 instead of jumper wire; eliminates ribbon cable between Controller PCB and CM5IO |
 | 8.0 | 2026-02-20 | Manas Pradhan | Removed J_LC (HX711 load cell connector); pot load cell signals (PC0/PC1) now route via J_STACK pins 17-18 to Driver PCB J_SLD connector; removed J_PWR (redundant, 5V comes via J_STACK) |
 | 9.0 | 2026-02-20 | Manas Pradhan | Removed J_NTC and both NTC thermistors (coil temp reported via CAN by induction module; ambient NTC not needed); freed PA4/PA5; removed ADC filter circuit, related BOM items (R14-R15, C14-C15), and ADC layout rule |
+| 10.0 | 2026-02-20 | Manas Pradhan | Moved entire CAN subsystem (ISO1050DUB, decoupling caps, termination resistor, J_CAN) to Driver PCB; FDCAN1 logic signals (PB8/PB9) now route via J_STACK pins 19-20; removed CAN isolation creepage rule from Controller PCB layout |

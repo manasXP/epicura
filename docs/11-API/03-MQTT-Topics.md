@@ -218,7 +218,7 @@ Device alerts that require backend processing or user notification.
   "timestamp": "2026-02-14T12:29:00Z",
   "alert_type": "sensor_degraded",
   "severity": "warning",
-  "message": "IR thermometer readings unstable — using NTC fallback",
+  "message": "IR thermometer readings unstable — using CAN coil temp fallback",
   "details": {
     "sensor": "MLX90614",
     "error_count": 5,

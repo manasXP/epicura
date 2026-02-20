@@ -58,13 +58,13 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160�
 - **Blocks:** [[PCB-pcb-design#PCB-CTL.02|PCB-CTL.02]], [[PCB-pcb-design#PCB-FAB.01|PCB-FAB.01]]
 
 **Acceptance Criteria:**
-- [ ] ADC channels allocated for NTC thermistors and current sensing
+- [ ] ADC channels allocated for current sensing
 - [ ] GPIO allocated for 6× P-ASD solenoid valves + 2× SLD solenoid valves, e-stop input, safety relay output
 - [ ] CM5IO SPI interface connector (2×10 pin header) with level shifting if needed
 - [ ] ERC passes with zero errors in KiCAD
 
 **Tasks:**
-- [ ] `PCB-CTL.01e` — Add ADC channels for NTC thermistors, current sensing
+- [ ] `PCB-CTL.01e` — Add ADC channels for current sensing
 - [ ] `PCB-CTL.01f` — Add GPIO for solenoid valve control (6× P-ASD + 2× SLD), e-stop input, safety relay output
 - [ ] `PCB-CTL.01g` — Add CM5IO SPI connector with level shifting; run ERC; fix all errors; generate netlist
 

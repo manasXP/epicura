@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-20
-version: 4.0
+version: 5.0
 status: Draft
 ---
 
@@ -69,7 +69,8 @@ This document details the actuation subsystem components for the Epicura kitchen
 | H-Bridge Motor Driver — CID | DRV8876RGTR (x2) | 2 | $2.50 | $5.00 | Mouser | CID linear actuator EN/PH direction + speed |
 | Limit Switches (micro) — CID | Generic micro switch | 4 | $0.50 | $2.00 | Amazon | CID home/extend position detection |
 | PCF8574 I2C GPIO Expander — P-ASD | PCF8574 (SOIC-16) | 1 | $0.50 | $0.50 | LCSC / Mouser | P-ASD solenoid V1-V6 gate driver (I2C1, addr 0x20) |
-| CAN Termination + Decoupling | 120Ω + MLCC caps | 1 lot | $0.13 | $0.13 | LCSC | CAN bus passives (transceiver ISO1050DUB listed under [[01-Compute-Module-Components|Compute Modules]]) |
+| ISO1050DUB (isolated CAN transceiver) | ISO1050DUBR | 1 | $3.50 | $3.50 | TI / Mouser | 5 kV RMS galvanic isolation, SOIC-8; on Driver PCB, CAN bus to induction module |
+| CAN Termination + Decoupling | 120Ω + MLCC caps | 1 lot | $0.13 | $0.13 | LCSC | CAN bus passives on Driver PCB |
 | Relay Module (5V, 10A) | SRD-05VDC-SL-C | 2 | $3.00 | $6.00 | Amazon | Induction on/off and power cycling control (prototype) |
 | Motor Driver Board | L298N or custom | 1 | $8.00 | $8.00 | Amazon | Servo power distribution and level shifting |
 | Power Connectors (XT60) | XT60 male+female | 4 | $1.00 | $4.00 | Amazon | High-current connections for induction and servo power |
@@ -98,13 +99,14 @@ This document details the actuation subsystem components for the Epicura kitchen
 | H-Bridge Driver — CID | $5.00 |
 | Limit Switches — CID (4x) | $2.00 |
 | PCF8574 I2C GPIO Expander (P-ASD) | $0.50 |
+| ISO1050DUB (isolated CAN transceiver) | $3.50 |
 | CAN Termination + Decoupling | $0.13 |
 | Relay Module (safety, 2x) | $6.00 |
 | Motor Driver Board | $8.00 |
 | Connectors + Wiring | $17.00 |
 | Exhaust Fan + Filtration | $22.50 |
 | Piezo Buzzer + MOSFET | $0.85 |
-| **Category Subtotal** | **$286.98** |
+| **Category Subtotal** | **$290.48** |
 
 ---
 
@@ -156,7 +158,7 @@ This document details the actuation subsystem components for the Epicura kitchen
 | Linear actuators x2 (CID) | $16 | $8 (bulk) | 50% |
 | Peristaltic pumps x2 (SLD) | $20 | $10 (bulk) | 50% |
 | Solenoid valves x2 (SLD) | $8 | $4 (bulk) | 50% |
-| CAN transceiver (ISO1050DUB) | Listed under Compute Modules | — | — |
+| CAN transceiver (ISO1050DUB) | $3.50 (on Driver PCB) | $2.50 (bulk) | 29% |
 | Wiring | $20 | $8 (harness) | 60% |
 
 ---
@@ -183,3 +185,4 @@ This document details the actuation subsystem components for the Epicura kitchen
 | 2.0 | 2026-02-16 | Manas Pradhan | Replace ASD (3× SG90 servo hoppers) with P-ASD pneumatic puff-dosing system (pump + 6× solenoid valves + sealed cartridges) |
 | 3.0 | 2026-02-16 | Manas Pradhan | Added PCF8574 I2C GPIO expander ($0.50) for P-ASD solenoid control |
 | 4.0 | 2026-02-20 | Manas Pradhan | Moved CAN transceiver (now ISO1050DUB) to Compute Modules; replaced with CAN termination + decoupling passives ($0.13); subtotal $289.85 → $286.98 |
+| 5.0 | 2026-02-20 | Manas Pradhan | Moved ISO1050DUB ($3.50) back from Compute Modules to Actuation (now on Driver PCB); subtotal $286.98 → $290.48 |

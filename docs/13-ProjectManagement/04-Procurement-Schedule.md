@@ -150,7 +150,6 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 | Item | Part Number | Description | Qty | Supplier | Unit Cost | Lead Time | Order By |
 |------|-------------|-------------|-----|----------|-----------|-----------|----------|
-| NTC Thermistor | NTCLE100E3103JB0 | 100K 1% 3950K radial | 5 | Mouser 594-2381-640-65103 | $0.45 | 1 week | Week 2 |
 | Thermal Fuse | 240C 10A | Axial thermal cutoff | 2 | Mouser 576-240C10A | $2.80 | 1 week | Week 2 |
 | E-Stop Button | XB4BS8442 | 22mm NC emergency stop red | 1 | Mouser 584-XB4BS8442 | $12 | 2 weeks | Week 1 |
 | Test Pot | - | SS304 3L flat-bottom | 1 | Amazon B08XXXXX | $20 | 3 days | Week 4 |
