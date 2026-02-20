@@ -32,6 +32,7 @@ Full system integration testing, safety certification testing, reliability endur
 - **Sprint:** [[sprint-11|Sprint 11]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#92](https://github.com/manasXP/epicura/issues/92)
 - **Blocked by:** [[RCP-recipe#RCP-FSM.01|RCP-FSM.01]], [[RCP-recipe#RCP-DSP.01|RCP-DSP.01]], [[UI-touchscreen#UI-COK.01|UI-COK.01]], [[THR-thermal#THR-PID.01|THR-PID.01]], [[ARM-actuation#ARM-SRV.01|ARM-SRV.01]]
 - **Blocks:** [[INT-integration#INT-SYS.02|INT-SYS.02]]
 
@@ -54,6 +55,7 @@ Full system integration testing, safety certification testing, reliability endur
 - **Sprint:** [[sprint-11|Sprint 11]]
 - **Priority:** P0
 - **Points:** 3
+- **GitHub:** [#93](https://github.com/manasXP/epicura/issues/93)
 - **Blocked by:** [[INT-integration#INT-SYS.01|INT-SYS.01]]
 - **Blocks:** [[INT-integration#INT-REL.01|INT-REL.01]], [[EMB-embedded#EMB-LCH.01|EMB-LCH.01]]
 
@@ -74,6 +76,7 @@ Full system integration testing, safety certification testing, reliability endur
 - **Sprint:** [[sprint-11|Sprint 11]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#94](https://github.com/manasXP/epicura/issues/94)
 - **Blocked by:** [[EMB-embedded#EMB-SAF.01|EMB-SAF.01]], [[THR-thermal#THR-SAF.01|THR-SAF.01]]
 - **Blocks:** [[INT-integration#INT-LCH.01|INT-LCH.01]]
 
@@ -100,6 +103,7 @@ Full system integration testing, safety certification testing, reliability endur
 - **Sprint:** [[sprint-12|Sprint 12]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#95](https://github.com/manasXP/epicura/issues/95)
 - **Blocked by:** [[INT-integration#INT-SYS.02|INT-SYS.02]]
 - **Blocks:** [[INT-integration#INT-LCH.01|INT-LCH.01]]
 
@@ -125,6 +129,7 @@ Full system integration testing, safety certification testing, reliability endur
 - **Sprint:** [[sprint-12|Sprint 12]]
 - **Priority:** P0
 - **Points:** 5
+- **GitHub:** [#96](https://github.com/manasXP/epicura/issues/96)
 - **Blocked by:** [[INT-integration#INT-SAF.01|INT-SAF.01]], [[INT-integration#INT-REL.01|INT-REL.01]], [[EMB-embedded#EMB-LCH.01|EMB-LCH.01]], [[EMB-embedded#EMB-OTA.01|EMB-OTA.01]], [[BE-backend#BE-LCH.01|BE-LCH.01]]
 - **Blocks:** None
 
