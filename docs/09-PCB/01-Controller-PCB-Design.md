@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-20
-version: 8.0
+version: 9.0
 status: Draft
 ---
 
@@ -55,7 +55,7 @@ The CM5IO board is an off-the-shelf Raspberry Pi carrier board that sits on top 
          │    │                           │                │
          │    │  GPIO (PC0/PC1) ───────────── J_STACK: HX711 (via Driver PCB)
          │    │                           │                │
-         │    │  ADC2 (PA4/PA5) ───────────── J_NTC: NTC Inputs
+         │    │  PA4/PA5 ─────────────────── Available (was NTC inputs)
          │    │                           │                │
          │    │  GPIO (PB0) ───────────────── Q1: Safety Relay Driver
          │    │  GPIO (PB1) ◄──────────────── SW1: Pot Detection
@@ -126,9 +126,9 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 │  │  PC1  (GPIO)      ◄── HX711 DOUT (data in)               │  │
 │  └─────────────────────────────────┘                           │
 │                                                                │
-│  ┌─── ADC: NTC Thermistors ───────┐                           │
-│  │  PA4  (ADC2_IN17) ◄── NTC Coil divider midpoint          │  │
-│  │  PA5  (ADC2_IN13) ◄── NTC Ambient divider midpoint       │  │
+│  ┌─── Reserved / Available ───────┐                           │
+│  │  PA4  ── Available (was NTC Coil)                          │  │
+│  │  PA5  ── Available (was NTC Ambient)                       │  │
 │  └─────────────────────────────────┘                           │
 │                                                                │
 │  ┌─── GPIO: Safety & Control ─────┐                           │
@@ -179,8 +179,8 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 | PA1 | COMP2_INP | 24V Power Fail Detection (COMP2) | Input | J_STACK Pin 16 (PWR_FAIL output) | Power |
 | PA2 | GPIO | LED Ring Power Enable | Output | J_LED (via Q2/Q3 MOSFET) | Illumination |
 | PA3 | — | Available (was P-ASD Sol V5) | — | — | — |
-| PA4 | ADC2_IN17 | NTC Coil | Input | J_NTC | Sensors |
-| PA5 | ADC2_IN13 | NTC Ambient | Input | J_NTC | Sensors |
+| PA4 | — | Available (was NTC Coil) | — | — | — |
+| PA5 | — | Available (was NTC Ambient) | — | — | — |
 | PA6 | TIM3_CH1 | Exhaust Fan 1 PWM | Output | J_STACK Pin 27 | Exhaust |
 | PA7 | GPIO | SLD Solenoid 1 Enable | Output | J_STACK Pin 33 | SLD |
 | PA8 | TIM1_CH1 | Main Servo (DS3225) | Output | J_STACK Pin 37 | Main |
@@ -257,7 +257,6 @@ The controller PCB receives 5V DC via J_STACK pins 11-12 from the Driver PCB's T
 | MLX90614 | 1.5 | 2 | I2C, continuous measurement |
 | HX711 | 1.5 | 2 | 10 Hz mode |
 | I2C pull-ups (2x 4.7k) | 1.4 | 1.4 | At 3.3V |
-| NTC dividers (2x 100k) | 0.07 | 0.07 | Negligible |
 | Status LED | 5 | 10 | Via 330 ohm resistor |
 | ISO1050 (3.3V side) | 15 | 20 | Isolated CAN transceiver VCC1 |
 | **Total 3.3V** | **~105** | **~186** | Well within LDO capacity |
@@ -425,15 +424,6 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 | 3 | VCC | 3.3V | — |
 | 4 | GND | GND | — |
 
-### J_NTC — NTC Thermistor Inputs (JST-XH 2.5mm, 4-pin)
-
-| Pin | Signal | STM32 Pin | Notes |
-|-----|--------|-----------|-------|
-| 1 | NTC_COIL | PA4 (ADC2_IN17) | Voltage divider midpoint |
-| 2 | NTC_AMB | PA5 (ADC2_IN13) | Voltage divider midpoint |
-| 3 | 3.3V | 3.3V | Top of voltage dividers |
-| 4 | GND | GND | — |
-
 ### J_SWD — SWD Debug (10-pin 1.27mm Cortex Debug or 6-pin TagConnect)
 
 | Pin | Signal | STM32 Pin |
@@ -574,21 +564,6 @@ Pot present → magnet closes reed → PB1 = LOW
 Pot absent → reed open → PB1 = HIGH (pulled up)
 ```
 
-### ADC Input Filtering (NTC Channels)
-
-```
-NTC Thermistor ──┬── R_pull (100k to 3.3V)
-                 │
-                 ├── R_filter (10k)──┬── PA4 or PA5 (ADC input)
-                 │                   │
-                 │                   C_filter (100nF to GND)
-                 │
-                GND
-
-RC filter cutoff: 1 / (2π × 10k × 100nF) ≈ 160 Hz
-Sufficient to attenuate induction EMI at 20-40 kHz
-```
-
 ### LED Ring Power Switch (Q2 + Q3)
 
 A high-side P-MOSFET switch controls 5V power to the WS2812B LED ring. An N-MOSFET (Q2) level-shifts the 3.3V STM32 GPIO to drive the P-MOSFET (Q3) gate. The LED ring data line (WS2812B protocol) is driven directly by CM5 GPIO18 and passes through J_LED as a signal passthrough — no STM32 involvement on the data path.
@@ -670,11 +645,11 @@ Material: FR4 (Tg 150°C minimum)
 │  └────────────────┘  └────────────────┘  └───────────┘  │
 │                                                         │
 │  ┌────────────────┐  ┌────────────────┐  ┌───────────┐  │
-│  │  CAN + I2C     │  │  ADC + Sensors │  │  Safety   │  │
-│  │  Connectors    │  │  Connectors    │  │  Relay    │  │
-│  │  (J_CAN, J_IR)      │  │  (J_NTC)      │  │  E-Stop   │  │
-│  │                │  │                │  │  (J_SAFE)    │  │
-│  │  BUS ZONE      │  │  SENSOR ZONE   │  │ SAFETY    │  │
+│  │  CAN + I2C     │  │  Safety I/O    │  │  LED Ring │  │
+│  │  Connectors    │  │  (J_SAFE)      │  │  (J_LED)  │  │
+│  │  (J_CAN, J_IR) │  │                │  │           │  │
+│  │                │  │                │  │           │  │
+│  │  BUS ZONE      │  │  SAFETY ZONE   │  │ LED ZONE  │  │
 │  └────────────────┘  └────────────────┘  └───────────┘  │
 │                                                         │
 │  ┌──────────────────────────────────────────────────┐   │
@@ -694,7 +669,6 @@ Material: FR4 (Tg 150°C minimum)
 | VDDA isolation | Ferrite bead + 1uF from 3.3V | Clean analog reference |
 | Crystal traces | Short, symmetric, guard ring GND | Minimize EMI coupling |
 | SPI traces | Matched length (±2mm), 50 ohm impedance | Signal integrity at 2 MHz |
-| ADC input traces | Route over GND plane, away from PWM | Minimize noise pickup |
 | PWM output traces | Away from analog section, wide traces | High-frequency switching noise |
 | GND plane | Unbroken under STM32 and analog section | Low-impedance return path |
 | I2C traces | Keep <30mm on board, pull-ups near STM32 | Minimize capacitance |
@@ -759,7 +733,6 @@ Material: FR4 (Tg 150°C minimum)
 | R6 | 330 ohm | 0402 | 1 | $0.01 | LED current limit |
 | R7 | 330 ohm | 0402 | 1 | $0.01 | Relay gate resistor |
 | R8-R13 | 33 ohm | 0402 | 6 | $0.01 | Series termination on SPI + safety |
-| R14-R15 | 10k ohm | 0402 | 2 | $0.01 | NTC ADC filter resistors |
 | R17 | 100 ohm | 0402 | 1 | $0.01 | Q2 gate resistor (LED switch) |
 | R18 | 10k ohm | 0402 | 1 | $0.01 | Q3 gate pull-up to 5V (LED OFF default) |
 | R19 | 10k ohm | 0402 | 1 | $0.01 | Q2 gate pull-down (safe boot) |
@@ -768,7 +741,6 @@ Material: FR4 (Tg 150°C minimum)
 | C9 | 1uF ceramic | 0402 | 1 | $0.02 | VDDA decoupling |
 | C10-C11 | 18pF ceramic | 0402 | 2 | $0.01 | HSE crystal load caps |
 | C12-C13 | 6.8pF ceramic | 0402 | 2 | $0.01 | LSE crystal load caps |
-| C14-C15 | 100nF ceramic | 0402 | 2 | $0.01 | ADC RC filter caps |
 | C16 | 100nF ceramic | 0402 | 1 | $0.01 | E-stop debounce cap |
 | SW1 | Tactile switch | 6x6mm | 1 | $0.05 | Reset button |
 | SJ1 | Solder jumper | 0603 pad | 1 | — | IRQ/SWO select |
@@ -776,7 +748,6 @@ Material: FR4 (Tg 150°C minimum)
 | J_CM5 | 2x20 pin socket | 2.54mm, 8.5mm stacking | 1 | $0.80 | CM5IO GPIO header receptor (SPI, IRQ, LED data, 5V power) |
 | J_CAN | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | CAN bus to microwave surface |
 | J_IR | JST-SH 4-pin | 1.0mm pitch | 1 | $0.20 | MLX90614 I2C |
-| J_NTC | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | NTC thermistor inputs |
 | J_SWD | Pin header 2x5 | 1.27mm pitch | 1 | $0.30 | SWD debug |
 | J_SAFE | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | Safety I/O |
 | J_LED | JST-XH 3-pin | 2.5mm pitch | 1 | $0.12 | LED ring (5V_SW + DATA + GND) |
@@ -823,7 +794,6 @@ Material: FR4 (Tg 150°C minimum)
 - [ ] STM32 responds to SWD probe (ST-Link connects, reads device ID)
 - [ ] SPI loopback test with CM5 passes (echo bytes)
 - [ ] All PWM channels output correct frequency on oscilloscope
-- [ ] ADC reads known voltage within ±1 LSB
 - [ ] I2C scan detects MLX90614 at address 0x5A
 - [ ] HX711 returns stable readings with no load cell attached
 - [ ] E-stop interrupt triggers on button press
@@ -858,3 +828,4 @@ Material: FR4 (Tg 150°C minimum)
 | 6.0 | 2026-02-20 | Manas Pradhan | Renamed all connectors from numeric (J1-J11) to descriptive names: J_SPI, J_CAN, J_IR, J_LC, J_NTC, J_SWD, J_PWR, J_SAFE; removed J3 (servo connector now via J_STACK to Driver PCB) |
 | 7.0 | 2026-02-20 | Manas Pradhan | Replaced J_SPI (6-pin JST-SH + ribbon cable) with J_CM5 (2x20 pin socket) that mates directly with CM5IO 40-pin GPIO header; 5V from J_STACK now feeds CM5IO through J_CM5 pins 2/4; LED ring data (GPIO18) routes through J_CM5 pin 12 instead of jumper wire; eliminates ribbon cable between Controller PCB and CM5IO |
 | 8.0 | 2026-02-20 | Manas Pradhan | Removed J_LC (HX711 load cell connector); pot load cell signals (PC0/PC1) now route via J_STACK pins 17-18 to Driver PCB J_SLD connector; removed J_PWR (redundant, 5V comes via J_STACK) |
+| 9.0 | 2026-02-20 | Manas Pradhan | Removed J_NTC and both NTC thermistors (coil temp reported via CAN by induction module; ambient NTC not needed); freed PA4/PA5; removed ADC filter circuit, related BOM items (R14-R15, C14-C15), and ADC layout rule |
