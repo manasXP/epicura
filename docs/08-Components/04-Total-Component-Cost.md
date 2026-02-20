@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
-modified: 2026-02-16
-version: 3.0
+modified: 2026-02-20
+version: 4.0
 status: Draft
 ---
 
@@ -17,16 +17,16 @@ This document provides a consolidated view of all component costs for the Epicur
 
 | Category | Subtotal | % of Total | Details |
 |----------|----------|------------|---------|
-| [[01-Compute-Module-Components|Compute Modules]] | $188.00 | 24% | CM5, STM32, display, cables |
-| [[02-Actuation-Components|Actuation]] | $281.85 | 36% | Induction hob, P-ASD pneumatic system + PCF8574 I2C expander, CID linear actuators, SLD pumps/solenoids/load cell, relays, exhaust fan, filters |
+| [[01-Compute-Module-Components|Compute Modules]] | $199.50 | 25% | CM5, STM32, display, cables, ISO1050DUB isolated CAN transceiver |
+| [[02-Actuation-Components|Actuation]] | $278.85 | 35% | Induction hob, P-ASD pneumatic system + PCF8574 I2C expander, CID linear actuators, SLD pumps/solenoids/load cell, relays, exhaust fan, filters |
 | [[03-Sensor-Components|Sensors]] | $64.90 | 8% | Camera, IR thermo, load cells, NTC |
-| **Component Total** | **$534.75** | **68%** | Electronic components only |
+| **Component Total** | **$543.25** | **69%** | Electronic components only |
 
 ---
 
 ## Detailed Component Breakdown
 
-### Compute Modules ($188.00)
+### Compute Modules ($199.50)
 
 | Item | Cost |
 |------|------|
@@ -35,8 +35,9 @@ This document provides a consolidated view of all component costs for the Epicur
 | STM32G474RE Nucleo | $18.00 |
 | 10.1" IPS Display | $80.00 |
 | Storage + Cables | $25.00 |
+| ISO1050DUB (isolated CAN transceiver) | $3.50 |
 
-### Actuation ($197.85)
+### Actuation ($194.85)
 
 | Item | Cost |
 |------|------|
@@ -49,7 +50,7 @@ This document provides a consolidated view of all component costs for the Epicur
 | Load Cells + HX711 — SLD (2×) | $16.00 |
 | H-Bridge Driver — CID | $5.00 |
 | Limit Switches — CID (4x) | $2.00 |
-| CAN Transceiver | $3.00 |
+| CAN Termination + Decoupling | $0.13 |
 | Safety Relay Module (2x) | $6.00 |
 | Motor Driver Board | $8.00 |
 | Connectors + Wiring | $17.00 |
@@ -88,10 +89,10 @@ This document provides a consolidated view of all component costs for the Epicur
 
 | Category | Cost |
 |----------|------|
-| Electronic Components | $534.75 |
+| Electronic Components | $543.25 |
 | Mechanical / Other | $250.00 |
-| **Total BOM (Prototype)** | **$784.75** |
-| **With Contingency (+20%)** | **~$942** |
+| **Total BOM (Prototype)** | **$793.25** |
+| **With Contingency (+20%)** | **~$952** |
 | **With Tools & Consumables** | **$1,100-1,350** |
 
 ---
@@ -117,7 +118,7 @@ This document provides a consolidated view of all component costs for the Epicur
 | Wiring / Connectors | $30.00 | $10.00 | Custom harness, bulk connectors |
 | Exhaust + Filters | $22.50 | $8.00 (OEM blower + bulk filters) | Custom blower + injection-molded housing |
 | Other (CAN, relays, drivers, load cell, cables, buzzer) | $94.85 | $20.00 (integrated into PCB + bulk) | Small components absorbed into custom PCB at volume |
-| **Total Unit** | **~$784** | **~$337** | **~57% cost reduction** |
+| **Total Unit** | **~$793** | **~$337** | **~57% cost reduction** |
 
 ---
 
@@ -149,7 +150,7 @@ This document provides a consolidated view of all component costs for the Epicur
 │  └─ Mechanical (6%)     ██████                                           │
 │  └─ PCBs/PSU (9%)       █████████                                        │
 │                                                                          │
-│  Total Prototype BOM: ~$784                                              │
+│  Total Prototype BOM: ~$793                                              │
 └────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -231,3 +232,4 @@ This document provides a consolidated view of all component costs for the Epicur
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
 | 2.0 | 2026-02-16 | Manas Pradhan | Update costs for P-ASD pneumatic redesign (+$84 to actuation); new prototype BOM ~$784 |
 | 3.0 | 2026-02-16 | Manas Pradhan | Added PCF8574 I2C GPIO expander (+$0.50); prototype BOM ~$785 |
+| 4.0 | 2026-02-20 | Manas Pradhan | Moved CAN transceiver from Actuation to Compute (ISO1050DUB $3.50 replaces $3.00 non-isolated); updated all totals; prototype BOM ~$793 |
