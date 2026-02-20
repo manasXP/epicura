@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
-modified: 2026-02-15
-version: 1.0
+modified: 2026-02-20
+version: 2.0
 status: Draft
 ---
 
@@ -66,8 +66,15 @@ AC Mains (220-240V 50Hz)
 │                   CAN Bus Port                     │
 └────────────────────┬───────────────────────────────┘
                      │
-              CAN_H, CAN_L, GND
+              CAN_H, CAN_L, GND_ISO
                      │
+                     ▼
+              ┌──────────────┐
+              │  ISO1050DUB  │ ◄── 5 kV RMS isolation barrier
+              │  (isolated   │
+              │  CAN xcvr)   │
+              └──────┬───────┘
+                     │ TXD/RXD (3.3V logic)
                      ▼
               ┌──────────────┐
               │ STM32G474RE  │
@@ -84,10 +91,10 @@ AC Mains (220-240V 50Hz)
 |-----------|-------|
 | Protocol | CAN 2.0B |
 | Bit Rate | 500 kbps |
-| Transceiver | Onboard in module; STM32 side uses FDCAN1 + external CAN transceiver |
+| Transceiver | Onboard in module; STM32 side uses FDCAN1 + ISO1050DUB isolated CAN transceiver on Controller PCB (5 kV RMS galvanic isolation) |
 | Termination | 120 ohm at each end (module + STM32 side) |
 | Connector | Standard CAN connector on module (CAN_H, CAN_L, GND) |
-| Wiring | Twisted pair, shielded, <1m length |
+| Wiring | Twisted pair, shielded, <1m length; shield connects to GND_ISO at Controller PCB end only (single-point ground) |
 
 ### CAN Message Protocol (Heater)
 
@@ -224,6 +231,7 @@ Safety is handled at two levels:
 
 1. **Module-internal:** The microwave surface has its own safety circuits (pot detection, thermal fuse, overcurrent) that operate independently of the STM32. These cannot be overridden by external CAN commands.
 2. **System-level:** The STM32 monitors temperature via IR sensor and module CAN status, and can command the module off via CAN or cut AC power via the safety relay.
+3. **Galvanic isolation:** The ISO1050DUB isolated CAN transceiver on the Controller PCB provides 5 kV RMS galvanic isolation between the STM32 control electronics and the CAN bus connected to the induction module. This prevents ground bounce and EMI transients from the module's high-power IGBT switching from coupling into the logic ground, and satisfies IEC 60335 reinforced insulation requirements.
 
 > [!warning] Critical Safety Section
 > The module's internal safety interlocks operate independently of the STM32 and cannot be overridden. The safety relay provides a system-level hard disconnect.
@@ -344,3 +352,4 @@ Power (W)
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
+| 2.0 | 2026-02-20 | Manas Pradhan | Updated CAN transceiver to ISO1050DUB (isolated); added isolation barrier to block diagram; added galvanic isolation safety note; updated wiring for single-point ground on CAN shield |

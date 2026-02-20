@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
-modified: 2026-02-15
-version: 1.0
+modified: 2026-02-20
+version: 1.1
 status: Draft
 ---
 
@@ -46,6 +46,7 @@ This document details the compute subsystem components for the Epicura kitchen r
 | USB-C Cable (debug/power) | - | 1 | $5.00 | $5.00 | Generic | CM5 debug console and power delivery |
 | CSI-2 Ribbon Cable (15-pin) | 15-pin FFC, 200mm | 1 | $3.00 | $3.00 | Generic | Camera module to CM5 CSI connector |
 | HDMI Cable (flat ribbon) | Micro-HDMI to HDMI | 1 | $5.00 | $5.00 | Generic | CM5 to display connection |
+| ISO1050DUB (isolated CAN transceiver) | ISO1050DUBR | 1 | $3.50 | $3.50 | TI / Mouser | 5 kV RMS galvanic isolation, SOIC-8; CAN bus to induction module |
 
 ---
 
@@ -58,7 +59,8 @@ This document details the compute subsystem components for the Epicura kitchen r
 | STM32G474RE Nucleo | $18.00 |
 | 10.1" Display | $80.00 |
 | Cables | $13.00 |
-| **Category Subtotal** | **$196.00** |
+| ISO1050DUB (isolated CAN transceiver) | $3.50 |
+| **Category Subtotal** | **$199.50** |
 
 ---
 
@@ -121,3 +123,4 @@ This document details the compute subsystem components for the Epicura kitchen r
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
+| 1.1 | 2026-02-20 | Manas Pradhan | Added ISO1050DUB isolated CAN transceiver to component list and cost summary |
