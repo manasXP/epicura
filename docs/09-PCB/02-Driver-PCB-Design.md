@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
-modified: 2026-02-16
-version: 3.0
+modified: 2026-02-20
+version: 4.0
 status: Draft
 ---
 
@@ -15,7 +15,7 @@ The Driver PCB is the power electronics and actuator interface board in Epicura'
 
 ```
 ┌─────────────────────────────────────┐
-│  Board 3: CM5 IO Board (CM5IO)       │  160 x 90 mm
+│  Board 3: CM5 IO Board (CM5IO)      │  160 x 90 mm
 │  Raspberry Pi CM5 + peripherals     │
 ├─────────────[ 2x20 Header ]─────────┤
 │  Board 2: Controller PCB            │  160 x 90 mm
@@ -24,8 +24,8 @@ The Driver PCB is the power electronics and actuator interface board in Epicura'
 │  Board 1: Driver PCB (this doc)     │  160 x 90 mm
 │  Power conversion + actuator drivers│
 └─────────────────────────────────────┘
-         ▲
-         │ 24V DC from Mean Well PSU
+         ▲                    ▲
+         │ 24V DC from PSU    │ 12V DC from UPS
 ```
 
 The CM5IO board is an off-the-shelf Raspberry Pi carrier board that sits on top. The two custom boards (Controller, Driver) share a uniform 160x90mm footprint with M3 mounting holes at identical positions, connected via a 2x20-pin 2.54mm board-to-board header. The Driver PCB sits at the bottom of the stack, closest to the PSU, and distributes power and actuator connections.
@@ -44,26 +44,43 @@ The CM5IO board is an off-the-shelf Raspberry Pi carrier board that sits on top.
 ## Board-Level Block Diagram
 
 ```
+12V UPS Input ─── F5 (3A Polyfuse) ─── SS34 ─── SMBJ12A TVS ─── 12V UPS Rail
+                                                                      │
+                                                              ┌───────▼────────┐
+                                                              │  TPS54531      │
+                                                              │  12V → 5V      │
+                                                              │  5A max        │
+                                                              └───────┬────────┘
+                                                                      │
+                                                                   5V Rail
+                                                              (CM5 + Controller
+                                                               + Buzzer + LED)
+
 24V DC Input ─── Polyfuse ─── SS54 (Reverse Polarity) ─── SMBJ24A (TVS)
                                         │
-                        ┌───────────────┼───────────────────────────┐
-                        │               │                           │
-                        ▼               ▼                           ▼
-                ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-                │  MP1584EN #1 │ │  MP1584EN #2 │ │  MP1584EN #3 │
-                │  24V → 12V   │ │  24V → 6.5V  │ │  24V → 5V    │
-                │  3A max      │ │  3A max      │ │  3A max      │
-                └──────┬───────┘ └──────┬───────┘ └──────┬───────┘
-                       │                │                │
-                12V Rail                6.5V Rail        5V Rail
-                  │                      │                │
-        ┌─────────┼──────────┐           │         ┌──────┼──────────┐
-        │         │          │           │         │      │          │
-    ┌───▼───┐ ┌──▼──┐  ┌───▼────┐  ┌───▼───┐  ┌───────▼───────┐
-    │2x Sol │ │Fan  │  │2x Lin  │  │DS3225 │  │P-ASD: 6x Sol │
-    │IRLML  │ │IRLML│  │Act     │  │Servo  │  │+ 1x Pump     │
-    │6344   │ │6344 │  │DRV8876 │  │Direct │  │IRLML6344     │
-    └───────┘ └─────┘  └────────┘  └───────┘  │(via PCF8574)  │
+                        ┌───────────────┼──────────────────┐
+                        │               │                  │
+                        ▼               ▼                  ▼
+                ┌──────────────┐ ┌──────────────┐   Voltage Divider
+                │  MP1584EN #1 │ │  MP1584EN #2 │   100kΩ / 10kΩ
+                │  24V → 12V   │ │  24V → 6.5V  │       │
+                │  3A max      │ │  3A max      │       ▼
+                └──────┬───────┘ └──────┬───────┘   PA1 (COMP2)
+                       │                │         Power Fail Detect
+                12V Rail                6.5V Rail
+                  │                      │
+        ┌─────────┼──────────┐           │
+        │         │          │           │
+    ┌───▼───┐ ┌──▼──┐  ┌───▼────┐  ┌───▼───┐
+    │2x Sol │ │Fan  │  │2x Lin  │  │DS3225 │
+    │IRLML  │ │IRLML│  │Act     │  │Servo  │
+    │6344   │ │6344 │  │DRV8876 │  │Direct │
+    └───────┘ └─────┘  └────────┘  └───────┘
+                                               ┌───────────────┐
+                                               │P-ASD: 6x Sol │
+                                               │+ 1x Pump     │
+                                               │IRLML6344     │
+                                               │(via PCF8574)  │
                                                └───────────────┘
                                                         │
                                                    ┌────▼────┐
@@ -72,15 +89,15 @@ The CM5IO board is an off-the-shelf Raspberry Pi carrier board that sits on top.
                                                    │TB6612   │
                                                    └─────────┘
 
-                    ┌──────────────┐
+                   ┌──────────────┐
          24V ──────┤  INA219      │──── I2C1 (via stacking connector)
                    │  Current Mon │
                    └──────────────┘
 
-                    ┌──────────────┐
-         I2C1 ────┤  PCF8574     │──── P0-P5 → P-ASD Solenoid V1-V6 MOSFET gates
-                   │  GPIO Exp.  │     (addr 0x20, 100Ω gate resistors)
-                   │  (SOIC-16)  │     P6-P7 available for future use
+                   ┌──────────────┐
+         I2C1  ────┤  PCF8574     │──── P0-P5 → P-ASD Solenoid V1-V6 MOSFET gates
+                   │  GPIO Exp.   │     (addr 0x20, 100Ω gate resistors)
+                   │  (SOIC-16)   │     P6-P7 available for future use
                    └──────────────┘
 
 All control signals arrive from Controller PCB via 2x20 stacking connector (J_STACK)
@@ -90,7 +107,7 @@ All control signals arrive from Controller PCB via 2x20 stacking connector (J_ST
 
 ## Power Conversion
 
-Three MP1584EN synchronous buck converters step down the 24V input to three separate rails. The MP1584EN was selected for its wide input range (4.5-28V), high efficiency (up to 92%), and compact SOT-23-8 package with minimal external components.
+Two MP1584EN synchronous buck converters step down the 24V input to 12V and 6.5V rails for actuators and servo. A separate TPS54531 buck converter generates the 5V rail from a UPS-backed 12V DC input, ensuring the CM5 and STM32 remain powered during AC outages. The MP1584EN was selected for its wide input range (4.5-28V), high efficiency (up to 92%), and compact SOT-23-8 package with minimal external components.
 
 ### 24V → 12V Rail (MP1584EN #1)
 
@@ -120,26 +137,60 @@ Three MP1584EN synchronous buck converters step down the 24V input to three sepa
 > [!note]
 > The DS3225 servo is rated for 4.8-6.8V. Running at 6.5V provides maximum torque (25 kg·cm) while staying within safe limits. The 470µF bulk capacitor absorbs stall current transients without drooping the rail.
 
-### 24V → 5V Rail (MP1584EN #3)
+### 12V UPS → 5V Rail (TPS54531)
+
+The 5V rail is now sourced from a UPS-backed 12V DC input via a TPS54531 synchronous buck converter (5A max). This ensures the CM5, STM32 controller (via 3.3V LDO on Controller PCB), buzzer, and LED ring remain powered during AC outages. The TPS54531 was selected for its wide input range (3.5-28V), high efficiency (up to 95%), integrated high-side MOSFET, and 5A output capability in a compact SOIC-8 package.
 
 | Parameter | Value |
 |-----------|-------|
+| IC | TPS54531DDAR (SOIC-8) |
+| Input Voltage | 12V (from UPS-backed DC input) |
 | Output Voltage | 5V |
-| Max Current | 3A |
-| Load | Buzzer (0.03A), LED ring (1A peak) — ASD servos removed (P-ASD uses 12V solenoids on 12V rail) |
-| Inductor | 22µH, CDRH104R (Sumida), Isat > 4A |
+| Max Current | 5A |
+| Load | CM5 (up to 3A), Controller PCB 3.3V LDO (0.17A), buzzer (0.03A), LED ring (1A peak) |
+| Inductor | 10µH, CDRH127 (12.7x12.7mm), Isat > 6A |
 | Output Cap | 2x 22µF MLCC (X5R, 10V) + 220µF electrolytic (10V) |
 | Feedback Resistors | R_top = 52.3k, R_bot = 10k → 4.98V |
-| Protection | 2A polyfuse + SMBJ5.0A TVS on output |
+| Switching Frequency | 570 kHz (internal oscillator) |
+| Protection | Integrated overcurrent, thermal shutdown, UVLO |
+
+> [!note]
+> The 5V rail was previously sourced from the 24V PSU via MP1584EN #3. Moving it to the 12V UPS input means the CM5 and STM32 stay alive during AC power outages while the UPS battery supplies 12V. The TPS54531's 5A rating provides adequate headroom for CM5 peak current (3A) plus all other 5V loads (total peak ~4.2A).
+
+### 24V Power Failure Detection
+
+A voltage divider on the 24V rail feeds the STM32's internal analog comparator (COMP2 on PA1) for fast hardware-based power failure detection. This enables the STM32 to immediately disable all actuators and notify the CM5 within <100µs of AC power loss.
+
+```
+24V Internal ─── R_DIV1 (100kΩ) ──┬── R_DIV2 (10kΩ) ─── GND
+                                   │
+                                   ├── C_DIV (100nF) ─── GND
+                                   │
+                                   └── PA1 (COMP2_INP) via J_STACK Pin 16
+```
+
+| Parameter | Value |
+|-----------|-------|
+| Divider Ratio | 10k / (100k + 10k) = 1/11 |
+| Nominal Voltage at PA1 | 24V × 1/11 = 2.18V |
+| Threshold (COMP2 ref) | ~1.5V (internal DAC reference) |
+| Trip Voltage (24V rail) | 1.5V × 11 = 16.5V |
+| Recovery Threshold | ~20V (with 2s debounce in firmware) |
+| Filter Cap | 100nF on divider midpoint (noise filtering) |
+| Response Time | <100µs (hardware comparator interrupt) |
+
+> [!note]
+> The INA219 continues to provide 24V rail voltage telemetry via I2C (polled every 1s in POWER_TELEMETRY messages). The comparator provides fast interrupt-driven detection for immediate safety response, while INA219 provides gradual voltage monitoring for logging and UI display.
 
 ### Power Budget Summary
 
-| Rail | Typical Load (A) | Peak Load (A) | Headroom |
-|------|------------------|---------------|----------|
-| 12V (3A max) | 1.9 | 3.0 | 0% (at limit) |
-| 6.5V (3A max) | 0.5 | 2.5 | 17% |
-| 5V (3A max) | 0.1 | 1.1 | 63% |
-| **24V input** | **~2.0** | **~3.0** | Within PSU 3.2A rating |
+| Rail | Source | Typical (A) | Peak (A) | Headroom | Notes |
+|------|--------|------------|----------|----------|-------|
+| 5V (5A max) | 12V UPS → TPS54531 | 1.5 | 4.0 | 20% | CM5 (3A peak) + Controller (0.17A) + buzzer + LED |
+| 12V (3A max) | 24V → MP1584EN #1 | 1.9 | 3.0 | 0% | Actuators only (not needed during power fail) |
+| 6.5V (3A max) | 24V → MP1584EN #2 | 0.5 | 2.5 | 17% | Servo only (not needed during power fail) |
+| **24V input** | **Mean Well PSU** | **~2.0** | **~2.5** | Within PSU 3.2A rating | Reduced (5V rail no longer on 24V) |
+| **12V UPS input** | **External UPS** | **1.5** | **4.0** | Within 5A fuse | UPS-backed, stays live during AC outage |
 
 ---
 
@@ -170,7 +221,7 @@ PA8 (TIM1_CH1) ── via J_STACK ── 33R ── J_SERVO_MAIN Pin 3 (Signal, 
 
 ### P-ASD Solenoid Valves (6×)
 
-Six 12V normally-closed solenoid valves for P-ASD (Pneumatic Advanced Seasoning Dispenser) cartridge air control, driven by low-side N-MOSFETs with flyback protection. One valve per spice cartridge. MOSFET gates are driven by a **PCF8574 I2C GPIO expander** (address 0x20) on the Driver PCB, eliminating the need for 6 dedicated STM32 GPIO pins.
+Six 12V normally-closed solenoid valves for P-ASD (Pneumatic Advanced Seasoning Dispenser) cartridge air control, driven by low-side N-MOSFETs with flyback protection. One valve per spice cartridge. MOSFET gates are driven by a **PCF8574 I2C GPIO expander** (address 0x20) on the Driver PCB, eliminating the need for 6 dedicated STM32 GPIO pins. All six solenoids and the diaphragm pump connect via a single **J_PASD** 16-pin connector.
 
 ```
 12V Rail ──── Solenoid Coil ──┬── Drain (IRLML6344)
@@ -469,13 +520,27 @@ PA0 (TIM2_CH1) ── via J_STACK Pin 15 ── 100R ── Gate
 | D1 | SS54 (5A, 40V Schottky) | Reverse polarity protection (Vf = 0.5V drop) |
 | D2 | SMBJ24A (24V TVS, 600W) | Transient voltage suppression from PSU spikes |
 
+### 12V UPS Input Protection Chain
+
+```
+12V from UPS ──── F5 (3A Polyfuse) ──── D_UPS1 (SS34 Schottky) ──┬── D_UPS2 (SMBJ12A TVS) ──── 12V UPS Rail
+                                                                    │
+                                                                   GND
+```
+
+| Component | Part | Function |
+|-----------|------|----------|
+| F5 | 3A resettable polyfuse (1812 package) | Overcurrent protection, self-resetting |
+| D_UPS1 | SS34 (3A, 40V Schottky) | Reverse polarity protection (Vf = 0.5V drop) |
+| D_UPS2 | SMBJ12A (12V TVS, 600W) | Transient voltage suppression |
+
 ### Per-Rail Protection
 
 | Rail | Polyfuse | TVS Diode | Notes |
 |------|----------|-----------|-------|
 | 12V | 1.5A (0805) | SMBJ12A | Protects solenoid/fan/actuator branch |
 | 6.5V | 3A (1206) | SMBJ6.5A | Protects DS3225 servo branch |
-| 5V | 2A (1206) | SMBJ5.0A | Protects buzzer + LED ring |
+| 5V | — | — | Protected at UPS input (F5 + D_UPS2); TPS54531 has integrated OCP |
 
 ### MOSFET Gate Safety
 
@@ -504,9 +569,9 @@ An INA219 bidirectional current/power monitor on the 24V input rail provides rea
               │   │      │      │      │   │
               └───┼──────┼──────┼──────┼───┘
                   │      │      │      │
-                 3.3V   GND    │      │
-                               │      │
-              PB7 (I2C1_SDA) ◄─┘      └─► PB6 (I2C1_SCL)
+                 3.3V   GND     │      │
+                                │      │
+              PB7 (I2C1_SDA)  ◄─┘      └─► PB6 (I2C1_SCL)
               (via J_STACK)               (via J_STACK)
 ```
 
@@ -550,7 +615,7 @@ The INA219 shares the I2C1 bus with the MLX90614 IR thermometer (0x5A) on the Co
 | 11 | 5V | Power | 12 | 5V | Power |
 | 13 | 3.3V | Power | 14 | 3.3V | Power |
 | **P-ASD Subsystem (Pins 15-20, 39)** ||||
-| 15 | PASD_PUMP_PWM (PA0) | In | 16 | Reserved (was PASD_SOL1) | — |
+| 15 | PASD_PUMP_PWM (PA0) | In | 16 | PWR_FAIL (PA1) | Out |
 | 17 | Reserved (was PASD_SOL2) | — | 18 | Reserved (was PASD_SOL3) | — |
 | 19 | Reserved (was PASD_SOL4) | — | 20 | Reserved (was PASD_SOL5) | — |
 | **CID Subsystem (Pins 21-26)** ||||
@@ -604,7 +669,7 @@ The INA219 shares the I2C1 bus with the MLX90614 IR thermometer (0x5A) on the Co
 ├──────────────────────────────────────────────┤
 │  Core             — FR4, 0.8mm               │
 ├──────────────────────────────────────────────┤
-│  Layer 3 (Inner2) — 12V / 5V Power Split      │  35um Cu (1 oz)
+│  Layer 3 (Inner2) — 12V / 5V / 12V-UPS Split   │  35um Cu (1 oz)
 ├──────────────────────────────────────────────┤
 │  Prepreg          — FR4, 0.2mm               │
 ├──────────────────────────────────────────────┤
@@ -625,29 +690,30 @@ Inner copper: 1 oz (35µm) for planes
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
 │                          160mm                                           │
-│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────────┐   │
+│  ┌───────────────────┐  ┌──────────────────┐  ┌──────────────────────┐   │
 │  │  INPUT PROTECTION │  │  BUCK CONVERTERS │  │  CURRENT MONITOR     │   │
-│  │  Polyfuse, SS54,  │  │  3x MP1584EN     │  │  INA219 + Shunt      │   │
-│  │  SMBJ24A TVS      │  │  + inductors     │  │                      │   │
-│  │                    │  │  + output caps   │  │                      │   │  90mm
-│  │  24V INPUT CONN   │  │                  │  │                      │   │
-│  └──────────────────┘  └──────────────────┘  └──────────────────────┘   │
+│  │  24V: Polyfuse,   │  │  2x MP1584EN     │  │  INA219 + Shunt      │   │
+│  │  SS54, SMBJ24A    │  │  1x TPS54531     │  │  + Power Fail Detect │   │
+│  │  12V UPS: F5,     │  │  + inductors     │  │  (voltage divider    │   │ 90mm
+│  │  SS34, SMBJ12A    │  │  + output caps   │  │   + COMP2)           │   │
+│  │  24V + 12V CONNS  │  │                  │  │                      │   │
+│  └───────────────────┘  └──────────────────┘  └──────────────────────┘   │
 │                                                                          │
-│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────────┐   │
-│  │  H-BRIDGE ICs    │  │  MOSFET DRIVERS  │  │  STACKING CONNECTOR  │   │
-│  │  2x DRV8876      │  │  11x IRLML6344  │  │  J_STACK (2x20)      │   │
-│  │  1x TB6612FNG    │  │  1x 2N7002      │  │  Center of board     │   │
-│  │  + decoupling    │  │  + flyback diodes│  │  long edge           │   │
-│  │                  │  │  + gate resistors│  │                      │   │
-│  └──────────────────┘  └──────────────────┘  └──────────────────────┘   │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────────┐    │
+│  │  H-BRIDGE ICs    │  │  MOSFET DRIVERS  │  │  STACKING CONNECTOR  │    │
+│  │  2x DRV8876      │  │  11x IRLML6344   │  │  J_STACK (2x20)      │    │
+│  │  1x TB6612FNG    │  │  1x 2N7002       │  │  Center of board     │    │
+│  │  + decoupling    │  │  + flyback diodes│  │  long edge           │    │
+│  │                  │  │  + gate resistors│  │                      │    │
+│  └──────────────────┘  └──────────────────┘  └──────────────────────┘    │
 │                                                                          │
-│  ┌──────────────────────────────────────────────────────────────────┐   │
-│  │                    OUTPUT CONNECTORS                              │   │
-│  │  J_SERVO_MAIN  J_PASD_SOL[1-6]  J_PASD_PUMP  J_FAN1-2            │   │
-│  │  J_LACT[1-2]   J_SLD            J_24V_IN   J_BUZZER            │   │
-│  └──────────────────────────────────────────────────────────────────┘   │
+│  ┌──────────────────────────────────────────────────────────────────┐    │
+│  │                    OUTPUT CONNECTORS                             │    │
+│  │  J_SERVO_MAIN  J_PASD  J_FAN1-2  J_LACT[1-2]                     │    │
+│  │  J_SLD  J_24V_IN  J_12V_UPS  J_BUZZER                           │    │
+│  └──────────────────────────────────────────────────────────────────┘    │
 │                                                                          │
-│  Board Edge ──────────────────────── M3 Mounting Holes (4 corners)      │
+│  Board Edge ──────────────────────── M3 Mounting Holes (4 corners)       │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -669,7 +735,7 @@ Inner copper: 1 oz (35µm) for planes
 | Buck converter loops | Minimize input cap → IC → inductor → output cap loop area | Reduce EMI radiation |
 | Inductor placement | Within 5mm of MP1584EN IC, away from signal traces | Magnetic field coupling |
 | GND plane | Continuous under all buck converters and H-bridge ICs | Low-impedance return path |
-| Power plane split | 12V zone (left half) / 5V+6.5V zone (right half) on Layer 3 | Isolate noisy actuator power from servo power |
+| Power plane split | 12V zone (left) / 6.5V zone (center) / 12V-UPS+5V zone (right) on Layer 3 | Isolate noisy actuator power from UPS-backed compute power |
 | MOSFET drain traces | ≥1mm wide, short runs to output connectors | Current capacity + minimize parasitic inductance |
 | I2C traces | Route away from switching nodes, 4.7kΩ pull-ups on Controller PCB | Signal integrity for INA219 |
 | Thermal relief | Wide GND vias under MP1584EN and DRV8876 exposed pads | Heat dissipation to inner GND plane |
@@ -681,7 +747,7 @@ Inner copper: 1 oz (35µm) for planes
 
 Connectors are organized by subsystem for modular wiring harness assembly.
 
-### Power Input
+### Power Inputs
 
 **J_24V_IN — 24V DC Power Input (XT30 or JST-VH 2-pin)**
 
@@ -690,21 +756,37 @@ Connectors are organized by subsystem for modular wiring harness assembly.
 | 1 | +24V | From Mean Well LRS-75-24 |
 | 2 | GND | Power ground |
 
-### P-ASD Subsystem Connectors (7 total)
-
-**J_PASD_SOL1 through J_PASD_SOL6 — Solenoid Valves (6x 2-pin JST-XH 2.5mm)**
+**J_12V_UPS — 12V UPS-Backed DC Input (XT30 2-pin)**
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
-| 1 | 12V | Solenoid power (switched by IRLML6344 MOSFET) |
-| 2 | SOL_OUT | Drain side of MOSFET (gate driven by PCF8574 P0-P5, I2C1 addr 0x20) |
+| 1 | +12V | From external 12V UPS battery backup |
+| 2 | GND | Power ground |
 
-**J_PASD_PUMP — Diaphragm Pump (2-pin JST-XH 2.5mm)**
+### P-ASD Subsystem Connector (1 connector)
+
+**J_PASD — Combined P-ASD Connector (1x 16-pin JST-XH 2.5mm)**
+
+All six solenoid valves and the diaphragm pump are combined into a single connector block for cleaner wiring harness assembly.
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
-| 1 | 12V | Pump power (switched by IRLML6344 MOSFET) |
-| 2 | PUMP_OUT | Drain side of MOSFET (PA0 via J_STACK Pin 15) |
+| 1 | 12V_SOL1 | Solenoid V1 power (switched by IRLML6344, gate via PCF8574 P0) |
+| 2 | SOL1_OUT | Solenoid V1 drain (Turmeric) |
+| 3 | 12V_SOL2 | Solenoid V2 power (switched by IRLML6344, gate via PCF8574 P1) |
+| 4 | SOL2_OUT | Solenoid V2 drain (Chili) |
+| 5 | 12V_SOL3 | Solenoid V3 power (switched by IRLML6344, gate via PCF8574 P2) |
+| 6 | SOL3_OUT | Solenoid V3 drain (Cumin) |
+| 7 | 12V_SOL4 | Solenoid V4 power (switched by IRLML6344, gate via PCF8574 P3) |
+| 8 | SOL4_OUT | Solenoid V4 drain (Salt) |
+| 9 | 12V_SOL5 | Solenoid V5 power (switched by IRLML6344, gate via PCF8574 P4) |
+| 10 | SOL5_OUT | Solenoid V5 drain (Garam Masala) |
+| 11 | 12V_SOL6 | Solenoid V6 power (switched by IRLML6344, gate via PCF8574 P5) |
+| 12 | SOL6_OUT | Solenoid V6 drain (Coriander) |
+| 13 | 12V_PUMP | Pump power (switched by IRLML6344, PA0 via J_STACK Pin 15) |
+| 14 | PUMP_OUT | Pump drain |
+| 15 | GND | Common ground |
+| 16 | GND | Common ground |
 
 ### CID Subsystem Connectors (2 total)
 
@@ -796,13 +878,13 @@ The Driver PCB introduces 14 new STM32 pin assignments (beyond the existing Cont
 
 | Port | Used Pins | Total Used | Available |
 |------|-----------|------------|-----------|
-| PA | PA0, PA4-PA11, PA13, PA14 | 11 | PA1, PA2, PA3 (freed from P-ASD solenoids), PA12 (USB reserved), PA15 |
+| PA | PA0-PA2, PA4-PA11, PA13, PA14 | 13 | PA3 (freed from P-ASD solenoid), PA12 (USB reserved), PA15 |
 | PB | PB0-PB10, PB12-PB15 | 15 | PB11 (freed from P-ASD solenoid V6) |
 | PC | PC0-PC6, PC9-PC12, PC13-PC15 | 12 | PC7 (freed from P-ASD solenoid V3), PC8 |
 | PD | — | 0 | PD2 (freed from P-ASD solenoid V4) |
 
 > [!note]
-> P-ASD solenoids V1-V6 are now driven by a PCF8574 I2C GPIO expander (address 0x20) on the Driver PCB instead of direct STM32 GPIO pins. This frees 6 GPIO pins (PA1, PA2, PA3, PC7, PD2, PB11) for future use. The PCF8574 shares the I2C1 bus with MLX90614 (0x5A), INA219 (0x40), and ADS1015 (0x48) — no address conflicts.
+> P-ASD solenoids V1-V6 are now driven by a PCF8574 I2C GPIO expander (address 0x20) on the Driver PCB instead of direct STM32 GPIO pins. This freed 6 GPIO pins; PA1 is now COMP2 (power fail detection), PA2 is now LED ring power enable. Remaining free: PA3, PC7, PD2, PB11. The PCF8574 shares the I2C1 bus with MLX90614 (0x5A), INA219 (0x40), and ADS1015 (0x48) — no address conflicts.
 
 All new signals pass through the J_STACK stacking connector — no additional cabling between Controller and Driver PCBs is needed.
 
@@ -822,6 +904,7 @@ The following SPI message types are added to the CM5 ↔ STM32 protocol for Driv
 | SET_SOLENOID | 0x09 | CM5 → STM32 | valve_id (uint8), state (uint8: 0=off, 1=on) |
 | SET_BUZZER | 0x0A | CM5 → STM32 | pattern (uint8: 0=off, 1=beep, 2=error, 3=complete, 4=warning), duration_ms (uint16) |
 | POWER_TELEMETRY | 0x13 | STM32 → CM5 | bus_voltage_mV (uint16), current_mA (uint16), power_mW (uint16) |
+| POWER_FAIL | 0x14 | STM32 → CM5 | state (uint8: 0=OK, 1=FAIL), voltage_mV (uint16) |
 
 **Buzzer Pattern Definitions:**
 
@@ -866,6 +949,30 @@ I2C1 Read Sequence (every 1 second):
 5. Pack into POWER_TELEMETRY message (0x13) for next SPI transaction
 ```
 
+### Power Failure State Machine (Firmware)
+
+The following describes the intended firmware behavior for power failure handling. Implementation is deferred to the embedded firmware phase.
+
+**STM32 behavior:**
+
+1. COMP2 interrupt fires (24V drops below ~16.5V) → set `power_fail = true`
+2. Immediately disable all actuators:
+   - Send CAN command to induction module: power OFF
+   - Set all MOSFET gates LOW (pull-downs ensure safe state)
+   - Set PCF8574 all outputs LOW (P-ASD solenoids off)
+3. Send `POWER_FAIL(state=1, voltage_mV)` to CM5 via SPI
+4. Assert `PWR_FAIL` signal LOW on J_STACK pin 16
+5. Enter low-power monitoring loop: poll 24V via comparator
+6. When 24V recovers (>20V sustained for >2 seconds debounce):
+   - Deassert `PWR_FAIL` (HIGH)
+   - Send `POWER_FAIL(state=0, voltage_mV)` to CM5
+   - CM5 decides whether to resume cooking
+
+**CM5 behavior:**
+
+- On `POWER_FAIL(state=1)`: save cooking state to PostgreSQL, pause recipe engine, show "Power Lost" on UI
+- On `POWER_FAIL(state=0)`: load saved state, prompt user or auto-resume based on elapsed time (<5 min: auto-resume, >5 min: prompt user)
+
 ---
 
 ## Thermal Analysis
@@ -876,7 +983,7 @@ I2C1 Read Sequence (every 1 second):
 |-----------|-----------|-----------|--------------|
 | MP1584EN #1 (12V) | 2A continuous | ~2.7 | IC + inductor, PCB copper pour |
 | MP1584EN #2 (6.5V) | 1A average | ~1.0 | IC + inductor, PCB copper pour |
-| MP1584EN #3 (5V) | 1A average | ~0.8 | IC + inductor, PCB copper pour |
+| TPS54531 (5V) | 2A average | ~0.5 | SOIC-8 + inductor, PCB copper pour (higher efficiency than MP1584EN) |
 | DRV8876 #1 | 1.5A continuous | ~0.8 | WSON-8 exposed pad → GND plane vias |
 | DRV8876 #2 | 1.5A continuous | ~0.8 | WSON-8 exposed pad → GND plane vias |
 | TB6612FNG | 1.2A total | ~0.7 | SSOP-24 thermal pad → PCB |
@@ -912,10 +1019,12 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 | Ref | Part | Package | Qty | Unit Cost (USD) | Notes |
 |-----|------|---------|-----|----------------|-------|
 | **Power Conversion** | | | | | |
-| U1-U3 | MP1584EN | SOT-23-8 | 3 | $0.80 | 24V→12V, 24V→6.5V, 24V→5V |
+| U1-U2 | MP1584EN | SOT-23-8 | 2 | $0.80 | 24V→12V, 24V→6.5V |
+| U9 | TPS54531DDAR | SOIC-8 | 1 | $1.50 | 12V UPS→5V, 5A buck |
 | L1 | 33µH inductor | CDRH104R (10x10mm) | 1 | $0.50 | 12V rail, Isat > 4A |
-| L2-L3 | 22µH inductor | CDRH104R (10x10mm) | 2 | $0.50 | 6.5V and 5V rails |
-| D_BST1-3 | SS34 | SMA | 3 | $0.15 | Bootstrap Schottky diodes |
+| L2 | 22µH inductor | CDRH104R (10x10mm) | 1 | $0.50 | 6.5V rail |
+| L4 | 10µH inductor | CDRH127 (12.7x12.7mm) | 1 | $0.60 | 5V rail (TPS54531), Isat > 6A |
+| D_BST1-2 | SS34 | SMA | 2 | $0.15 | Bootstrap Schottky diodes (MP1584EN) |
 | **H-Bridge ICs** | | | | | |
 | U4-U5 | DRV8876RGTR | WSON-8 (3x3mm) | 2 | $2.50 | CID linear actuator drivers |
 | U6 | TB6612FNG | SSOP-24 | 1 | $1.50 | SLD dual peristaltic pump driver |
@@ -928,13 +1037,19 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 | U7 | INA219BIDR | SOT-23-8 | 1 | $1.50 | 24V input current/power |
 | R_SHUNT | 10 mΩ 1% 1W | 2512 | 1 | $0.30 | Current sense shunt |
 | **Protection** | | | | | |
-| F1 | 5A polyfuse | 1812 | 1 | $0.40 | Input overcurrent |
-| F2-F4 | 1.5A/3A/2A polyfuse | 0805/1206 | 3 | $0.25 | Per-rail protection |
-| D1 | SS54 | SMA | 1 | $0.20 | Input reverse polarity |
-| D2 | SMBJ24A | SMB | 1 | $0.25 | Input TVS |
+| F1 | 5A polyfuse | 1812 | 1 | $0.40 | 24V input overcurrent |
+| F2-F3 | 1.5A/3A polyfuse | 0805/1206 | 2 | $0.25 | 12V and 6.5V per-rail protection |
+| F5 | 3A polyfuse | 1812 | 1 | $0.30 | 12V UPS input overcurrent |
+| D1 | SS54 | SMA | 1 | $0.20 | 24V input reverse polarity |
+| D2 | SMBJ24A | SMB | 1 | $0.25 | 24V input TVS |
 | D3 | SMBJ12A | SMB | 1 | $0.20 | 12V rail TVS |
 | D4 | SMBJ6.5A | SMB | 1 | $0.20 | 6.5V rail TVS |
-| D5 | SMBJ5.0A | SMB | 1 | $0.20 | 5V rail TVS |
+| D_UPS1 | SS34 | SMA | 1 | $0.15 | 12V UPS reverse polarity |
+| D_UPS2 | SMBJ12A | SMB | 1 | $0.20 | 12V UPS input TVS |
+| **Power Fail Detection** | | | | | |
+| R_DIV1 | 100kΩ | 0402 | 1 | $0.01 | Voltage divider top (24V rail) |
+| R_DIV2 | 10kΩ | 0402 | 1 | $0.01 | Voltage divider bottom |
+| C_DIV | 100nF | 0402 | 1 | $0.01 | Divider filter cap |
 | **Flyback Diodes** | | | | | |
 | D6-D16 | SS14 | SMA | 11 | $0.10 | SLD sol 1-2, fan 1-2, P-ASD sol V1-V6, P-ASD pump |
 | **Passive Components** | | | | | |
@@ -952,10 +1067,10 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 | **Connectors** | | | | | |
 | J_STACK | 2x20 pin socket | 2.54mm, 11mm stacking | 1 | $0.80 | Stacking to Controller PCB |
 | J_24V_IN | XT30 or JST-VH 2-pin | 2.5mm pitch | 1 | $0.40 | 24V DC input |
+| J_12V_UPS | XT30 2-pin | 2.5mm pitch | 1 | $0.40 | 12V UPS-backed DC input |
 | J_SERVO_MAIN | Pin header 3-pin | 2.54mm | 1 | $0.05 | DS3225 servo |
 | J_SLD | JST-XH 8-pin | 2.5mm pitch | 1 | $0.30 | SLD combined (2× pumps + 2× solenoids) |
-| J_PASD_SOL1-6 | JST-XH 2-pin | 2.5mm pitch | 6 | $0.10 | P-ASD solenoid valves |
-| J_PASD_PUMP | JST-XH 2-pin | 2.5mm pitch | 1 | $0.10 | P-ASD diaphragm pump |
+| J_PASD | JST-XH 16-pin | 2.5mm pitch | 1 | $0.60 | P-ASD combined (6× solenoids + 1× pump + 2× GND) |
 | J_FAN1-2 | JST-XH 2-pin | 2.5mm pitch | 2 | $0.10 | Exhaust fans |
 | J_LACT1-2 | JST-XH 2-pin | 2.5mm pitch | 2 | $0.10 | Linear actuators |
 | J_BUZZER | JST-PH 2-pin | 2.0mm pitch | 1 | $0.08 | Piezo buzzer |
@@ -966,15 +1081,15 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 
 | Category | Prototype (1x) | Volume (100x) |
 |----------|---------------|---------------|
-| Power Conversion ICs + Passives | $8.50 | $5.50 |
+| Power Conversion ICs + Passives | $9.50 | $6.00 |
 | H-Bridge ICs (DRV8876 + TB6612) | $6.50 | $4.50 |
 | Discrete MOSFETs + Diodes | $3.35 | $2.00 |
 | Current Monitor (INA219 + shunt) | $1.80 | $1.20 |
-| Protection (polyfuses + TVS) | $1.70 | $1.00 |
+| Protection + Power Fail Detection | $2.20 | $1.30 |
 | Passive Components | $2.20 | $1.10 |
-| Connectors | $2.90 | $1.70 |
+| Connectors | $3.30 | $2.00 |
 | PCB | $5.00 | $2.00 |
-| **Total** | **~$32** | **~$19** |
+| **Total** | **~$34** | **~$20** |
 
 ---
 
@@ -1076,3 +1191,4 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
 | 2.0 | 2026-02-16 | Manas Pradhan | Replaced ASD (3× SG90 servo + 3× vibration motor) with P-ASD (6× solenoid valve + 1× diaphragm pump); updated 12V rail load, J_STACK pinout, connector definitions, BOM, and thermal analysis |
 | 3.0 | 2026-02-16 | Manas Pradhan | Added PCF8574 I2C GPIO expander (addr 0x20) for P-ASD solenoid control; solenoid MOSFET gates now driven by PCF8574 P0-P5 instead of direct STM32 GPIO; freed 6 STM32 pins; J_STACK pins 16-20, 39 now Reserved |
+| 4.0 | 2026-02-20 | Manas Pradhan | Added 12V UPS-backed DC input (J_12V_UPS) with TPS54531 12V→5V 5A buck converter replacing MP1584EN #3; added 24V power failure detection via voltage divider + COMP2 on PA1; J_STACK pin 16 now PWR_FAIL; added POWER_FAIL SPI message (0x14) and power failure state machine; updated BOM, thermal analysis, and block diagram |

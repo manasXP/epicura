@@ -132,7 +132,7 @@ The CM5 is the main application processor for Epicura. It runs Yocto Linux with 
 | GPIO4 | IRQ_STM32 | Input | Active-low, data-ready from STM32 |
 | GPIO2 | I2C1_SDA | Bidir | Touch panel |
 | GPIO3 | I2C1_SCL | Output | Touch panel |
-| GPIO18 | WS2812B_DATA | Output | LED ring (12–16 LEDs) |
+| GPIO18 | WS2812B_DATA | Output | LED ring (12–16 LEDs); routed via jumper to J_LED pin 2 on Controller PCB; 5V power switched by STM32 PA2 |
 
 ### 3.2 Camera (CSI-2)
 

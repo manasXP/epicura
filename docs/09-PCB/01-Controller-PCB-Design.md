@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
-modified: 2026-02-16
-version: 3.0
+modified: 2026-02-20
+version: 4.0
 status: Draft
 ---
 
@@ -27,7 +27,7 @@ The CM5IO board is an off-the-shelf Raspberry Pi carrier board that sits on top 
 ## Board-Level Block Diagram
 
 ```
-                        5V from PSU
+                   5V from J_STACK (UPS-backed)
                             │
                      ┌──────▼──────┐
                      │  3.3V LDO   │
@@ -138,6 +138,19 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 │  │  PC13 (GPIO)      ──► Status LED (green, active-low)     │  │
 │  └─────────────────────────────────┘                           │
 │                                                                │
+│  ┌─── Power Fail Detection ───────┐                           │
+│  │  PA1  (COMP2_INP) ◄── 24V voltage divider (100k/10k)     │  │
+│  │       COMP2 threshold ~1.5V → trips at 24V < 16.5V       │  │
+│  │       PWR_FAIL output on J_STACK Pin 16 (active-low)      │  │
+│  └─────────────────────────────────┘                           │
+│                                                                │
+│  ┌─── LED Ring Power Control ────┐                           │
+│  │  PA2  (GPIO)     ──► Q2 gate (2N7002, N-MOSFET)          │  │
+│  │       Q2 drain ──► Q3 gate (SI2301, P-MOSFET)            │  │
+│  │       Q3 switches 5V to LED ring via J_LED                │  │
+│  │       Data line: CM5 GPIO18 → J_LED pin 2 (passthrough)  │  │
+│  └─────────────────────────────────┘                           │
+│                                                                │
 │  ┌─── Reserved / Unused ──────────┐                           │
 │  │  PA9  (GPIO)      ── Available (was USART1_TX)            │  │
 │  │  PA10 (GPIO)      ── Available (was USART1_RX)            │  │
@@ -163,8 +176,8 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 | Pin | Function | Peripheral | Direction | Connector | Subsystem |
 |-----|----------|------------|-----------|-----------|-----------|
 | PA0 | TIM2_CH1 | P-ASD Pump PWM | Output | J_STACK Pin 15 | P-ASD |
-| PA1 | — | Available (was P-ASD Sol V1) | — | — | — |
-| PA2 | — | Available (was P-ASD Sol V2) | — | — | — |
+| PA1 | COMP2_INP | 24V Power Fail Detection (COMP2) | Input | J_STACK Pin 16 (PWR_FAIL output) | Power |
+| PA2 | GPIO | LED Ring Power Enable | Output | J_LED (via Q2/Q3 MOSFET) | Illumination |
 | PA3 | — | Available (was P-ASD Sol V5) | — | — | — |
 | PA4 | ADC2_IN17 | NTC Coil | Input | J8 | Sensors |
 | PA5 | ADC2_IN13 | NTC Ambient | Input | J8 | Sensors |
@@ -207,12 +220,12 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 
 ### Input
 
-The controller PCB receives 5V DC from the CM5IO board's 40-pin GPIO connector (pins 2/4: 5V, pins 6/9/14/20/25/30/34/39: GND). A 3.3V LDO regulates this down for the STM32 and all 3.3V peripherals. No onboard buck converter is needed — the CM5IO board handles 24V→5V regulation from the Mean Well PSU.
+The controller PCB receives 5V DC via J_STACK pins 11-12 from the Driver PCB's TPS54531 buck converter, which is powered from a UPS-backed 12V DC input. This ensures the STM32 remains powered during AC outages. A 3.3V LDO regulates this down for the STM32 and all 3.3V peripherals. No onboard buck converter is needed.
 
 ### Regulator Circuit
 
 ```
-5V from CM5IO 40-pin (pins 2,4)
+5V from J_STACK (pins 11-12, UPS-backed via TPS54531)
     │
     ├──── C1: 10uF ceramic (input bypass)
     │
@@ -249,7 +262,7 @@ The controller PCB receives 5V DC from the CM5IO board's 40-pin GPIO connector (
 | **Total 3.3V** | **~90** | **~166** | Well within LDO capacity |
 
 > [!note]
-> Servo motors (DS3225, SG90) are powered from a separate 24V→5V buck converter on the servo rail, not from this 3.3V LDO. Only the PWM signal lines route through the controller PCB.
+> Servo motors (DS3225) are powered from a separate 24V→6.5V buck converter on the Driver PCB, not from this 3.3V LDO. The 5V rail is sourced from a UPS-backed 12V→5V converter (TPS54531) on the Driver PCB, ensuring the controller stays powered during AC outages. Only the PWM signal lines route through the controller PCB.
 
 ### Decoupling
 
@@ -351,6 +364,8 @@ The CM5 (master) initiates all SPI transactions. The STM32 (slave) asserts the I
 | STATUS | 0x12 | STM32 → CM5 | safety_state, error_code, flags |
 | PURGE_PASD | 0x0B | CM5 → STM32 | cartridge_id (uint8: 1-6, or 0xFF=all) |
 | PRESSURE_STATUS | 0x0C | CM5 → STM32 | — (returns pressure_bar, 2 bytes fixed-point) |
+| POWER_TELEMETRY | 0x13 | STM32 → CM5 | bus_voltage_mV (uint16), current_mA (uint16), power_mW (uint16) |
+| POWER_FAIL | 0x14 | STM32 → CM5 | state (uint8: 0=OK, 1=FAIL), voltage_mV (uint16) |
 | ACK | 0xFF | Bidirectional | ack_msg_id, result_code |
 
 ### STM32 SPI Slave Implementation Notes
@@ -433,7 +448,7 @@ The CM5 (master) initiates all SPI transactions. The STM32 (slave) asserts the I
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
-| 1 | +5V | From PSU 5V rail |
+| 1 | +5V | From J_STACK 5V rail (UPS-backed, TPS54531 on Driver PCB) |
 | 2 | GND | Power ground |
 
 ### J11 — Safety I/O (JST-XH 2.5mm, 4-pin)
@@ -444,6 +459,14 @@ The CM5 (master) initiates all SPI transactions. The STM32 (slave) asserts the I
 | 2 | POT_DET | PB1 | Reed switch input, 10k pull-up |
 | 3 | E_STOP | PB2 | NC button, 10k pull-up, RC debounce |
 | 4 | GND | GND | — |
+
+### J_LED — LED Ring (JST-XH 2.5mm, 3-pin)
+
+| Pin | Signal | Notes |
+|-----|--------|-------|
+| 1 | 5V_SW | Switched 5V from Q3 P-MOSFET (PA2 enable) |
+| 2 | DATA | WS2812B data (passthrough from CM5 GPIO18) |
+| 3 | GND | Power ground |
 
 ### J_STACK — Stacking Connector to Driver PCB (2x20 pin header, 2.54mm, 11mm stacking height)
 
@@ -461,7 +484,7 @@ The stacking connector passes 24V power, ground, 5V/3.3V references, all servo P
 | 11 | 5V | Power | 12 | 5V | Power |
 | 13 | 3.3V | Power | 14 | 3.3V | Power |
 | **P-ASD Subsystem (Pins 15-20, 39)** ||||
-| 15 | PASD_PUMP_PWM (PA0) | Out | 16 | Reserved (was PASD_SOL1) | — |
+| 15 | PASD_PUMP_PWM (PA0) | Out | 16 | PWR_FAIL (PA1) | Out |
 | 17 | Reserved (was PASD_SOL2) | — | 18 | Reserved (was PASD_SOL3) | — |
 | 19 | Reserved (was PASD_SOL4) | — | 20 | Reserved (was PASD_SOL5) | — |
 | **CID Subsystem (Pins 21-26)** ||||
@@ -568,6 +591,44 @@ NTC Thermistor ──┬── R_pull (100k to 3.3V)
 RC filter cutoff: 1 / (2π × 10k × 100nF) ≈ 160 Hz
 Sufficient to attenuate induction EMI at 20-40 kHz
 ```
+
+### LED Ring Power Switch (Q2 + Q3)
+
+A high-side P-MOSFET switch controls 5V power to the WS2812B LED ring. An N-MOSFET (Q2) level-shifts the 3.3V STM32 GPIO to drive the P-MOSFET (Q3) gate. The LED ring data line (WS2812B protocol) is driven directly by CM5 GPIO18 and passes through J_LED as a signal passthrough — no STM32 involvement on the data path.
+
+```
+5V (from J_STACK) ──── Q3: SI2301 (P-MOSFET, SOT-23) ──── J_LED Pin 1 (5V_SW)
+                         │ Source              Drain │
+                         │                           │
+                         Gate ──┬── R18: 10k to 5V (default OFF)
+                                │
+                                └── Q2: 2N7002 Drain
+                                         │
+                                    Q2 Source ── GND
+                                         │
+                                    Q2 Gate ── R17: 100R ── PA2 (GPIO)
+                                         │
+                                    R19: 10k pull-down to GND
+
+CM5 GPIO18 ──────── J_LED Pin 2 (DATA, signal passthrough)
+GND ─────────────── J_LED Pin 3 (GND)
+```
+
+| Parameter | Value |
+|-----------|-------|
+| Q2 | 2N7002 (N-MOSFET, SOT-23) — level shifter |
+| Q3 | SI2301CDS (P-MOSFET, SOT-23) — high-side switch |
+| Vds(max) Q3 | -20V |
+| Rds(on) Q3 | 110 mΩ @ Vgs=-4.5V |
+| Id(max) Q3 | -2.3A (sufficient for 1A LED ring peak) |
+| R17 | 100Ω gate resistor on Q2 |
+| R18 | 10kΩ pull-up to 5V on Q3 gate (LED OFF by default) |
+| R19 | 10kΩ pull-down on Q2 gate (safe boot state) |
+| Control Pin | PA2 (GPIO output) |
+| Default State | OFF (Q2 gate pulled low → Q3 gate pulled to 5V → P-MOSFET off) |
+
+> [!note]
+> The WS2812B data line from CM5 GPIO18 connects to J_LED pin 2 via a short jumper wire from the CM5IO GPIO header. This signal is a passthrough on the Controller PCB — no buffering or level shifting needed (WS2812B accepts 3.3V logic at 5V supply). The STM32 controls only the power enable; the CM5 handles pixel data via `rpi_ws281x` Python library.
 
 ---
 
@@ -688,6 +749,8 @@ Material: FR4 (Tg 150°C minimum)
 | Y1 | 8 MHz crystal | HC49/SMD | 1 | $0.20 | HSE, 20ppm, 18pF load |
 | Y2 | 32.768 kHz crystal | 2x1.2mm SMD | 1 | $0.30 | LSE for RTC |
 | Q1 | 2N7002 | SOT-23 | 1 | $0.05 | Relay driver MOSFET |
+| Q2 | 2N7002 | SOT-23 | 1 | $0.05 | LED ring power switch (N-MOSFET level shifter) |
+| Q3 | SI2301CDS | SOT-23 | 1 | $0.10 | LED ring power switch (P-MOSFET high-side) |
 | D1 | Green LED | 0603 | 1 | $0.03 | Status indicator |
 | D2 | 1N4148WS | SOD-323 | 1 | $0.03 | Flyback diode for relay |
 | D3 | PRTR5V0U2X | SOT-143B | 2 | $0.15 | ESD protection on SPI + safety I/O |
@@ -699,6 +762,9 @@ Material: FR4 (Tg 150°C minimum)
 | R7 | 330 ohm | 0402 | 1 | $0.01 | Relay gate resistor |
 | R8-R13 | 33 ohm | 0402 | 6 | $0.01 | Series termination on SPI + safety |
 | R14-R15 | 10k ohm | 0402 | 2 | $0.01 | NTC ADC filter resistors |
+| R17 | 100 ohm | 0402 | 1 | $0.01 | Q2 gate resistor (LED switch) |
+| R18 | 10k ohm | 0402 | 1 | $0.01 | Q3 gate pull-up to 5V (LED OFF default) |
+| R19 | 10k ohm | 0402 | 1 | $0.01 | Q2 gate pull-down (safe boot) |
 | C1-C2 | 10uF ceramic | 0805 | 2 | $0.10 | LDO input/output bulk |
 | C3-C8 | 100nF ceramic | 0402 | 6 | $0.01 | VDD decoupling per pin |
 | C9 | 1uF ceramic | 0402 | 1 | $0.02 | VDDA decoupling |
@@ -717,6 +783,7 @@ Material: FR4 (Tg 150°C minimum)
 | J9 | Pin header 2x5 | 1.27mm pitch | 1 | $0.30 | SWD debug |
 | J10 | JST-XH 2-pin | 2.5mm pitch | 1 | $0.10 | 5V power input |
 | J11 | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | Safety I/O |
+| J_LED | JST-XH 3-pin | 2.5mm pitch | 1 | $0.12 | LED ring (5V_SW + DATA + GND) |
 | J_STACK | 2x20 pin header | 2.54mm, 11mm stacking | 1 | $0.80 | Stacking connector to Driver PCB |
 | **PCB** | 4-layer, 160x90mm | FR4 ENIG | 1 | $4.50 | JLCPCB batch pricing (5 pcs) |
 
@@ -785,3 +852,4 @@ Material: FR4 (Tg 150°C minimum)
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
 | 2.0 | 2026-02-16 | Manas Pradhan | Replaced ASD (3× servo + 3× vibration motor) pin allocations with P-ASD (1× pump PWM + 6× solenoid + pressure sensor); updated J_STACK pinout, pin summary, and SPI message types |
 | 3.0 | 2026-02-16 | Manas Pradhan | Moved P-ASD solenoid control from 6× direct GPIO (PA1/PA2/PA3/PC7/PD2/PB11) to PCF8574 I2C GPIO expander on Driver PCB; freed 6 STM32 pins; J_STACK pins 16-20, 39 now Reserved |
+| 4.0 | 2026-02-20 | Manas Pradhan | Reassigned PA1 to COMP2 for 24V power failure detection; J_STACK pin 16 now PWR_FAIL (active-low output); added POWER_FAIL (0x14) and POWER_TELEMETRY (0x13) SPI messages; updated 5V source from CM5IO to J_STACK (UPS-backed TPS54531 on Driver PCB); added LED ring power switch (PA2 → Q2/Q3 P-MOSFET high-side) with J_LED 3-pin connector |
