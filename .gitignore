@@ -25,6 +25,7 @@
 fp-info-cache
 *.dsn
 *.ses
+*.lck
 
 # PCB build artifacts
 pcb/**/gerbers/*.zip
