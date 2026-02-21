@@ -1,0 +1,592 @@
+{
+  "board": "/Users/manaspradhan/Library/Mobile Documents/iCloud~md~obsidian/Documents/ClaudeNotes/__Workspaces/Epicura/pcb/driver-board/driver-board.kicad_pcb",
+  "timestamp": "2026-02-21T21:16:55+0530",
+  "total_violations": 57,
+  "violation_counts": {
+    "shorting_items": 1,
+    "silk_over_copper": 2,
+    "solder_mask_bridge": 2,
+    "missing_courtyard": 22,
+    "silk_edge_clearance": 3,
+    "lib_footprint_mismatch": 25,
+    "lib_footprint_issues": 1,
+    "silk_overlap": 1
+  },
+  "severity_counts": {
+    "error": 5,
+    "warning": 52,
+    "info": 0
+  },
+  "violations": [
+    {
+      "type": "shorting_items",
+      "severity": "error",
+      "message": "Items shorting two nets (nets GND and SLD_PUMP1_PWM)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "silk_over_copper",
+      "severity": "error",
+      "message": "Silkscreen clipped by solder mask",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "silk_over_copper",
+      "severity": "error",
+      "message": "Silkscreen clipped by solder mask",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "solder_mask_bridge",
+      "severity": "error",
+      "message": "Front solder mask aperture bridges items with different nets",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "solder_mask_bridge",
+      "severity": "error",
+      "message": "Rear solder mask aperture bridges items with different nets",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "silk_edge_clearance",
+      "severity": "warning",
+      "message": "Silkscreen clipped by board edge (board setup constraints silk clearance 0.1500 mm; actual 0.0000 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "silk_edge_clearance",
+      "severity": "warning",
+      "message": "Silkscreen clipped by board edge (board setup constraints silk clearance 0.1500 mm; actual 0.0000 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "silk_edge_clearance",
+      "severity": "warning",
+      "message": "Silkscreen clipped by board edge (board setup constraints silk clearance 0.1500 mm; actual 0.0000 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'MountingHole_3.2mm_M3' does not match copy in library 'MountingHole'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'MountingHole_3.2mm_M3' does not match copy in library 'MountingHole'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'MountingHole_3.2mm_M3' does not match copy in library 'MountingHole'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'MountingHole_3.2mm_M3' does not match copy in library 'MountingHole'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'PinHeader_1x02_P2.54mm_Vertical' does not match copy in library 'Connector_PinHeader_2.54mm'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'Fuse_1812_4532Metric' does not match copy in library 'Fuse'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'D_SMA' does not match copy in library 'Diode_SMD'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'D_SMB' does not match copy in library 'Diode_SMD'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'SOT-23-8_Handsoldering' does not match copy in library 'Package_TO_SOT_SMD'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_issues",
+      "severity": "warning",
+      "message": "Footprint 'L_Sumida_CDRH104R' not found in library 'Inductor_SMD'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'CP_Radial_D8.0mm_P3.50mm' does not match copy in library 'Capacitor_THT'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'SOT-23-8_Handsoldering' does not match copy in library 'Package_TO_SOT_SMD'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'CP_Radial_D10.0mm_P5.00mm' does not match copy in library 'Capacitor_THT'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'SOT-23-8_Handsoldering' does not match copy in library 'Package_TO_SOT_SMD'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'DFN-8-1EP_3x3mm_P0.5mm_EP1.66x2.38mm' does not match copy in library 'Package_DFN_QFN'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'DFN-8-1EP_3x3mm_P0.5mm_EP1.66x2.38mm' does not match copy in library 'Package_DFN_QFN'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'SSOP-24_5.3x8.2mm_P0.65mm' does not match copy in library 'Package_SO'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'SOIC-16_3.9x9.9mm_P1.27mm' does not match copy in library 'Package_SO'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'SOT-23' does not match copy in library 'Package_TO_SOT_SMD'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'SOT-23' does not match copy in library 'Package_TO_SOT_SMD'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'SOT-23' does not match copy in library 'Package_TO_SOT_SMD'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'SOT-23' does not match copy in library 'Package_TO_SOT_SMD'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'SOT-23' does not match copy in library 'Package_TO_SOT_SMD'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'SOT-23' does not match copy in library 'Package_TO_SOT_SMD'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'PinHeader_1x03_P2.54mm_Vertical' does not match copy in library 'Connector_PinHeader_2.54mm'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'PinHeader_2x20_P2.54mm_Vertical' does not match copy in library 'Connector_PinHeader_2.54mm'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "silk_overlap",
+      "severity": "warning",
+      "message": "Silkscreen overlap (board setup constraints silk clearance 0.1500 mm; actual 0.0000 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    }
+  ]
+}

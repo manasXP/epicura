@@ -1,0 +1,1019 @@
+{
+  "board": "/Users/manaspradhan/Library/Mobile Documents/iCloud~md~obsidian/Documents/ClaudeNotes/__Workspaces/Epicura/pcb/controller-board/controller-board.kicad_pcb",
+  "timestamp": "2026-02-21T21:16:45+0530",
+  "total_violations": 100,
+  "violation_counts": {
+    "tracks_crossing": 42,
+    "clearance": 35,
+    "starved_thermal": 2,
+    "missing_courtyard": 8,
+    "lib_footprint_mismatch": 13
+  },
+  "severity_counts": {
+    "error": 79,
+    "warning": 21,
+    "info": 0
+  },
+  "violations": [
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0500 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0500 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0500 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0500 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0500 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0500 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0500 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0500 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0500 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0850 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1071 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0878 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "clearance",
+      "severity": "error",
+      "message": "Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "tracks_crossing",
+      "severity": "error",
+      "message": "Tracks crossing",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "starved_thermal",
+      "severity": "error",
+      "message": "Thermal relief connection to zone incomplete (layer GND; zone min spoke count 2; actual 1)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "starved_thermal",
+      "severity": "error",
+      "message": "Thermal relief connection to zone incomplete (layer GND; zone min spoke count 2; actual 1)",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "missing_courtyard",
+      "severity": "warning",
+      "message": "Footprint has no courtyard defined",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'MountingHole_3.2mm_M3_Pad_Via' does not match copy in library 'MountingHole'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'MountingHole_3.2mm_M3_Pad_Via' does not match copy in library 'MountingHole'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'MountingHole_3.2mm_M3_Pad_Via' does not match copy in library 'MountingHole'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'MountingHole_3.2mm_M3_Pad_Via' does not match copy in library 'MountingHole'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'LQFP-64_10x10mm_P0.5mm' does not match copy in library 'Package_QFP'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'SOT-223-3_TabPin2' does not match copy in library 'Package_TO_SOT_SMD'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'C_0805_2012Metric' does not match copy in library 'Capacitor_SMD'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'C_0805_2012Metric' does not match copy in library 'Capacitor_SMD'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical' does not match copy in library 'Connector_JST'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'SOIC-8_3.9x4.9mm_P1.27mm' does not match copy in library 'Package_SO'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical' does not match copy in library 'Connector_JST'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'PinHeader_2x20_P2.54mm_Vertical' does not match copy in library 'Connector_PinHeader_2.54mm'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    },
+    {
+      "type": "lib_footprint_mismatch",
+      "severity": "warning",
+      "message": "Footprint 'LED_0603_1608Metric' does not match copy in library 'LED_SMD'.",
+      "location": {
+        "x": 0,
+        "y": 0,
+        "unit": "mm"
+      }
+    }
+  ]
+}

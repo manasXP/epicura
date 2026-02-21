@@ -1,0 +1,389 @@
+** Drc report for controller-board.kicad_pcb **
+** Created on 2026-02-21T21:16:46+0530 **
+
+** Found 100 DRC violations **
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0500 mm)
+    Rule: netclass 'Default'; error
+    @(53.2500 mm, 39.3250 mm): Track [GND] on F.Cu, length 3.8250 mm
+    @(53.7500 mm, 37.0000 mm): Via [+3V3] on F.Cu - B.Cu
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0500 mm)
+    Rule: netclass 'Default'; error
+    @(47.0000 mm, 47.2500 mm): Via [+3V3] on F.Cu - B.Cu
+    @(49.3250 mm, 47.7500 mm): Track [GND] on F.Cu, length 3.8250 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(72.0000 mm, 45.6200 mm): Track [SPI_IRQ] on B.Cu, length 8.0000 mm
+    @(76.0000 mm, 48.7500 mm): Track [SPI_NSS] on B.Cu, length 8.2100 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0500 mm)
+    Rule: netclass 'Default'; error
+    @(60.6750 mm, 41.2500 mm): Track [GND] on F.Cu, length 3.8250 mm
+    @(63.0000 mm, 41.7500 mm): Via [+3V3] on F.Cu - B.Cu
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(62.0000 mm, 46.5000 mm): Track [SPI_IRQ] on B.Cu, length 10.0000 mm
+    @(70.0000 mm, 45.2500 mm): Track [SERVO_PWM] on B.Cu, length 5.4500 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(128.0000 mm, 13.0950 mm): Track [CAN_TX] on F.Cu, length 4.5250 mm
+    @(130.0000 mm, 14.3650 mm): Track [GND] on F.Cu, length 3.3650 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0500 mm)
+    Rule: netclass 'Default'; error
+    @(60.6750 mm, 45.7500 mm): Track [GND] on F.Cu, length 3.8250 mm
+    @(62.0000 mm, 45.2500 mm): Via [SERVO_PWM] on F.Cu - B.Cu
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(77.0000 mm, 32.0000 mm): Track [ESTOP] on B.Cu, length 28.8600 mm
+    @(66.0000 mm, 55.7800 mm): Track [HX711_SCK] on B.Cu, length 14.0000 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(73.0000 mm, 39.2700 mm): Track [SPI_MISO] on B.Cu, length 5.5000 mm
+    @(77.0000 mm, 32.0000 mm): Track [ESTOP] on B.Cu, length 28.8600 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)
+    Rule: netclass 'Default'; error
+    @(57.7500 mm, 54.5000 mm): Via [GND] on F.Cu - B.Cu
+    @(58.2500 mm, 50.6750 mm): Track [STATUS_LED] on F.Cu, length 18.3250 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0500 mm)
+    Rule: netclass 'Default'; error
+    @(56.7500 mm, 37.0000 mm): Via [+3V3] on F.Cu - B.Cu
+    @(56.2500 mm, 39.3250 mm): Track [GND] on F.Cu, length 3.8250 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)
+    Rule: netclass 'Default'; error
+    @(53.2500 mm, 50.6750 mm): Track [CAN_TX] on F.Cu, length 11.3250 mm
+    @(52.7500 mm, 54.5000 mm): Via [GND] on F.Cu - B.Cu
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(71.0000 mm, 44.7500 mm): Track [PUMP_PWM] on B.Cu, length 4.6800 mm
+    @(63.5000 mm, 47.7500 mm): Track [SPI_MISO] on B.Cu, length 9.5000 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0500 mm)
+    Rule: netclass 'Default'; error
+    @(52.7500 mm, 50.6750 mm): Track [GND] on F.Cu, length 3.8250 mm
+    @(52.2500 mm, 53.0000 mm): Via [+3V3] on F.Cu - B.Cu
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(68.0000 mm, 8.0000 mm): Track [+5V] on F.Cu, length 14.5400 mm
+    @(80.0000 mm, 6.0000 mm): Track [+3V3] on F.Cu, length 32.0000 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(77.0000 mm, 32.0000 mm): Track [ESTOP] on B.Cu, length 28.8600 mm
+    @(71.0000 mm, 49.4300 mm): Track [PUMP_PWM] on B.Cu, length 7.5000 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0500 mm)
+    Rule: netclass 'Default'; error
+    @(47.0000 mm, 45.2500 mm): Via [+3V3] on F.Cu - B.Cu
+    @(49.3250 mm, 45.7500 mm): Track [GND] on F.Cu, length 3.8250 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)
+    Rule: netclass 'Default'; error
+    @(51.7500 mm, 50.6750 mm): Track [I2C_SDA] on F.Cu, length 8.8250 mm
+    @(51.2500 mm, 57.0000 mm): Via [I2C_SCL] on F.Cu - B.Cu
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(27.3000 mm, 10.0000 mm): Track [+5V] on F.Cu, length 40.7000 mm
+    @(31.0000 mm, 15.0000 mm): Track [+3V3] on F.Cu, length 9.0000 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)
+    Rule: netclass 'Default'; error
+    @(60.6750 mm, 42.7500 mm): Track [HX711_DOUT] on F.Cu, length 2.8250 mm
+    @(62.0000 mm, 43.2500 mm): Via [HX711_SCK] on F.Cu - B.Cu
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(126.0000 mm, 16.9050 mm): Track [CAN_RX] on F.Cu, length 6.5250 mm
+    @(130.0000 mm, 15.6350 mm): Track [+3V3] on F.Cu, length 3.3650 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0500 mm)
+    Rule: netclass 'Default'; error
+    @(57.2500 mm, 53.0000 mm): Via [+3V3] on F.Cu - B.Cu
+    @(57.7500 mm, 50.6750 mm): Track [GND] on F.Cu, length 3.8250 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)
+    Rule: netclass 'Default'; error
+    @(53.7500 mm, 50.6750 mm): Track [CAN_RX] on F.Cu, length 16.3250 mm
+    @(53.2500 mm, 62.0000 mm): Via [CAN_TX] on F.Cu - B.Cu
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(70.0000 mm, 45.2500 mm): Track [SERVO_PWM] on B.Cu, length 5.4500 mm
+    @(63.5000 mm, 47.7500 mm): Track [SPI_MISO] on B.Cu, length 9.5000 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)
+    Rule: netclass 'Default'; error
+    @(60.6750 mm, 48.2500 mm): Track [SPI_SCK] on F.Cu, length 3.3250 mm
+    @(62.0000 mm, 48.7500 mm): Via [SPI_NSS] on F.Cu - B.Cu
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(62.0000 mm, 47.2500 mm): Track [SPI_MOSI] on B.Cu, length 12.0000 mm
+    @(73.0000 mm, 47.7500 mm): Track [SPI_MISO] on B.Cu, length 8.4800 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(68.0000 mm, 8.0000 mm): Track [+5V] on F.Cu, length 14.5400 mm
+    @(69.2000 mm, 10.0000 mm): Track [+3V3] on F.Cu, length 4.0000 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(53.2500 mm, 62.0000 mm): Track [CAN_TX] on B.Cu, length 74.7500 mm
+    @(126.0000 mm, 67.0000 mm): Track [CAN_RX] on B.Cu, length 50.0950 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)
+    Rule: netclass 'Default'; error
+    @(56.2500 mm, 35.5000 mm): Via [GND] on F.Cu - B.Cu
+    @(55.7500 mm, 39.3250 mm): Track [RELAY_DRV] on F.Cu, length 5.3250 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(65.0000 mm, 50.0000 mm): Track [I2C_SCL] on B.Cu, length 14.0000 mm
+    @(70.0000 mm, 45.2500 mm): Track [SERVO_PWM] on B.Cu, length 5.4500 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0500 mm)
+    Rule: netclass 'Default'; error
+    @(51.2500 mm, 37.0000 mm): Via [+3V3] on F.Cu - B.Cu
+    @(51.7500 mm, 39.3250 mm): Track [GND] on F.Cu, length 3.8250 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(76.0000 mm, 48.7500 mm): Track [SPI_NSS] on B.Cu, length 8.2100 mm
+    @(74.0000 mm, 43.0800 mm): Track [SPI_MOSI] on B.Cu, length 6.0000 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)
+    Rule: netclass 'Default'; error
+    @(62.0000 mm, 43.2500 mm): Track [HX711_SCK] on B.Cu, length 4.0000 mm
+    @(63.5000 mm, 42.7500 mm): Via [HX711_DOUT] on F.Cu - B.Cu
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(76.0000 mm, 40.5400 mm): Track [SPI_NSS] on B.Cu, length 4.0000 mm
+    @(77.0000 mm, 32.0000 mm): Track [ESTOP] on B.Cu, length 28.8600 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(78.5000 mm, 49.4300 mm): Track [PUMP_PWM] on B.Cu, length 5.0000 mm
+    @(79.0000 mm, 50.0000 mm): Track [I2C_SCL] on B.Cu, length 1.8400 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(70.0000 mm, 45.2500 mm): Track [SERVO_PWM] on B.Cu, length 5.4500 mm
+    @(62.0000 mm, 48.7500 mm): Track [SPI_NSS] on B.Cu, length 14.0000 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)
+    Rule: netclass 'Default'; error
+    @(60.6750 mm, 44.7500 mm): Track [PUMP_PWM] on F.Cu, length 2.8250 mm
+    @(62.0000 mm, 44.2500 mm): Via [NTC_COIL] on F.Cu - B.Cu
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)
+    Rule: netclass 'Default'; error
+    @(60.6750 mm, 47.7500 mm): Track [SPI_MISO] on F.Cu, length 2.8250 mm
+    @(62.0000 mm, 47.2500 mm): Via [SPI_MOSI] on F.Cu - B.Cu
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(62.0000 mm, 46.5000 mm): Via [SPI_IRQ] on F.Cu - B.Cu
+    @(62.0000 mm, 47.2500 mm): Via [SPI_MOSI] on F.Cu - B.Cu
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)
+    Rule: netclass 'Default'; error
+    @(64.5000 mm, 45.7500 mm): Via [GND] on F.Cu - B.Cu
+    @(62.0000 mm, 45.2500 mm): Track [SERVO_PWM] on B.Cu, length 8.0000 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)
+    Rule: netclass 'Default'; error
+    @(63.5000 mm, 47.7500 mm): Via [SPI_MISO] on F.Cu - B.Cu
+    @(60.6750 mm, 48.2500 mm): Track [SPI_SCK] on F.Cu, length 3.3250 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)
+    Rule: netclass 'Default'; error
+    @(62.0000 mm, 47.2500 mm): Track [SPI_MOSI] on B.Cu, length 12.0000 mm
+    @(63.5000 mm, 47.7500 mm): Via [SPI_MISO] on F.Cu - B.Cu
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1071 mm)
+    Rule: netclass 'Default'; error
+    @(63.5000 mm, 47.7500 mm): Via [SPI_MISO] on F.Cu - B.Cu
+    @(64.0000 mm, 48.2500 mm): Via [SPI_SCK] on F.Cu - B.Cu
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)
+    Rule: netclass 'Default'; error
+    @(51.7500 mm, 50.6750 mm): Track [I2C_SDA] on F.Cu, length 8.8250 mm
+    @(52.2500 mm, 53.0000 mm): Via [+3V3] on F.Cu - B.Cu
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(62.0000 mm, 47.2500 mm): Track [SPI_MOSI] on B.Cu, length 12.0000 mm
+    @(70.0000 mm, 45.2500 mm): Track [SERVO_PWM] on B.Cu, length 5.4500 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(74.0000 mm, 43.0800 mm): Track [SPI_MOSI] on B.Cu, length 6.0000 mm
+    @(75.0000 mm, 48.2500 mm): Track [SPI_SCK] on B.Cu, length 6.4400 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(72.0000 mm, 45.6200 mm): Track [SPI_IRQ] on B.Cu, length 8.0000 mm
+    @(74.0000 mm, 47.2500 mm): Track [SPI_MOSI] on B.Cu, length 4.1700 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(68.0000 mm, 53.2400 mm): Track [NTC_COIL] on B.Cu, length 12.0000 mm
+    @(77.0000 mm, 32.0000 mm): Track [ESTOP] on B.Cu, length 28.8600 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)
+    Rule: netclass 'Default'; error
+    @(64.0000 mm, 48.2500 mm): Via [SPI_SCK] on F.Cu - B.Cu
+    @(63.5000 mm, 47.7500 mm): Track [SPI_MISO] on B.Cu, length 9.5000 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(67.0000 mm, 42.7500 mm): Track [HX711_DOUT] on B.Cu, length 11.7600 mm
+    @(63.5000 mm, 47.7500 mm): Track [SPI_MISO] on B.Cu, length 9.5000 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(77.0000 mm, 32.0000 mm): Track [ESTOP] on B.Cu, length 28.8600 mm
+    @(67.0000 mm, 54.5100 mm): Track [HX711_DOUT] on B.Cu, length 11.5000 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(67.0000 mm, 42.7500 mm): Track [HX711_DOUT] on B.Cu, length 11.7600 mm
+    @(62.0000 mm, 44.2500 mm): Track [NTC_COIL] on B.Cu, length 6.0000 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(84.0000 mm, 30.0000 mm): Track [POT_DET] on B.Cu, length 28.3200 mm
+    @(85.0000 mm, 48.1600 mm): Track [I2C_SDA] on B.Cu, length 2.4600 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(51.7500 mm, 59.5000 mm): Track [I2C_SDA] on B.Cu, length 33.2500 mm
+    @(77.0000 mm, 32.0000 mm): Track [ESTOP] on B.Cu, length 28.8600 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0850 mm)
+    Rule: netclass 'Default'; error
+    @(80.0000 mm, 65.9400 mm): PTH pad 23 [<no net>] of J_STACK
+    @(53.7500 mm, 67.0000 mm): Track [CAN_RX] on B.Cu, length 72.2500 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(63.5000 mm, 47.7500 mm): Track [SPI_MISO] on B.Cu, length 9.5000 mm
+    @(68.0000 mm, 44.2500 mm): Track [NTC_COIL] on B.Cu, length 8.9900 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)
+    Rule: netclass 'Default'; error
+    @(62.0000 mm, 43.2500 mm): Via [HX711_SCK] on F.Cu - B.Cu
+    @(60.6750 mm, 43.7500 mm): Track [NTC_AMB] on F.Cu, length 2.8250 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(64.0000 mm, 48.2500 mm): Track [SPI_SCK] on B.Cu, length 11.0000 mm
+    @(70.0000 mm, 45.2500 mm): Track [SERVO_PWM] on B.Cu, length 5.4500 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(76.0000 mm, 48.7500 mm): Track [SPI_NSS] on B.Cu, length 8.2100 mm
+    @(75.0000 mm, 41.8100 mm): Track [SPI_SCK] on B.Cu, length 3.5000 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)
+    Rule: netclass 'Default'; error
+    @(63.5000 mm, 43.7500 mm): Via [NTC_AMB] on F.Cu - B.Cu
+    @(62.0000 mm, 44.2500 mm): Track [NTC_COIL] on B.Cu, length 6.0000 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)
+    Rule: netclass 'Default'; error
+    @(60.6750 mm, 44.7500 mm): Track [PUMP_PWM] on F.Cu, length 2.8250 mm
+    @(62.0000 mm, 45.2500 mm): Via [SERVO_PWM] on F.Cu - B.Cu
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)
+    Rule: netclass 'Default'; error
+    @(55.7500 mm, 34.0000 mm): Via [RELAY_DRV] on F.Cu - B.Cu
+    @(55.2500 mm, 39.3250 mm): Track [POT_DET] on F.Cu, length 9.3250 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(72.0000 mm, 45.6200 mm): Track [SPI_IRQ] on B.Cu, length 8.0000 mm
+    @(75.0000 mm, 48.2500 mm): Track [SPI_SCK] on B.Cu, length 6.4400 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(63.5000 mm, 43.7500 mm): Track [NTC_AMB] on B.Cu, length 5.5000 mm
+    @(67.0000 mm, 42.7500 mm): Track [HX711_DOUT] on B.Cu, length 11.7600 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(69.0000 mm, 43.7500 mm): Track [NTC_AMB] on B.Cu, length 8.2200 mm
+    @(63.5000 mm, 47.7500 mm): Track [SPI_MISO] on B.Cu, length 9.5000 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0878 mm)
+    Rule: netclass 'Default'; error
+    @(60.6750 mm, 46.2500 mm): Pad 38 [+3V3] of U1 on F.Cu
+    @(60.6750 mm, 46.7500 mm): Track [SPI_IRQ] on F.Cu, length 1.3484 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(70.0000 mm, 50.7000 mm): Track [SERVO_PWM] on B.Cu, length 10.0000 mm
+    @(77.0000 mm, 32.0000 mm): Track [ESTOP] on B.Cu, length 28.8600 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(55.7500 mm, 34.0000 mm): Track [RELAY_DRV] on B.Cu, length 22.2500 mm
+    @(77.0000 mm, 32.0000 mm): Track [ESTOP] on B.Cu, length 28.8600 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(62.0000 mm, 45.2500 mm): Track [SERVO_PWM] on B.Cu, length 8.0000 mm
+    @(68.0000 mm, 44.2500 mm): Track [NTC_COIL] on B.Cu, length 8.9900 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(76.0000 mm, 40.5400 mm): Track [SPI_NSS] on B.Cu, length 4.0000 mm
+    @(78.0000 mm, 34.0000 mm): Track [RELAY_DRV] on B.Cu, length 24.3200 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)
+    Rule: netclass 'Default'; error
+    @(54.7500 mm, 32.0000 mm): Via [ESTOP] on F.Cu - B.Cu
+    @(55.2500 mm, 39.3250 mm): Track [POT_DET] on F.Cu, length 9.3250 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(77.0000 mm, 32.0000 mm): Track [ESTOP] on B.Cu, length 28.8600 mm
+    @(69.0000 mm, 51.9700 mm): Track [NTC_AMB] on B.Cu, length 9.5000 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)
+    Rule: netclass 'Default'; error
+    @(62.0000 mm, 45.2500 mm): Track [SERVO_PWM] on B.Cu, length 8.0000 mm
+    @(63.5000 mm, 44.7500 mm): Via [PUMP_PWM] on F.Cu - B.Cu
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(63.5000 mm, 44.7500 mm): Track [PUMP_PWM] on B.Cu, length 7.5000 mm
+    @(68.0000 mm, 44.2500 mm): Track [NTC_COIL] on B.Cu, length 8.9900 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0750 mm)
+    Rule: netclass 'Default'; error
+    @(62.0000 mm, 43.2500 mm): Track [HX711_SCK] on B.Cu, length 4.0000 mm
+    @(63.5000 mm, 43.7500 mm): Via [NTC_AMB] on F.Cu - B.Cu
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(66.0000 mm, 43.2500 mm): Track [HX711_SCK] on B.Cu, length 12.5300 mm
+    @(63.5000 mm, 47.7500 mm): Track [SPI_MISO] on B.Cu, length 9.5000 mm
+[tracks_crossing]: Tracks crossing
+    Rule: netclass 'Default'; error
+    @(74.0000 mm, 43.0800 mm): Track [SPI_MOSI] on B.Cu, length 6.0000 mm
+    @(77.0000 mm, 32.0000 mm): Track [ESTOP] on B.Cu, length 28.8600 mm
+[starved_thermal]: Thermal relief connection to zone incomplete (layer GND; zone min spoke count 2; actual 1)
+    Local override; error
+    @(0.0000 mm, 0.0000 mm): Zone [GND] on GND, priority 0
+    @(82.5400 mm, 45.6200 mm): PTH pad 8 [GND] of J_STACK
+[starved_thermal]: Thermal relief connection to zone incomplete (layer GND; zone min spoke count 2; actual 1)
+    Local override; error
+    @(0.0000 mm, 0.0000 mm): Zone [GND] on GND, priority 0
+    @(82.5400 mm, 60.8600 mm): PTH pad 20 [GND] of J_STACK
+[missing_courtyard]: Footprint has no courtyard defined
+    Local override; warning
+    @(25.0000 mm, 15.0000 mm): Footprint U2
+[missing_courtyard]: Footprint has no courtyard defined
+    Local override; warning
+    @(18.0000 mm, 15.0000 mm): Footprint C1
+[missing_courtyard]: Footprint has no courtyard defined
+    Local override; warning
+    @(32.0000 mm, 15.0000 mm): Footprint C2
+[missing_courtyard]: Footprint has no courtyard defined
+    Local override; warning
+    @(5.0000 mm, 15.0000 mm): Footprint J10
+[missing_courtyard]: Footprint has no courtyard defined
+    Local override; warning
+    @(135.0000 mm, 15.0000 mm): Footprint U3
+[missing_courtyard]: Footprint has no courtyard defined
+    Local override; warning
+    @(148.0000 mm, 15.0000 mm): Footprint J2
+[missing_courtyard]: Footprint has no courtyard defined
+    Local override; warning
+    @(80.0000 mm, 38.0000 mm): Footprint J_STACK
+[missing_courtyard]: Footprint has no courtyard defined
+    Local override; warning
+    @(70.0000 mm, 10.0000 mm): Footprint D1
+[lib_footprint_mismatch]: Footprint 'MountingHole_3.2mm_M3_Pad_Via' does not match copy in library 'MountingHole'.
+    Local override; warning
+    @(3.5000 mm, 3.5000 mm): Footprint MH1
+[lib_footprint_mismatch]: Footprint 'MountingHole_3.2mm_M3_Pad_Via' does not match copy in library 'MountingHole'.
+    Local override; warning
+    @(156.5000 mm, 3.5000 mm): Footprint MH2
+[lib_footprint_mismatch]: Footprint 'MountingHole_3.2mm_M3_Pad_Via' does not match copy in library 'MountingHole'.
+    Local override; warning
+    @(3.5000 mm, 86.5000 mm): Footprint MH3
+[lib_footprint_mismatch]: Footprint 'MountingHole_3.2mm_M3_Pad_Via' does not match copy in library 'MountingHole'.
+    Local override; warning
+    @(156.5000 mm, 86.5000 mm): Footprint MH4
+[lib_footprint_mismatch]: Footprint 'LQFP-64_10x10mm_P0.5mm' does not match copy in library 'Package_QFP'.
+    Local override; warning
+    @(55.0000 mm, 45.0000 mm): Footprint U1
+[lib_footprint_mismatch]: Footprint 'SOT-223-3_TabPin2' does not match copy in library 'Package_TO_SOT_SMD'.
+    Local override; warning
+    @(25.0000 mm, 15.0000 mm): Footprint U2
+[lib_footprint_mismatch]: Footprint 'C_0805_2012Metric' does not match copy in library 'Capacitor_SMD'.
+    Local override; warning
+    @(18.0000 mm, 15.0000 mm): Footprint C1
+[lib_footprint_mismatch]: Footprint 'C_0805_2012Metric' does not match copy in library 'Capacitor_SMD'.
+    Local override; warning
+    @(32.0000 mm, 15.0000 mm): Footprint C2
+[lib_footprint_mismatch]: Footprint 'JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical' does not match copy in library 'Connector_JST'.
+    Local override; warning
+    @(5.0000 mm, 15.0000 mm): Footprint J10
+[lib_footprint_mismatch]: Footprint 'SOIC-8_3.9x4.9mm_P1.27mm' does not match copy in library 'Package_SO'.
+    Local override; warning
+    @(135.0000 mm, 15.0000 mm): Footprint U3
+[lib_footprint_mismatch]: Footprint 'JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical' does not match copy in library 'Connector_JST'.
+    Local override; warning
+    @(148.0000 mm, 15.0000 mm): Footprint J2
+[lib_footprint_mismatch]: Footprint 'PinHeader_2x20_P2.54mm_Vertical' does not match copy in library 'Connector_PinHeader_2.54mm'.
+    Local override; warning
+    @(80.0000 mm, 38.0000 mm): Footprint J_STACK
+[lib_footprint_mismatch]: Footprint 'LED_0603_1608Metric' does not match copy in library 'LED_SMD'.
+    Local override; warning
+    @(70.0000 mm, 10.0000 mm): Footprint D1
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **
