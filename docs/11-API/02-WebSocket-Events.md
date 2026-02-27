@@ -7,15 +7,15 @@ status: Draft
 
 # WebSocket Events
 
-## Overview
+## 1. Overview
 
 Epicura uses WebSocket connections for real-time communication between the cloud backend and mobile apps. The CM5 device publishes telemetry via MQTT (see [[03-MQTT-Topics|MQTT Topics]]), which the backend bridges to WebSocket clients. For local WiFi connections, apps can also connect directly to the CM5's WebSocket server.
 
 ---
 
-## Connection
+## 2. Connection
 
-### Cloud Relay
+### 2.1 Cloud Relay
 
 ```
 URL:  wss://api.epicura.io/ws
@@ -26,7 +26,7 @@ Auth: Pass JWT access token as query parameter
 wss://api.epicura.io/ws?token=eyJhbGciOiJIUzI1NiIs...
 ```
 
-### Local (Direct to CM5)
+### 2.2 Local (Direct to CM5)
 
 ```
 URL:  ws://<device-ip>:8080/ws
@@ -37,7 +37,7 @@ The CM5 device IP is discovered via mDNS (`_epicura._tcp.local`) or read from th
 
 ---
 
-## Connection Lifecycle
+## 3. Connection Lifecycle
 
 ```
 ┌──────────┐                              ┌──────────┐
@@ -66,7 +66,7 @@ The CM5 device IP is discovered via mDNS (`_epicura._tcp.local`) or read from th
      │◄────────────────────────────────────────│
 ```
 
-### Heartbeat
+### 3.1 Heartbeat
 
 - Client sends `ping` frame every 30 seconds
 - Server responds with `pong` frame
@@ -75,7 +75,7 @@ The CM5 device IP is discovered via mDNS (`_epicura._tcp.local`) or read from th
 
 ---
 
-## Event Format
+## 4. Event Format
 
 All WebSocket messages use JSON with a consistent envelope:
 
@@ -97,9 +97,9 @@ All WebSocket messages use JSON with a consistent envelope:
 
 ---
 
-## Client Events (App → Server)
+## 5. Client Events (App → Server)
 
-### `subscribe`
+### 5.1 `subscribe`
 
 Subscribe to real-time events from a specific appliance.
 
@@ -122,7 +122,7 @@ Subscribe to real-time events from a specific appliance.
 }
 ```
 
-### `cooking:start`
+### 5.2 `cooking:start`
 
 Request to start cooking a recipe on a paired appliance.
 
@@ -140,7 +140,7 @@ Request to start cooking a recipe on a paired appliance.
 }
 ```
 
-### `cooking:pause`
+### 5.3 `cooking:pause`
 
 Pause the current cooking session.
 
@@ -151,7 +151,7 @@ Pause the current cooking session.
 }
 ```
 
-### `cooking:resume`
+### 5.4 `cooking:resume`
 
 Resume a paused cooking session.
 
@@ -162,7 +162,7 @@ Resume a paused cooking session.
 }
 ```
 
-### `cooking:stop`
+### 5.5 `cooking:stop`
 
 Emergency stop — immediately halt cooking.
 
@@ -175,9 +175,9 @@ Emergency stop — immediately halt cooking.
 
 ---
 
-## Server Events (Server → App)
+## 6. Server Events (Server → App)
 
-### `cooking:started`
+### 6.1 `cooking:started`
 
 Cooking session has begun on the device.
 
@@ -196,7 +196,7 @@ Cooking session has begun on the device.
 }
 ```
 
-### `cooking:progress`
+### 6.2 `cooking:progress`
 
 Periodic cooking progress update (every 5-10 seconds during active cooking).
 
@@ -224,7 +224,7 @@ Periodic cooking progress update (every 5-10 seconds during active cooking).
 }
 ```
 
-### `cooking:stage_change`
+### 6.3 `cooking:stage_change`
 
 A cooking stage transition has occurred.
 
@@ -251,7 +251,7 @@ A cooking stage transition has occurred.
 }
 ```
 
-### `cooking:complete`
+### 6.4 `cooking:complete`
 
 Cooking session has finished successfully.
 
@@ -272,7 +272,7 @@ Cooking session has finished successfully.
 }
 ```
 
-### `cooking:error`
+### 6.5 `cooking:error`
 
 An error occurred during cooking.
 
@@ -291,7 +291,7 @@ An error occurred during cooking.
 }
 ```
 
-### `appliance:status`
+### 6.6 `appliance:status`
 
 Device status change (online, offline, cooking, error).
 
@@ -308,7 +308,7 @@ Device status change (online, offline, cooking, error).
 }
 ```
 
-### `appliance:alert`
+### 6.7 `appliance:alert`
 
 Device alert requiring user attention.
 
@@ -327,7 +327,7 @@ Device alert requiring user attention.
 
 ---
 
-## Cloud Relay Architecture
+## 7. Cloud Relay Architecture
 
 The cloud backend bridges MQTT telemetry from Epicura devices to WebSocket clients:
 
@@ -358,7 +358,7 @@ This ensures horizontal scalability — multiple API server instances can serve 
 
 ---
 
-## Error Events
+## 8. Error Events
 
 | Error Code | Severity | Description |
 |------------|----------|-------------|
@@ -372,7 +372,7 @@ This ensures horizontal scalability — multiple API server instances can serve 
 
 ---
 
-## Client Reconnection Strategy
+## 9. Client Reconnection Strategy
 
 | Attempt | Delay | Notes |
 |---------|-------|-------|
@@ -386,7 +386,7 @@ On reconnection, the client should re-send `subscribe` events for all previously
 
 ---
 
-## Related Documentation
+## 10. Related Documentation
 
 - [[01-REST-API-Reference|REST API Reference]] - HTTP endpoints
 - [[03-MQTT-Topics|MQTT Topics]] - Device-side telemetry protocol
@@ -398,7 +398,7 @@ On reconnection, the client should re-send `subscribe` events for all previously
 
 ---
 
-## Revision History
+## 11. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

@@ -7,11 +7,11 @@ status: Draft
 
 # Actuation Components
 
-## Overview
+## 1. Overview
 
 This document details the actuation subsystem components for the Epicura kitchen robot prototype, including the induction heating element, servo stirring arm, and ingredient dispensing mechanisms.
 
-## Actuation Architecture
+## 2. Actuation Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -46,7 +46,7 @@ This document details the actuation subsystem components for the Epicura kitchen
 
 ---
 
-## Component List
+## 3. Component List
 
 | Component | Part Number | Qty | Unit Price | Subtotal | Supplier | Notes |
 |-----------|-------------|-----|------------|----------|----------|-------|
@@ -85,7 +85,7 @@ This document details the actuation subsystem components for the Epicura kitchen
 
 ---
 
-## Cost Summary
+## 4. Cost Summary
 
 | Item | Cost |
 |------|------|
@@ -110,9 +110,9 @@ This document details the actuation subsystem components for the Epicura kitchen
 
 ---
 
-## Design Notes
+## 5. Design Notes
 
-### Microwave Induction Surface Strategy
+### 5.1 Microwave Induction Surface Strategy
 - **Both Prototype and Production:** Commercial microwave induction surface with CAN bus port
   - Self-contained module: internal coil, driver, safety circuits
   - STM32 controls power level (0-100%) via CAN 2.0B at 500 kbps
@@ -120,7 +120,7 @@ This document details the actuation subsystem components for the Epicura kitchen
   - Safety relay on AC mains provides system-level hard disconnect
   - Module-internal pot detection and thermal cutoff
 
-### 24V BLDC Motor Selection
+### 5.2 24V BLDC Motor Selection
 - **30-50 kg-cm torque** provides ample margin for thick curries and dals
 - **Brushless design** eliminates brush wear, better thermal handling for sustained operation
 - **True continuous rotation** — no servo modification needed
@@ -129,7 +129,7 @@ This document details the actuation subsystem components for the Epicura kitchen
 - Control: 10 kHz PWM (speed) + EN (enable) + DIR (direction) from STM32
 - **Specific model TBD** — document generically as "24V BLDC, 30-50 kg-cm, integrated ESC"
 
-### P-ASD Pneumatic System
+### 5.3 P-ASD Pneumatic System
 - **Puff-dosing mechanism**: pressurized air bursts through sealed cartridges
 - **6 cartridges** (60 mL each) with quarter-turn bayonet docking
 - **12V diaphragm pump** (3-4 L/min) + 100 mL accumulator at ~1.0 bar
@@ -138,19 +138,19 @@ This document details the actuation subsystem components for the Epicura kitchen
 - **Anti-clog**: inherent (pressurized air breaks powder bridges), no moving parts in powder path
 - **BOM cost**: ~$90 (vs ~$6 for old 3× SG90 servos) — 15× cost for 2× capacity + dramatically improved reliability with sticky Indian spices
 
-### CID Linear Actuators (×2)
+### 5.4 CID Linear Actuators (×2)
 - 12V DC, 50 mm stroke push-plate sliders for coarse ingredients
 - 20–50 N force sufficient for pushing up to 500g of chopped vegetables
 - H-bridge driver (DRV8876RGTR) for EN/PH direction and speed control
 - Limit switches at home/extend positions for position feedback
 
-### SLD Peristaltic Pumps (×2) + Solenoid Valves (×2)
+### 5.5 SLD Peristaltic Pumps (×2) + Solenoid Valves (×2)
 - Peristaltic: fluid only touches food-grade silicone tubing (no contamination)
 - Flow rate 5–50 mL/min, adjustable via PWM motor speed
 - Solenoid valves (12V NC) prevent dripping when pumps are off
 - Dedicated 1 kg load cell + HX711 for closed-loop liquid metering (±5%)
 
-### Production Cost Reduction
+### 5.6 Production Cost Reduction
 
 | Item | Prototype | Production (1000 qty) | Savings |
 |------|-----------|----------------------|---------|
@@ -165,7 +165,7 @@ This document details the actuation subsystem components for the Epicura kitchen
 
 ---
 
-## Related Documentation
+## 6. Related Documentation
 
 - [[01-Compute-Module-Components|Compute Module Components]]
 - [[03-Sensor-Components|Sensor Components]]
@@ -179,7 +179,7 @@ This document details the actuation subsystem components for the Epicura kitchen
 
 ---
 
-## Revision History
+## 7. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

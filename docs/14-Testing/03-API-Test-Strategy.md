@@ -6,27 +6,27 @@ aliases: [API Test Strategy, Backend Test Strategy]
 
 # API & Admin Test Strategy — epicura-api
 
-## Scope
+## 1. Scope
 
 Testing strategy for the TypeScript monorepo: Fastify API server (`apps/api`), Next.js admin portal (`apps/admin`), and shared packages (`@epicura/types`, `@epicura/validators`).
 
 ---
 
-## Test Levels
+## 2. Test Levels
 
-### 1. Unit Tests
+### 2.1 Unit Tests
 
 **Framework:** Vitest
 **Runs on:** Host (CI-compatible)
 
-#### Shared Packages
+#### 2.1.1 Shared Packages
 
 | Package | Key Test Cases |
 |---------|---------------|
 | `@epicura/types` | Type exports compile correctly (type-check only, no runtime tests) |
 | `@epicura/validators` | Zod schemas: valid input passes, invalid input rejects with correct error path, edge cases (empty strings, null, boundary values) for recipe, device, user, and auth schemas |
 
-#### API Server (`apps/api`)
+#### 2.1.2 API Server (`apps/api`)
 
 | Module | Key Test Cases |
 |--------|---------------|
@@ -44,7 +44,7 @@ Testing strategy for the TypeScript monorepo: Fastify API server (`apps/api`), N
 - Mock MQTT client for mqtt-bridge tests
 - Mock S3/R2 for upload tests
 
-#### Admin Portal (`apps/admin`)
+#### 2.1.3 Admin Portal (`apps/admin`)
 
 | Module | Key Test Cases |
 |--------|---------------|
@@ -59,7 +59,7 @@ Testing strategy for the TypeScript monorepo: Fastify API server (`apps/api`), N
 - Mock API responses with MSW (Mock Service Worker)
 - Test page rendering with Next.js test utilities
 
-### 2. Integration Tests
+### 2.2 Integration Tests
 
 **Framework:** Vitest + Testcontainers (PostgreSQL, Mosquitto, Redis)
 **Runs on:** Host with Docker
@@ -73,7 +73,7 @@ Testing strategy for the TypeScript monorepo: Fastify API server (`apps/api`), N
 | Device lifecycle | Full API server + DB + MQTT | Register device → claim → receive telemetry → send command |
 | Admin ↔ API | Next.js dev server + API server | Login to admin, CRUD recipe, view device telemetry |
 
-### 3. API Contract Tests
+### 2.3 API Contract Tests
 
 | Test | Method | Pass Criteria |
 |------|--------|--------------|
@@ -82,7 +82,7 @@ Testing strategy for the TypeScript monorepo: Fastify API server (`apps/api`), N
 | MQTT topic validation | Verify published topics match `docs/11-API/03-MQTT-Topics` | All topics match spec |
 | WebSocket event validation | Verify event shapes match `docs/11-API/02-WebSocket-Events` | All events match spec |
 
-### 4. Performance Tests
+### 2.4 Performance Tests
 
 | Test | Tool | Pass Criteria |
 |------|------|--------------|
@@ -92,7 +92,7 @@ Testing strategy for the TypeScript monorepo: Fastify API server (`apps/api`), N
 | Admin page load | Lighthouse CI | Performance score ≥ 80 |
 | Admin bundle size | `next build` output | Total JS < 500 KB gzipped |
 
-### 5. Security Tests
+### 2.5 Security Tests
 
 | Test | Tool | Pass Criteria |
 |------|------|--------------|
@@ -105,7 +105,7 @@ Testing strategy for the TypeScript monorepo: Fastify API server (`apps/api`), N
 
 ---
 
-## CI Pipeline
+## 3. CI Pipeline
 
 ```yaml
 # .github/workflows/ci.yml
@@ -126,7 +126,7 @@ steps:
 
 ---
 
-## Test Data
+## 4. Test Data
 
 - **Seed database:** 50 recipes, 10 users (various roles), 5 devices, 1000 telemetry records
 - **MQTT test messages:** JSON payloads for all telemetry and command topic types
@@ -134,7 +134,7 @@ steps:
 
 ---
 
-## References
+## 5. References
 
 - [[__Workspaces/Epicura/docs/07-Development/02-Repository-Plan|Repository Plan]]
 - [[__Workspaces/Epicura/docs/10-Backend/01-Backend-Architecture|Backend Architecture]]

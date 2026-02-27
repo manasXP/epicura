@@ -7,7 +7,7 @@ status: Draft
 
 # Sensors & Data Acquisition
 
-## Sensor Overview
+## 1. Sensor Overview
 
 | Sensor | Type | Interface | Range | Accuracy | Sampling Rate | Connected To |
 |--------|------|-----------|-------|----------|---------------|--------------|
@@ -18,9 +18,9 @@ status: Draft
 
 ---
 
-## Camera System
+## 2. Camera System
 
-### Module Selection
+### 2.1 Module Selection
 
 | Parameter | IMX219 (Standard) | IMX477 (HQ Option) |
 |-----------|-------------------|---------------------|
@@ -36,7 +36,7 @@ status: Draft
 
 **Selection Rationale:** The IMX219 is the default choice for the prototype. Its fixed-focus lens and adequate resolution are sufficient for food color/texture classification. The IMX477 with a C-mount lens offers more flexibility if fine-grained visual analysis is needed (e.g., detecting individual spice particles or subtle color gradients).
 
-### Camera Mounting
+### 2.2 Camera Mounting
 
 ```
 ┌────────────────────────────────────────────────────┐
@@ -65,7 +65,7 @@ status: Draft
 └────────────────────────────────────────────────────┘
 ```
 
-### Field of View Calculation
+### 2.3 Field of View Calculation
 
 At a mounting height of 25cm above a 22cm diameter pot:
 
@@ -80,9 +80,9 @@ Margin: ~37% extra coverage (captures pot rim and surroundings)
 
 For the IMX477 with a suitable lens, FOV can be tuned via lens selection. A 6mm lens at 25cm gives approximately 28cm coverage. A wider 3.6mm lens gives approximately 45cm coverage.
 
-### Lighting System
+### 2.4 Lighting System
 
-#### LED Ring Specifications
+#### 2.4.1 LED Ring Specifications
 
 | Parameter | Value |
 |-----------|-------|
@@ -94,14 +94,14 @@ For the IMX477 with a suitable lens, FOV can be tuned via lens selection. A 6mm 
 | Interface | Single-wire data (SPI/GPIO from CM5 or STM32) |
 | Power | 5V, ~60mA per LED at full white (total ~1A max) |
 
-#### Lighting Design
+#### 2.4.2 Lighting Design
 
 - **Consistent Illumination:** Ring around camera lens provides even, shadow-free lighting on food surface
 - **Anti-Glare:** Diffuser film over LEDs reduces specular reflections from liquid surfaces (oil, water)
 - **Color Accuracy:** Neutral white enables reliable food color detection (e.g., golden-brown vs. burnt)
 - **Adjustable:** Software dims LEDs during non-imaging periods to reduce heat/power
 
-### Calibration
+### 2.5 Calibration
 
 - **White Balance:** Calibrate on boot using a white reference card placed on pot. Store AWB gains per unit.
 - **Color Reference:** Optional X-Rite ColorChecker patch card for factory calibration of color reproduction
@@ -110,9 +110,9 @@ For the IMX477 with a suitable lens, FOV can be tuned via lens selection. A 6mm 
 
 ---
 
-## IR Thermometer (MLX90614)
+## 3. IR Thermometer (MLX90614)
 
-### Specifications
+### 3.1 Specifications
 
 | Parameter | Value |
 |-----------|-------|
@@ -129,7 +129,7 @@ For the IMX477 with a suitable lens, FOV can be tuned via lens selection. A 6mm 
 | Current Consumption | 1.5 mA (typical) |
 | Response Time | 100ms (to 90% of final value) |
 
-### Mounting Configuration
+### 3.2 Mounting Configuration
 
 ```
                      ┌──── Gantry Arm ────┐
@@ -157,7 +157,7 @@ FOV at 7cm distance: covers ~14cm diameter circle
 (adequate for pot center measurement)
 ```
 
-### Emissivity Calibration
+### 3.3 Emissivity Calibration
 
 Different food surfaces have different IR emissivity values, affecting temperature accuracy:
 
@@ -173,7 +173,7 @@ Different food surfaces have different IR emissivity values, affecting temperatu
 - **Configurable:** Recipe engine can set emissivity per recipe stage (e.g., dry spices vs. liquid gravy)
 - **Calibration:** Compare IR reading against reference thermometer in water bath at 50C, 70C, 90C
 
-### I2C Wiring Diagram
+### 3.4 I2C Wiring Diagram
 
 ```
 STM32G474RE                        MLX90614ESF-BAA
@@ -198,7 +198,7 @@ Cable: Shielded 4-wire, <30cm length
 Shield: Connected to GND at STM32 end only
 ```
 
-### STM32 Software Interface
+### 3.5 STM32 Software Interface
 
 ```c
 // MLX90614 I2C read sequence (simplified)
@@ -219,9 +219,9 @@ float mlx90614_read_object_temp(I2C_HandleTypeDef *hi2c) {
 
 ---
 
-## Load Cell System
+## 4. Load Cell System
 
-### Strain Gauge Configuration
+### 4.1 Strain Gauge Configuration
 
 Four 5kg strain gauges are arranged in a full Wheatstone bridge under the pot platform, providing 20kg total capacity with excellent sensitivity and temperature compensation.
 
@@ -251,7 +251,7 @@ Full-scale output: ~2 mV/V (at rated load)
 At 5V excitation: ~10 mV full scale
 ```
 
-### HX711 ADC Wiring
+### 4.2 HX711 ADC Wiring
 
 ```
 Load Cell Bridge                HX711 Module              STM32G474RE
@@ -281,7 +281,7 @@ HX711 Specifications:
   - Excitation: On-chip 5V regulated output for bridge
 ```
 
-### Calibration Procedure
+### 4.3 Calibration Procedure
 
 1. **Zero Offset (Tare):**
    - On system boot (no pot), read 10 samples and average
@@ -303,7 +303,7 @@ HX711 Specifications:
    - Full Wheatstone bridge provides first-order temperature compensation
    - For high accuracy, recalibrate tare when ambient temp changes >10C
 
-### Measurements and Use Cases
+### 4.4 Measurements and Use Cases
 
 | Measurement | Method | Accuracy | Use Case |
 |-------------|--------|----------|----------|
@@ -313,7 +313,7 @@ HX711 Specifications:
 | Total Food Weight | Current weight - pot tare | +/-5g | Portion tracking, recipe scaling |
 | Stirring Torque (indirect) | Weight oscillation during stir | Qualitative | Detect thick vs. thin consistency |
 
-### STM32 Software Interface
+### 4.5 STM32 Software Interface
 
 ```c
 // HX711 read sequence (bit-bang GPIO)
@@ -356,9 +356,9 @@ float hx711_read_grams(int32_t tare_offset, float scale_factor) {
 
 ---
 
-## Pot Detection
+## 5. Pot Detection
 
-### Mechanism
+### 5.1 Mechanism
 
 A reed switch (or Hall effect sensor) detects the presence of a ferromagnetic pot on the induction platform. A small magnet is embedded in the pot base; when the pot is placed on the platform, the reed switch closes.
 
@@ -391,7 +391,7 @@ Alternative: Hall effect sensor (SS49E or A3144)
   - Requires small magnet in pot base
 ```
 
-### Interlock Logic
+### 5.2 Interlock Logic
 
 1. On boot, STM32 queries microwave surface module via CAN for pot detection status
 2. If pot not detected, display "Place pot" on UI
@@ -402,9 +402,9 @@ Alternative: Hall effect sensor (SS49E or A3144)
 
 ---
 
-## Sensor Fusion
+## 6. Sensor Fusion
 
-### Multi-Sensor Cooking Stage Detection
+### 6.1 Multi-Sensor Cooking Stage Detection
 
 The recipe engine on CM5 combines data from multiple sensors to determine the current cooking stage and trigger transitions:
 
@@ -437,7 +437,7 @@ The recipe engine on CM5 combines data from multiple sensors to determine the cu
 └─────────────────────────────────────────────────────────┘
 ```
 
-### Decision Matrix
+### 6.2 Decision Matrix
 
 | Cooking Stage | Camera Signal | IR Temp (C) | Weight Change | Confidence |
 |---------------|---------------|-------------|---------------|------------|
@@ -450,7 +450,7 @@ The recipe engine on CM5 combines data from multiple sensors to determine the cu
 | Done | Target color/texture reached | Recipe-specific | Recipe-specific | Recipe-dependent |
 | Burning (ALERT) | Dark/black spots, smoke detection | >200 | Rapid decrease | High |
 
-### Sampling Rate Summary
+### 6.3 Sampling Rate Summary
 
 | Sensor | Acquisition Rate | Processing Rate | Latency Budget |
 |--------|-----------------|-----------------|----------------|
@@ -461,9 +461,9 @@ The recipe engine on CM5 combines data from multiple sensors to determine the cu
 
 ---
 
-## Sensor Quality Monitoring
+## 7. Sensor Quality Monitoring
 
-### Health Check Table
+### 7.1 Health Check Table
 
 | Sensor | Health Check | Pass Criteria | Failure Mode |
 |--------|-------------|---------------|--------------|
@@ -472,7 +472,7 @@ The recipe engine on CM5 combines data from multiple sensors to determine the cu
 | Load Cells | Zero drift check, range valid | Drift < 5g/hour, 0 < raw < 0xFFFFFF | Bridge wire break, HX711 fault |
 | Pot Detection | State change matches expectations | Toggles when pot placed/removed | Switch stuck, magnet missing |
 
-### Degradation Fallback Strategy
+### 7.2 Degradation Fallback Strategy
 
 | Primary Sensor Failed | Fallback Strategy | Limitations |
 |-----------------------|-------------------|-------------|
@@ -482,9 +482,9 @@ The recipe engine on CM5 combines data from multiple sensors to determine the cu
 
 ---
 
-## Testing & Validation
+## 8. Testing & Validation
 
-### Camera Test Procedures
+### 8.1 Camera Test Procedures
 
 - [ ] Mount camera at 25cm height, verify full pot is in frame
 - [ ] Capture image of white card, verify white balance (R/G/B within +/-10%)
@@ -494,7 +494,7 @@ The recipe engine on CM5 combines data from multiple sensors to determine the cu
 - [ ] Steam test: boil water for 10 minutes, verify lens does not fog (shroud effective)
 - [ ] FPS test: verify 30fps capture sustained over 30 minutes
 
-### IR Thermometer Test Procedures
+### 8.2 IR Thermometer Test Procedures
 
 - [ ] Read room temperature, compare to reference thermometer (+/-1C)
 - [ ] Read boiling water surface, verify 97-102C (altitude-dependent)
@@ -504,7 +504,7 @@ The recipe engine on CM5 combines data from multiple sensors to determine the cu
 - [ ] Steam interference: verify stable reading during active boiling
 - [ ] Response time: apply sudden temp change, verify 90% response in <200ms
 
-### Load Cell Test Procedures
+### 8.3 Load Cell Test Procedures
 
 - [ ] Tare with empty platform, verify drift <2g over 10 minutes
 - [ ] Place 100g weight, verify reading 98-102g
@@ -514,7 +514,7 @@ The recipe engine on CM5 combines data from multiple sensors to determine the cu
 - [ ] Temperature test: verify drift <5g over 0-40C ambient range
 - [ ] Dynamic test: dispense water into pot, verify weight tracks smoothly
 
-### Pot Detection Test Procedures
+### 8.4 Pot Detection Test Procedures
 
 - [ ] Place pot: verify detection within 100ms
 - [ ] Remove pot: verify detection within 100ms
@@ -524,7 +524,7 @@ The recipe engine on CM5 combines data from multiple sensors to determine the cu
 
 ---
 
-## Related Documentation
+## 9. Related Documentation
 
 - [[02-Technical-Specifications|Technical Specifications]]
 - [[Epicura-Architecture|Hardware Architecture & Wiring Diagrams]]
@@ -535,7 +535,7 @@ The recipe engine on CM5 combines data from multiple sensors to determine the cu
 
 ---
 
-## Revision History
+## 10. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

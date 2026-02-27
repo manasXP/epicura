@@ -7,7 +7,7 @@ status: Draft
 
 # Weekly Status Report Template
 
-## How to Use This Template
+## 1. How to Use This Template
 
 1. **Copy this entire document** and create a new file named `Weekly-Status-YYYY-MM-DD.md` in a `reports/` subfolder
 2. **Fill in all sections** each Friday before end of day
@@ -27,7 +27,7 @@ status: Draft
 
 ---
 
-## Executive Summary
+## 2. Executive Summary
 
 **Overall Status:** 🟢 On Track | 🟡 At Risk | 🔴 Delayed | ⏸️ On Hold
 
@@ -45,14 +45,14 @@ status: Draft
 
 ---
 
-## Current Sprint/Phase Status
+## 3. Current Sprint/Phase Status
 
-### Active Sprint: [Sprint Name or Pre-Sprint Phase]
+### 3.1 Active Sprint: [Sprint Name or Pre-Sprint Phase]
 **Sprint Goal:** [One sentence describing the sprint objective]
 **Sprint Dates:** [Start Date] to [End Date]
 **Days Remaining:** [X] of [Y] days
 
-### Story Progress
+### 3.2 Story Progress
 
 | Story ID | Story Name | Points | Status | % Complete | Owner | Notes |
 |----------|------------|--------|--------|------------|-------|-------|
@@ -63,7 +63,7 @@ status: Draft
 
 **Legend:** ✅ Done | 🔄 In Progress | ⏸️ Blocked | 📋 Not Started | ❌ Cancelled
 
-### Sprint Burndown
+### 3.3 Sprint Burndown
 
 ```
 Story Points Remaining
@@ -83,37 +83,37 @@ Story Points Remaining
 
 ---
 
-## Accomplishments This Week
+## 4. Accomplishments This Week
 
-### Completed Work
+### 4.1 Completed Work
 
-#### 1. [Achievement Title]
+#### 4.1.1 [Achievement Title]
 - **Story:** ST-XXX ([Story Name])
 - **Description:** [What was accomplished]
 - **Impact:** [Why this matters for the project]
 - **Artifacts:** [Links to code commits, docs, test results]
 
-#### 2. [Achievement Title]
+#### 4.1.2 [Achievement Title]
 - **Story:** ST-XXX ([Story Name])
 - **Description:** [What was accomplished]
 - **Impact:** [Why this matters for the project]
 - **Artifacts:** [Links to code commits, docs, test results]
 
-#### 3. [Achievement Title]
+#### 4.1.3 [Achievement Title]
 - **Story:** ST-XXX ([Story Name])
 - **Description:** [What was accomplished]
 - **Impact:** [Why this matters for the project]
 - **Artifacts:** [Links to code commits, docs, test results]
 
-### Milestones Reached
+### 4.2 Milestones Reached
 - [ ] [Milestone Name] — [Date Achieved] ✅
 - [ ] [Milestone Name] — [Planned Date: YYYY-MM-DD]
 
 ---
 
-## Resource Utilization
+## 5. Resource Utilization
 
-### Team Capacity This Week
+### 5.1 Team Capacity This Week
 
 | Role | Planned % | Actual % | Variance | Hours | Notes |
 |------|-----------|----------|----------|-------|-------|
@@ -128,7 +128,7 @@ Story Points Remaining
 - [Any planned time off next week]
 - [Overtime justification if applicable]
 
-### External Dependencies
+### 5.2 External Dependencies
 - **Waiting On:** [What we're blocked by]
   - **Status:** [Vendor/person status]
   - **ETA:** [Expected resolution date]
@@ -136,33 +136,33 @@ Story Points Remaining
 
 ---
 
-## Procurement & Components
+## 6. Procurement & Components
 
-### Orders Placed This Week
+### 6.1 Orders Placed This Week
 
 | Item | Part Number | Qty | Supplier | Cost | Order Date | ETA | Status |
 |------|-------------|-----|----------|------|------------|-----|--------|
 | [Component] | [PN] | 2 | Mouser | $XX.XX | YYYY-MM-DD | YYYY-MM-DD | 🚚 Shipped |
 | [Component] | [PN] | 5 | Digikey | $XX.XX | YYYY-MM-DD | YYYY-MM-DD | ⏳ Processing |
 
-### Components Received This Week
+### 6.2 Components Received This Week
 - ✅ [Component Name] (Qty: X) — Inspected and stored
 - ✅ [Component Name] (Qty: X) — Integrated into build
 
-### Upcoming Orders (Next Week)
+### 6.3 Upcoming Orders (Next Week)
 - [ ] [Component Name] — Week [X] ordering window — Budget: $XXX
 - [ ] [Component Name] — Week [X] ordering window — Budget: $XXX
 
-### Procurement Issues
+### 6.4 Procurement Issues
 - ⚠️ **[Component Name]:** Out of stock at Mouser
   - **Impact:** Delays Sprint X by [Y] days
   - **Mitigation:** Ordered from Digikey backup supplier, +2 days delivery
 
 ---
 
-## Budget Status
+## 7. Budget Status
 
-### Weekly Spend
+### 7.1 Weekly Spend
 
 | Category | This Week | Cumulative | Allocated | Remaining | % Used |
 |----------|-----------|------------|-----------|-----------|--------|
@@ -172,20 +172,20 @@ Story Points Remaining
 | Contingency | $[X] | $[XXX] | $14,970 | $[XX,XXX] | [X]% |
 | **Total** | **$[X,XXX]** | **$[XX,XXX]** | **$164,666** | **$[XXX,XXX]** | **[XX]%** |
 
-### Budget Variance Analysis
+### 7.2 Budget Variance Analysis
 - **Status:** 🟢 Under Budget | 🟡 On Budget | 🔴 Over Budget
 - **Projected Overrun/Savings:** $[X,XXX] ([+/-]%)
 - **Explanation:** [Why variance occurred, if significant]
 
-### Major Expenses This Week
+### 7.3 Major Expenses This Week
 1. **[Expense Name]:** $[XXX] — [Justification]
 2. **[Expense Name]:** $[XXX] — [Justification]
 
 ---
 
-## Risks & Issues
+## 8. Risks & Issues
 
-### Active Risks
+### 8.1 Active Risks
 
 | Risk ID | Risk Description | Probability | Impact | Status | Owner | Mitigation |
 |---------|------------------|-------------|--------|--------|-------|------------|
@@ -195,23 +195,23 @@ Story Points Remaining
 
 **Risk Status Legend:** 🔴 Active (immediate action) | 🟡 Monitor | 🟢 Mitigated | ⚫ Closed
 
-### New Risks Identified This Week
+### 8.2 New Risks Identified This Week
 1. **[Risk Title]**
    - **Probability:** High / Medium / Low
    - **Impact:** Critical / High / Medium / Low
    - **Description:** [What could go wrong]
    - **Mitigation Plan:** [What we'll do to prevent/reduce impact]
 
-### Closed Risks This Week
+### 8.3 Closed Risks This Week
 - ⚫ **[Risk Title]:** [Why risk is no longer applicable]
 
 ---
 
-## Issues & Blockers
+## 9. Issues & Blockers
 
-### Critical Issues (Immediate Action Required)
+### 9.1 Critical Issues (Immediate Action Required)
 
-#### Issue #1: [Issue Title]
+#### 9.1.1 Issue #1: [Issue Title]
 - **Status:** 🔴 Critical
 - **Discovered:** [Date]
 - **Impact:** [How this affects timeline/deliverables]
@@ -221,20 +221,20 @@ Story Points Remaining
   2. [Action item 2] — Owner: [Name] — Due: [Date]
 - **ETA for Resolution:** [Date]
 
-### Active Blockers
+### 9.2 Active Blockers
 
 | Blocker | Blocking Story | Impact | Owner | Status | ETA |
 |---------|---------------|--------|-------|--------|-----|
 | [Blocker description] | ST-XXX | Sprint delayed 2 days | [Name] | Working | YYYY-MM-DD |
 
-### Resolved Issues This Week
+### 9.3 Resolved Issues This Week
 - ✅ **[Issue Title]:** Resolved on [Date] — [Brief explanation]
 
 ---
 
-## Technical Highlights
+## 10. Technical Highlights
 
-### Code/Design Artifacts Produced
+### 10.1 Code/Design Artifacts Produced
 - **Git Commits:** [X] commits to [repo/branch]
   - Link: [GitHub/GitLab URL]
 - **Documentation Updated:**
@@ -242,21 +242,21 @@ Story Points Remaining
 - **Tests Written/Passed:**
   - [Test name]: [Pass/Fail] — [X/Y] test cases
 
-### Technical Decisions Made
+### 10.2 Technical Decisions Made
 1. **Decision:** [What was decided]
    - **Rationale:** [Why this decision was made]
    - **Alternatives Considered:** [What else was evaluated]
    - **Impact:** [How this affects architecture/timeline]
 
-### Design Reviews Completed
+### 10.3 Design Reviews Completed
 - **PCB Review:** Controller PCB schematic — [Pass/Fail with comments]
 - **Code Review:** STM32 UART driver — Approved with minor changes
 
 ---
 
-## Testing & Validation
+## 11. Testing & Validation
 
-### Tests Executed This Week
+### 11.1 Tests Executed This Week
 
 | Test | Type | Result | Issues Found | Notes |
 |------|------|--------|--------------|-------|
@@ -264,109 +264,109 @@ Story Points Remaining
 | UART loopback test | Unit | ✅ Pass | 0 | <5ms latency achieved |
 | PID step response | Integration | ⚠️ Partial | 1 | Overshoot 15% (target: <10%) |
 
-### Quality Metrics
+### 11.2 Quality Metrics
 - **Test Coverage:** [XX]% (target: 80%)
 - **Defect Density:** [X] bugs per 100 lines of code
 - **Mean Time to Fix:** [X] hours average
 
 ---
 
-## Next Week Plan
+## 12. Next Week Plan
 
-### Sprint Goal for Next Week
+### 12.1 Sprint Goal for Next Week
 [One sentence describing what you aim to accomplish]
 
-### Planned Work
+### 12.2 Planned Work
 
 | Story ID | Story Name | Points | Owner | Key Tasks |
 |----------|------------|--------|-------|-----------|
 | ST-XXX | [Story Name] | 8 | [Name] | - Task 1<br>- Task 2<br>- Task 3 |
 | ST-XXX | [Story Name] | 5 | [Name] | - Task 1<br>- Task 2 |
 
-### Key Activities
+### 12.3 Key Activities
 - **Monday:** [Activity or meeting]
 - **Tuesday:** [Activity or meeting]
 - **Wednesday:** [Mid-week checkpoint] — Sprint review if applicable
 - **Thursday:** [Activity or meeting]
 - **Friday:** [Activity or meeting] — Next status report due
 
-### Meetings & Reviews
+### 12.4 Meetings & Reviews
 - **Sprint Planning:** [Date/Time] — [Attendees]
 - **Design Review:** [Date/Time] — [What's being reviewed]
 - **Stakeholder Demo:** [Date/Time] — [What will be demonstrated]
 
-### Procurement Actions
+### 12.5 Procurement Actions
 - [ ] Order [Component X] by [Day of Week]
 - [ ] Confirm shipment for [Component Y]
 - [ ] Receive and inspect [Component Z]
 
 ---
 
-## Dependencies & Coordination
+## 13. Dependencies & Coordination
 
-### Waiting On (External)
+### 13.1 Waiting On (External)
 - **[Vendor/Person]:** [What we need] — ETA: [Date]
 - **[Vendor/Person]:** [What we need] — ETA: [Date]
 
-### Providing To (Internal/External)
+### 13.2 Providing To (Internal/External)
 - **[Team/Person]:** [What we're delivering] — Due: [Date]
 
 ---
 
-## Stakeholder Communication
+## 14. Stakeholder Communication
 
-### Questions for Stakeholders
+### 14.1 Questions for Stakeholders
 1. **Question:** [What you need clarification on]
    - **Context:** [Why this matters]
    - **Options:** [Potential paths forward]
 
-### Decisions Needed
+### 14.2 Decisions Needed
 1. **Decision:** [What needs to be decided]
    - **By When:** [Deadline for decision]
    - **Impact if Delayed:** [Consequences of no decision]
 
-### Feedback Requested
+### 14.3 Feedback Requested
 - **Topic:** [What you want feedback on]
   - **Artifact:** [Link to document/prototype]
   - **Due Date:** [When you need response]
 
 ---
 
-## Lessons Learned (Optional)
+## 15. Lessons Learned (Optional)
 
-### What Went Well This Week
+### 15.1 What Went Well This Week
 - [Positive outcome or process that worked]
 - [Something that exceeded expectations]
 
-### What Could Be Improved
+### 15.2 What Could Be Improved
 - [Challenge faced or inefficiency identified]
 - [Process that needs refinement]
 
-### Action Items for Improvement
+### 15.3 Action Items for Improvement
 - [ ] [Action to improve process] — Owner: [Name] — Due: [Date]
 
 ---
 
-## Attachments & References
+## 16. Attachments & References
 
-### Documents Updated This Week
+### 16.1 Documents Updated This Week
 - [[03-Sprints|Sprint Planning]] — Updated velocity tracking
 - [[04-Procurement-Schedule|Procurement Schedule]] — Added new component orders
 - [PCB Design Files] — v1.2 committed to git
 
-### Photos/Diagrams
+### 16.2 Photos/Diagrams
 - [Link to image/diagram] — [Description]
 - [Link to image/diagram] — [Description]
 
-### External Links
+### 16.3 External Links
 - [JLCPCB Order Status] — [Tracking URL]
 - [Mouser Order #12345] — [Tracking URL]
 
 ---
 
-## Appendix: Detailed Metrics
+## 17. Appendix: Detailed Metrics
 
-### Velocity Tracking
+### 17.1 Velocity Tracking
 
 | Sprint | Planned Points | Completed Points | Variance | Cumulative Velocity |
 |--------|---------------|------------------|----------|---------------------|
@@ -374,7 +374,7 @@ Story Points Remaining
 | Pre-Sprint Week 2 | 5.7 | [X] | [+/-X] | [X] |
 | ... | ... | ... | ... | ... |
 
-### Burndown Data (Copy for Charting)
+### 17.2 Burndown Data (Copy for Charting)
 ```csv
 Day,Ideal,Actual
 Monday,[X],[Y]
@@ -384,7 +384,7 @@ Thursday,[X],[Y]
 Friday,[X],[Y]
 ```
 
-### Component Inventory
+### 17.3 Component Inventory
 
 | Component | On Hand | Allocated | Available | Reorder Level | Status |
 |-----------|---------|-----------|-----------|---------------|--------|
@@ -394,7 +394,7 @@ Friday,[X],[Y]
 
 ---
 
-## Report Distribution
+## 18. Report Distribution
 
 **Primary Recipients:**
 - Project Manager
@@ -411,7 +411,7 @@ Friday,[X],[Y]
 
 ---
 
-## Sign-Off
+## 19. Sign-Off
 
 **Prepared By:** [Your Name]
 **Date:** [YYYY-MM-DD]
@@ -423,12 +423,12 @@ Friday,[X],[Y]
 
 ---
 
-## Related Documentation
+## 20. Related Documentation
 
 - [[03-Sprints|Sprint Planning]] — Current sprint details
 - [[04-Procurement-Schedule|Procurement Schedule]] — Component ordering timeline
 - [[05-Resource-Allocation|Resource Allocation]] — Team assignments and budget
-- [[__init|Project Management Hub]] — Dashboard and overview
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/__init|Project Management Hub]] — Dashboard and overview
 
 ---
 
@@ -439,7 +439,7 @@ Friday,[X],[Y]
 **Status:** Template (Copy and customize for each week)
 ---
 
-## Revision History
+## 21. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

@@ -7,7 +7,7 @@ status: Draft
 
 # Prototype Development Plan
 
-## Overview
+## 1. Overview
 
 This document outlines the comprehensive plan for building a functional Epicura prototype capable of cooking 3-5 Indian recipes autonomously. The prototype will validate core subsystems: induction heating, robotic stirring, computer vision, and recipe state machine execution.
 
@@ -15,7 +15,7 @@ This document outlines the comprehensive plan for building a functional Epicura 
 **Goal:** Working prototype demonstrating autonomous one-pot cooking with CV-guided stage detection
 **Budget:** $1,500-2,500 (including components, tools, and miscellaneous)
 
-## Project Links
+## 2. Project Links
 
 - [[../01-Overview/01-Project-Overview|Project Overview]]
 - [[../02-Hardware/02-Technical-Specifications|Technical Specifications]]
@@ -24,17 +24,17 @@ This document outlines the comprehensive plan for building a functional Epicura 
 
 ---
 
-## Development Phases
+## 3. Development Phases
 
-### Phase 1: Hardware Setup & Bring-up (Weeks 1-4)
+### 3.1 Phase 1: Hardware Setup & Bring-up (Weeks 1-4)
 
-#### Objectives
+#### 3.1.1 Objectives
 - Set up Raspberry Pi CM5 with Yocto Linux image
 - Set up STM32G474RE with FreeRTOS
 - Establish CM5-to-STM32 communication link
 - Validate basic I/O and power supply
 
-#### Tasks
+#### 3.1.2 Tasks
 
 **Week 1: CM5 Bring-up**
 - [ ] Acquire CM5 module + IO carrier board
@@ -83,14 +83,14 @@ This document outlines the comprehensive plan for building a functional Epicura 
 
 ---
 
-### Phase 2: Induction Integration (Weeks 5-7)
+### 3.2 Phase 2: Induction Integration (Weeks 5-7)
 
-#### Objectives
+#### 3.2.1 Objectives
 - Integrate and control a commercial induction hob
 - Implement PID temperature controller on STM32
 - Validate temperature accuracy and step response
 
-#### Tasks
+#### 3.2.2 Tasks
 
 **Week 5: Microwave Surface Module Setup**
 - [ ] Acquire commercial microwave induction surface with CAN bus port
@@ -147,14 +147,14 @@ This document outlines the comprehensive plan for building a functional Epicura 
 
 ---
 
-### Phase 3: Arm & Sensors (Weeks 8-10)
+### 3.3 Phase 3: Arm & Sensors (Weeks 8-10)
 
-#### Objectives
+#### 3.3.1 Objectives
 - Build and mount the servo stirring arm
 - Integrate load cells for weight measurement
 - Implement stirring patterns and weight-verified dispensing preparation
 
-#### Tasks
+#### 3.3.2 Tasks
 
 **Week 8: Servo Arm Assembly**
 - [ ] Acquire 24V BLDC motor (30-50 kg.cm, integrated ESC)
@@ -226,14 +226,14 @@ This document outlines the comprehensive plan for building a functional Epicura 
 
 ---
 
-### Phase 4: Vision & Computer Vision (Weeks 11-14)
+### 3.4 Phase 4: Vision & Computer Vision (Weeks 11-14)
 
-#### Objectives
+#### 3.4.1 Objectives
 - Set up overhead camera with controlled illumination
 - Build image preprocessing pipeline
 - Train and deploy food stage classification model
 
-#### Tasks
+#### 3.4.2 Tasks
 
 **Week 11: Camera Setup**
 - [ ] Mount IMX219 camera module above pot (overhead view)
@@ -304,14 +304,14 @@ This document outlines the comprehensive plan for building a functional Epicura 
 
 ---
 
-### Phase 5: Recipe Engine & Dispensing (Weeks 15-17)
+### 3.5 Phase 5: Recipe Engine & Dispensing (Weeks 15-17)
 
-#### Objectives
+#### 3.5.1 Objectives
 - Define recipe YAML format and implement state machine
 - Build ingredient dispensing subsystems (ASD, CID, SLD)
 - Validate end-to-end cooking of 3-5 Indian recipes
 
-#### Tasks
+#### 3.5.2 Tasks
 
 **Week 15: Recipe Format & State Machine**
 - [ ] Define recipe YAML schema:
@@ -393,14 +393,14 @@ This document outlines the comprehensive plan for building a functional Epicura 
 
 ---
 
-### Phase 6: UI & Companion App (Weeks 18-20)
+### 3.6 Phase 6: UI & Companion App (Weeks 18-20)
 
-#### Objectives
+#### 3.6.1 Objectives
 - Build touchscreen UI on CM5 with 5 core screens
 - Build basic native companion mobile apps (iOS + Android)
 - Connect app to CM5 via REST API
 
-#### Tasks
+#### 3.6.2 Tasks
 
 **Week 18: Touchscreen UI**
 - [ ] Set up Kivy framework on CM5
@@ -445,14 +445,14 @@ This document outlines the comprehensive plan for building a functional Epicura 
 
 ---
 
-### Phase 7: Integration & Testing (Weeks 21-24)
+### 3.7 Phase 7: Integration & Testing (Weeks 21-24)
 
-#### Objectives
+#### 3.7.1 Objectives
 - Full system integration of all subsystems
 - End-to-end cooking validation
 - Safety testing and reliability assessment
 
-#### Tasks
+#### 3.7.2 Tasks
 
 **Week 21: Full System Integration**
 - [ ] Connect all subsystems into single enclosure/frame
@@ -499,7 +499,7 @@ This document outlines the comprehensive plan for building a functional Epicura 
 
 ---
 
-## Resource Requirements
+## 4. Resource Requirements
 
 | Category | Items | Estimated Cost |
 |----------|-------|----------------|
@@ -516,9 +516,9 @@ This document outlines the comprehensive plan for building a functional Epicura 
 
 ---
 
-## Risk Management
+## 5. Risk Management
 
-### Technical Risks
+### 5.1 Technical Risks
 
 | Risk | Probability | Impact | Mitigation |
 |------|------------|--------|------------|
@@ -530,7 +530,7 @@ This document outlines the comprehensive plan for building a functional Epicura 
 | Servo arm reliability | Medium | Medium | Use BLDC motor with integrated ESC; add mechanical end-stops; monitor motor current for early failure detection |
 | Recipe state machine bugs | Medium | Medium | Extensive unit testing; timeout fallbacks on every state; manual override via UI |
 
-### Schedule Risks
+### 5.2 Schedule Risks
 
 | Risk | Probability | Impact | Mitigation |
 |------|------------|--------|------------|
@@ -541,23 +541,23 @@ This document outlines the comprehensive plan for building a functional Epicura 
 
 ---
 
-## Success Criteria
+## 6. Success Criteria
 
-### Minimum Viable Prototype (MVP)
+### 6.1 Minimum Viable Prototype (MVP)
 - [ ] Cook 3 recipes end-to-end autonomously
 - [ ] Temperature control within ±10°C of target
 - [ ] Basic touchscreen UI: recipe select, cooking screen, camera feed
 - [ ] Safety interlocks functional (pot detect, overtemp shutoff)
 - [ ] Dispensing works for all 3 subsystems (ASD, CID, SLD)
 
-### Should-Have
+### 6.2 Should-Have
 - [ ] 5 recipes validated with consistent results
 - [ ] CV-guided cooking stage detection (> 80% accuracy)
 - [ ] Mobile app with basic functionality (browse, live view, start/stop)
 - [ ] Temperature accuracy ±5°C
 - [ ] Weight-verified dispensing (±10% accuracy)
 
-### Nice-to-Have
+### 6.3 Nice-to-Have
 - [ ] 10+ recipes in library
 - [ ] Cloud sync for recipe updates
 - [ ] Multi-language UI (English + Hindi)
@@ -566,7 +566,7 @@ This document outlines the comprehensive plan for building a functional Epicura 
 
 ---
 
-## Budget Summary
+## 7. Budget Summary
 
 | Category | Estimated Cost |
 |----------|---------------|
@@ -581,15 +581,15 @@ This document outlines the comprehensive plan for building a functional Epicura 
 
 ---
 
-## Next Steps After Prototype
+## 8. Next Steps After Prototype
 
-### Alpha Phase Preparation
+### 8.1 Alpha Phase Preparation
 - Identify improvements from prototype testing
 - Design custom carrier PCB (combine CM5 + STM32 + power on single board)
 - Plan injection-molded enclosure design
 - Begin BIS certification process (India)
 
-### Production Planning
+### 8.2 Production Planning
 - Finalize component selection for long-term availability
 - Design custom induction driver board (replace teardown hob)
 - Establish supplier relationships (volume pricing)
@@ -597,7 +597,7 @@ This document outlines the comprehensive plan for building a functional Epicura 
 
 ---
 
-## Related Documentation
+## 9. Related Documentation
 
 - [[../01-Overview/01-Project-Overview|Project Overview]]
 - [[../02-Hardware/02-Technical-Specifications|Technical Specifications]]
@@ -614,7 +614,7 @@ This document outlines the comprehensive plan for building a functional Epicura 
 
 ---
 
-## Revision History
+## 10. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

@@ -6,15 +6,15 @@ aliases: [Android Test Strategy]
 
 # Android Test Strategy — epicura-android
 
-## Scope
+## 1. Scope
 
 Testing strategy for the Android companion app: authentication, BLE pairing/WiFi provisioning, recipe browsing, live cooking view, and user profile.
 
 ---
 
-## Test Levels
+## 2. Test Levels
 
-### 1. Unit Tests
+### 2.1 Unit Tests
 
 **Framework:** JUnit 5 + Mockk + Turbine (for Flow testing)
 **Runs on:** JVM (no emulator required)
@@ -37,7 +37,7 @@ Testing strategy for the Android companion app: authentication, BLE pairing/WiFi
 - Room tested with in-memory database (`Room.inMemoryDatabaseBuilder`)
 - All external dependencies injected via Hilt, replaced with fakes in tests
 
-### 2. Integration Tests
+### 2.2 Integration Tests
 
 **Framework:** JUnit 5 + Hilt testing + MockWebServer
 **Runs on:** JVM or emulator
@@ -49,7 +49,7 @@ Testing strategy for the Android companion app: authentication, BLE pairing/WiFi
 | Cooking flow | MockWebServer + mock WebSocket | Start cook → receive updates → ViewModel emits correct states |
 | Network error handling | MockWebServer returns 500/timeout | UI shows error state, retry works |
 
-### 3. UI Tests
+### 2.3 UI Tests
 
 **Framework:** Compose UI Test (AndroidX)
 **Runs on:** Emulator (CI via Gradle managed devices)
@@ -62,7 +62,7 @@ Testing strategy for the Android companion app: authentication, BLE pairing/WiFi
 | Settings | Navigate to profile → toggle preference → restart | Preference persists (DataStore) |
 | Accessibility | TalkBack pass, `assertHasContentDescription` | All interactive elements have content descriptions |
 
-### 4. Performance Tests
+### 2.4 Performance Tests
 
 | Test | Method | Pass Criteria |
 |------|--------|--------------|
@@ -72,7 +72,7 @@ Testing strategy for the Android companion app: authentication, BLE pairing/WiFi
 | APK size | `bundletool size` | < 15 MB download size |
 | Battery impact | Battery Historian during 30-min cook | No excessive wakelocks |
 
-### 5. Security Tests
+### 2.5 Security Tests
 
 | Test | Method | Pass Criteria |
 |------|--------|--------------|
@@ -84,7 +84,7 @@ Testing strategy for the Android companion app: authentication, BLE pairing/WiFi
 
 ---
 
-## CI Pipeline
+## 3. CI Pipeline
 
 ```yaml
 # .github/workflows/ci.yml
@@ -104,7 +104,7 @@ steps:
 
 ---
 
-## Test Fixtures
+## 4. Test Fixtures
 
 - **MockWebServer responses:** JSON files for all API endpoints
 - **Room test database:** Pre-populated with recipes, user data for DAO tests
@@ -114,7 +114,7 @@ steps:
 
 ---
 
-## References
+## 5. References
 
 - [[__Workspaces/Epicura/docs/07-Development/02-Repository-Plan|Repository Plan]]
 - [[__Workspaces/Epicura/docs/12-MobileApps/03-Android-App|Android App]]

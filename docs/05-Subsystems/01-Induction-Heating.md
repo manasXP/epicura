@@ -7,13 +7,13 @@ status: Draft
 
 # Induction Heating System
 
-## Overview
+## 1. Overview
 
 The induction heating system is the primary thermal element of Epicura, delivering up to 1,800W of cooking power through electromagnetic induction. Epicura uses a **commercial microwave induction surface** — a self-contained module with its own power coil, driver electronics, and AC power stage. The module exposes a **CAN bus interface** for external control, allowing the STM32 controller to set power levels, read status, and receive fault notifications without dealing with high-power IGBT driver circuits directly.
 
 This approach eliminates the need for custom high-voltage power electronics (IGBT half-bridge, gate drivers, resonant tank design, EMI filtering) and leverages a commercially certified, safety-tested heating module.
 
-### Advantages of Commercial Microwave Surface
+### 1.1 Advantages of Commercial Microwave Surface
 
 - **No custom high-voltage design:** Eliminates IGBT driver board, resonant tank tuning, and EMI filter design
 - **Pre-certified safety:** Commercial module includes pot detection, over-temperature, overcurrent protection
@@ -21,7 +21,7 @@ This approach eliminates the need for custom high-voltage power electronics (IGB
 - **Faster prototyping:** No need to source/test individual IGBT modules, gate drivers, or Litz wire coils
 - **Reliability:** Production-tested power electronics vs. prototype IGBT board
 
-### Advantages of Induction Over Resistive Heating
+### 1.2 Advantages of Induction Over Resistive Heating
 
 - **Speed:** Induction heats the pot directly, not the coil surface, reducing preheat time by 50-70%
 - **Efficiency:** 85-90% of electrical energy reaches the food (vs. ~65% for radiant coils)
@@ -29,9 +29,9 @@ This approach eliminates the need for custom high-voltage power electronics (IGB
 - **Safety:** No open flame, coil surface stays relatively cool, automatic shutoff without a pot
 - **Cleanliness:** No combustion byproducts, easy wipe-down of flat glass-ceramic surface
 
-## Heater Module
+## 2. Heater Module
 
-### Commercial Microwave Surface
+### 2.1 Commercial Microwave Surface
 
 The microwave surface is a self-contained induction heating module that includes:
 
@@ -42,7 +42,7 @@ The microwave surface is a self-contained induction heating module that includes
 
 The STM32 controller communicates with the module over CAN bus. All high-voltage power electronics are handled internally by the module — Epicura's controller PCB never touches mains voltage.
 
-### System Block Diagram
+### 2.2 System Block Diagram
 
 ```
 AC Mains (220-240V 50Hz)
@@ -83,9 +83,9 @@ AC Mains (220-240V 50Hz)
               └──────────────┘
 ```
 
-## CAN Bus Interface
+## 3. CAN Bus Interface
 
-### Physical Layer
+### 3.1 Physical Layer
 
 | Parameter | Value |
 |-----------|-------|
@@ -96,7 +96,7 @@ AC Mains (220-240V 50Hz)
 | Connector | Standard CAN connector on module (CAN_H, CAN_L, GND) |
 | Wiring | Twisted pair, shielded, <1m length; shield connects to GND_ISO at Driver PCB end only (single-point ground) |
 
-### CAN Message Protocol (Heater)
+### 3.2 CAN Message Protocol (Heater)
 
 | CAN ID | Name | Direction | Payload | Description |
 |--------|------|-----------|---------|-------------|
@@ -110,7 +110,7 @@ AC Mains (220-240V 50Hz)
 > [!note]
 > Exact CAN message IDs and payload formats depend on the specific microwave surface module. The above is a reference protocol — adapt to the module's documentation.
 
-## Specifications
+## 4. Specifications
 
 | Parameter | Value |
 |-----------|-------|
@@ -124,9 +124,9 @@ AC Mains (220-240V 50Hz)
 | Internal Safety | Pot detection, thermal cutoff, overcurrent, insulation monitoring |
 | Temperature Range | 60-250C surface temperature |
 
-## PID Temperature Controller
+## 5. PID Temperature Controller
 
-### Control Loop Architecture
+### 5.1 Control Loop Architecture
 
 The STM32 runs a discrete PID controller at 10Hz (100ms period) that modulates the induction power to track the temperature setpoint commanded by the CM5 recipe engine. Instead of directly driving an IGBT gate, the PID output is sent as a power level command over CAN bus to the microwave surface module.
 
@@ -145,7 +145,7 @@ The STM32 runs a discrete PID controller at 10Hz (100ms period) that modulates t
                     └─────────────┘
 ```
 
-### PID Parameters
+### 5.2 PID Parameters
 
 | Parameter | Symbol | Initial Value | Notes |
 |-----------|--------|---------------|-------|
@@ -158,7 +158,7 @@ The STM32 runs a discrete PID controller at 10Hz (100ms period) that modulates t
 | Setpoint Ramp | - | 5 C/s max | Limits thermal shock |
 | Overshoot Limit | - | +10 C above setpoint | Triggers power reduction |
 
-### Output Mapping
+### 5.3 Output Mapping
 
 Power level (0-100%) sent via CAN maps to average power delivered by the module:
 
@@ -173,9 +173,9 @@ Power Level (%)    Power (W)     Application
     100%           1800W       Sear / Maximum
 ```
 
-## Temperature Profiles
+## 6. Temperature Profiles
 
-### Cooking Stage Targets
+### 6.1 Cooking Stage Targets
 
 | Stage | Target Temp (C) | Power Level | Ramp Rate | Hold Time | Typical Use |
 |-------|-----------------|-------------|-----------|-----------|-------------|
@@ -185,7 +185,7 @@ Power Level (%)    Power (W)     Application
 | Simmer | 80-95 | 30-40% (540-720W) | Maintain | 10-60 min | Slow cooking dal, curry |
 | Warm | 60-70 | 15-20% (270-360W) | Maintain | Until served | Keep-warm after cooking |
 
-### Temperature Transition Diagram
+### 6.2 Temperature Transition Diagram
 
 ```
 Temp (C)
@@ -203,14 +203,14 @@ Temp (C)
         0         2         5        10        20        40        60   Time (min)
 ```
 
-## Feedback Sources
+## 7. Feedback Sources
 
 | Source | Measurement | Interface | Range | Accuracy | Role |
 |--------|-------------|-----------|-------|----------|------|
 | MLX90614 IR Thermometer | Food surface temperature | I2C (STM32) | -70 to +380 C | +/- 0.5 C | Primary PID feedback |
 | Module CAN Status | Coil temperature, fault flags | CAN (STM32 FDCAN1) | Module-reported | Module accuracy | Module health monitoring |
 
-### Sensor Priority Logic
+### 7.1 Sensor Priority Logic
 
 ```
 IF IR_sensor.valid AND IR_sensor.confidence > threshold:
@@ -222,9 +222,9 @@ ELSE:
     emergency_shutdown()               # No valid temperature data
 ```
 
-## Safety
+## 8. Safety
 
-### Dual-Layer Safety Architecture
+### 8.1 Dual-Layer Safety Architecture
 
 Safety is handled at two levels:
 
@@ -235,7 +235,7 @@ Safety is handled at two levels:
 > [!warning] Critical Safety Section
 > The module's internal safety interlocks operate independently of the STM32 and cannot be overridden. The safety relay provides a system-level hard disconnect.
 
-### Safety Summary
+### 8.2 Safety Summary
 
 | Layer | Mechanism | Trigger | Action | Response Time |
 |-------|-----------|---------|--------|---------------|
@@ -246,7 +246,7 @@ Safety is handled at two levels:
 | System | STM32 CAN command | IR temp >270C or module coil over-temp via CAN | Send HEAT_ON_OFF=0 via CAN | <100ms |
 | System | STM32 watchdog | Firmware hang | STM32 resets, relay opens (fail-safe) | 1s |
 
-### Safe State Definition
+### 8.3 Safe State Definition
 
 When any safety condition triggers, the system enters the following safe state:
 
@@ -258,9 +258,9 @@ When any safety condition triggers, the system enters the following safe state:
 5. CM5 notified ──► Push notification to companion app
 ```
 
-## Power Management
+## 9. Power Management
 
-### Power Level Table
+### 9.1 Power Level Table
 
 | Level | Name | Power (W) | CAN Power % | Application |
 |-------|------|-----------|-------------|-------------|
@@ -271,7 +271,7 @@ When any safety condition triggers, the system enters the following safe state:
 | 4 | High | 1,500 | 85% | Boiling water, rapid cooking |
 | 5 | Sear | 1,800 | 100% | Browning, tempering spices |
 
-### Soft-Start Sequence
+### 9.2 Soft-Start Sequence
 
 To reduce inrush current and thermal shock, the STM32 ramps the CAN power command from 0 to target over 2-3 seconds:
 
@@ -289,14 +289,14 @@ Power (W)
        │◄── Soft-Start ──►│◄── Steady ──►│
 ```
 
-### Standby Power
+### 9.3 Standby Power
 
 - System standby: <5W total draw (CM5 idle, display off, module off)
 - Deep sleep: <2W (CM5 suspended, STM32 in STOP mode, relay open)
 
-## Software Safety
+## 10. Software Safety
 
-### Watchdog and Heartbeat
+### 10.1 Watchdog and Heartbeat
 
 | Mechanism | Timeout | Action on Timeout |
 |-----------|---------|-------------------|
@@ -305,9 +305,9 @@ Power (W)
 | Maximum Cook Duration | Configurable (default 2 hours) | Graceful shutdown, alert user |
 | Temperature Rate Limiter | >30 C/s rise detected | Reduce power to 50%, flag anomaly |
 
-## Testing and Validation
+## 11. Testing and Validation
 
-### Test Procedures
+### 11.1 Test Procedures
 
 | Test | Method | Pass Criteria |
 |------|--------|---------------|
@@ -320,7 +320,7 @@ Power (W)
 | Thermal Cycling | 1,000 cycles: heat to 250 C, cool to ambient | No component failure or drift >5% |
 | Insulation Resistance | 500V DC megger test, mains to logic | >7 Mohm |
 
-### Prototype Validation Checklist
+### 11.2 Prototype Validation Checklist
 
 - [ ] Module powers on and responds to CAN queries
 - [ ] CAN power level commands correctly modulate heating power
@@ -332,7 +332,7 @@ Power (W)
 - [ ] Soft-start limits inrush current to acceptable levels
 - [ ] Continuous 2-hour cook session completes without fault
 
-## Related Documentation
+## 12. Related Documentation
 
 - [[../01-Overview/01-Project-Overview|Project Overview]]
 - [[../02-Hardware/02-Technical-Specifications|Technical Specifications]]
@@ -346,7 +346,7 @@ Power (W)
 
 ---
 
-## Revision History
+## 13. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

@@ -7,13 +7,13 @@ status: Draft
 
 # Epicura Hardware Architecture & Wiring Diagrams
 
-## Overview
+## 1. Overview
 
 This document provides the comprehensive hardware architecture, wiring diagrams, and interface specifications for the Epicura autonomous kitchen robot. The system uses a dual-processor architecture: a Raspberry Pi CM5 running Yocto Linux for AI/vision/UI, and an STM32G4 microcontroller running FreeRTOS for real-time motor control, sensing, and safety.
 
 ---
 
-## System Block Diagram
+## 2. System Block Diagram
 
 ```
                               ┌─────────────────────────────────┐
@@ -75,7 +75,7 @@ This document provides the comprehensive hardware architecture, wiring diagrams,
 
 ---
 
-## Main Component List
+## 3. Main Component List
 
 | Component | Part Number | Interface | Connected To | Purpose |
 |-----------|-------------|-----------|--------------|---------|
@@ -104,9 +104,9 @@ This document provides the comprehensive hardware architecture, wiring diagrams,
 
 ---
 
-## 1. Compute Platform (Raspberry Pi CM5)
+## 4. Compute Platform (Raspberry Pi CM5)
 
-### CM5 Module Specifications
+### 4.1 CM5 Module Specifications
 
 | Specification | Value |
 |--------------|-------|
@@ -122,7 +122,7 @@ This document provides the comprehensive hardware architecture, wiring diagrams,
 | Operating System | Yocto Linux (custom BSP) |
 | Form Factor | CM4-compatible, 55x40mm |
 
-### Carrier Board Design (CM5IO)
+### 4.2 Carrier Board Design (CM5IO)
 
 The CM5 mounts on the CM5IO (Raspberry Pi Compute Module IO Board) carrier that breaks out:
 
@@ -156,7 +156,7 @@ The CM5 mounts on the CM5IO (Raspberry Pi Compute Module IO Board) carrier that 
 └────────────────────────────────────────────────────────────────┘
 ```
 
-### CM5 GPIO Allocation
+### 4.3 CM5 GPIO Allocation
 
 | GPIO | Function | Direction | Notes |
 |------|----------|-----------|-------|
@@ -174,9 +174,9 @@ The CM5 mounts on the CM5IO (Raspberry Pi Compute Module IO Board) carrier that 
 
 ---
 
-## 2. STM32 Motor Controller
+## 5. STM32 Motor Controller
 
-### STM32G474RE Specifications
+### 5.1 STM32G474RE Specifications
 
 | Specification | Value |
 |--------------|-------|
@@ -194,7 +194,7 @@ The CM5 mounts on the CM5IO (Raspberry Pi Compute Module IO Board) carrier that 
 | Supply | 3.3V (from PSU 3.3V rail) |
 | RTOS | FreeRTOS |
 
-### STM32 Pin Allocation
+### 5.2 STM32 Pin Allocation
 
 ```
 STM32G474RE (LQFP-64)
@@ -287,9 +287,9 @@ STM32G474RE (LQFP-64)
 
 ---
 
-## 3. Camera Interface
+## 6. Camera Interface
 
-### CSI-2 Wiring (CM5 to Camera Module)
+### 6.1 CSI-2 Wiring (CM5 to Camera Module)
 
 ```
 CM5 Carrier Board                    Camera Module (IMX219/IMX477)
@@ -314,7 +314,7 @@ Cable: 15-pin 1.0mm pitch FFC, <20cm length
 Signal: 2-lane MIPI CSI-2, up to 1Gbps/lane
 ```
 
-### LED Ring Illumination
+### 6.2 LED Ring Illumination
 
 ```
 CM5 GPIO18 (or STM32 SPI)
@@ -342,9 +342,9 @@ Use SN74HCT125 or similar buffer if reliability issues arise.
 
 ---
 
-## 4. IR Thermometer Interface
+## 7. IR Thermometer Interface
 
-### MLX90614 I2C Wiring
+### 7.1 MLX90614 I2C Wiring
 
 ```
 STM32G474RE                        MLX90614ESF-BAA
@@ -370,7 +370,7 @@ Bus speed: 100 kHz (SMBus compatible)
 Cable length: <30cm (keep short for I2C reliability)
 ```
 
-### MLX90614 Mounting
+### 7.2 MLX90614 Mounting
 
 - Mounted on a bracket angled ~30 degrees toward pot center
 - Distance from food surface: 5-10cm
@@ -380,9 +380,9 @@ Cable length: <30cm (keep short for I2C reliability)
 
 ---
 
-## 5. Display Interface
+## 8. Display Interface
 
-### DSI Display Wiring (Primary Option)
+### 8.1 DSI Display Wiring (Primary Option)
 
 ```
 CM5 Carrier Board                    10.1" IPS Touchscreen
@@ -414,7 +414,7 @@ Alternative: HDMI Type-A cable from CM5 carrier HDMI port
 to HDMI-input display panel (simpler, no FFC routing needed).
 ```
 
-### Display Specifications
+### 8.2 Display Specifications
 
 | Parameter | Value |
 |-----------|-------|
@@ -430,9 +430,9 @@ to HDMI-input display panel (simpler, no FFC routing needed).
 
 ---
 
-## 6. CM5-STM32 Communication
+## 9. CM5-STM32 Communication
 
-### SPI Wiring (Primary)
+### 9.1 SPI Wiring (Primary)
 
 ```
 Raspberry Pi CM5 (SPI0 Master)     STM32G474RE (SPI2 Slave)
@@ -459,7 +459,7 @@ SPI Configuration:
   Cable:      6-wire JST-SH, <30cm length
 ```
 
-### CAN Bus Wiring (Microwave Surface)
+### 9.2 CAN Bus Wiring (Microwave Surface)
 
 CAN bus is used for controlling the microwave induction surface module. The STM32's FDCAN1 logic signals (PB8/PB9) route via J_STACK pins 19-20 to the **Driver PCB**, where an ISO1050DUB isolated CAN transceiver (5 kV RMS) converts them to differential CAN_H/CAN_L signals on J_CAN.
 
@@ -485,7 +485,7 @@ CAN Configuration:
   Nodes:       Microwave surface (required), STM32 via Driver PCB (required)
 ```
 
-### Message Protocol (SPI or CAN)
+### 9.3 Message Protocol (SPI or CAN)
 
 | Message ID | Name | Direction | Payload | Description |
 |------------|------|-----------|---------|-------------|
@@ -500,7 +500,7 @@ CAN Configuration:
 | 0x20 | SET_LED | CM5 -> STM32 | LED pattern, brightness | LED ring control (if on STM32) |
 | 0xFF | FAULT | STM32 -> CM5 | Fault code, sensor data | Critical fault notification |
 
-### Protocol Format (SPI)
+### 9.4 Protocol Format (SPI)
 
 ```
 ┌──────┬────────┬─────────┬───────────────┬──────────┐
@@ -515,9 +515,9 @@ Full duplex: command on MOSI, response on MISO simultaneously.
 
 ---
 
-## 7. Power Supply
+## 10. Power Supply
 
-### AC-DC Power Supply Architecture
+### 10.1 AC-DC Power Supply Architecture
 
 ```
 AC Mains (220-240V 50Hz)
@@ -574,7 +574,7 @@ powered via the CM5IO board's 40-pin connector (5V rail).
 STM32 controls the module via CAN bus (FDCAN1).
 ```
 
-### Mean Well LRS-75-24 Specifications
+### 10.2 Mean Well LRS-75-24 Specifications
 
 | Parameter | Value |
 |-----------|-------|
@@ -587,7 +587,7 @@ STM32 controls the module via CAN bus (FDCAN1).
 | Protections | Short circuit, overload, over-voltage |
 | Certifications | UL, CE, CB |
 
-### Power Budget Table
+### 10.3 Power Budget Table
 
 | Rail | Subsystem | Typical (W) | Peak (W) | Notes |
 |------|-----------|-------------|----------|-------|
@@ -610,9 +610,9 @@ STM32 controls the module via CAN bus (FDCAN1).
 
 ---
 
-## 8. Microwave Induction Surface Module
+## 11. Microwave Induction Surface Module
 
-### Module Integration
+### 11.1 Module Integration
 
 The microwave induction surface is a self-contained commercial module with its own AC power inlet, power electronics, induction coil, and onboard safety circuits. Epicura interfaces with the module exclusively via CAN bus — no high-voltage wiring touches the controller PCB.
 
@@ -653,11 +653,11 @@ System Safety:
 
 ---
 
-## 9. Ingredient Dispensing System (ASD / CID / SLD)
+## 12. Ingredient Dispensing System (ASD / CID / SLD)
 
 The dispensing system comprises three subsystems. See [[../05-Subsystems/03-Ingredient-Dispensing|Ingredient Dispensing System]] for full details.
 
-### P-ASD — Pneumatic Seasoning Dispenser Wiring
+### 12.1 P-ASD — Pneumatic Seasoning Dispenser Wiring
 
 ```
   12V Rail (from Driver PCB MP1584EN #1)
@@ -674,7 +674,7 @@ The dispensing system comprises three subsystems. See [[../05-Subsystems/03-Ingr
   Note: P-ASD uses pneumatic puff-dosing (no servo gates or vibration motors)
 ```
 
-### CID — Linear Actuator Wiring
+### 12.2 CID — Linear Actuator Wiring
 
 ```
   12V Rail (from Driver PCB MP1584EN #1)
@@ -692,7 +692,7 @@ The dispensing system comprises three subsystems. See [[../05-Subsystems/03-Ingr
   Note: Limit switches not currently implemented (reserved J_STACK Pins 27-28)
 ```
 
-### SLD — Liquid Dispensing Wiring
+### 12.3 SLD — Liquid Dispensing Wiring
 
 ```
   12V Rail (from Driver PCB MP1584EN #1)
@@ -718,7 +718,7 @@ The dispensing system comprises three subsystems. See [[../05-Subsystems/03-Ingr
     Low-level alert when reservoir weight < configurable threshold
 ```
 
-### Dispensing Summary
+### 12.4 Dispensing Summary
 
 | Subsystem | Actuators | Metering | Min Dispense |
 |-----------|-----------|----------|-------------|
@@ -737,9 +737,9 @@ The dispensing system comprises three subsystems. See [[../05-Subsystems/03-Ingr
 
 ---
 
-## 10. WiFi / Bluetooth
+## 13. WiFi / Bluetooth
 
-### CM5 Onboard Wireless
+### 13.1 CM5 Onboard Wireless
 
 The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules are needed.
 
@@ -751,7 +751,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 | Antenna | Onboard PCB antenna (or u.FL for external) |
 | Security | WPA3, WPA2 |
 
-### Wireless Use Cases
+### 13.2 Wireless Use Cases
 
 | Function | Protocol | Description |
 |----------|----------|-------------|
@@ -763,7 +763,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 | Remote Monitoring | WebSocket | Real-time status to app during cooking |
 | NTP Time Sync | NTP (UDP) | Clock synchronization on boot |
 
-### Antenna Considerations
+### 13.3 Antenna Considerations
 
 - CM5 PCB antenna sufficient for typical kitchen distances (<10m)
 - If mounted inside metal enclosure, route u.FL to external antenna on rear panel
@@ -771,9 +771,9 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 
 ---
 
-## 11. Storage Architecture
+## 14. Storage Architecture
 
-### CM5 Storage
+### 14.1 CM5 Storage
 
 ```
 ┌────────────────────────────────────────────────────────┐
@@ -804,9 +804,9 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 
 ---
 
-## PCB Layout Considerations
+## 15. PCB Layout Considerations
 
-### Induction EMI Shielding
+### 15.1 Induction EMI Shielding
 
 - The induction coil radiates strong magnetic fields at 20-40 kHz
 - **Shielding:** Ferrite sheet between coil and electronics compartment
@@ -814,13 +814,13 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 - **Orientation:** Route I2C/SPI traces perpendicular to coil field lines
 - **Grounding:** Copper ground pour on STM32 PCB, connected to chassis ground
 
-### Sensor Signal Routing
+### 15.2 Sensor Signal Routing
 
 - Keep I2C lines (MLX90614) short (<30cm), with 4.7k pull-ups near STM32
 - HX711 clock/data lines: shielded twisted pair if >20cm, ground guard traces
 - Camera CSI-2: differential pairs, matched length, <20cm FFC cable
 
-### Power / Signal Ground Separation
+### 15.3 Power / Signal Ground Separation
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -844,7 +844,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 └─────────────────────────────────────────────────────┘
 ```
 
-### Thermal Relief
+### 15.4 Thermal Relief
 
 - Microwave surface module: internal cooling; ensure adequate ventilation around module
 - STM32: thermal vias under exposed pad to ground plane
@@ -853,9 +853,9 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 
 ---
 
-## BOM Summary
+## 16. BOM Summary
 
-### Prototype Bill of Materials
+### 16.1 Prototype Bill of Materials
 
 | Category | Component | Quantity | Est. Unit Cost (USD) | Est. Total (USD) |
 |----------|-----------|----------|---------------------|-------------------|
@@ -899,9 +899,9 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 
 ---
 
-## Hardware Validation Checklist
+## 17. Hardware Validation Checklist
 
-### Power Supply
+### 17.1 Power Supply
 - [ ] Verify 24V rail from Mean Well PSU within spec (24V +/-5%)
 - [ ] Measure ripple on each rail (<50mV peak-to-peak)
 - [ ] Load test at full power (microwave surface 1800W + all subsystems)
@@ -909,7 +909,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 - [ ] Test EMI filter effectiveness (conducted emissions)
 - [ ] Verify fuse blows at rated overcurrent
 
-### Compute (CM5)
+### 17.2 Compute (CM5)
 - [ ] CM5 boots Yocto Linux from eMMC
 - [ ] SPI communication to STM32 (loopback test, then bidirectional)
 - [ ] Camera captures 1080p/30fps frames via CSI-2
@@ -919,7 +919,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 - [ ] BLE advertises and pairs with test phone
 - [ ] eMMC read/write speed adequate (>50 MB/s sequential)
 
-### Microwave Induction Surface
+### 17.3 Microwave Induction Surface
 - [ ] Module responds to CAN queries (HEAT_QUERY → HEAT_STATUS)
 - [ ] CAN power level commands correctly modulate heating
 - [ ] Module heats water from 20C to 100C within 5 minutes (1.5L)
@@ -929,7 +929,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 - [ ] Safety relay disconnects AC to module on E-stop or fault
 - [ ] CAN off command stops heating within 500ms
 
-### Servo System
+### 17.4 Servo System
 - [ ] Main arm (24V BLDC motor) rotates full 360 degrees smoothly
 - [ ] Stirring speed controllable from 10-60 RPM
 - [ ] Arm torque sufficient to stir thick curry/dal
@@ -937,7 +937,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 - [ ] ASD gate servos hold closed position under seasoning weight
 - [ ] No servo jitter at idle (proper PWM signal quality)
 
-### Sensors
+### 17.5 Sensors
 - [ ] Camera: white balance calibrated, image sharp across full pot FOV
 - [ ] IR (MLX90614): reads boiling water as 98-102C
 - [ ] IR: reads room temp object within +/-1C of reference thermometer
@@ -945,7 +945,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 - [ ] Load cells: track water evaporation over 30-minute simmer
 - [ ] Pot detection: reliably detects pot on/off
 
-### Dispensing (ASD / CID / SLD)
+### 17.6 Dispensing (ASD / CID / SLD)
 - [ ] ASD: Each hopper dispenses 5g powder within ±10%
 - [ ] ASD: Vibration motors (3x) activate before dispense (200ms pulse)
 - [ ] ASD: Anti-clog retry mechanism clears blockages within 2 attempts
@@ -961,27 +961,27 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 
 ---
 
-## Safety Considerations
+## 18. Safety Considerations
 
-### Electrical Safety
+### 18.1 Electrical Safety
 
 - **Galvanic Isolation:** The microwave induction surface is a self-contained AC module — no mains voltage reaches the controller or driver PCBs. The ISO1050DUB isolated CAN transceiver on the Driver PCB provides 5 kV RMS galvanic isolation between the CAN bus and STM32 logic. PSU provides transformer-isolated DC outputs.
 - **Earth Bonding:** Metal enclosure parts connected to AC earth via IEC C14 inlet. Chassis ground bonded to PSU earth.
 - **Fuse Protection:** 10A ceramic fuse in IEC C14 inlet. Self-resetting PTC fuse on 5V rail (3A).
 
-### Thermal Safety
+### 18.2 Thermal Safety
 
 - **Module Thermal:** Microwave surface has internal thermal cutoff. Module reports coil temperature via CAN status.
 - **Food Over-Temperature:** IR thermometer monitors food surface. If >270C (beyond any recipe requirement), STM32 sends CAN off command and opens safety relay.
 - **Enclosure Thermal:** Exhaust fan provides ventilation. Module reports internal temp via CAN for enclosure monitoring.
 
-### Mechanical Safety
+### 18.3 Mechanical Safety
 
 - **E-Stop Button:** Red mushroom-head button on front panel. Normally-closed contact wired to STM32 interrupt AND safety relay. Pressing E-stop: (1) STM32 sends CAN off to module, (2) relay disconnects AC to microwave surface, (3) servos return to safe position.
 - **Pot Detection Interlock:** Handled internally by microwave surface module. Module will not heat without compatible pot detected. Status reported via CAN.
 - **Pinch Protection:** Arm mechanism has limited torque (BLDC motor current monitored via INA219). Arm speed limited in firmware to prevent splash/injury.
 
-### Overcurrent Protection
+### 18.4 Overcurrent Protection
 
 - **Mains:** 10A fuse (IEC C14)
 - **DC Rails:** PTC self-resetting fuses on each rail
@@ -990,7 +990,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 
 ---
 
-## Related Documentation
+## 19. Related Documentation
 
 - [[02-Technical-Specifications|Technical Specifications]]
 - [[05-Sensors-Acquisition|Sensors & Data Acquisition]]
@@ -1006,7 +1006,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 
 ---
 
-## Revision History
+## 20. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

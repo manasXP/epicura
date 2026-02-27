@@ -13,7 +13,7 @@ aliases: [Repository Plan, Repo Plan]
 
 Six repositories covering all Epicura subsystems: documentation + PCB design, firmware, device software, cloud API + admin portal, and mobile apps.
 
-## Repository Overview
+## 1. Repository Overview
 
 | Repository | Language / Stack | Primary Epics | Owner |
 |-----------|-----------------|---------------|-------|
@@ -26,9 +26,9 @@ Six repositories covering all Epicura subsystems: documentation + PCB design, fi
 
 ---
 
-## Repository Details
+## 2. Repository Details
 
-### 1. epicura (this repository)
+### 2.1 epicura (this repository)
 
 **Purpose:** Project documentation, specifications, project management, and PCB design files. Single source of truth for all non-code artifacts.
 
@@ -81,7 +81,7 @@ epicura/
 
 ---
 
-### 2. epicura-firmware
+### 2.2 epicura-firmware
 
 **Purpose:** STM32G474RE real-time control firmware — PID, servo, sensors, CAN bus, dispensers, safety.
 
@@ -121,7 +121,7 @@ epicura-firmware/
 
 ---
 
-### 3. epicura-cm5
+### 2.3 epicura-cm5
 
 **Purpose:** All CM5-side software — Docker Compose orchestration of 6 services running on Yocto Linux.
 
@@ -198,7 +198,7 @@ epicura-cm5/
 
 ---
 
-### 4. epicura-api
+### 2.4 epicura-api
 
 **Purpose:** Cloud API server and admin portal as a TypeScript monorepo — shared types, validation schemas, and tooling between Fastify backend and Next.js admin dashboard.
 
@@ -300,7 +300,7 @@ epicura-api/
 
 ---
 
-### 5. epicura-ios
+### 2.5 epicura-ios
 
 **Purpose:** iOS companion app — BLE pairing, WiFi provisioning, recipe browsing, live cooking, user profile.
 
@@ -347,7 +347,7 @@ epicura-ios/
 
 ---
 
-### 6. epicura-android
+### 2.6 epicura-android
 
 **Purpose:** Android companion app — mirroring iOS functionality with platform-native implementations.
 
@@ -397,7 +397,7 @@ epicura-android/
 
 ---
 
-## Cross-Repository Dependencies
+## 3. Cross-Repository Dependencies
 
 ```
 epicura                (docs + PCB design — standalone)
@@ -427,9 +427,9 @@ epicura-api            (cloud API + admin portal monorepo)
 
 ---
 
-## Git Conventions (All Repos)
+## 4. Git Conventions (All Repos)
 
-### Branch Strategy
+### 4.1 Branch Strategy
 
 | Branch | Purpose | Protection |
 |--------|---------|------------|
@@ -438,7 +438,7 @@ epicura-api            (cloud API + admin portal monorepo)
 | `feature/*` | Feature work | No protection |
 | `fix/*` | Bug fixes | No protection |
 
-### Commit Messages
+### 4.2 Commit Messages
 
 Use [Conventional Commits](https://www.conventionalcommits.org/):
 
@@ -449,7 +449,7 @@ docs(recipe): add YAML schema specification
 chore(ci): update GitHub Actions to Node 20
 ```
 
-### PR Template
+### 4.3 PR Template
 
 All repos include a PR template:
 - Summary of changes
@@ -459,7 +459,7 @@ All repos include a PR template:
 
 ---
 
-## GitHub Organization
+## 5. GitHub Organization
 
 **Organization:** `epicura-robotics` (or personal account for prototype phase)
 
@@ -473,7 +473,7 @@ All repos include a PR template:
 
 ---
 
-## Creation Order
+## 6. Creation Order
 
 Repositories should be created in this order, matching the epic dependency chain:
 
@@ -486,7 +486,7 @@ Repositories should be created in this order, matching the epic dependency chain
 
 ---
 
-## References
+## 7. References
 
 - [[__Workspaces/Epicura/docs/03-Software/01-Tech-Stack|Tech Stack]]
 - [[__Workspaces/Epicura/docs/02-Hardware/01-Epicura-Architecture|System Architecture]]

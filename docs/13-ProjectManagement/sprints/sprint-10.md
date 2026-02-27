@@ -14,7 +14,7 @@ aliases: [Sprint 10]
 > **Phase:** Phase 3 — Software Integration
 > **Goal:** Build live cooking interface, implement mobile recipe browsing, launch admin portal, and deploy production backend.
 
-## Stories
+## 1. Stories
 
 | Status | ID | Title | Epic | Points | Blocked By |
 |:------:|-----|-------|------|:------:|------------|
@@ -28,7 +28,7 @@ aliases: [Sprint 10]
 
 **Total Points:** 41
 
-## Capacity Allocation
+## 2. Capacity Allocation
 
 | Team Member | Allocated | Available | Notes |
 |-------------|:---------:|:---------:|-------|
@@ -39,7 +39,7 @@ aliases: [Sprint 10]
 | Backend Engineer | 5 | 20 | BE-LCH.01 (5) |
 | **Total** | **41** | **100** | |
 
-## Sprint Review Checklist
+## 3. Sprint Review Checklist
 
 - [ ] All stories demo-ready
 - [ ] No P0 bugs remaining
@@ -48,7 +48,7 @@ aliases: [Sprint 10]
 - [ ] **Milestone M5 (Software Complete)** criteria met
 - [ ] Production backend live and stable
 
-## Retro Notes
+## 4. Retro Notes
 
 > _To be filled during sprint retrospective._
 >
@@ -63,7 +63,7 @@ aliases: [Sprint 10]
 
 ---
 
-## References
+## 5. References
 
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calendar]]
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/01-Epics|Milestone M5: Software Complete]]

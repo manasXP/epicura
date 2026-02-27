@@ -7,11 +7,11 @@ status: Draft
 
 # Driver PCB Design
 
-## Overview
+## 1. Overview
 
 The Driver PCB is the power electronics and actuator interface board in Epicura's 3-board stackable architecture. It receives low-level PWM and GPIO signals from the Controller PCB (STM32G474RE) through a 2x20 stacking connector and converts them into high-current drive signals for all actuators — BLDC stirring motor, solenoids, linear actuators, peristaltic pumps, diaphragm pump, and the exhaust fan.
 
-### 3-Board Stackable Architecture
+### 1.1 3-Board Stackable Architecture
 
 ```
 ┌─────────────────────────────────────┐
@@ -30,7 +30,7 @@ The Driver PCB is the power electronics and actuator interface board in Epicura'
 
 The CM5IO board is an off-the-shelf Raspberry Pi carrier board that sits on top. The two custom boards (Controller, Driver) share a uniform 160x90mm footprint with M3 mounting holes at identical positions, connected via a 2x20-pin 2.54mm board-to-board header. The Driver PCB sits at the bottom of the stack, closest to the PSU, and distributes power and actuator connections.
 
-### Scope
+### 1.2 Scope
 
 | Item | Status | Notes |
 |------|--------|-------|
@@ -41,7 +41,7 @@ The CM5IO board is an off-the-shelf Raspberry Pi carrier board that sits on top.
 
 ---
 
-## Board-Level Block Diagram
+## 2. Board-Level Block Diagram
 
 ```
 12V UPS Input ─── F5 (3A Polyfuse) ─── SS34 ─── SMBJ12A TVS ─── 12V UPS Rail
@@ -110,11 +110,11 @@ All control signals arrive from Controller PCB via 2x20 stacking connector (J_ST
 
 ---
 
-## Power Conversion
+## 3. Power Conversion
 
 Two MP1584EN synchronous buck converters step down the 24V input to 12V and 6.5V rails for actuators. A separate TPS54531 buck converter generates the 5V rail from a UPS-backed 12V DC input, ensuring the CM5 and STM32 remain powered during AC outages. The MP1584EN was selected for its wide input range (4.5-28V), high efficiency (up to 92%), and compact SOT-23-8 package with minimal external components.
 
-### 24V → 12V Rail (MP1584EN #1)
+### 3.1 24V → 12V Rail (MP1584EN #1)
 
 | Parameter | Value |
 |-----------|-------|
@@ -127,7 +127,7 @@ Two MP1584EN synchronous buck converters step down the 24V input to 12V and 6.5V
 | Schottky Diode | SS34 (3A, 40V) for bootstrap |
 | Protection | 1.5A polyfuse + SMBJ12A TVS on output |
 
-### 24V → 6.5V Rail (MP1584EN #2)
+### 3.2 24V → 6.5V Rail (MP1584EN #2)
 
 | Parameter | Value |
 |-----------|-------|
@@ -142,7 +142,7 @@ Two MP1584EN synchronous buck converters step down the 24V input to 12V and 6.5V
 > [!note]
 > The 6.5V rail is retained for future use. The DS3225 servo has been replaced with a 24V BLDC motor with integrated driver/ESC, powered directly from the 24V rail via J_BLDC. The MP1584EN #2 and its output components remain populated but unloaded.
 
-### 12V UPS → 5V Rail (TPS54531)
+### 3.3 12V UPS → 5V Rail (TPS54531)
 
 The 5V rail is now sourced from a UPS-backed 12V DC input via a TPS54531 synchronous buck converter (5A max). This ensures the CM5, STM32 controller (via 3.3V LDO on Controller PCB), buzzer, and LED ring remain powered during AC outages. The TPS54531 was selected for its wide input range (3.5-28V), high efficiency (up to 95%), integrated high-side MOSFET, and 5A output capability in a compact SOIC-8 package.
 
@@ -162,7 +162,7 @@ The 5V rail is now sourced from a UPS-backed 12V DC input via a TPS54531 synchro
 > [!note]
 > The 5V rail was previously sourced from the 24V PSU via MP1584EN #3. Moving it to the 12V UPS input means the CM5 and STM32 stay alive during AC power outages while the UPS battery supplies 12V. The TPS54531's 5A rating provides adequate headroom for CM5 peak current (3A) plus all other 5V loads (total peak ~4.2A).
 
-### 24V Power Failure Detection
+### 3.4 24V Power Failure Detection
 
 A voltage divider on the 24V rail feeds the STM32's internal analog comparator (COMP2 on PA1) for fast hardware-based power failure detection. This enables the STM32 to immediately disable all actuators and notify the CM5 within <100µs of AC power loss.
 
@@ -187,7 +187,7 @@ A voltage divider on the 24V rail feeds the STM32's internal analog comparator (
 > [!note]
 > The INA219 continues to provide 24V rail voltage telemetry via I2C (polled every 1s in POWER_TELEMETRY messages). The comparator provides fast interrupt-driven detection for immediate safety response, while INA219 provides gradual voltage monitoring for logging and UI display.
 
-### Power Budget Summary
+### 3.5 Power Budget Summary
 
 | Rail | Source | Typical (A) | Peak (A) | Headroom | Notes |
 |------|--------|------------|----------|----------|-------|
@@ -200,9 +200,9 @@ A voltage divider on the 24V rail feeds the STM32's internal analog comparator (
 
 ---
 
-## Actuator Driver Circuits
+## 4. Actuator Driver Circuits
 
-### 24V BLDC Motor with Integrated Driver
+### 4.1 24V BLDC Motor with Integrated Driver
 
 The stirring mechanism uses a 24V BLDC motor with integrated driver/ESC, connected directly to the 24V rail. The motor accepts a 10 kHz PWM signal for speed control, plus digital EN (enable) and DIR (direction) signals. No external H-bridge or buck converter is needed — the integrated ESC handles commutation and power switching.
 
@@ -234,7 +234,7 @@ J_STACK Pin 40 (BLDC_DIR, PA5) ── 100R ── J_BLDC Pin 5 (DIR)
 > [!warning]
 > The BLDC motor draws up to 3A peak from the 24V rail. Combined with other 24V loads, the Mean Well LRS-75-24 (3.2A) may be tight. Monitor total 24V current via INA219; consider upgrading to LRS-100-24 (4.2A) if headroom is insufficient.
 
-### P-ASD Solenoid Valves (6×)
+### 4.2 P-ASD Solenoid Valves (6×)
 
 Six 12V normally-closed solenoid valves for P-ASD (Pneumatic Advanced Seasoning Dispenser) cartridge air control, driven by low-side N-MOSFETs with flyback protection. One valve per spice cartridge. MOSFET gates are driven by a **PCF8574 I2C GPIO expander** (address 0x20) on the Driver PCB, eliminating the need for 6 dedicated STM32 GPIO pins. All six solenoids and the diaphragm pump connect via a single **J_PASD** 16-pin connector.
 
@@ -285,7 +285,7 @@ PCF8574 P0-P5 (I2C1, 0x20) ── 100R Gate Resistor ── Gate
 | Decoupling | 100nF MLCC on VDD |
 | Cost | ~$0.50 |
 
-### SLD Solenoid Valves (2x)
+### 4.3 SLD Solenoid Valves (2x)
 
 Two 12V solenoid valves for SLD (Standard Liquid Dispenser) drip prevention, driven by low-side N-MOSFETs with flyback protection.
 
@@ -315,7 +315,7 @@ PA7/PA9 ── via J_STACK ── 100R Gate Resistor ── Gate
 > [!tip]
 > The 10kΩ pull-down resistors on all MOSFET gates ensure actuators remain OFF during STM32 boot, reset, or firmware crash. This is a critical safety feature.
 
-### Exhaust Fans (2x)
+### 4.4 Exhaust Fans (2x)
 
 Two independent 120mm 12V brushless DC fans for exhaust and fume extraction, driven by PWM via low-side MOSFETs. Independent control allows optimal airflow management.
 
@@ -354,7 +354,7 @@ PB10 (TIM2_CH3) ── via J_STACK Pin 28 ── 100R ── Gate
 > [!note]
 > Independent control of both fans enables optimal airflow management. During light cooking, one fan may suffice; during high-heat operations, both fans can run at full speed for maximum exhaust capacity.
 
-### CID Linear Actuators (2x) — DRV8876RGTR
+### 4.5 CID Linear Actuators (2x) — DRV8876RGTR
 
 Two linear actuators for CID (Coarse Ingredients Dispenser) push-plate sliders, each driven by a TI DRV8876RGTR H-bridge IC. The DRV8876 provides integrated current sensing, current regulation, and fault reporting.
 
@@ -399,7 +399,7 @@ Two linear actuators for CID (Coarse Ingredients Dispenser) push-plate sliders, 
 | Linear Actuator 1 | PA10 | PB4 |
 | Linear Actuator 2 | PB5 | PC2 |
 
-### SLD Peristaltic Pumps (2x) — TB6612FNG
+### 4.6 SLD Peristaltic Pumps (2x) — TB6612FNG
 
 Two peristaltic pumps for SLD (Standard Liquid Dispenser) precise liquid dispensing (oil + water), driven by a single TB6612FNG dual H-bridge IC. The TB6612FNG handles both channels in one compact SSOP-24 package.
 
@@ -453,7 +453,7 @@ Two peristaltic pumps for SLD (Standard Liquid Dispenser) precise liquid dispens
 > [!note]
 > AIN2 and BIN2 are tied LOW on the driver board. For forward pumping, set AIN1/BIN1 HIGH and apply PWM on PWMA/PWMB. For reverse flush (cleaning), set AIN1/BIN1 LOW and pulse AIN2/BIN2 (requires cutting trace and routing to GPIO — not needed for prototype).
 
-### Piezo Buzzer (1x)
+### 4.7 Piezo Buzzer (1x)
 
 Active piezo buzzer (5V, 3-24 kHz PWM-capable) for audio feedback on errors, faults, task completion, and timer initiation. Driven by a 2N7002 N-MOSFET with PWM from STM32.
 
@@ -490,7 +490,7 @@ PA11 (TIM1_CH4) ── via J_STACK ── 100R ── Gate
 | Cooking Stage Change | Ascending tones | 2-3 kHz sweep | 300ms |
 | E-Stop | Pulsing alarm | 1-2 kHz alternating | Continuous |
 
-### P-ASD Diaphragm Pump (1×)
+### 4.8 P-ASD Diaphragm Pump (1×)
 
 A 12V micro diaphragm pump (3-4 L/min) pressurizes the P-ASD accumulator. Driven by an IRLML6344 N-MOSFET with PWM speed control from STM32.
 
@@ -519,9 +519,9 @@ PA0 (TIM2_CH1) ── via J_STACK Pin 15 ── 100R ── Gate
 
 ---
 
-## Input Protection
+## 5. Input Protection
 
-### 24V Input Protection Chain
+### 5.1 24V Input Protection Chain
 
 ```
 24V from PSU ──── F1 (5A Polyfuse) ──── D1 (SS54 Schottky) ──┬── D2 (SMBJ24A TVS) ──── 24V Internal
@@ -535,7 +535,7 @@ PA0 (TIM2_CH1) ── via J_STACK Pin 15 ── 100R ── Gate
 | D1 | SS54 (5A, 40V Schottky) | Reverse polarity protection (Vf = 0.5V drop) |
 | D2 | SMBJ24A (24V TVS, 600W) | Transient voltage suppression from PSU spikes |
 
-### 12V UPS Input Protection Chain
+### 5.2 12V UPS Input Protection Chain
 
 ```
 12V from UPS ──── F5 (3A Polyfuse) ──── D_UPS1 (SS34 Schottky) ──┬── D_UPS2 (SMBJ12A TVS) ──── 12V UPS Rail
@@ -549,7 +549,7 @@ PA0 (TIM2_CH1) ── via J_STACK Pin 15 ── 100R ── Gate
 | D_UPS1 | SS34 (3A, 40V Schottky) | Reverse polarity protection (Vf = 0.5V drop) |
 | D_UPS2 | SMBJ12A (12V TVS, 600W) | Transient voltage suppression |
 
-### Per-Rail Protection
+### 5.3 Per-Rail Protection
 
 | Rail | Polyfuse | TVS Diode | Notes |
 |------|----------|-----------|-------|
@@ -557,7 +557,7 @@ PA0 (TIM2_CH1) ── via J_STACK Pin 15 ── 100R ── Gate
 | 6.5V | 3A (1206) | SMBJ6.5A | Available for future use (was DS3225 servo branch) |
 | 5V | — | — | Protected at UPS input (F5 + D_UPS2); TPS54531 has integrated OCP |
 
-### MOSFET Gate Safety
+### 5.4 MOSFET Gate Safety
 
 All MOSFET and H-bridge IC enable pins have:
 - **100Ω series gate resistor** — limits gate charge current, reduces ringing and EMI
@@ -567,7 +567,7 @@ This guarantees a safe default state for all actuators regardless of controller 
 
 ---
 
-## Current Monitoring — INA219
+## 6. Current Monitoring — INA219
 
 An INA219 bidirectional current/power monitor on the 24V input rail provides real-time power consumption telemetry to the CM5 via I2C.
 
@@ -605,11 +605,11 @@ The INA219 shares the I2C1 bus with the MLX90614 IR thermometer (0x5A) on the Co
 
 ---
 
-## CAN Bus Transceiver — ISO1050DUB
+## 7. CAN Bus Transceiver — ISO1050DUB
 
 An ISO1050DUB isolated CAN transceiver on the Driver PCB provides 5 kV RMS galvanic isolation between the STM32 logic side and the CAN bus connected to the microwave induction surface. Placing the transceiver on the Driver PCB keeps all power electronics and external wiring on one board, and only two 3.3V CMOS logic signals (PB8/PB9) cross J_STACK.
 
-### Circuit
+### 7.1 Circuit
 
 ```
 J_STACK Pin 20 (FDCAN1_TX, PB9) ──► TXD ┐
@@ -632,7 +632,7 @@ J_STACK Pin 19 (FDCAN1_RX, PB8) ◄── RXD ┘
                                     J_CAN Pin 1              J_CAN Pin 2
 ```
 
-### Decoupling
+### 7.2 Decoupling
 
 | Ref | Part | Value | Notes |
 |-----|------|-------|-------|
@@ -641,7 +641,7 @@ J_STACK Pin 19 (FDCAN1_RX, PB8) ◄── RXD ┘
 | C_CAN2b | 10µF MLCC | 0805 | VCC2 bulk decoupling (5V bus side) |
 | R_TERM | 120Ω | 0402 | CAN bus termination |
 
-### J_CAN — CAN Bus to Microwave Surface (JST-XH 2.5mm, 4-pin)
+### 7.3 J_CAN — CAN Bus to Microwave Surface (JST-XH 2.5mm, 4-pin)
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
@@ -655,9 +655,9 @@ J_STACK Pin 19 (FDCAN1_RX, PB8) ◄── RXD ┘
 
 ---
 
-## Stacking Connector — J_STACK
+## 8. Stacking Connector — J_STACK
 
-### Physical Specifications
+### 8.1 Physical Specifications
 
 | Parameter | Value |
 |-----------|-------|
@@ -667,7 +667,7 @@ J_STACK Pin 19 (FDCAN1_RX, PB8) ◄── RXD ┘
 | Orientation | Pin 1 marked with silkscreen triangle + square pad |
 | Location | Center of board long edge (matching Controller PCB) |
 
-### Pinout (Bottom View — Driver PCB)
+### 8.2 Pinout (Bottom View — Driver PCB)
 
 | Pin | Signal | Direction | Pin | Signal | Direction |
 |-----|--------|-----------|-----|--------|-----------|
@@ -698,7 +698,7 @@ J_STACK Pin 19 (FDCAN1_RX, PB8) ◄── RXD ┘
 | 37 | BLDC_PWM (PA8) | In | 38 | BUZZER_PWM (PA11) | In |
 | 39 | BLDC_EN (PA4) | In | 40 | BLDC_DIR (PA5) | In |
 
-### Pin Group Summary
+### 8.3 Pin Group Summary
 
 | Group | Pins | Count | Purpose |
 |-------|------|-------|---------|
@@ -721,9 +721,9 @@ J_STACK Pin 19 (FDCAN1_RX, PB8) ◄── RXD ┘
 
 ---
 
-## PCB Stackup and Layout
+## 9. PCB Stackup and Layout
 
-### 4-Layer Stackup
+### 9.1 4-Layer Stackup
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -751,7 +751,7 @@ Inner copper: 1 oz (35µm) for planes
 > [!note]
 > 2oz outer copper allows power traces to carry higher current in less width. A 1mm (40 mil) trace on 2oz copper handles ~3A with <10°C rise. This is critical for the 24V input, 12V actuator, and 6.5V servo power paths.
 
-### Component Placement Zones
+### 9.2 Component Placement Zones
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
@@ -783,7 +783,7 @@ Inner copper: 1 oz (35µm) for planes
 └──────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Board Dimensions
+### 9.3 Board Dimensions
 
 | Parameter | Value |
 |-----------|-------|
@@ -793,7 +793,7 @@ Inner copper: 1 oz (35µm) for planes
 | Output Connectors | Distributed along remaining three edges |
 | Keep-out Zone | 5mm from board edges for mounting clearance |
 
-### Critical Layout Rules
+### 9.4 Critical Layout Rules
 
 | Rule | Specification | Rationale |
 |------|---------------|-----------|
@@ -811,11 +811,11 @@ Inner copper: 1 oz (35µm) for planes
 
 ---
 
-## Connector Definitions
+## 10. Connector Definitions
 
 Connectors are organized by subsystem for modular wiring harness assembly.
 
-### Power Inputs
+### 10.1 Power Inputs
 
 **J_24V_IN — 24V DC Power Input (XT30 or JST-VH 2-pin)**
 
@@ -831,7 +831,7 @@ Connectors are organized by subsystem for modular wiring harness assembly.
 | 1 | +12V | From external 12V UPS battery backup |
 | 2 | GND | Power ground |
 
-### P-ASD Subsystem Connector (1 connector)
+### 10.2 P-ASD Subsystem Connector (1 connector)
 
 **J_PASD — Combined P-ASD Connector (1x 16-pin JST-XH 2.5mm)**
 
@@ -856,7 +856,7 @@ All six solenoid valves and the diaphragm pump are combined into a single connec
 | 15 | GND | Common ground |
 | 16 | GND | Common ground |
 
-### CID Subsystem Connector (1 connector)
+### 10.3 CID Subsystem Connector (1 connector)
 
 **J_CID — Combined CID Linear Actuators (1x 4-pin JST-XH 2.5mm)**
 
@@ -867,7 +867,7 @@ All six solenoid valves and the diaphragm pump are combined into a single connec
 | 3 | LACT2_OUT1 | DRV8876 #2 output 1 (actuator 2) |
 | 4 | LACT2_OUT2 | DRV8876 #2 output 2 (actuator 2) |
 
-### SLD Subsystem Connectors (1 connector)
+### 10.4 SLD Subsystem Connectors (1 connector)
 
 **J_SLD — Combined SLD + Pot Load Cell Connector (1x 12-pin JST-XH 2.5mm)**
 
@@ -886,7 +886,7 @@ All six solenoid valves and the diaphragm pump are combined into a single connec
 | 11 | 3.3V | HX711 supply |
 | 12 | GND | HX711 ground |
 
-### Main Actuators (3 total)
+### 10.5 Main Actuators (3 total)
 
 **J_BLDC — 24V BLDC Stirring Motor (6-pin JST-XH 2.5mm)**
 
@@ -915,7 +915,7 @@ All six solenoid valves and the diaphragm pump are combined into a single connec
 | 1 | 5V | Buzzer power (switched by 2N7002) |
 | 2 | BUZZ_OUT | Drain side of 2N7002 (PA11 via J_STACK) |
 
-### Inter-Board
+### 10.6 Inter-Board
 
 **J_STACK — Stacking Connector to Controller PCB (2x20 socket, 2.54mm)**
 
@@ -923,11 +923,11 @@ See [[#Stacking Connector — J_STACK]] section for full pinout.
 
 ---
 
-## STM32 Pin Allocation Update
+## 11. STM32 Pin Allocation Update
 
 The Driver PCB introduces 14 new STM32 pin assignments (beyond the existing Controller PCB allocations). These pins were previously marked as "Available" or "Reserved" in the Controller PCB design.
 
-### New Pin Assignments
+### 11.1 New Pin Assignments
 
 | Pin | Previous Status | New Function | Peripheral | Direction | Target |
 |-----|----------------|--------------|------------|-----------|--------|
@@ -950,7 +950,7 @@ The Driver PCB introduces 14 new STM32 pin assignments (beyond the existing Cont
 | ~~PD2~~ | ~~Available~~ | ~~GPIO~~ | ~~P-ASD Solenoid V4~~ | ~~Output~~ | ~~Removed — now via PCF8574~~ |
 | ~~PB11~~ | ~~Available~~ | ~~GPIO~~ | ~~P-ASD Solenoid V6~~ | ~~Output~~ | ~~Removed — now via PCF8574~~ |
 
-### Complete Pin Usage Summary (Controller + Driver PCBs)
+### 11.2 Complete Pin Usage Summary (Controller + Driver PCBs)
 
 | Port | Used Pins | Total Used | Available |
 |------|-----------|------------|-----------|
@@ -966,9 +966,9 @@ All new signals pass through the J_STACK stacking connector — no additional ca
 
 ---
 
-## Firmware Integration
+## 12. Firmware Integration
 
-### New SPI Message Types
+### 12.1 New SPI Message Types
 
 The following SPI message types are added to the CM5 ↔ STM32 protocol for Driver PCB actuators:
 
@@ -995,7 +995,7 @@ The following SPI message types are added to the CM5 ↔ STM32 protocol for Driv
 | 0x06 | E_STOP | Pulsing alarm (alternating 1-2 kHz) |
 | 0x07 | STAGE_CHANGE | Ascending tone sweep (300ms, 2-3 kHz) |
 
-### FreeRTOS Task Updates
+### 12.2 FreeRTOS Task Updates
 
 | Task | Additions | Priority |
 |------|-----------|----------|
@@ -1003,7 +1003,7 @@ The following SPI message types are added to the CM5 ↔ STM32 protocol for Driv
 | Sensor Task | Add INA219 I2C read every 1s (power monitoring) | Low (10 Hz, existing) |
 | Comms Task | Handle new message types (0x06-0x09, 0x13) | High (20 Hz, existing) |
 
-### STM32 Timer Allocation
+### 12.3 STM32 Timer Allocation
 
 | Timer | Existing Use | New Channels |
 |-------|-------------|--------------|
@@ -1014,7 +1014,7 @@ The following SPI message types are added to the CM5 ↔ STM32 protocol for Driv
 > [!note]
 > PB10 (Fan 2) can use TIM2_CH3 alternate function. With ASD servos removed, TIM2 channels are now available. TIM2_CH1 (PA0) is used for P-ASD pump PWM. Fan 2 can use TIM2_CH3 on PB10, or software PWM if a timer conflict arises.
 
-### INA219 Driver
+### 12.4 INA219 Driver
 
 ```
 I2C1 Read Sequence (every 1 second):
@@ -1025,7 +1025,7 @@ I2C1 Read Sequence (every 1 second):
 5. Pack into POWER_TELEMETRY message (0x13) for next SPI transaction
 ```
 
-### Power Failure State Machine (Firmware)
+### 12.5 Power Failure State Machine (Firmware)
 
 The following describes the intended firmware behavior for power failure handling. Implementation is deferred to the embedded firmware phase.
 
@@ -1051,9 +1051,9 @@ The following describes the intended firmware behavior for power failure handlin
 
 ---
 
-## Thermal Analysis
+## 13. Thermal Analysis
 
-### Component Power Dissipation
+### 13.1 Component Power Dissipation
 
 | Component | Condition | Power (W) | Thermal Path |
 |-----------|-----------|-----------|--------------|
@@ -1070,7 +1070,7 @@ The following describes the intended firmware behavior for power failure handlin
 | Shunt resistor | 3A peak | ~0.09 | 2512 package |
 | **Total** | | **~8.5W typical** | |
 
-### Temperature Estimates
+### 13.2 Temperature Estimates
 
 At 40°C ambient (inside Epicura enclosure near induction surface):
 
@@ -1090,7 +1090,7 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 
 ---
 
-## Driver PCB BOM
+## 14. Driver PCB BOM
 
 | Ref | Part | Package | Qty | Unit Cost (USD) | Notes |
 |-----|------|---------|-----|----------------|-------|
@@ -1158,7 +1158,7 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 | BZ1 | MLT-5030 or generic | 12mm piezo | 1 | $0.80 | Active piezo buzzer 5V |
 | **PCB** | 4-layer, 160x90mm | FR4 ENIG, 2oz outer Cu | 1 | $5.00 | JLCPCB batch (5 pcs) |
 
-### Cost Summary
+### 14.1 Cost Summary
 
 | Category | Prototype (1x) | Volume (100x) |
 |----------|---------------|---------------|
@@ -1175,7 +1175,7 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 
 ---
 
-## Manufacturing Specifications
+## 15. Manufacturing Specifications
 
 | Parameter | Value |
 |-----------|-------|
@@ -1193,7 +1193,7 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 | Board material | FR4, Tg ≥ 150°C |
 | Panelization | 1x1 (board too large for paneling at JLCPCB standard) |
 
-### Assembly Notes
+### 15.1 Assembly Notes
 
 - All ICs and passives are SMT (top side preferred)
 - Through-hole: JST-XH connectors, XT30 for power input
@@ -1203,9 +1203,9 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 
 ---
 
-## Design Verification Checklist
+## 16. Design Verification Checklist
 
-### Pre-Fabrication
+### 16.1 Pre-Fabrication
 
 - [ ] Schematic ERC passes with zero errors
 - [ ] All buck converter feedback resistor values verified against MP1584EN datasheet formula
@@ -1218,7 +1218,7 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 - [ ] 24V input protection chain in correct order: Polyfuse → Schottky → TVS
 - [ ] No pin conflicts between new assignments (PA6/7/9/10, PB4/5, PC2-PC7, PD2) and existing Controller PCB pins
 
-### PCB Layout
+### 16.2 PCB Layout
 
 - [ ] DRC passes with zero errors
 - [ ] GND plane continuous under all switching converters (no splits)
@@ -1231,7 +1231,7 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 - [ ] Mounting holes at same positions as Controller PCB and CM5IO (M3, 4 corners)
 - [ ] Stacking connector centered on board long edge, bottom layer
 
-### Post-Assembly
+### 16.3 Post-Assembly
 
 - [ ] 24V input draws <10mA with no actuators connected (quiescent)
 - [ ] 12V rail measures 12.0V ±3% under 500mA dummy load
@@ -1248,7 +1248,7 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 
 ---
 
-## Related Documentation
+## 17. Related Documentation
 
 - [[Controller-PCB-Design]] — STM32G474RE controller board with sensor interfaces
 - [[../02-Hardware/Epicura-Architecture|Epicura Architecture]] — System-level wiring and block diagrams
@@ -1266,7 +1266,7 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 
 ---
 
-## Revision History
+## 18. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

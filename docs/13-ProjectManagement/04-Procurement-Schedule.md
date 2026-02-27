@@ -7,7 +7,7 @@ status: Draft
 
 # Procurement Schedule
 
-## Overview
+## 1. Overview
 
 This document provides a detailed procurement schedule for all hardware components required across the Epicura prototype development. Components are organized by sprint with specific part numbers, suppliers, lead times, and order windows.
 
@@ -19,7 +19,7 @@ This document provides a detailed procurement schedule for all hardware componen
 
 ---
 
-## Procurement Timeline
+## 2. Procurement Timeline
 
 ```
 Week -6: PCB designs complete → submit to JLCPCB
@@ -30,11 +30,11 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-## Pre-Sprint Phase: PCB Components
+## 3. Pre-Sprint Phase: PCB Components
 
-### Order Window: Week -8 to Week -6 (URGENT - Start Now)
+### 3.1 Order Window: Week -8 to Week -6 (URGENT - Start Now)
 
-#### Controller PCB Components
+#### 3.1.1 Controller PCB Components
 
 | Ref | Part Number | Description | Qty | Supplier | Unit Cost | Lead Time | Order By |
 |-----|-------------|-------------|-----|----------|-----------|-----------|----------|
@@ -58,7 +58,7 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-#### Driver PCB Components
+#### 3.1.2 Driver PCB Components
 
 | Ref | Part Number | Description | Qty | Supplier | Unit Cost | Lead Time | Order By |
 |-----|-------------|-------------|-----|----------|-----------|-----------|----------|
@@ -84,7 +84,7 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-#### CM5IO Board (CM5 Carrier) Components
+#### 3.1.3 CM5IO Board (CM5 Carrier) Components
 
 | Item | Part Number | Description | Qty | Supplier | Unit Cost | Lead Time | Order By |
 |------|-------------|-------------|-----|----------|-----------|-----------|----------|
@@ -95,7 +95,7 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-### PCB Fabrication Order (Week -6)
+### 3.2 PCB Fabrication Order (Week -6)
 
 | Board | Specs | Quantity | Unit Cost | Total | Fabricator | Lead Time |
 |-------|-------|----------|-----------|-------|------------|-----------|
@@ -109,9 +109,9 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-## Sprint 1 (Weeks 1-2): Foundation Components
+## 4. Sprint 1 (Weeks 1-2): Foundation Components
 
-### Order Window: Week -4 to Week 0
+### 4.1 Order Window: Week -4 to Week 0
 
 | Item | Part Number | Description | Qty | Supplier | Unit Cost | Lead Time | Order By |
 |------|-------------|-------------|-----|----------|-----------|-----------|----------|
@@ -126,9 +126,9 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-## Sprint 2 (Weeks 3-4): Power & Thermal
+## 5. Sprint 2 (Weeks 3-4): Power & Thermal
 
-### Order Window: Week -2 to Week 1
+### 5.1 Order Window: Week -2 to Week 1
 
 | Item | Part Number | Description | Qty | Supplier | Unit Cost | Lead Time | Order By |
 |------|-------------|-------------|-----|----------|-----------|-----------|----------|
@@ -144,9 +144,9 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-## Sprint 3 (Weeks 5-6): Thermal Control
+## 6. Sprint 3 (Weeks 5-6): Thermal Control
 
-### Order Window: Week 1 to Week 3
+### 6.1 Order Window: Week 1 to Week 3
 
 | Item | Part Number | Description | Qty | Supplier | Unit Cost | Lead Time | Order By |
 |------|-------------|-------------|-----|----------|-----------|-----------|----------|
@@ -159,9 +159,9 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-## Sprint 4 (Weeks 7-8): Robotic Arm
+## 7. Sprint 4 (Weeks 7-8): Robotic Arm
 
-### Order Window: Week 3 to Week 5
+### 7.1 Order Window: Week 3 to Week 5
 
 | Item | Part Number | Description | Qty | Supplier | Unit Cost | Lead Time | Order By |
 |------|-------------|-------------|-----|----------|-----------|-----------|----------|
@@ -176,9 +176,9 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-## Sprint 5 (Weeks 9-10): Load Cells
+## 8. Sprint 5 (Weeks 9-10): Load Cells
 
-### Order Window: Week 5 to Week 7
+### 8.1 Order Window: Week 5 to Week 7
 
 | Item | Part Number | Description | Qty | Supplier | Unit Cost | Lead Time | Order By |
 |------|-------------|-------------|-----|----------|-----------|-----------|----------|
@@ -192,9 +192,9 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-## Sprint 6 (Weeks 11-12): Computer Vision
+## 9. Sprint 6 (Weeks 11-12): Computer Vision
 
-### Order Window: Week 7 to Week 9
+### 9.1 Order Window: Week 7 to Week 9
 
 | Item | Part Number | Description | Qty | Supplier | Unit Cost | Lead Time | Order By |
 |------|-------------|-------------|-----|----------|-----------|-----------|----------|
@@ -207,9 +207,9 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-## Sprint 7 (Weeks 13-14): CV Training
+## 10. Sprint 7 (Weeks 13-14): CV Training
 
-### Order Window: Week 9 to Week 11
+### 10.1 Order Window: Week 9 to Week 11
 
 | Item | Description | Qty | Supplier | Cost | Lead Time | Order By |
 |------|-------------|-----|----------|------|-----------|----------|
@@ -220,9 +220,9 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-## Sprint 9 (Weeks 17-18): Dispensing
+## 11. Sprint 9 (Weeks 17-18): Dispensing
 
-### Order Window: Week 13 to Week 15
+### 11.1 Order Window: Week 13 to Week 15
 
 | Item | Part Number | Description | Qty | Supplier | Unit Cost | Lead Time | Order By |
 |------|-------------|-------------|-----|----------|-----------|-----------|----------|
@@ -238,9 +238,9 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-## Sprint 10 (Weeks 19-20): UI Display
+## 12. Sprint 10 (Weeks 19-20): UI Display
 
-### Order Window: Week 15 to Week 17
+### 12.1 Order Window: Week 15 to Week 17
 
 | Item | Part Number | Description | Qty | Supplier | Unit Cost | Lead Time | Order By |
 |------|-------------|-------------|-----|----------|-----------|-----------|----------|
@@ -250,9 +250,9 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-## Sprint 11 (Weeks 21-22): Integration
+## 13. Sprint 11 (Weeks 21-22): Integration
 
-### Order Window: Week 17 to Week 19
+### 13.1 Order Window: Week 17 to Week 19
 
 | Item | Description | Qty | Supplier | Cost | Lead Time | Order By |
 |------|-------------|-----|----------|------|-----------|----------|
@@ -263,9 +263,9 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-## Sprint 12 (Weeks 23-24): Validation
+## 14. Sprint 12 (Weeks 23-24): Validation
 
-### Order Window: Week 19 to Week 21
+### 14.1 Order Window: Week 19 to Week 21
 
 | Item | Part Number | Description | Qty | Supplier | Unit Cost | Lead Time | Order By |
 |------|-------------|-------------|-----|----------|-----------|-----------|----------|
@@ -277,9 +277,9 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-## Consolidated Supplier Order Summary
+## 15. Consolidated Supplier Order Summary
 
-### Mouser Electronics (Order Week -8, -7, 0)
+### 15.1 Mouser Electronics (Order Week -8, -7, 0)
 
 **Order 1 (Week -8): Long-lead ICs**
 - STM32G474RET6 (2x) - $17.00
@@ -300,7 +300,7 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-### Amazon (Ongoing)
+### 15.2 Amazon (Ongoing)
 
 **Week -7:**
 - Resistor kit, capacitor kit, JST connector kit, XT30 connectors
@@ -326,7 +326,7 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-### JLCPCB (Order Week -6)
+### 15.3 JLCPCB (Order Week -6)
 
 **Single Combined Order:**
 - Controller PCB 4L 160x90mm ENIG (10 pcs)
@@ -338,7 +338,7 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-### McMaster-Carr (Order Week 5, 7)
+### 15.4 McMaster-Carr (Order Week 5, 7)
 
 **Week 5:**
 - SS304 shaft 8mm x 250mm
@@ -353,7 +353,7 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-### AliExpress / Alibaba (Order Week -2, Week 5)
+### 15.5 AliExpress / Alibaba (Order Week -2, Week 5)
 
 **Week -2:**
 - Commercial microwave induction surface with CAN port
@@ -367,7 +367,7 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-### Adafruit (Order Week 10)
+### 15.6 Adafruit (Order Week 10)
 
 **Week 10:**
 - WS2812B LED ring (2x) - $15
@@ -376,7 +376,7 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-### Local Grocery (Weekly Weeks 11-24)
+### 15.7 Local Grocery (Weekly Weeks 11-24)
 
 **Ongoing ingredient purchases:**
 - Sprint 7: $80 (training data)
@@ -386,7 +386,7 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-## Total Procurement Budget Summary
+## 16. Total Procurement Budget Summary
 
 | Supplier | Subtotal | Shipping | Total | % of Budget |
 |----------|----------|----------|-------|-------------|
@@ -406,9 +406,9 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-## Critical Path Items (Order Immediately)
+## 17. Critical Path Items (Order Immediately)
 
-### Week -8 to Week -6: MUST ORDER NOW
+### 17.1 Week -8 to Week -6: MUST ORDER NOW
 
 | Item | Lead Time | Impact if Delayed |
 |------|-----------|-------------------|
@@ -424,44 +424,44 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-## Procurement Checklist
+## 18. Procurement Checklist
 
-### Week -8
+### 18.1 Week -8
 - [ ] Order Raspberry Pi CM5 (2x) from approved distributor
 - [ ] Order STM32G474RET6, DRV8876, TB6612FNG, MP1584EN from Mouser
 - [ ] Order microwave induction surface from AliExpress
 
-### Week -7
+### 18.2 Week -7
 - [ ] Order all passive components (resistors, caps, inductors) from Mouser
 - [ ] Order connector kits from Amazon
 - [ ] Order MLX90614, load cells from respective suppliers
 - [ ] Finalize CM5IO board BOM and add to Mouser cart
 
-### Week -6
+### 18.3 Week -6
 - [ ] Submit PCB fabrication order to JLCPCB (Controller + Driver + CM5IO)
 - [ ] Decide on assembly service (add $150-300 but saves 2-3 days)
 - [ ] Verify all component inventories match PCB BOM
 
-### Week -4 to Week 0
+### 18.4 Week -4 to Week 0
 - [ ] Track PCB shipment (DHL tracking)
 - [ ] Order Sprint 1 items (microSD, PSU, cables)
 - [ ] Prepare Yocto build environment on workstation
 
-### Week 0 (Sprint 1 Start)
+### 18.5 Week 0 (Sprint 1 Start)
 - [ ] Receive and inspect PCBs
 - [ ] Visual inspection and continuity testing
 - [ ] Power-on testing with bench supply
 
-### Weeks 1-24
+### 18.6 Weeks 1-24
 - [ ] Follow sprint-specific procurement windows above
 - [ ] Monitor component inventory
 - [ ] Re-order consumables (filament, ingredients) as needed
 
 ---
 
-## Supplier Contact Information
+## 19. Supplier Contact Information
 
-### Electronics Distributors
+### 19.1 Electronics Distributors
 
 **Mouser Electronics**
 - Website: mouser.com
@@ -480,7 +480,7 @@ Week 0: Sprint 1 starts with tested PCBs ready
 - Shipping: $5-8 (USPS), UPS available
 - Payment: Credit card, PayPal
 
-### PCB Fabrication
+### 19.2 PCB Fabrication
 
 **JLCPCB**
 - Website: jlcpcb.com
@@ -495,7 +495,7 @@ Week 0: Sprint 1 starts with tested PCBs ready
 - Lead time: 3-5 days production + shipping
 - Payment: Credit card, PayPal, wire transfer
 
-### Mechanical Components
+### 19.3 Mechanical Components
 
 **McMaster-Carr**
 - Website: mcmaster.com
@@ -503,7 +503,7 @@ Week 0: Sprint 1 starts with tested PCBs ready
 - Shipping: Next-day available, $8 standard
 - Payment: Credit card, Net 30
 
-### Asia Sourcing
+### 19.4 Asia Sourcing
 
 **AliExpress**
 - Website: aliexpress.com
@@ -518,7 +518,7 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-## Related Documentation
+## 20. Related Documentation
 
 - [[03-Sprints|Sprint Planning]]
 - [[02-Stories|User Stories]]
@@ -533,7 +533,7 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ---
 
-## Revision History
+## 21. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

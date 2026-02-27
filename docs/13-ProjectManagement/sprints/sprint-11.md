@@ -14,7 +14,7 @@ aliases: [Sprint 11]
 > **Phase:** Phase 4 — Integration & Launch
 > **Goal:** Complete full system integration testing, conduct safety certification testing, and implement mobile live cooking views.
 
-## Stories
+## 1. Stories
 
 | Status | ID | Title | Epic | Points | Blocked By |
 |:------:|-----|-------|------|:------:|------------|
@@ -28,7 +28,7 @@ aliases: [Sprint 11]
 
 **Total Points:** 44
 
-## Capacity Allocation
+## 2. Capacity Allocation
 
 | Team Member | Allocated | Available | Notes |
 |-------------|:---------:|:---------:|-------|
@@ -38,7 +38,7 @@ aliases: [Sprint 11]
 | Web Developer | 5 | 20 | ADM-DEV.01 (5) |
 | **Total** | **44** | **80** | Peak staffing for integration push |
 
-## Sprint Review Checklist
+## 3. Sprint Review Checklist
 
 - [ ] All stories demo-ready
 - [ ] No P0 bugs remaining
@@ -47,7 +47,7 @@ aliases: [Sprint 11]
 - [ ] Full system integration test passed
 - [ ] Safety certification testing report completed
 
-## Retro Notes
+## 4. Retro Notes
 
 > _To be filled during sprint retrospective._
 >
@@ -62,6 +62,6 @@ aliases: [Sprint 11]
 
 ---
 
-## References
+## 5. References
 
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calendar]]

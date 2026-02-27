@@ -13,7 +13,7 @@ aliases: [UX Epic, User Experience Epic]
 
 JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Covers phone+OTP auth, tab navigation (Recipe, Favourite, Session, Profile), and all primary screens. Visual style: iOS Liquid Glass aesthetic as default, Material 3 notes in comments. Mocks will be converted to native SwiftUI and Kotlin/Compose.
 
-## Story Summary
+## 1. Story Summary
 
 | Module | Stories | Points | Sprints |
 |--------|:-------:|:------:|---------|
@@ -28,7 +28,7 @@ JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Cover
 
 ---
 
-## UX-AUTH.01: Phone+OTP login/register screens (JSX mock)
+## 2. UX-AUTH.01: Phone+OTP login/register screens (JSX mock)
 
 - **Priority:** P0
 - **Points:** 3
@@ -51,7 +51,7 @@ JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Cover
 
 ---
 
-## UX-TAB.01: Tab bar layout (JSX mock)
+## 3. UX-TAB.01: Tab bar layout (JSX mock)
 
 - **Priority:** P0
 - **Points:** 2
@@ -72,7 +72,7 @@ JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Cover
 
 ---
 
-## UX-RCP.01: Recipe browsing screen (JSX mock)
+## 4. UX-RCP.01: Recipe browsing screen (JSX mock)
 
 - **Priority:** P0
 - **Points:** 3
@@ -94,7 +94,7 @@ JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Cover
 
 ---
 
-## UX-FAV.01: Favourites screen (JSX mock)
+## 5. UX-FAV.01: Favourites screen (JSX mock)
 
 - **Priority:** P1
 - **Points:** 2
@@ -113,7 +113,7 @@ JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Cover
 
 ---
 
-## UX-SES.01: Session screen (JSX mock)
+## 6. UX-SES.01: Session screen (JSX mock)
 
 - **Priority:** P0
 - **Points:** 3
@@ -132,7 +132,7 @@ JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Cover
 
 ---
 
-## UX-PRO.01: Profile screen (JSX mock)
+## 7. UX-PRO.01: Profile screen (JSX mock)
 
 - **Priority:** P1
 - **Points:** 3
@@ -151,7 +151,7 @@ JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Cover
 
 ---
 
-## UX-PRO.02: Food Preferences section mock (JSX)
+## 8. UX-PRO.02: Food Preferences section mock (JSX)
 
 - **Priority:** P1
 - **Points:** 3
@@ -175,7 +175,7 @@ JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Cover
 
 ---
 
-## UX-LIVE.01: Mini cooking progress view (JSX mock)
+## 9. UX-LIVE.01: Mini cooking progress view (JSX mock)
 
 - **Priority:** P0
 - **Points:** 2
@@ -194,7 +194,7 @@ JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Cover
 
 ---
 
-## UX-GLANCE.01: Live Activity / Glance Widget mock (JSX)
+## 10. UX-GLANCE.01: Live Activity / Glance Widget mock (JSX)
 
 - **Priority:** P1
 - **Points:** 3
@@ -217,21 +217,21 @@ JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Cover
 
 ---
 
-## Dependencies
+## 11. Dependencies
 
-### What UX blocks
+### 11.1 What UX blocks
 
 | UX Story | Blocks | Reason |
 |----------|--------|--------|
 | UX screens | IOS, AND native implementation | Mocks define screen layout and flow |
 
-### What blocks UX
+### 11.2 What blocks UX
 
 None — UX is independent; can be built in parallel with other epics.
 
 ---
 
-## References
+## 12. References
 
 - [[__Workspaces/Epicura/docs/12-MobileApps/01-Mobile-Architecture|Mobile Architecture]]
 - [[__Workspaces/Epicura/docs/04-UserInterface/03-UI-UX-Design|UI/UX Design]]

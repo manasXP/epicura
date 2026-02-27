@@ -7,13 +7,13 @@ status: Draft
 
 # Vision System
 
-## Overview
+## 1. Overview
 
 The vision system provides real-time food monitoring and cooking stage detection using an overhead HD camera, LED illumination, and edge AI inference on the Raspberry Pi CM5. A TFLite model classifies the current cooking stage (raw, browning, boiling, simmering, done) from camera frames, feeding decisions back to the recipe state machine. The system also supports live video streaming to the touchscreen and companion mobile app, plus anomaly detection for safety-critical events (burning, boil-over, empty pot).
 
-## Camera Selection
+## 2. Camera Selection
 
-### Module Comparison
+### 2.1 Module Comparison
 
 | Parameter | IMX219 (Standard) | IMX477 (Premium) |
 |-----------|-------------------|-------------------|
@@ -28,13 +28,13 @@ The vision system provides real-time food monitoring and cooking stage detection
 | Availability | Widely available | Widely available |
 | Recommendation | **Prototype** -- low cost, sufficient quality | **Production** -- better low-light, lens flexibility |
 
-### Selection Rationale
+### 2.2 Selection Rationale
 
 The IMX219 is selected for prototyping due to its low cost and adequate resolution for cooking stage classification (inference runs on 224x224 crops). The IMX477 is recommended for production because its larger sensor and interchangeable lens system provide better performance in the steam-heavy, variable-lighting environment inside the enclosure.
 
-## Mounting and Steam Protection
+## 3. Mounting and Steam Protection
 
-### Camera Position
+### 3.1 Camera Position
 
 ```
 ┌──────────────────────────────────────────────────┐
@@ -60,7 +60,7 @@ The IMX219 is selected for prototyping due to its low cost and adequate resoluti
 └──────────────────────────────────────────────────┘
 ```
 
-### Mounting Specifications
+### 3.2 Mounting Specifications
 
 | Parameter | Value |
 |-----------|-------|
@@ -71,7 +71,7 @@ The IMX219 is selected for prototyping due to its low cost and adequate resoluti
 | Angle Adjustment | +/- 10 degrees tilt (set screw) |
 | Vibration Isolation | Rubber dampers (2x M3 silicone grommets) |
 
-### Steam Protection Measures
+### 3.3 Steam Protection Measures
 
 | Measure | Implementation | Effectiveness |
 |---------|---------------|---------------|
@@ -81,9 +81,9 @@ The IMX219 is selected for prototyping due to its low cost and adequate resoluti
 | Software Dehazing | OpenCV CLAHE or dehazing algorithm on captured frames | Compensates for mild haze when physical measures insufficient |
 | Periodic Wipe Reminder | UI notification after N cook cycles | Prompts user to clean lens cover |
 
-## LED Illumination
+## 4. LED Illumination
 
-### Ring Light Design
+### 4.1 Ring Light Design
 
 ```
          ┌───────────────────────┐
@@ -102,7 +102,7 @@ The IMX219 is selected for prototyping due to its low cost and adequate resoluti
          └───────────────────────┘
 ```
 
-### LED Specifications
+### 4.2 LED Specifications
 
 | Parameter | Value |
 |-----------|-------|
@@ -115,7 +115,7 @@ The IMX219 is selected for prototyping due to its low cost and adequate resoluti
 | Power | 5V, max 1A (from 5V rail) |
 | Mounting | Co-axial with camera, 5mm offset below lens plane |
 
-### Illumination Modes
+### 4.3 Illumination Modes
 
 | Mode | RGB Value | Brightness | Use Case |
 |------|-----------|------------|----------|
@@ -125,9 +125,9 @@ The IMX219 is selected for prototyping due to its low cost and adequate resoluti
 | Off | (0, 0, 0) | 0% | Standby, lid open, cleaning |
 | Alert | Red pulse (255, 0, 0) | 100% pulsing | Anomaly detected (burning, boil-over) |
 
-## Image Processing Pipeline
+## 5. Image Processing Pipeline
 
-### End-to-End Flow
+### 5.1 End-to-End Flow
 
 ```
 ┌──────────────┐    ┌───────────────┐    ┌────────────────┐
@@ -156,7 +156,7 @@ The IMX219 is selected for prototyping due to its low cost and adequate resoluti
                                            └────────────────┘
 ```
 
-### Pipeline Stage Details
+### 5.2 Pipeline Stage Details
 
 | Stage | Input | Output | Library | Notes |
 |-------|-------|--------|---------|-------|
@@ -166,7 +166,7 @@ The IMX219 is selected for prototyping due to its low cost and adequate resoluti
 | Inference | 224x224 float32 tensor | 8-class probability vector | TFLite Interpreter (Python) | INT8 quantized model, <200ms on CM5 |
 | Post-Process | Probability vector | Stage ID + confidence | Custom Python | Confidence threshold >0.6, 3-frame majority vote |
 
-### Inference Timing Budget
+### 5.3 Inference Timing Budget
 
 ```
 Operation                Time (ms)    Cumulative
@@ -181,9 +181,9 @@ Target: < 200ms average (5 fps inference throughput)
 Actual inference rate: 2 fps (every 500ms, with headroom)
 ```
 
-## Classification Stages
+## 6. Classification Stages
 
-### Cooking Stage Definitions
+### 6.1 Cooking Stage Definitions
 
 | Stage ID | Stage Name | Visual Cues | Example Dish State |
 |----------|-----------|-------------|---------------------|
@@ -196,7 +196,7 @@ Actual inference rate: 2 fps (every 500ms, with headroom)
 | 6 | Thickening | Reduced liquid level, glossy/viscous surface, less bubbling | Gravy coating spoon, reduced sauce |
 | 7 | Done | Final color/texture matching recipe target, minimal activity | Thick dal, well-coated curry |
 
-### Stage Transition Diagram
+### 6.2 Stage Transition Diagram
 
 ```
     ┌───────┐    Heat    ┌──────────┐   Browning   ┌──────────┐
@@ -226,9 +226,9 @@ Actual inference rate: 2 fps (every 500ms, with headroom)
                                         └──────────────┘
 ```
 
-## AI Model Development
+## 7. AI Model Development
 
-### Model Architecture
+### 7.1 Model Architecture
 
 | Parameter | Value |
 |-----------|-------|
@@ -241,7 +241,7 @@ Actual inference rate: 2 fps (every 500ms, with headroom)
 | Model Size | ~3.5 MB (INT8 .tflite) |
 | Framework | TensorFlow / Keras (training), TFLite (inference) |
 
-### Training Pipeline
+### 7.2 Training Pipeline
 
 ```
 ┌────────────────┐    ┌───────────────┐    ┌────────────────┐
@@ -261,7 +261,7 @@ Actual inference rate: 2 fps (every 500ms, with headroom)
                                            └────────────────┘
 ```
 
-### Training Data Requirements
+### 7.3 Training Data Requirements
 
 | Stage | Min Images | Collection Method | Augmented Total |
 |-------|-----------|-------------------|-----------------|
@@ -275,7 +275,7 @@ Actual inference rate: 2 fps (every 500ms, with headroom)
 | Done (7) | 1,500 | Final states across many recipes | 7,500 |
 | **Total** | **9,500** | | **47,500** (after augmentation) |
 
-### Performance Targets
+### 7.4 Performance Targets
 
 | Metric | Target | Notes |
 |--------|--------|-------|
@@ -285,11 +285,11 @@ Actual inference rate: 2 fps (every 500ms, with headroom)
 | Model Size | <5 MB | Fits comfortably on eMMC |
 | False Positive Rate (anomaly) | <5% | Burning/boil-over false alarms |
 
-## Rule-Based Fallback
+## 8. Rule-Based Fallback
 
 When CV confidence drops below 0.6 or the camera is unavailable, the system falls back to sensor-based cooking stage estimation:
 
-### Fallback Decision Table
+### 8.1 Fallback Decision Table
 
 | Stage | Temperature Indicator | Time Indicator | Weight Indicator |
 |-------|----------------------|----------------|------------------|
@@ -302,7 +302,7 @@ When CV confidence drops below 0.6 or the camera is unavailable, the system fall
 | Thickening (6) | T rising above 95 C | >70% cook time elapsed | Significant weight loss (>15%) |
 | Done (7) | Stable T, recipe timer expired | Cook time complete | Target weight reached |
 
-### Fallback Activation
+### 8.2 Fallback Activation
 
 ```
 IF camera.status == OFFLINE OR last_inference.confidence < 0.6:
@@ -315,9 +315,9 @@ ELSE:
     stage = last_inference.stage_id
 ```
 
-## Anomaly Detection
+## 9. Anomaly Detection
 
-### Critical Anomalies
+### 9.1 Critical Anomalies
 
 | Anomaly | Detection Method | Trigger Condition | Action |
 |---------|-----------------|-------------------|--------|
@@ -326,7 +326,7 @@ ELSE:
 | Empty Pot | No contents detected in pot area | Frame variance < threshold (flat surface) | Stop heating immediately, alert user |
 | Foreign Object | Unexpected shape/color in pot | Classification confidence < 0.3 for all stages | Pause cooking, alert user to inspect |
 
-### Anomaly Detection Pipeline
+### 9.2 Anomaly Detection Pipeline
 
 ```
 ┌──────────────┐
@@ -357,9 +357,9 @@ ELSE:
                                      └──────────────────┘
 ```
 
-## Live Feed Streaming
+## 10. Live Feed Streaming
 
-### Streaming Architecture
+### 10.1 Streaming Architecture
 
 | Destination | Protocol | Resolution | Frame Rate | Latency Target |
 |-------------|----------|------------|------------|----------------|
@@ -367,7 +367,7 @@ ELSE:
 | Mobile App | MJPEG over HTTP or WebRTC | 720p | 15 fps | <500ms (LAN), <2s (WAN) |
 | CV Inference | Direct memory buffer | 224x224 (cropped) | 2 fps | <50ms |
 
-### Kivy Camera Widget (Touchscreen)
+### 10.2 Kivy Camera Widget (Touchscreen)
 
 ```python
 # Kivy Camera widget for live CSI-2 feed on touchscreen
@@ -385,7 +385,7 @@ class CookingCameraView(FloatLayout):
         self.add_widget(self.camera)
 ```
 
-### MJPEG Streaming (Mobile App)
+### 10.3 MJPEG Streaming (Mobile App)
 
 ```python
 # Minimal MJPEG HTTP streaming server
@@ -406,9 +406,9 @@ def generate_frames():
                buffer.tobytes() + b'\r\n')
 ```
 
-## Steam Management Solutions
+## 11. Steam Management Solutions
 
-### Multi-Layer Approach
+### 11.1 Multi-Layer Approach
 
 | Layer | Solution | Maintenance | Effectiveness |
 |-------|----------|-------------|---------------|
@@ -418,9 +418,9 @@ def generate_frames():
 | 4. Software Dehaze | OpenCV dehazing on mild haze frames | None | Recovers detail in slightly foggy frames |
 | 5. Capture Timing | Brief air puff (compressed air nozzle) before capture | Refill air canister | Clears lens immediately before frame |
 
-## Calibration
+## 12. Calibration
 
-### Factory Calibration
+### 12.1 Factory Calibration
 
 | Calibration | Method | Frequency |
 |-------------|--------|-----------|
@@ -429,7 +429,7 @@ def generate_frames():
 | Focus Distance | Set focus to pot depth (20-30cm), lock focus ring | Per-unit (factory) |
 | LED Uniformity | Capture white reference surface, measure brightness variance | Per-unit (factory) |
 
-### Runtime Calibration
+### 12.2 Runtime Calibration
 
 | Calibration | Method | Frequency |
 |-------------|--------|-----------|
@@ -437,9 +437,9 @@ def generate_frames():
 | Exposure Compensation | Auto-exposure with ROI set to pot center | Continuous |
 | Steam Compensation | Compare frame clarity metric, apply dehaze if below threshold | Per-frame |
 
-## Testing and Validation
+## 13. Testing and Validation
 
-### Test Procedures
+### 13.1 Test Procedures
 
 | Test | Method | Pass Criteria |
 |------|--------|---------------|
@@ -454,7 +454,7 @@ def generate_frames():
 | Fallback Mode | Disable camera, verify sensor-based cooking completes | Recipe completes within +/- 20% of normal cook time |
 | Lens Cleaning | Run 10 cook cycles without cleaning, measure clarity degradation | Clarity remains >60% after 10 cycles |
 
-### Prototype Validation Checklist
+### 13.2 Prototype Validation Checklist
 
 - [ ] Camera captures clear 1080p frames at 15 fps from mounted position
 - [ ] LED ring provides uniform illumination (no hot spots on liquid surface)
@@ -467,7 +467,7 @@ def generate_frames():
 - [ ] Fallback mode activates automatically when camera is covered/disabled
 - [ ] Color calibration produces consistent readings across 10 capture sessions
 
-## Related Documentation
+## 14. Related Documentation
 
 - [[../01-Overview/01-Project-Overview|Project Overview]]
 - [[../02-Hardware/02-Technical-Specifications|Technical Specifications]]
@@ -482,7 +482,7 @@ def generate_frames():
 
 ---
 
-## Revision History
+## 15. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

@@ -1,6 +1,6 @@
 
 
-Epicura is an autonomous countertop kitchen robot that cooks full meals like a human chef using AI vision, robotic stirring, and precise heat control. Its core features include home use, tailored for compact kitchens with embedded tech integration. It closely follows the design of a commercically available product from Posha.com 
+Epicura is an autonomous countertop kitchen robot that cooks full meals like a human chef using AI vision, robotic stirring, and precise heat control. Its core features include home use, tailored for compact kitchens with embedded tech integration. It closely follows the design of a commercially available product from Posha.com 
 
 ## Core Design Overview
 

@@ -14,7 +14,7 @@ aliases: [CM5 Spec, MPU Spec]
 
 ---
 
-## 1 Overview
+## 1. Overview
 
 The CM5 is the main application processor for Epicura. It runs Yocto Linux with Docker Compose orchestrating all high-level services: recipe engine, computer vision, touchscreen UI, database, MQTT broker, and cloud sync. It communicates with the STM32 MCU over SPI for real-time actuator commands and telemetry.
 
@@ -33,7 +33,7 @@ The CM5 is the main application processor for Epicura. It runs Yocto Linux with 
 
 ---
 
-## 2 Functional Requirements
+## 2. Functional Requirements
 
 ### 2.1 Recipe Engine
 
@@ -119,7 +119,7 @@ The CM5 is the main application processor for Epicura. It runs Yocto Linux with 
 
 ---
 
-## 3 Hardware Interfaces
+## 3. Hardware Interfaces
 
 ### 3.1 GPIO Allocation (via CM5IO 40-pin header)
 
@@ -155,7 +155,7 @@ The CM5 is the main application processor for Epicura. It runs Yocto Linux with 
 
 ---
 
-## 4 Software Architecture
+## 4. Software Architecture
 
 ### 4.1 Operating System
 
@@ -194,7 +194,7 @@ The CM5 is the main application processor for Epicura. It runs Yocto Linux with 
 
 ---
 
-## 5 Communication Protocols
+## 5. Communication Protocols
 
 ### 5.1 SPI Protocol (CM5 → STM32)
 
@@ -248,7 +248,7 @@ typedef struct {
 
 ---
 
-## 6 Power Management
+## 6. Power Management
 
 ### 6.1 Power States
 
@@ -268,7 +268,7 @@ typedef struct {
 
 ---
 
-## 7 Safety & Fault Handling
+## 7. Safety & Fault Handling
 
 ### 7.1 CM5 Safety Responsibilities
 
@@ -304,7 +304,7 @@ The CM5 is **not** the primary safety controller — the STM32 owns all safety-c
 
 ---
 
-## 8 Performance Requirements
+## 8. Performance Requirements
 
 | Metric | Target | Measurement Method |
 |--------|--------|--------------------|
@@ -319,7 +319,7 @@ The CM5 is **not** the primary safety controller — the STM32 owns all safety-c
 
 ---
 
-## 9 Dependencies & Constraints
+## 9. Dependencies & Constraints
 
 ### 9.1 Hardware Dependencies
 

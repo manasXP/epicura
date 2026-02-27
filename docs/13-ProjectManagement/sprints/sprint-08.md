@@ -14,7 +14,7 @@ aliases: [Sprint 8]
 > **Phase:** Phase 3 — Software Integration
 > **Goal:** Define recipe format, begin state machine implementation, and initialize mobile app projects.
 
-## Stories
+## 1. Stories
 
 | Status | ID | Title | Epic | Points | Blocked By |
 |:------:|-----|-------|------|:------:|------------|
@@ -26,7 +26,7 @@ aliases: [Sprint 8]
 
 **Total Points:** 30
 
-## Capacity Allocation
+## 2. Capacity Allocation
 
 | Team Member | Allocated | Available | Notes |
 |-------------|:---------:|:---------:|-------|
@@ -36,7 +36,7 @@ aliases: [Sprint 8]
 | Android Developer | 5 | 20 | AND-SET.01 (5) |
 | **Total** | **30** | **80** | |
 
-## Sprint Review Checklist
+## 3. Sprint Review Checklist
 
 - [ ] All stories demo-ready
 - [ ] No P0 bugs remaining
@@ -44,7 +44,7 @@ aliases: [Sprint 8]
 - [ ] QA sign-off on completed stories
 - [ ] **Milestone M4 (Vision + Recipe)** criteria met
 
-## Retro Notes
+## 4. Retro Notes
 
 > _To be filled during sprint retrospective._
 >
@@ -59,7 +59,7 @@ aliases: [Sprint 8]
 
 ---
 
-## References
+## 5. References
 
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calendar]]
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/01-Epics|Milestone M4: Vision + Recipe]]

@@ -7,7 +7,7 @@ status: Draft
 
 # iOS App
 
-## Platform Requirements
+## 1. Platform Requirements
 
 | Requirement | Value |
 |-------------|-------|
@@ -20,7 +20,7 @@ status: Draft
 
 ---
 
-## Project Structure
+## 2. Project Structure
 
 ```
 EpicuraApp/
@@ -122,7 +122,7 @@ EpicuraApp/
 
 ---
 
-## Frameworks & Libraries
+## 3. Frameworks & Libraries
 
 | Framework / Library | Source | Purpose |
 |--------------------|--------|---------|
@@ -140,9 +140,9 @@ EpicuraApp/
 
 ---
 
-## BLE Implementation Notes
+## 4. BLE Implementation Notes
 
-### Core Bluetooth Setup
+### 4.1 Core Bluetooth Setup
 
 ```swift
 class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate {
@@ -167,7 +167,7 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate {
 }
 ```
 
-### Key Considerations
+### 4.2 Key Considerations
 
 - **State Restoration:** Implement `willRestoreState` for background BLE sessions during pairing
 - **Permission Flow:** Request Bluetooth permission on pairing screen, not on app launch
@@ -177,9 +177,9 @@ class BLEManager: NSObject, ObservableObject, CBCentralManagerDelegate {
 
 ---
 
-## Push Notifications (APNs)
+## 5. Push Notifications (APNs)
 
-### Setup
+### 5.1 Setup
 
 ```swift
 // AppDelegate.swift
@@ -193,7 +193,7 @@ func application(_ application: UIApplication,
 }
 ```
 
-### Notification Types
+### 5.2 Notification Types
 
 | Notification | Trigger | Action |
 |-------------|---------|--------|
@@ -204,9 +204,9 @@ func application(_ application: UIApplication,
 
 ---
 
-## Accessibility
+## 6. Accessibility
 
-### VoiceOver
+### 6.1 VoiceOver
 
 - All interactive elements have `.accessibilityLabel` and `.accessibilityHint`
 - Recipe cards: `"Dal Tadka. Easy difficulty. 35 minutes. Double-tap to view recipe."`
@@ -214,7 +214,7 @@ func application(_ application: UIApplication,
 - Cooking progress: `"Stage 3 of 6. Saute Onions. 42 percent complete."`
 - Emergency stop button: `.accessibilityLabel("Emergency stop")` with `.accessibilityAddTraits(.isButton)`
 
-### Dynamic Type
+### 6.2 Dynamic Type
 
 - All text uses SwiftUI semantic font styles (`.title`, `.body`, `.caption`)
 - Custom font sizes defined relative to Dynamic Type categories
@@ -223,9 +223,9 @@ func application(_ application: UIApplication,
 
 ---
 
-## Testing
+## 7. Testing
 
-### Unit Tests (XCTest)
+### 7.1 Unit Tests (XCTest)
 
 | Test Suite | Scope |
 |-----------|-------|
@@ -236,7 +236,7 @@ func application(_ application: UIApplication,
 | `CookingViewModelTests` | WebSocket event handling, state transitions |
 | `PairingViewModelTests` | BLE pairing flow, WiFi provisioning |
 
-### UI Tests (XCUITest)
+### 7.2 UI Tests (XCUITest)
 
 | Test | Flow |
 |------|------|
@@ -245,7 +245,7 @@ func application(_ application: UIApplication,
 | `CookingProgressUITests` | Start cook → Progress updates → Complete → Rate |
 | `SettingsUITests` | Settings → Change preferences → Save → Verify |
 
-### Testing Tools
+### 7.3 Testing Tools
 
 | Tool | Purpose |
 |------|---------|
@@ -256,7 +256,7 @@ func application(_ application: UIApplication,
 
 ---
 
-## Related Documentation
+## 8. Related Documentation
 
 - [[01-Mobile-Architecture|Mobile Architecture]] - Shared architecture and design system
 - [[03-Android-App|Android App]] - Android counterpart
@@ -269,7 +269,7 @@ func application(_ application: UIApplication,
 
 ---
 
-## Revision History
+## 9. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

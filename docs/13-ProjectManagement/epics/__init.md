@@ -14,7 +14,7 @@ aliases: [Epic Index, Epics]
 
 Thirteen subsystem-based epics spanning a 6-week pre-sprint PCB phase and 12 two-week sprints.
 
-## Epic Summary
+## 1. Epic Summary
 
 | Epic | File | Stories | Points (est.) | Sprints Active | Owner |
 |------|------|:-------:|:-------------:|----------------|-------|
@@ -33,7 +33,7 @@ Thirteen subsystem-based epics spanning a 6-week pre-sprint PCB phase and 12 two
 | **UX** — User Experience Design | [[UX-ux]] | 7 | ~18 | Parallel | UX / Frontend |
 | | | **~89** | **~385** | | |
 
-## Dependency Order
+## 2. Dependency Order
 
 Epics should be read (and largely built) in this order:
 
@@ -50,7 +50,7 @@ Epics should be read (and largely built) in this order:
 11. **ADM** — Depends on BE (admin API endpoints)
 12. **INT** — Depends on all other epics
 
-## Module Coverage by Epic
+## 3. Module Coverage by Epic
 
 | Module | PCB | EMB | THR | ARM | CV | RCP | UI | BE | IOS | AND | ADM | INT |
 |--------|:---:|:---:|:---:|:---:|:--:|:---:|:--:|:--:|:---:|:---:|:---:|:---:|
@@ -74,7 +74,7 @@ Epics should be read (and largely built) in this order:
 
 ---
 
-## References
+## 4. References
 
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/__init|Project Management Index]]
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calendar]]

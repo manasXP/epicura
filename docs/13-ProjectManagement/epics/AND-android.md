@@ -14,7 +14,7 @@ aliases: [AND Epic, Android Epic]
 
 Native Android companion app mirroring iOS functionality: BLE device pairing, WiFi provisioning, recipe browsing, live cooking view, and user profile. Built with Kotlin, Jetpack Compose, MVVM, Hilt DI.
 
-## Story Summary
+## 1. Story Summary
 
 | Module | Stories | Points | Sprints |
 |--------|:-------:|:------:|---------|
@@ -27,9 +27,9 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 
 ---
 
-## Phase 3 — Mobile Foundation (Sprint 8)
+## 2. Phase 3 — Mobile Foundation (Sprint 8)
 
-### AND-SET.01: Gradle project setup — Compose, Hilt, networking, auth
+### 2.1 AND-SET.01: Gradle project setup — Compose, Hilt, networking, auth
 - **Sprint:** [[sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
@@ -54,7 +54,7 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 
 ---
 
-### AND-BLE.01: BLE pairing — CompanionDeviceManager scanning, WiFi provisioning
+### 2.2 AND-BLE.01: BLE pairing — CompanionDeviceManager scanning, WiFi provisioning
 - **Sprint:** [[sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
@@ -75,7 +75,7 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 
 ---
 
-### AND-BLE.02: BLE device management — claim API, home screen status, permissions edge cases
+### 2.3 AND-BLE.02: BLE device management — claim API, home screen status, permissions edge cases
 - **Sprint:** [[sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 3
@@ -95,9 +95,9 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 
 ---
 
-## Phase 3 — Recipe & Cooking (Sprints 9–10)
+## 3. Phase 3 — Recipe & Cooking (Sprints 9–10)
 
-### AND-RCP.01: Recipe browsing — list, detail, search, favorites
+### 3.1 AND-RCP.01: Recipe browsing — list, detail, search, favorites
 - **Sprint:** [[sprint-09|Sprint 9]]
 - **Priority:** P0
 - **Points:** 5
@@ -126,7 +126,7 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 
 ---
 
-### AND-COK.01: Live cooking view — camera stream, status, temperature, timer
+### 3.2 AND-COK.01: Live cooking view — camera stream, status, temperature, timer
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 5
@@ -149,7 +149,7 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 
 ---
 
-### AND-COK.02: Cooking controls and notifications — pause/abort, FCM push, testing
+### 3.3 AND-COK.02: Cooking controls and notifications — pause/abort, FCM push, testing
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 3
@@ -169,9 +169,9 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 
 ---
 
-## Phase 4 — User Profile (Sprint 11)
+## 4. Phase 4 — User Profile (Sprint 11)
 
-### AND-USR.01: User profile — settings, cooking history, preferences
+### 4.1 AND-USR.01: User profile — settings, cooking history, preferences
 - **Sprint:** [[sprint-11|Sprint 11]]
 - **Priority:** P1
 - **Points:** 5
@@ -195,7 +195,7 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 
 ---
 
-### AND-USR.02: Food Preferences UI — diet, cuisines, seasoning, servings
+### 4.2 AND-USR.02: Food Preferences UI — diet, cuisines, seasoning, servings
 - **Sprint:** [[sprint-11|Sprint 11]]
 - **Priority:** P1
 - **Points:** 3
@@ -219,7 +219,7 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 
 ---
 
-### AND-LIVE.01: Glance Widget — Cooking Progress App Widget (Jetpack Glance)
+### 4.3 AND-LIVE.01: Glance Widget — Cooking Progress App Widget (Jetpack Glance)
 - **Sprint:** [[sprint-11|Sprint 11]]
 - **Priority:** P1
 - **Points:** 5
@@ -245,13 +245,13 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 
 ---
 
-## Dependencies
+## 5. Dependencies
 
-### What AND blocks
+### 5.1 What AND blocks
 
 None — Android app is a leaf node.
 
-### What blocks AND
+### 5.2 What blocks AND
 
 | AND Story | Blocked by | Reason |
 |-----------|------------|--------|
@@ -266,7 +266,7 @@ None — Android app is a leaf node.
 
 ---
 
-## References
+## 6. References
 
 - [[__Workspaces/Epicura/docs/12-MobileApps/03-Android-App|Android App Details]]
 - [[__Workspaces/Epicura/docs/12-MobileApps/01-Mobile-Architecture|Mobile Architecture]]

@@ -14,7 +14,7 @@ aliases: [RCP Epic, Recipe Epic]
 
 YAML recipe format, cooking state machine, dispensing orchestration, and cloud recipe sync. The recipe engine is the central orchestrator that coordinates thermal control, arm movement, dispensing, and vision feedback.
 
-## Story Summary
+## 1. Story Summary
 
 | Module | Stories | Points | Sprints |
 |--------|:-------:|:------:|---------|
@@ -26,9 +26,9 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 
 ---
 
-## Phase 3 — Recipe Engine (Sprints 8–9)
+## 2. Phase 3 — Recipe Engine (Sprints 8–9)
 
-### RCP-FMT.01: YAML recipe format — schema definition, parser, validation
+### 2.1 RCP-FMT.01: YAML recipe format — schema definition, parser, validation
 - **Sprint:** [[sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
@@ -53,7 +53,7 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 
 ---
 
-### RCP-FSM.01: Cooking state machine — design, engine, step executor, transitions
+### 2.2 RCP-FSM.01: Cooking state machine — design, engine, step executor, transitions
 - **Sprint:** [[sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
@@ -75,7 +75,7 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 
 ---
 
-### RCP-FSM.02: State machine controls and telemetry — pause/resume, abort, logging, MQTT status
+### 2.3 RCP-FSM.02: State machine controls and telemetry — pause/resume, abort, logging, MQTT status
 - **Sprint:** [[sprint-08|Sprint 8]] → [[sprint-09|Sprint 9]]
 - **Priority:** P0
 - **Points:** 5
@@ -98,7 +98,7 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 
 ---
 
-### RCP-DSP.01: Dispensing orchestration — sequence generation, coordination, weight verification
+### 2.4 RCP-DSP.01: Dispensing orchestration — sequence generation, coordination, weight verification
 - **Sprint:** [[sprint-09|Sprint 9]]
 - **Priority:** P0
 - **Points:** 5
@@ -118,7 +118,7 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 
 ---
 
-### RCP-DSP.02: Dispensing integration — retry logic, state machine integration, recipe testing
+### 2.5 RCP-DSP.02: Dispensing integration — retry logic, state machine integration, recipe testing
 - **Sprint:** [[sprint-09|Sprint 9]]
 - **Priority:** P0
 - **Points:** 3
@@ -139,7 +139,7 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 
 ---
 
-### RCP-SYN.01: Cloud recipe sync — download, cache, versioning
+### 2.6 RCP-SYN.01: Cloud recipe sync — download, cache, versioning
 - **Sprint:** [[sprint-09|Sprint 9]]
 - **Priority:** P1
 - **Points:** 5
@@ -164,9 +164,9 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 
 ---
 
-## Dependencies
+## 3. Dependencies
 
-### What RCP blocks (downstream consumers)
+### 3.1 What RCP blocks (downstream consumers)
 
 | RCP Story | Blocks | Reason |
 |-----------|--------|--------|
@@ -176,7 +176,7 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 | RCP-DSP.01 | RCP-DSP.02 | Core dispensing needed for integration and testing |
 | RCP-DSP.02 | INT-SYS.01 | Dispensing needed for end-to-end cooking |
 
-### What blocks RCP (upstream dependencies)
+### 3.2 What blocks RCP (upstream dependencies)
 
 | RCP Story | Blocked by | Reason |
 |-----------|------------|--------|
@@ -189,7 +189,7 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 
 ---
 
-## References
+## 4. References
 
 - [[__Workspaces/Epicura/docs/03-Software/02-Controller-Software-Architecture|Controller Software Architecture]]
 - [[__Workspaces/Epicura/docs/03-Software/03-Main-Loop-State-Machine|Main Loop State Machine]]

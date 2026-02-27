@@ -7,7 +7,7 @@ status: Draft
 
 # Tech Stack
 
-## Architecture Overview
+## 1. Architecture Overview
 
 Epicura uses a dual-processor architecture with clearly separated responsibilities. The CM5 handles high-level application logic and AI, while the STM32G4 manages real-time control and safety-critical operations.
 
@@ -24,9 +24,9 @@ Epicura uses a dual-processor architecture with clearly separated responsibiliti
 
 ---
 
-## CM5 Software Stack
+## 2. CM5 Software Stack
 
-### Hardware Platform
+### 2.1 Hardware Platform
 
 **Raspberry Pi Compute Module 5:**
 
@@ -43,7 +43,7 @@ Epicura uses a dual-processor architecture with clearly separated responsibiliti
 | GPIO | 28x GPIO, UART, SPI, I2C |
 | Carrier Board | CM5IO (Raspberry Pi Compute Module IO Board) |
 
-### Operating System & Container Architecture
+### 2.2 Operating System & Container Architecture
 
 **Yocto Linux (Kirkstone or Scarthgap LTS):**
 - Custom BSP built with bitbake for CM5
@@ -87,9 +87,9 @@ All application services run as Docker containers on the CM5:
 - Inter-container networking via Docker bridge network
 - Host network mode for MQTT and API services
 
-### UI Framework
+### 2.3 UI Framework
 
-#### Comparison
+#### 2.3.1 Comparison
 
 | Criteria | Kivy (Chosen) | Qt6/QML | LVGL |
 |----------|--------------|---------|------|
@@ -106,7 +106,7 @@ All application services run as Docker containers on the CM5:
 
 **Decision Rationale**: Kivy allows Python developers to build the entire UI without learning QML or managing C++ bindings. Qt6/QML is designed for medical-grade UX and automotive HMIs—overkill for a kitchen appliance. Kivy provides sufficient touch support, GPU acceleration, and camera integration while keeping development simple and aligned with the Python-based backend services.
 
-#### Kivy Architecture
+#### 2.3.2 Kivy Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -137,7 +137,7 @@ All application services run as Docker containers on the CM5:
 └─────────────────────────────────────────────────────────┘
 ```
 
-### AI/ML Stack
+### 2.4 AI/ML Stack
 
 | Component | Library | Purpose |
 |-----------|---------|---------|
@@ -147,7 +147,7 @@ All application services run as Docker containers on the CM5:
 | Training | Python/Keras (off-device) | Model training on cloud/desktop GPU |
 | Labeling | LabelImg / Roboflow | Cooking stage image annotation |
 
-### Recipe Engine
+### 2.5 Recipe Engine
 
 - **Language:** Python 3.11+
 - **Container:** Dedicated Docker container with Python runtime
@@ -158,7 +158,7 @@ All application services run as Docker containers on the CM5:
   - Redis pub/sub for real-time state updates
   - gRPC or HTTP API for Kivy frontend integration
 
-### Cloud & Networking
+### 2.6 Cloud & Networking
 
 | Service | Library / Protocol | Purpose |
 |---------|--------------------|---------|
@@ -169,7 +169,7 @@ All application services run as Docker containers on the CM5:
 | Live Camera | MJPEG over HTTP or WebSocket | Stream cooking video to mobile app |
 | CM5-STM32 Bridge | Python service (Docker container) | SPI/UART protocol handler, message queuing |
 
-### Storage
+### 2.7 Storage
 
 **PostgreSQL 16:**
 - Primary database running in Docker container on CM5
@@ -193,7 +193,7 @@ All application services run as Docker containers on the CM5:
 | Cooking Logs | Created locally, synced to cloud | Aggregated from all devices |
 | Images | Cached locally (S3 refs) | Stored in S3/R2 |
 
-### CM5 Development Tools
+### 2.8 CM5 Development Tools
 
 | Tool | Purpose |
 |------|---------|
@@ -209,11 +209,11 @@ All application services run as Docker containers on the CM5:
 
 ---
 
-## CM5-STM32 Bridge Service
+## 3. CM5-STM32 Bridge Service
 
 The bridge service runs as a Python Docker container and handles all communication between the CM5 application layer and the STM32 real-time controller.
 
-### Bridge Architecture
+### 3.1 Bridge Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -247,7 +247,7 @@ The bridge service runs as a Python Docker container and handles all communicati
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Bridge Service Features
+### 3.2 Bridge Service Features
 
 | Feature | Implementation |
 |---------|----------------|
@@ -259,7 +259,7 @@ The bridge service runs as a Python Docker container and handles all communicati
 | **API** | REST endpoints: `/bridge/command`, `/bridge/telemetry`, `/bridge/status` |
 | **Logging** | Structured JSON logs to Docker stdout |
 
-### Bridge Service Stack
+### 3.3 Bridge Service Stack
 
 ```python
 # Python dependencies
@@ -273,11 +273,11 @@ The bridge service runs as a Python Docker container and handles all communicati
 
 ---
 
-## STM32 Software Stack
+## 4. STM32 Software Stack
 
-### Hardware Platform
+### 4.1 Hardware Platform
 
-#### Primary Choice: STM32G474RE
+#### 4.1.1 Primary Choice: STM32G474RE
 
 | Specification | Value |
 |--------------|-------|
@@ -290,7 +290,7 @@ The bridge service runs as a Python Docker container and handles all communicati
 | Comm | 3x UART, 3x SPI, 4x I2C, FDCAN |
 | Package | LQFP-64 or LQFP-100 |
 
-#### Alternative: STM32F446RE
+#### 4.1.2 Alternative: STM32F446RE
 
 | Specification | Value |
 |--------------|-------|
@@ -305,7 +305,7 @@ The bridge service runs as a Python Docker container and handles all communicati
 
 **Recommendation:** STM32G474RE preferred for its FDCAN peripheral (required for CAN bus communication with the microwave induction surface module) and HRTIM for precise servo PWM control.
 
-### RTOS
+### 4.2 RTOS
 
 **FreeRTOS 10.x:**
 - 4-5 concurrent tasks (PID, Motor, Sensor, Safety, Communication)
@@ -314,13 +314,13 @@ The bridge service runs as a Python Docker container and handles all communicati
 - Tick rate: 1 kHz (1 ms resolution)
 - Stack monitoring enabled for overflow detection
 
-### Language & Standards
+### 4.3 Language & Standards
 
 - **Language:** C11 (MISRA C:2012 subset for safety-critical paths)
 - **Math:** CMSIS-DSP library for PID computation and signal filtering
 - **Coding standard:** MISRA C mandatory for safety monitor and motor control tasks
 
-### HAL & Drivers
+### 4.4 HAL & Drivers
 
 | Peripheral | Driver | Usage |
 |------------|--------|-------|
@@ -333,7 +333,7 @@ The bridge service runs as a Python Docker container and handles all communicati
 | GPIO | STM32 HAL GPIO | Limit switches, ASD servos, CID actuators, SLD solenoids, buzzer |
 | IWDG | STM32 HAL IWDG | Independent watchdog (safety) |
 
-### STM32 Development Tools
+### 4.5 STM32 Development Tools
 
 | Tool | Purpose |
 |------|---------|
@@ -346,9 +346,9 @@ The bridge service runs as a Python Docker container and handles all communicati
 
 ---
 
-## Companion Mobile Apps
+## 5. Companion Mobile Apps
 
-### Framework Comparison
+### 5.1 Framework Comparison
 
 | Criteria | Native (Swift + Kotlin) (Chosen) | Flutter (Previously Considered) |
 |----------|----------------------------------|--------------------------------|
@@ -364,7 +364,7 @@ The bridge service runs as a Python Docker container and handles all communicati
 
 **Decision:** Native development provides superior BLE integration, camera streaming performance, and platform-native UX — all critical for Epicura's pairing and live cooking flows. See [[../12-MobileApps/01-Mobile-Architecture|Mobile Architecture]] for full rationale.
 
-### Communication
+### 5.2 Communication
 
 | Channel | Protocol | Purpose |
 |---------|----------|---------|
@@ -375,7 +375,7 @@ The bridge service runs as a Python Docker container and handles all communicati
 | Cloud | Push notifications (FCM/APNs) | Cooking complete, error alerts |
 | BLE | GATT services | Device pairing, WiFi provisioning |
 
-### Key Screens
+### 5.3 Key Screens
 
 1. **Recipe Browse** - Grid of recipes with filters (category, time, difficulty)
 2. **Recipe Detail** - Ingredients, steps, customization (spice level, allergens)
@@ -387,9 +387,9 @@ The bridge service runs as a Python Docker container and handles all communicati
 
 ---
 
-## Testing & Validation
+## 6. Testing & Validation
 
-### CM5 Testing
+### 6.1 CM5 Testing
 
 | Framework | Language | Scope |
 |-----------|----------|-------|
@@ -398,7 +398,7 @@ The bridge service runs as a Python Docker container and handles all communicati
 | pytest | Python | Kivy UI components and screens |
 | Google Test | C++ | Shared C++ libraries |
 
-### STM32 Testing
+### 6.2 STM32 Testing
 
 | Framework | Language | Scope |
 |-----------|----------|-------|
@@ -406,7 +406,7 @@ The bridge service runs as a Python Docker container and handles all communicati
 | CMock | C | Mock HAL functions for unit testing |
 | Ceedling | C | Build system for Unity + CMock |
 
-### Integration & System Testing
+### 6.3 Integration & System Testing
 
 | Method | Purpose |
 |--------|---------|
@@ -419,9 +419,9 @@ The bridge service runs as a Python Docker container and handles all communicati
 
 ---
 
-## Firmware Update Strategy
+## 7. Firmware Update Strategy
 
-### CM5 (Yocto Linux)
+### 7.1 CM5 (Yocto Linux)
 
 ```
 ┌───────────────────────────────────────────────┐
@@ -439,7 +439,7 @@ The bridge service runs as a Python Docker container and handles all communicati
 - **Rollback:** If boot fails 3 times, revert to previous partition
 - **Data partition:** Preserved across updates (recipes, logs, preferences)
 
-### STM32 (FreeRTOS)
+### 7.2 STM32 (FreeRTOS)
 
 - **Mechanism:** System bootloader (STM32 built-in SPI bootloader)
 - **Trigger:** CM5 asserts STM32 BOOT0 pin via GPIO, then resets
@@ -449,7 +449,7 @@ The bridge service runs as a Python Docker container and handles all communicati
 
 ---
 
-## Development Timeline
+## 8. Development Timeline
 
 | Phase | Duration | Key Activities |
 |-------|----------|----------------|
@@ -465,7 +465,7 @@ The bridge service runs as a Python Docker container and handles all communicati
 
 ---
 
-## Design Decisions
+## 9. Design Decisions
 
 | Decision | Chosen | Alternative | Rationale |
 |----------|--------|-------------|-----------|
@@ -483,7 +483,7 @@ The bridge service runs as a Python Docker container and handles all communicati
 
 ---
 
-## Related Documentation
+## 10. Related Documentation
 
 - [[../01-Overview/01-Project-Overview|Project Overview]]
 - [[04-Controller-Software-Architecture|Controller & Software Architecture]]
@@ -496,7 +496,7 @@ The bridge service runs as a Python Docker container and handles all communicati
 
 ---
 
-## Revision History
+## 11. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

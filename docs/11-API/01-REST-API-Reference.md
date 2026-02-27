@@ -7,7 +7,7 @@ status: Draft
 
 # REST API Reference
 
-## Base URL
+## 1. Base URL
 
 | Environment | URL |
 |-------------|-----|
@@ -16,7 +16,7 @@ status: Draft
 
 ---
 
-## Authentication
+## 2. Authentication
 
 All endpoints except `/auth/register`, `/auth/login`, `/auth/otp/request`, and `/auth/otp/verify` require a valid JWT access token in the `Authorization` header:
 
@@ -28,9 +28,9 @@ Tokens are obtained via the login flow. See [[../10-Backend/01-Backend-Architect
 
 ---
 
-## Common Response Format
+## 3. Common Response Format
 
-### Success
+### 3.1 Success
 
 ```json
 {
@@ -39,7 +39,7 @@ Tokens are obtained via the login flow. See [[../10-Backend/01-Backend-Architect
 }
 ```
 
-### Paginated
+### 3.2 Paginated
 
 ```json
 {
@@ -54,7 +54,7 @@ Tokens are obtained via the login flow. See [[../10-Backend/01-Backend-Architect
 }
 ```
 
-### Error
+### 3.3 Error
 
 ```json
 {
@@ -71,7 +71,7 @@ Tokens are obtained via the login flow. See [[../10-Backend/01-Backend-Architect
 
 ---
 
-## Error Codes
+## 4. Error Codes
 
 | Code | HTTP Status | Description |
 |------|-------------|-------------|
@@ -87,7 +87,7 @@ Tokens are obtained via the login flow. See [[../10-Backend/01-Backend-Architect
 
 ---
 
-## Rate Limits
+## 5. Rate Limits
 
 | Scope | Limit | Window |
 |-------|-------|--------|
@@ -98,11 +98,11 @@ Tokens are obtained via the login flow. See [[../10-Backend/01-Backend-Architect
 
 ---
 
-## Endpoints
+## 6. Endpoints
 
-### Auth
+### 6.1 Auth
 
-#### `POST /auth/register`
+#### 6.1.1 `POST /auth/register`
 
 Register a new user account.
 
@@ -138,7 +138,7 @@ curl -X POST https://api.epicura.io/api/v1/auth/register \
   -d '{"email":"user@example.com","password":"securePassword123","name":"Manas Pradhan"}'
 ```
 
-#### `POST /auth/login`
+#### 6.1.2 `POST /auth/login`
 
 Authenticate and receive tokens.
 
@@ -173,7 +173,7 @@ curl -X POST https://api.epicura.io/api/v1/auth/login \
   -d '{"email":"user@example.com","password":"securePassword123"}'
 ```
 
-#### `POST /auth/otp/request`
+#### 6.1.3 `POST /auth/otp/request`
 
 Request a one-time password sent via SMS to the user's phone number. This is the **primary authentication method** for mobile apps. Register-on-first-login: if the phone number is not yet registered, a new account is created on successful OTP verification.
 
@@ -206,7 +206,7 @@ curl -X POST https://api.epicura.io/api/v1/auth/otp/request \
   -d '{"phone":"+919876543210"}'
 ```
 
-#### `POST /auth/otp/verify`
+#### 6.1.4 `POST /auth/otp/verify`
 
 Verify an OTP and receive JWT tokens. If the phone number is new, a user account is created automatically (register-on-first-login).
 
@@ -246,7 +246,7 @@ curl -X POST https://api.epicura.io/api/v1/auth/otp/verify \
   -d '{"phone":"+919876543210","otp":"123456"}'
 ```
 
-#### `POST /auth/refresh`
+#### 6.1.5 `POST /auth/refresh`
 
 Refresh an expired access token.
 
@@ -268,7 +268,7 @@ Refresh an expired access token.
 }
 ```
 
-#### `POST /auth/logout`
+#### 6.1.6 `POST /auth/logout`
 
 Revoke the current refresh token.
 
@@ -289,9 +289,9 @@ Revoke the current refresh token.
 
 ---
 
-### Recipes
+### 6.2 Recipes
 
-#### `GET /recipes`
+#### 6.2.1 `GET /recipes`
 
 List published recipes with optional filtering.
 
@@ -347,7 +347,7 @@ curl https://api.epicura.io/api/v1/recipes?category=dal&difficulty=easy \
   -H "Authorization: Bearer <token>"
 ```
 
-#### `GET /recipes/:id`
+#### 6.2.2 `GET /recipes/:id`
 
 Get full recipe details including `recipe_data` (stages, ingredients).
 
@@ -393,7 +393,7 @@ Get full recipe details including `recipe_data` (stages, ingredients).
 }
 ```
 
-#### `POST /recipes` (Admin only)
+#### 6.2.3 `POST /recipes` (Admin only)
 
 Create a new recipe.
 
@@ -421,15 +421,15 @@ Create a new recipe.
 
 **Response (201):** Returns created recipe.
 
-#### `PUT /recipes/:id` (Admin only)
+#### 6.2.4 `PUT /recipes/:id` (Admin only)
 
 Update an existing recipe. Increments `version` automatically.
 
-#### `DELETE /recipes/:id` (Admin only)
+#### 6.2.5 `DELETE /recipes/:id` (Admin only)
 
 Soft-delete a recipe (sets `is_published = false`).
 
-#### `GET /recipes/sync`
+#### 6.2.6 `GET /recipes/sync`
 
 CM5 recipe sync endpoint. Returns recipes updated since a given timestamp.
 
@@ -466,9 +466,9 @@ curl "https://api.epicura.io/api/v1/recipes/sync?since=2026-02-01T00:00:00Z" \
 
 ---
 
-### Appliances
+### 6.3 Appliances
 
-#### `POST /appliances/register`
+#### 6.3.1 `POST /appliances/register`
 
 Register a new appliance (called by CM5 on first boot).
 
@@ -485,7 +485,7 @@ Register a new appliance (called by CM5 on first boot).
 
 **Response (201):** Returns appliance record.
 
-#### `POST /appliances/pair`
+#### 6.3.2 `POST /appliances/pair`
 
 Pair an appliance with a user account using a pairing code obtained via BLE (see [[04-BLE-Services|BLE Services]]).
 
@@ -511,7 +511,7 @@ Pair an appliance with a user account using a pairing code obtained via BLE (see
 }
 ```
 
-#### `GET /appliances`
+#### 6.3.3 `GET /appliances`
 
 List user's paired appliances.
 
@@ -533,11 +533,11 @@ List user's paired appliances.
 }
 ```
 
-#### `GET /appliances/:id`
+#### 6.3.4 `GET /appliances/:id`
 
 Get appliance details.
 
-#### `PUT /appliances/:id`
+#### 6.3.5 `PUT /appliances/:id`
 
 Update appliance (e.g., rename).
 
@@ -550,9 +550,9 @@ Update appliance (e.g., rename).
 
 ---
 
-### Cooking Sessions
+### 6.4 Cooking Sessions
 
-#### `POST /sessions`
+#### 6.4.1 `POST /sessions`
 
 Create a new cooking session (called by CM5 when cooking starts or by mobile app to upload synced logs).
 
@@ -570,7 +570,7 @@ Create a new cooking session (called by CM5 when cooking starts or by mobile app
 
 **Response (201):** Returns session record with `status: "started"`.
 
-#### `PUT /sessions/:id`
+#### 6.4.2 `PUT /sessions/:id`
 
 Update session status and data (called by CM5 during/after cooking).
 
@@ -595,7 +595,7 @@ Update session status and data (called by CM5 during/after cooking).
 }
 ```
 
-#### `GET /sessions`
+#### 6.4.3 `GET /sessions`
 
 List user's cooking sessions (history).
 
@@ -630,11 +630,11 @@ List user's cooking sessions (history).
 }
 ```
 
-#### `GET /sessions/:id`
+#### 6.4.4 `GET /sessions/:id`
 
 Get full session details including stage log.
 
-#### `PUT /sessions/:id/rate`
+#### 6.4.5 `PUT /sessions/:id/rate`
 
 Rate a completed cooking session.
 
@@ -648,9 +648,9 @@ Rate a completed cooking session.
 
 ---
 
-### User Preferences
+### 6.5 User Preferences
 
-#### `GET /users/me`
+#### 6.5.1 `GET /users/me`
 
 Get current user profile and preferences.
 
@@ -682,7 +682,7 @@ Get current user profile and preferences.
 }
 ```
 
-#### `PUT /users/me`
+#### 6.5.2 `PUT /users/me`
 
 Update profile and preferences.
 
@@ -705,9 +705,9 @@ Update profile and preferences.
 
 ---
 
-### Push Notifications
+### 6.6 Push Notifications
 
-#### `POST /push/register`
+#### 6.6.1 `POST /push/register`
 
 Register a device push token.
 
@@ -729,9 +729,9 @@ Register a device push token.
 
 ---
 
-### Firmware
+### 6.7 Firmware
 
-#### `GET /firmware/latest`
+#### 6.7.1 `GET /firmware/latest`
 
 Check for firmware updates (called by CM5).
 
@@ -776,7 +776,7 @@ curl "https://api.epicura.io/api/v1/firmware/latest?target=cm5&current_version=1
 
 ---
 
-## CM5 Local API Cross-Reference
+## 7. CM5 Local API Cross-Reference
 
 The CM5 also runs a local REST API (Flask/FastAPI) for direct WiFi communication with mobile apps on the same network. See [[../03-Software/04-Controller-Software-Architecture|Controller & Software Architecture]] and [[../07-Development/Prototype-Development-Plan#Phase 6|Prototype Dev Plan - Phase 6]] for local endpoints:
 
@@ -790,7 +790,7 @@ The CM5 also runs a local REST API (Flask/FastAPI) for direct WiFi communication
 
 ---
 
-## Pagination
+## 8. Pagination
 
 All list endpoints support cursor or offset pagination:
 
@@ -801,7 +801,7 @@ All list endpoints support cursor or offset pagination:
 
 ---
 
-## Related Documentation
+## 9. Related Documentation
 
 - [[../10-Backend/01-Backend-Architecture|Backend Architecture]] - Server setup and deployment
 - [[../10-Backend/02-Database-Schema|Database Schema]] - Tables queried by these endpoints
@@ -814,7 +814,7 @@ All list endpoints support cursor or offset pagination:
 
 ---
 
-## Revision History
+## 10. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

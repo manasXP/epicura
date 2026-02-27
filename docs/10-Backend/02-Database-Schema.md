@@ -1,25 +1,25 @@
 ---
 created: 2026-02-15
-modified: 2026-02-15
-version: 1.0
+modified: 2026-02-27
+version: 1.2
 status: Draft
 ---
 
 # Database Schema
 
-## Overview
+## 1. Overview
 
-Epicura's cloud database uses PostgreSQL 16 with Drizzle ORM. The schema supports user management, recipe storage (with JSONB for flexible recipe data), appliance registration, cooking session tracking, time-series telemetry (partitioned by month), push notification tokens, and firmware release management.
+Epicura's cloud database uses PostgreSQL 16 with Drizzle ORM. The schema supports user management, normalized recipe storage (with relational tables for cooking segments, dispensing actions, and ingredients), appliance registration, cooking session tracking, time-series telemetry (partitioned by month), push notification tokens, and firmware release management.
 
 The cloud schema is designed to complement the [[../03-Software/04-Controller-Software-Architecture#5. Data Management (CM5)|CM5 on-device SQLite schema]], with a sync strategy that keeps recipes and user preferences consistent between cloud and device.
 
 ---
 
-## ER Diagram
+## 2. ER Diagram
 
 ```
 ┌──────────────────┐       ┌──────────────────┐       ┌──────────────────┐
-│      users       │       │  user_preferences │       │   push_tokens    │
+│      users       │       │  user_preferences│       │   push_tokens    │
 │──────────────────│       │──────────────────│       │──────────────────│
 │ id (PK)          │──┐    │ id (PK)          │       │ id (PK)          │
 │ email            │  │    │ user_id (FK)     │───┐   │ user_id (FK)     │───┐
@@ -33,10 +33,10 @@ The cloud schema is designed to complement the [[../03-Software/04-Controller-So
                       │    │ allergens        │   │                          │
                       │    │ theme            │   │                          │
                       │    └──────────────────┘   │                          │
-                      │                            │                          │
-          ┌───────────┴──────────────┐             │                          │
-          │                          │             │                          │
-          ▼                          ▼             │                          │
+                      │                           │                          │
+          ┌───────────┴──────────────┐            │                          │
+          │                          │            │                          │
+          ▼                          ▼            │                          │
 ┌──────────────────┐       ┌──────────────────┐   │                          │
 │   appliances     │       │ cooking_sessions │   │                          │
 │──────────────────│       │──────────────────│   │                          │
@@ -51,7 +51,7 @@ The cloud schema is designed to complement the [[../03-Software/04-Controller-So
 │ status           │  │    │ user_rating      │   │                          │
 └──────────────────┘  │    │ notes            │   │                          │
                       │    └──────────────────┘   │                          │
-                      │                            │                          │
+                      │                           │                          │
                       │    ┌──────────────────┐   │                          │
                       │    │telemetry_events  │   │                          │
                       │    │──────────────────│   │                          │
@@ -69,29 +69,51 @@ The cloud schema is designed to complement the [[../03-Software/04-Controller-So
 │ id (PK)          │       │ id (PK)          │                              │
 │ name             │       │ target           │                              │
 │ category         │       │ version          │                              │
-│ cuisine          │       │ channel          │                              │
-│ calories         │       │ binary_url       │                              │
-│ protein_g        │       │ checksum         │                              │
-│ carbs_g          │       │ release_notes    │                              │
-│ fats_g           │       │ is_mandatory     │                              │
-│ recipe_data (J)  │       │ created_at       │                              │
-│ tags             │       └──────────────────┘                              │
-│ difficulty       │                                                         │
-│ time_minutes     │                                                         │
-│ image_url        │                                                         │
-│ version          │                                                         │
-│ is_published     │                                                         │
-│ created_at       │             users.id ◄── user_preferences.user_id       │
-│ updated_at       │             users.id ◄── push_tokens.user_id ───────────┘
-└──────────────────┘             users.id ◄── appliances.user_id
+│ cuisines[]       │       │ channel          │                              │
+│ tags[]           │       │ binary_url       │                              │
+│ difficulty       │       │ checksum         │                              │
+│ time_minutes     │       │ release_notes    │                              │
+│ servings         │       │ is_mandatory     │                              │
+│ calories         │       │ created_at       │                              │
+│ protein_g        │       └──────────────────┘                              │
+│ carbs_g          │                                                         │
+│ fats_g           │       ┌─────────────────────┐  ┌──────────────────────┐ │
+│ image_url        │       │  cooking_segments   │  │ segment_dispensing   │ │
+│ version          │       │─────────────────────│  │──────────────────────│ │
+│ is_published     │──────►│ id (PK)             │─►│ id (PK)              │ │
+│ created_at       │  │    │ recipe_id (FK)      │  │ segment_id (FK)      │ │
+│ updated_at       │  │    │ segment_number      │  │ subsystem            │ │
+└──────────────────┘  │    │ temp_start_c        │  │ sld_type             │ │
+                      │    │ heat_profile        │  │ sld_qty_ml           │ │
+                      │    │ heat_duration_s     │  │ asd_box_id           │ │
+                      │    │ stir_rotation       │  │ asd_qty_quarter_tsp  │ │
+                      │    │ stir_direction      │  │ cid_slot_id          │ │
+                      │    │ stir_duration_s     │  └──────────────────────┘ │
+                      │    └─────────────────────┘                           │
+                      │                                                      │
+                      │    ┌─────────────────────┐                           │
+                      │    │ recipe_ingredients  │                           │
+                      └───►│─────────────────────│                           │
+                           │ id (PK)             │                           │
+                           │ recipe_id (FK)      │                           │
+                           │ name                │                           │
+                           │ subsystem           │                           │
+                           │ channel             │                           │
+                           │ total_qty           │                           │
+                           │ unit                │                           │
+                           └─────────────────────┘                           │
+                                                                             │
+                                 users.id ◄── user_preferences.user_id       │
+                                 users.id ◄── push_tokens.user_id ───────────┘
+                                 users.id ◄── appliances.user_id
                                   users.id ◄── cooking_sessions.user_id
 ```
 
 ---
 
-## Table Definitions
+## 3. Table Definitions
 
-### `users`
+### 3.1 `users`
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
@@ -104,7 +126,7 @@ The cloud schema is designed to complement the [[../03-Software/04-Controller-So
 | `created_at` | `timestamptz` | NOT NULL, default `now()` | Registration timestamp |
 | `updated_at` | `timestamptz` | NOT NULL, default `now()` | Last modification |
 
-### `user_preferences`
+### 3.2 `user_preferences`
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
@@ -122,7 +144,7 @@ The cloud schema is designed to complement the [[../03-Software/04-Controller-So
 | `notifications_enabled` | `boolean` | default `true` | Push notification preference |
 | `updated_at` | `timestamptz` | NOT NULL, default `now()` | Last update |
 
-### `appliances`
+### 3.3 `appliances`
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
@@ -140,15 +162,14 @@ The cloud schema is designed to complement the [[../03-Software/04-Controller-So
 | `paired_at` | `timestamptz` | NOT NULL, default `now()` | Initial pairing time |
 | `created_at` | `timestamptz` | NOT NULL, default `now()` | Record creation |
 
-### `recipes`
+### 3.4 `recipes`
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
 | `id` | `uuid` | PK, default `gen_random_uuid()` | Recipe identifier |
 | `name` | `varchar(200)` | NOT NULL | Recipe display name |
 | `category` | `varchar(50)` | NOT NULL | `dal`, `curry`, `rice`, `pasta`, `soup`, etc. |
-| `cuisine` | `varchar(50)` | default `'indian'` | Cuisine: `indian`, `italian`, `american`, `chinese`, `mexican`, `korean`, `thai`, `asian`, `global` |
-| `recipe_data` | `jsonb` | NOT NULL | Full recipe definition (stages, ingredients, temps) |
+| `cuisines` | `text[]` | NOT NULL, default `'{indian}'` | Cuisine tags: `indian`, `italian`, `american`, `chinese`, `mexican`, `korean`, `thai`, `japanese`, `asian`, `global` |
 | `tags` | `text[]` | default `'{}'` | Filter tags: `vegan`, `healthy`, `vegetarian`, `protein-rich`, `stir-fry`, `gluten-free`, `quick` |
 | `difficulty` | `varchar(10)` | NOT NULL | `easy`, `medium`, `hard` |
 | `time_minutes` | `integer` | NOT NULL | Total estimated cooking time |
@@ -164,42 +185,61 @@ The cloud schema is designed to complement the [[../03-Software/04-Controller-So
 | `created_at` | `timestamptz` | NOT NULL, default `now()` | Creation timestamp |
 | `updated_at` | `timestamptz` | NOT NULL, default `now()` | Last modification |
 
-**`recipe_data` JSONB Structure:**
+### 3.5 `cooking_segments`
 
-The JSONB field stores the full recipe definition, matching the YAML format defined in [[../03-Software/04-Controller-Software-Architecture#Recipe Format (YAML)|Controller Software Architecture]]:
+One row per segment per recipe. A recipe can have up to 5 cooking segments, executed in order.
 
-```json
-{
-  "name": "Dal Tadka",
-  "servings": 4,
-  "total_time_minutes": 35,
-  "stages": [
-    {
-      "name": "Heat Oil",
-      "temp_target": 180,
-      "duration_seconds": 120,
-      "stir": false,
-      "ingredients": [
-        {"subsystem": "SLD", "channel": "OIL", "name": "oil", "amount_g": 30}
-      ],
-      "cv_check": "oil_shimmer"
-    },
-    {
-      "name": "Add Spices",
-      "temp_target": 160,
-      "ingredients": [
-        {"subsystem": "ASD", "id": 1, "name": "turmeric", "amount_g": 3},
-        {"subsystem": "ASD", "id": 2, "name": "chili_powder", "amount_g": 5}
-      ],
-      "cv_check": "spice_crackle",
-      "stir": true,
-      "stir_pattern": "intermittent"
-    }
-  ]
-}
-```
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `id` | `uuid` | PK, default `gen_random_uuid()` | Segment identifier |
+| `recipe_id` | `uuid` | FK → `recipes.id` ON DELETE CASCADE, NOT NULL | Parent recipe |
+| `segment_number` | `smallint` | NOT NULL, CHECK 1-5 | Segment execution order (1 to 5) |
+| `temp_start_c` | `real` | NOT NULL | Pot surface temperature (°C) to begin segment |
+| `heat_profile` | `varchar(20)` | NOT NULL | Heat level: `low`, `low_medium`, `medium`, `medium_high`, `high` |
+| `heat_duration_s` | `integer` | NOT NULL, CHECK > 0 | Heat application duration in seconds |
+| `stir_rotation` | `varchar(10)` | | Stirring speed: `slow`, `normal`, `fast` (NULL = no stirring) |
+| `stir_direction` | `varchar(15)` | | Stirring direction: `forward`, `reverse`, `alternating` (NULL = no stirring) |
+| `stir_duration_s` | `integer` | CHECK > 0 | Stirring duration in seconds (NULL = no stirring) |
 
-### `cooking_sessions`
+**Constraints:**
+- `UNIQUE(recipe_id, segment_number)` — one segment per number per recipe
+- CHECK: if `stir_rotation` IS NOT NULL then `stir_direction` and `stir_duration_s` must also be NOT NULL (stirring fields are all-or-nothing)
+
+### 3.6 `segment_dispensing`
+
+One row per dispensing action within a cooking segment. A segment may dispense from multiple subsystems (e.g., add oil via SLD and spices via ASD in the same segment).
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `id` | `uuid` | PK, default `gen_random_uuid()` | Dispensing action ID |
+| `segment_id` | `uuid` | FK → `cooking_segments.id` ON DELETE CASCADE, NOT NULL | Parent segment |
+| `subsystem` | `varchar(5)` | NOT NULL, CHECK IN (`SLD`, `ASD`, `CID`) | Dispensing subsystem |
+| `sld_type` | `varchar(10)` | CHECK IN (`oil`, `water`) | SLD only: liquid type |
+| `sld_qty_ml` | `real` | CHECK > 0 | SLD only: quantity in ml |
+| `asd_box_id` | `smallint` | CHECK 1-6 | ASD only: box number (Box1–Box6) |
+| `asd_qty_quarter_tsp` | `smallint` | CHECK > 0 | ASD only: quantity in multiples of ¼ tsp |
+| `cid_slot_id` | `smallint` | CHECK 1-5 | CID only: slot number (Slot1–Slot5) |
+
+**Constraints:**
+- CHECK: when `subsystem = 'SLD'` then `sld_type` and `sld_qty_ml` must be NOT NULL; `asd_*` and `cid_*` must be NULL
+- CHECK: when `subsystem = 'ASD'` then `asd_box_id` and `asd_qty_quarter_tsp` must be NOT NULL; `sld_*` and `cid_*` must be NULL
+- CHECK: when `subsystem = 'CID'` then `cid_slot_id` must be NOT NULL; `sld_*` and `asd_*` must be NULL
+
+### 3.7 `recipe_ingredients`
+
+Human-readable ingredient list for the recipe (displayed in UI/app). This is distinct from dispensing — it tells the user what ingredients are needed before cooking begins.
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `id` | `uuid` | PK, default `gen_random_uuid()` | Row ID |
+| `recipe_id` | `uuid` | FK → `recipes.id` ON DELETE CASCADE, NOT NULL | Parent recipe |
+| `name` | `varchar(100)` | NOT NULL | Ingredient display name (e.g., "turmeric", "mustard oil") |
+| `subsystem` | `varchar(5)` | NOT NULL, CHECK IN (`SLD`, `ASD`, `CID`) | Which dispensing subsystem |
+| `channel` | `varchar(10)` | NOT NULL | SLD: `oil`/`water`, ASD: `box1`–`box6`, CID: `slot1`–`slot5` |
+| `total_qty` | `real` | NOT NULL, CHECK > 0 | Total quantity across all segments |
+| `unit` | `varchar(10)` | NOT NULL | `ml` for SLD, `quarter_tsp` for ASD, `slot` for CID |
+
+### 3.8 `cooking_sessions`
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
@@ -217,7 +257,7 @@ The JSONB field stores the full recipe definition, matching the YAML format defi
 | `user_rating` | `integer` | CHECK 1-5 | User's star rating |
 | `notes` | `text` | | User's notes about the cook |
 
-### `telemetry_events` (Partitioned)
+### 3.9 `telemetry_events` (Partitioned)
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
@@ -249,7 +289,7 @@ CREATE TABLE telemetry_events_2026_02 PARTITION OF telemetry_events
 -- ...
 ```
 
-### `push_tokens`
+### 3.10 `push_tokens`
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
@@ -260,7 +300,7 @@ CREATE TABLE telemetry_events_2026_02 PARTITION OF telemetry_events
 | `created_at` | `timestamptz` | NOT NULL, default `now()` | Registration time |
 | `updated_at` | `timestamptz` | NOT NULL, default `now()` | Last refresh |
 
-### `firmware_releases`
+### 3.11 `firmware_releases`
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
@@ -278,9 +318,9 @@ CREATE TABLE telemetry_events_2026_02 PARTITION OF telemetry_events
 
 ---
 
-## Indexes
+## 4. Indexes
 
-### Primary Indexes
+### 4.1 Primary Indexes
 
 ```sql
 -- Users
@@ -288,8 +328,18 @@ CREATE UNIQUE INDEX idx_users_email ON users(email);
 
 -- Recipes
 CREATE INDEX idx_recipes_category ON recipes(category);
-CREATE INDEX idx_recipes_cuisine ON recipes(cuisine);
 CREATE INDEX idx_recipes_published ON recipes(is_published) WHERE is_published = true;
+
+-- Cooking Segments
+CREATE UNIQUE INDEX idx_segments_recipe_number ON cooking_segments(recipe_id, segment_number);
+CREATE INDEX idx_segments_recipe ON cooking_segments(recipe_id);
+
+-- Segment Dispensing
+CREATE INDEX idx_dispensing_segment ON segment_dispensing(segment_id);
+CREATE INDEX idx_dispensing_subsystem ON segment_dispensing(subsystem);
+
+-- Recipe Ingredients
+CREATE INDEX idx_ingredients_recipe ON recipe_ingredients(recipe_id);
 
 -- Appliances
 CREATE UNIQUE INDEX idx_appliances_device_id ON appliances(device_id);
@@ -309,11 +359,11 @@ CREATE UNIQUE INDEX idx_firmware_target_version ON firmware_releases(target, ver
 CREATE INDEX idx_firmware_channel ON firmware_releases(target, channel, created_at DESC);
 ```
 
-### GIN Indexes (JSONB & Arrays)
+### 4.2 GIN Indexes (JSONB & Arrays)
 
 ```sql
--- Full recipe data search
-CREATE INDEX idx_recipes_data ON recipes USING GIN (recipe_data jsonb_path_ops);
+-- Recipe cuisines array search
+CREATE INDEX idx_recipes_cuisines ON recipes USING GIN (cuisines);
 
 -- Recipe tags array search
 CREATE INDEX idx_recipes_tags ON recipes USING GIN (tags);
@@ -328,13 +378,13 @@ CREATE INDEX idx_prefs_cuisines ON user_preferences USING GIN (cuisines);
 CREATE INDEX idx_telemetry_payload ON telemetry_events USING GIN (payload jsonb_path_ops);
 ```
 
-### Full-Text Search
+### 4.3 Full-Text Search
 
 ```sql
 -- Recipe search by name and category
 ALTER TABLE recipes ADD COLUMN search_vector tsvector
     GENERATED ALWAYS AS (
-        to_tsvector('english', coalesce(name, '') || ' ' || coalesce(category, '') || ' ' || coalesce(cuisine, ''))
+        to_tsvector('english', coalesce(name, '') || ' ' || coalesce(category, '') || ' ' || array_to_string(cuisines, ' '))
     ) STORED;
 
 CREATE INDEX idx_recipes_fts ON recipes USING GIN (search_vector);
@@ -345,11 +395,11 @@ CREATE INDEX idx_recipes_fts ON recipes USING GIN (search_vector);
 
 ---
 
-## CM5 SQLite Sync Strategy
+## 5. CM5 SQLite Sync Strategy
 
 The Epicura CM5 device stores recipes and cooking logs locally in SQLite (see [[../03-Software/04-Controller-Software-Architecture#5. Data Management (CM5)|CM5 Data Management]]). The cloud sync strategy ensures consistency:
 
-### Recipe Sync (Cloud → Device)
+### 5.1 Recipe Sync (Cloud → Device)
 
 ```
 ┌──────────┐     GET /recipes/sync?since=<timestamp>     ┌──────────┐
@@ -366,14 +416,14 @@ The Epicura CM5 device stores recipes and cooking logs locally in SQLite (see [[
 4. CM5 upserts recipes into local SQLite and removes deleted ones
 5. CM5 updates `last_sync_at` to server timestamp
 
-### Cooking Log Sync (Device → Cloud)
+### 5.2 Cooking Log Sync (Device → Cloud)
 
 1. CM5 stores cooking logs locally in SQLite
 2. Logs marked `synced = false` are uploaded via `POST /sessions` on next connection
 3. Backend stores in `cooking_sessions` table and marks as synced
 4. Device marks local logs as `synced = true`
 
-### Conflict Resolution
+### 5.3 Conflict Resolution
 
 - **Recipes:** Cloud is authoritative; device always accepts cloud version
 - **Cooking logs:** Device is authoritative; cloud stores whatever device reports
@@ -381,7 +431,7 @@ The Epicura CM5 device stores recipes and cooking logs locally in SQLite (see [[
 
 ---
 
-## Drizzle Migration Approach
+## 6. Drizzle Migration Approach
 
 Migrations are managed via Drizzle Kit:
 
@@ -400,7 +450,7 @@ Migration files are stored in `packages/db/migrations/` and version-controlled. 
 
 ---
 
-## Related Documentation
+## 7. Related Documentation
 
 - [[01-Backend-Architecture|Backend Architecture]] - Service architecture and deployment
 - [[../11-API/01-REST-API-Reference|REST API Reference]] - Endpoints that query this schema
@@ -411,9 +461,10 @@ Migration files are stored in `packages/db/migrations/` and version-controlled. 
 
 ---
 
-## Revision History
+## 8. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
 | 1.1 | 2026-02-17 | Manas Pradhan | Added nutrition columns (calories, protein_g, carbs_g, fats_g) to recipes; updated cuisine/tag values |
+| 1.2 | 2026-02-27 | Manas Pradhan | Normalized recipe schema: replaced recipe_data JSONB with cooking_segments, segment_dispensing, and recipe_ingredients tables; changed cuisine to cuisines text[] |

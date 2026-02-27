@@ -7,11 +7,11 @@ status: Draft
 
 # Exhaust & Fume Management System
 
-## Overview
+## 1. Overview
 
 Indian one-pot cooking — especially tadka (tempering), searing, and deep-frying — produces significant steam, oil smoke, and volatile fumes inside the semi-enclosed Epicura enclosure. Without active extraction, these byproducts degrade the camera image (fogging), corrode electronics, and create an unpleasant user experience. The exhaust system must extract cooking fumes while maintaining safe internal temperatures and protecting sensitive components.
 
-### Design Goals
+### 1.1 Design Goals
 
 - Extract steam and oil smoke before they reach the camera lens and electronics
 - Filter odors and grease particles before exhausting into the kitchen
@@ -21,7 +21,7 @@ Indian one-pot cooking — especially tadka (tempering), searing, and deep-fryin
 
 ---
 
-## System Architecture
+## 2. System Architecture
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
@@ -60,7 +60,7 @@ Indian one-pot cooking — especially tadka (tempering), searing, and deep-fryin
 └──────────────────────────────────────────────────────────────────┘
 ```
 
-### Airflow Sequence
+### 2.1 Airflow Sequence
 
 1. **Source:** Steam, oil smoke, and volatile fumes rise from the pot during cooking
 2. **Collection:** Fume collection hood above the pot opening captures rising fumes via natural convection + fan suction
@@ -72,9 +72,9 @@ Indian one-pot cooking — especially tadka (tempering), searing, and deep-fryin
 
 ---
 
-## Exhaust Fan
+## 3. Exhaust Fan
 
-### Specifications
+### 3.1 Specifications
 
 | Parameter | Value |
 |-----------|-------|
@@ -90,7 +90,7 @@ Indian one-pot cooking — especially tadka (tempering), searing, and deep-fryin
 | **Bearing** | Sleeve or dual ball-bearing (kitchen humidity tolerance) |
 | **Mounting** | Rear-top panel, rubber anti-vibration grommets |
 
-### Speed Control Profiles
+### 3.2 Speed Control Profiles
 
 The STM32 modulates fan speed based on the current cooking stage commanded by the recipe engine:
 
@@ -103,7 +103,7 @@ The STM32 modulates fan speed based on the current cooking stage commanded by th
 | **Sear / Tadka (200-250C)** | 100% | Max | Oil smoke + volatile fumes |
 | **Post-cook cooldown** | 50% | Medium | Clear residual fumes, 2-min timer |
 
-### STM32 Control Interface
+### 3.3 STM32 Control Interface
 
 ```c
 // Exhaust fan PWM configuration
@@ -125,7 +125,7 @@ void exhaust_set_speed(uint8_t duty_percent) {
 }
 ```
 
-### CM5-STM32 Command Integration
+### 3.4 CM5-STM32 Command Integration
 
 | Command | Code | Payload | Description |
 |---------|------|---------|-------------|
@@ -137,9 +137,9 @@ The recipe engine sends `EXHAUST_AUTO` at each cooking stage transition. Manual 
 
 ---
 
-## Filtration System
+## 4. Filtration System
 
-### Dual-Stage Filter Stack
+### 4.1 Dual-Stage Filter Stack
 
 ```
 ┌────────────────────────────────────┐
@@ -166,21 +166,21 @@ The recipe engine sends `EXHAUST_AUTO` at each cooking stage transition. Manual 
 └────────────────────────────────────┘
 ```
 
-### Filter Specifications
+### 4.2 Filter Specifications
 
 | Filter Stage | Material | Purpose | Maintenance | Estimated Cost |
 |-------------|----------|---------|-------------|----------------|
 | **Stage 1: Grease mesh** | 304 SS woven mesh (40-60 mesh) | Trap oil particles, prevent carbon fouling | Wash in dishwasher every 2-4 weeks | $3 (reusable) |
 | **Stage 2: Carbon** | Coconut shell activated carbon granules | Absorb odors, smoke VOCs, spice volatiles | Replace cartridge every 3-6 months | $5-8 per refill |
 
-### Filter Housing
+### 4.3 Filter Housing
 
 - **Slide-out cartridge** accessible from rear panel — no tools required
 - **Snap-fit frame** holds both filter stages in correct order
 - **Gasket seal** (silicone) prevents fume bypass around the filter edges
 - **Visual indicator:** Carbon filter has a date label; future production could add a filter-hours counter in the UI
 
-### Filter Performance
+### 4.4 Filter Performance
 
 | Pollutant | Source | Pre-filter Capture | Carbon Capture | Combined |
 |-----------|--------|-------------------|----------------|----------|
@@ -194,9 +194,9 @@ The recipe engine sends `EXHAUST_AUTO` at each cooking stage transition. Manual 
 
 ---
 
-## Fume Collection Hood
+## 5. Fume Collection Hood
 
-### Design
+### 5.1 Design
 
 The fume collection hood sits above the pot opening, integrated into the overhead gantry that already holds the camera and LED ring. It uses the natural upward convection of hot cooking fumes combined with exhaust fan suction.
 
@@ -219,7 +219,7 @@ The fume collection hood sits above the pot opening, integrated into the overhea
 └───────────────────────────────────────┘
 ```
 
-### Key Design Points
+### 5.2 Key Design Points
 
 - **Hood material:** Stainless steel or heat-resistant PP (same as enclosure interior)
 - **Camera protection:** The hood directs fumes laterally toward the exhaust duct, away from the camera lens. Combined with the camera's anti-fog glass cover (see [[12-Vision-System|Vision System]]), this minimizes lens fogging
@@ -229,9 +229,9 @@ The fume collection hood sits above the pot opening, integrated into the overhea
 
 ---
 
-## Steam Management
+## 6. Steam Management
 
-### Pot Lid Integration
+### 6.1 Pot Lid Integration
 
 For recipes that require covered cooking (e.g., rice, pressure-style dal), the pot lid provides passive steam management:
 
@@ -241,7 +241,7 @@ For recipes that require covered cooking (e.g., rice, pressure-style dal), the p
 | **Condensation ring** | Underside ridge returns condensed water to pot (reduces steam volume) |
 | **Silicone gasket** | Loose-fit seal — allows steam out through vent, not around edges |
 
-### Condensation Strategy
+### 6.2 Condensation Strategy
 
 For heavy-steam recipes (boiling, covered simmering), reducing steam volume before it reaches the exhaust:
 
@@ -252,9 +252,9 @@ For heavy-steam recipes (boiling, covered simmering), reducing steam volume befo
 
 ---
 
-## Safety Considerations
+## 7. Safety Considerations
 
-### Fire Risk Mitigation
+### 7.1 Fire Risk Mitigation
 
 | Hazard | Mitigation |
 |--------|-----------|
@@ -263,7 +263,7 @@ For heavy-steam recipes (boiling, covered simmering), reducing steam volume befo
 | Fan failure during high-heat cooking | STM32 monitors fan RPM via tachometer; if fan stalls during sear/tadka, sends CAN command to reduce power to simmer and alerts user |
 | Blocked exhaust (clogged filter) | Pressure drop sensor (optional) or timer-based replacement reminder |
 
-### Fan-Induction Interlock
+### 7.2 Fan-Induction Interlock
 
 The exhaust fan is interlocked with the microwave induction surface for safety:
 
@@ -286,7 +286,7 @@ The exhaust fan is interlocked with the microwave induction surface for safety:
 └─────────────────────────────────────────────────────┘
 ```
 
-### Compliance Notes
+### 7.3 Compliance Notes
 
 - Fan and filter assembly must meet IEC 60335-2-6 requirements for cooking appliance ventilation
 - Grease filter material must be non-flammable (304 SS passes; PP frame must be flame-retardant grade V-0)
@@ -295,7 +295,7 @@ The exhaust fan is interlocked with the microwave induction surface for safety:
 
 ---
 
-## Component List
+## 8. Component List
 
 | Component | Part | Qty | Unit Price | Subtotal | Supplier | Notes |
 |-----------|------|-----|------------|----------|----------|-------|
@@ -308,7 +308,7 @@ The exhaust fan is interlocked with the microwave induction surface for safety:
 | Fan MOSFET (PWM driver) | IRLZ44N or AO3400 | 1 | $0.50 | $0.50 | DigiKey / LCSC | Logic-level gate, STM32 PWM |
 | **Category Subtotal** | | | | **$22.50** | | |
 
-### Production Cost Projection
+### 8.1 Production Cost Projection
 
 | Item | Prototype | Production (1000 qty) | Savings |
 |------|-----------|----------------------|---------|
@@ -320,7 +320,7 @@ The exhaust fan is interlocked with the microwave induction surface for safety:
 
 ---
 
-## Maintenance Schedule
+## 9. Maintenance Schedule
 
 | Task | Frequency | User Action | Time |
 |------|-----------|-------------|------|
@@ -333,9 +333,9 @@ The companion app tracks filter usage hours and sends maintenance reminders.
 
 ---
 
-## Testing & Validation
+## 10. Testing & Validation
 
-### Test Procedures
+### 10.1 Test Procedures
 
 - [ ] Fan speed: verify PWM duty maps to expected RPM (0%, 25%, 50%, 75%, 100%)
 - [ ] Airflow: confirm 15+ CFM with both filters installed (anemometer at exhaust outlet)
@@ -348,7 +348,7 @@ The companion app tracks filter usage hours and sends maintenance reminders.
 - [ ] Filter replacement: verify tool-less cartridge removal and reinsertion
 - [ ] Long-duration: run 20+ cook cycles, inspect duct for grease accumulation
 
-### Prototype Validation Checklist
+### 10.2 Prototype Validation Checklist
 
 - [ ] Exhaust fan draws air upward from pot opening (smoke test with incense)
 - [ ] Camera lens remains clear during 30-min simmer cook
@@ -360,7 +360,7 @@ The companion app tracks filter usage hours and sends maintenance reminders.
 
 ---
 
-## Related Documentation
+## 11. Related Documentation
 
 - [[09-Induction-Heating|Induction Heating]] - Heat source and PID control (fan speed tracks cooking stage)
 - [[12-Vision-System|Vision System]] - Camera anti-fog measures and steam protection
@@ -376,7 +376,7 @@ The companion app tracks filter usage hours and sends maintenance reminders.
 
 ---
 
-## Revision History
+## 12. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

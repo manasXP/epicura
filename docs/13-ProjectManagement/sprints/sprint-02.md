@@ -14,7 +14,7 @@ aliases: [Sprint 2]
 > **Phase:** Phase 0 — Foundation
 > **Goal:** Complete platform foundation with Docker service containers, safety systems, and OTA update infrastructure. Achieve Milestone M1: Platform Ready.
 
-## Stories
+## 1. Stories
 
 | Status | ID | Title | Epic | Points | Blocked By |
 |:------:|-----|-------|------|:------:|------------|
@@ -24,7 +24,7 @@ aliases: [Sprint 2]
 
 **Total Points:** 15
 
-## Capacity Allocation
+## 2. Capacity Allocation
 
 | Team Member | Allocated | Available | Notes |
 |-------------|:---------:|:---------:|-------|
@@ -32,7 +32,7 @@ aliases: [Sprint 2]
 | Embedded Dev 2 | 5 | 8 | Safety systems implementation |
 | **Total** | **15** | **24** | Lower sprint load for stability |
 
-## Sprint Review Checklist
+## 3. Sprint Review Checklist
 
 - [ ] All stories demo-ready
 - [ ] No P0 bugs remaining
@@ -43,7 +43,7 @@ aliases: [Sprint 2]
 - [ ] OTA update successfully swaps A/B partitions
 - [ ] **Milestone M1: Platform Ready** achieved
 
-## Retro Notes
+## 4. Retro Notes
 
 > _To be filled during sprint retrospective._
 >
@@ -58,7 +58,7 @@ aliases: [Sprint 2]
 
 ---
 
-## References
+## 5. References
 
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calendar]]
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/02-Stories|User Stories]]

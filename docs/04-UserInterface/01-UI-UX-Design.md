@@ -7,25 +7,25 @@ status: Draft
 
 # UI/UX Design
 
-## Display Overview
+## 1. Display Overview
 
-### Primary Display
+### 1.1 Primary Display
 - **Type:** 10" capacitive touchscreen (IPS TFT)
 - **Resolution:** 1280x800 (recommended) or 800x480 (budget option)
 - **Interface:** MIPI DSI from Raspberry Pi CM5
 - **Touch:** 10-point capacitive multi-touch
 - **Mounting:** Integrated into Epicura enclosure top panel
 
-### Secondary Display
+### 1.2 Secondary Display
 - **Native companion mobile apps** (iOS: SwiftUI, Android: Jetpack Compose)
 - **Communication:** WiFi direct to Epicura device
 - **Features:** Remote recipe browsing, live camera feed, cooking notifications
 
 ---
 
-## Screen Layouts
+## 2. Screen Layouts
 
-### 1. Home Screen
+### 2.1 Home Screen
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -65,7 +65,7 @@ status: Draft
 
 ---
 
-### 2. Recipe Selection
+### 2.2 Recipe Selection
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -111,7 +111,7 @@ status: Draft
 
 ---
 
-### 3. Recipe Detail
+### 2.3 Recipe Detail
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -157,7 +157,7 @@ status: Draft
 
 ---
 
-### 4. Ingredient Loading
+### 2.4 Ingredient Loading
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -201,7 +201,7 @@ status: Draft
 
 ---
 
-### 5. Cooking Progress
+### 2.5 Cooking Progress
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -247,7 +247,7 @@ status: Draft
 
 ---
 
-### 6. Cooking Complete
+### 2.6 Cooking Complete
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -286,7 +286,7 @@ status: Draft
 
 ---
 
-### 7. Settings
+### 2.7 Settings
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -333,9 +333,9 @@ status: Draft
 
 ---
 
-## Multi-Language Support
+## 3. Multi-Language Support
 
-### Supported Languages
+### 3.1 Supported Languages
 
 | Language | Script | Locale Code | Priority |
 |----------|--------|-------------|----------|
@@ -348,7 +348,7 @@ status: Draft
 | Bengali | Bengali (বাংলা) | bn_IN | Secondary |
 | Marathi | Devanagari (मराठी) | mr_IN | Secondary |
 
-### Implementation
+### 3.2 Implementation
 
 **Python i18n Workflow:**
 1. Mark all UI strings with gettext `_()` function
@@ -379,9 +379,9 @@ temp_label = Label(text=_("Temperature: %d°C") % current_temp)
 
 ---
 
-## UX Goals
+## 4. UX Goals
 
-### Five Core Principles
+### 4.1 Five Core Principles
 
 1. **Easy Recipe Selection (< 3 taps to start)**
    - Home screen shows favorites and recent recipes
@@ -415,27 +415,27 @@ temp_label = Label(text=_("Temperature: %d°C") % current_temp)
 
 ---
 
-## Accessibility
+## 5. Accessibility
 
-### Touch Targets
+### 5.1 Touch Targets
 - Minimum size: 48 x 48 pixels for all interactive elements
 - Emergency Stop: 96 x 48 pixels minimum (oversized for safety)
 - Spacing between targets: minimum 8 pixels
 
-### Visual Accessibility
+### 5.2 Visual Accessibility
 - **High contrast mode:** Dark backgrounds with bright text (toggle in settings)
 - **Adjustable font size:** Small / Medium / Large / Extra-Large
 - **Color-blind safe palette:** Avoid red/green only indicators; use shape + color
 - **Status indicators:** Use both color and icon (e.g., green checkmark, red X)
 
-### Audio Feedback
+### 5.3 Audio Feedback
 - **Stage transitions:** Distinct beep pattern when moving to next cooking stage
 - **Completion:** Musical chime when cooking is done
 - **Warnings:** Rapid beeping for temperature warnings
 - **Emergency:** Continuous alarm tone for E-stop or critical errors
 - **Touch:** Subtle click sound on button press (configurable)
 
-### Text & Typography
+### 5.4 Text & Typography
 - Primary font: Noto Sans (covers all Indian scripts)
 - Minimum body text: 16px (on 10" 1280x800 display)
 - Headings: 24-32px
@@ -443,9 +443,9 @@ temp_label = Label(text=_("Temperature: %d°C") % current_temp)
 
 ---
 
-## Kivy Implementation Notes
+## 6. Kivy Implementation Notes
 
-### Application Architecture
+### 6.1 Application Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -465,7 +465,7 @@ temp_label = Label(text=_("Temperature: %d°C") % current_temp)
 └─────────────────────────────────────────────────────────┘
 ```
 
-### Key Kivy Screens and Widgets
+### 6.2 Key Kivy Screens and Widgets
 
 | Component | File | Purpose |
 |-----------|------|---------|
@@ -480,7 +480,7 @@ temp_label = Label(text=_("Temperature: %d°C") % current_temp)
 | TempGauge | `temp_gauge.py` | Circular temperature gauge (custom widget) |
 | RecipeCard | `recipe_card.py` | Reusable card with photo, name, time |
 
-### Camera Widget
+### 6.3 Camera Widget
 
 ```python
 # camera_widget.py
@@ -510,7 +510,7 @@ class CameraWidget(FloatLayout):
 Kivy Camera widget (index=0, resolution=(640, 480), play=True) with CSI-2 V4L2 backend
 ```
 
-### Styling
+### 6.4 Styling
 
 **Design Language:** Material Design inspired, warm food-friendly palette
 
@@ -547,9 +547,9 @@ class Theme:
 
 ---
 
-## Companion App Design
+## 7. Companion App Design
 
-### Native Mobile Architecture
+### 7.1 Native Mobile Architecture
 
 Epicura uses native mobile development: **SwiftUI** (iOS) and **Jetpack Compose** (Android), following the MVVM pattern. For complete architecture details, project structure, and platform-specific implementation guides, see:
 
@@ -557,7 +557,7 @@ Epicura uses native mobile development: **SwiftUI** (iOS) and **Jetpack Compose*
 - [[../12-MobileApps/02-iOS-App|iOS App]] - Swift/SwiftUI project structure, Core Bluetooth, APNs
 - [[../12-MobileApps/03-Android-App|Android App]] - Kotlin/Compose project structure, CompanionDeviceManager, FCM
 
-### Key Screens
+### 7.2 Key Screens
 
 1. **Recipe Browse** - List layout with food bowl image on left, tag filters (Vegan/Healthy/Vegetarian/Protein Rich/Stir Fry/Gluten Free/Quick), cuisine filters (Indian/Italian/American/Chinese/Mexican/Korean/Thai/Asian/Global), nutrition per serving (Protein/Carbs/Fats/Calories)
 2. **Recipe Detail** - Ingredients, spice customization, allergen flags, nutrition breakdown, remote start
@@ -612,7 +612,7 @@ Epicura uses native mobile development: **SwiftUI** (iOS) and **Jetpack Compose*
 6. **Device Pairing** - BLE scan, WiFi provisioning, cloud account linking
 7. **Device Status** - Firmware versions, connection status, sensor health
 
-### Communication
+### 7.3 Communication
 
 | Channel | Protocol | Data |
 |---------|----------|------|
@@ -624,7 +624,7 @@ Epicura uses native mobile development: **SwiftUI** (iOS) and **Jetpack Compose*
 | Push notifications | FCM (Android) / APNs (iOS) | Cooking complete, errors |
 | Device pairing | BLE GATT services | WiFi provisioning, device identification |
 
-### Offline Recipe Cache
+### 7.4 Offline Recipe Cache
 
 - iOS: Recipes cached locally using SwiftData; images cached using Nuke
 - Android: Recipes cached locally using Room; images cached using Coil
@@ -633,7 +633,7 @@ Epicura uses native mobile development: **SwiftUI** (iOS) and **Jetpack Compose*
 
 ---
 
-## Related Documentation
+## 8. Related Documentation
 
 - [[../01-Overview/01-Project-Overview|Project Overview]]
 - [[../03-Software/04-Controller-Software-Architecture|Controller & Software Architecture]]
@@ -643,7 +643,7 @@ Epicura uses native mobile development: **SwiftUI** (iOS) and **Jetpack Compose*
 
 ---
 
-## Revision History
+## 9. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

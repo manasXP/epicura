@@ -7,13 +7,13 @@ status: Draft
 
 # Admin Portal
 
-## Overview
+## 1. Overview
 
 The Epicura Admin Portal is a web application for internal team use, providing recipe management (CRUD with stage editor), appliance registration and monitoring, user management, firmware release publishing, analytics dashboards, and push notification broadcasting.
 
 ---
 
-## Tech Stack
+## 2. Tech Stack
 
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
@@ -29,7 +29,7 @@ The Epicura Admin Portal is a web application for internal team use, providing r
 
 ---
 
-## Page Routes
+## 3. Page Routes
 
 | Route | Page | Description |
 |-------|------|-------------|
@@ -50,7 +50,7 @@ The Epicura Admin Portal is a web application for internal team use, providing r
 
 ---
 
-## Dashboard
+## 4. Dashboard
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
@@ -87,11 +87,11 @@ The Epicura Admin Portal is a web application for internal team use, providing r
 
 ---
 
-## Recipe Editor
+## 5. Recipe Editor
 
 The recipe editor is the most complex page, featuring a stage-by-stage builder that matches the YAML recipe format used by the CM5.
 
-### Recipe Editor Wireframe
+### 5.1 Recipe Editor Wireframe
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
@@ -137,7 +137,7 @@ The recipe editor is the most complex page, featuring a stage-by-stage builder t
 └────────┴─────────────────────────────────────────────────────────────────┘
 ```
 
-### Stage Editor Features
+### 5.2 Stage Editor Features
 
 - Drag-and-drop stage reordering (via `[↕]` handle)
 - Each stage has: name, temperature target, duration, stir pattern, CV check class, and ingredients
@@ -148,7 +148,7 @@ The recipe editor is the most complex page, featuring a stage-by-stage builder t
 
 ---
 
-## Appliance Management
+## 6. Appliance Management
 
 | Column | Description |
 |--------|-------------|
@@ -165,7 +165,7 @@ The recipe editor is the most complex page, featuring a stage-by-stage builder t
 
 ---
 
-## User Management
+## 7. User Management
 
 | Column | Description |
 |--------|-------------|
@@ -181,7 +181,7 @@ The recipe editor is the most complex page, featuring a stage-by-stage builder t
 
 ---
 
-## Firmware Release Management
+## 8. Firmware Release Management
 
 | Field | Description |
 |-------|-------------|
@@ -198,7 +198,7 @@ The recipe editor is the most complex page, featuring a stage-by-stage builder t
 
 ---
 
-## Analytics Charts
+## 9. Analytics Charts
 
 | Chart | Type | Data Source |
 |-------|------|-------------|
@@ -213,7 +213,7 @@ The recipe editor is the most complex page, featuring a stage-by-stage builder t
 
 ---
 
-## Push Notification Broadcast
+## 10. Push Notification Broadcast
 
 Admin can send push notifications to:
 - **All users** — Announcements, new recipe collections
@@ -231,7 +231,7 @@ Admin can send push notifications to:
 
 ---
 
-## Related Documentation
+## 11. Related Documentation
 
 - [[01-Backend-Architecture|Backend Architecture]] - Monorepo structure, API server
 - [[02-Database-Schema|Database Schema]] - Tables and indexes
@@ -242,7 +242,7 @@ Admin can send push notifications to:
 
 ---
 
-## Revision History
+## 12. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

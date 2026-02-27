@@ -2,7 +2,7 @@
 
 The `epicura` repository (this docs repo) is linked as a Git submodule in every other Epicura repository. This gives developers access to the full documentation while working on any part of the system.
 
-## Repository Layout (with submodule)
+## 1. Repository Layout (with submodule)
 
 ```
 epicura-firmware/          # or any other repo
@@ -16,7 +16,7 @@ epicura-firmware/          # or any other repo
 └── .gitmodules
 ```
 
-## Repositories That Include the Submodule
+## 2. Repositories That Include the Submodule
 
 | Repository | Stack | Submodule Path |
 |-----------|-------|----------------|
@@ -26,7 +26,7 @@ epicura-firmware/          # or any other repo
 | `epicura-ios` | Swift / Xcode | `docs/` |
 | `epicura-android` | Kotlin / Gradle | `docs/` |
 
-## Adding the Submodule (when scaffolding a new repo)
+## 3. Adding the Submodule (when scaffolding a new repo)
 
 Run the helper script from the new repo's root:
 
@@ -42,7 +42,7 @@ git submodule add git@github.com:manasXP/epicura.git docs
 git commit -m "Add epicura docs as submodule"
 ```
 
-## Cloning a Repo with the Submodule
+## 4. Cloning a Repo with the Submodule
 
 New contributors must initialize the submodule after cloning:
 
@@ -53,7 +53,7 @@ git clone --recurse-submodules git@github.com:manasXP/epicura-firmware.git
 git submodule update --init
 ```
 
-## Updating the Docs Submodule
+## 5. Updating the Docs Submodule
 
 When the docs repo is updated, pull the latest in each repo:
 
@@ -73,7 +73,7 @@ git add docs
 git commit -m "Update docs submodule"
 ```
 
-## Notes
+## 6. Notes
 
 - The submodule points to the `main` branch of `epicura` by default.
 - The `docs/` path is in each repo's `.gitignore` template under build artifacts — **remove the `docs/` entry** if present, since it's now a tracked submodule.

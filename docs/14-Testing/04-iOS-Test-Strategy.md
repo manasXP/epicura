@@ -6,15 +6,15 @@ aliases: [iOS Test Strategy]
 
 # iOS Test Strategy — epicura-ios
 
-## Scope
+## 1. Scope
 
 Testing strategy for the iOS companion app: authentication, BLE pairing/WiFi provisioning, recipe browsing, live cooking view, and user profile.
 
 ---
 
-## Test Levels
+## 2. Test Levels
 
-### 1. Unit Tests
+### 2.1 Unit Tests
 
 **Framework:** XCTest + Swift Testing
 **Runs on:** macOS (Xcode, CI-compatible)
@@ -36,7 +36,7 @@ Testing strategy for the iOS companion app: authentication, BLE pairing/WiFi pro
 - `BLEManager` tested with `CBCentralManager` mock via protocol abstraction
 - All async code tested with `async/await` + `XCTestExpectation` or Swift Testing `#expect`
 
-### 2. Integration Tests
+### 2.2 Integration Tests
 
 **Framework:** XCTest
 **Runs on:** Simulator + local API server
@@ -48,7 +48,7 @@ Testing strategy for the iOS companion app: authentication, BLE pairing/WiFi pro
 | Cooking flow | Mock API + mock WebSocket server | Start cook → receive status updates → display progress → complete |
 | Offline mode | Disconnect network mid-operation | Cached recipes accessible, queued actions sync on reconnect |
 
-### 3. UI Tests
+### 2.3 UI Tests
 
 **Framework:** XCUITest
 **Runs on:** iOS Simulator (CI via `xcodebuild test`)
@@ -61,7 +61,7 @@ Testing strategy for the iOS companion app: authentication, BLE pairing/WiFi pro
 | Settings | Navigate to profile → change preference → save | Preference persists after app restart |
 | Accessibility | VoiceOver pass on all screens | All interactive elements labeled, correct traits |
 
-### 4. Performance Tests
+### 2.4 Performance Tests
 
 | Test | Method | Pass Criteria |
 |------|--------|--------------|
@@ -71,7 +71,7 @@ Testing strategy for the iOS companion app: authentication, BLE pairing/WiFi pro
 | Network payload | Charles Proxy | Recipe list response < 50 KB, images lazy-loaded |
 | Battery impact | Instruments Energy Log during 30-min cook | No excessive CPU/network wake-ups |
 
-### 5. Security Tests
+### 2.5 Security Tests
 
 | Test | Method | Pass Criteria |
 |------|--------|--------------|
@@ -82,7 +82,7 @@ Testing strategy for the iOS companion app: authentication, BLE pairing/WiFi pro
 
 ---
 
-## CI Pipeline
+## 3. CI Pipeline
 
 ```yaml
 # .github/workflows/ci.yml
@@ -102,7 +102,7 @@ steps:
 
 ---
 
-## Test Fixtures
+## 4. Test Fixtures
 
 - **Mock API responses:** JSON files for all endpoints (recipes, user, device, auth)
 - **Mock BLE peripherals:** `CBPeripheralMock` conforming to protocol, simulates discovery + connection
@@ -111,7 +111,7 @@ steps:
 
 ---
 
-## References
+## 5. References
 
 - [[__Workspaces/Epicura/docs/07-Development/02-Repository-Plan|Repository Plan]]
 - [[__Workspaces/Epicura/docs/12-MobileApps/02-iOS-App|iOS App]]

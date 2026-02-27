@@ -14,7 +14,7 @@ aliases: [BE Epic, Backend Epic]
 
 Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device management, user accounts, and telemetry. TypeScript throughout. Serves mobile apps and admin portal.
 
-## Story Summary
+## 1. Story Summary
 
 | Module | Stories | Points | Sprints |
 |--------|:-------:|:------:|---------|
@@ -28,9 +28,9 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 
 ---
 
-## Phase 2 — Backend Foundation (Sprints 5–6)
+## 2. Phase 2 — Backend Foundation (Sprints 5–6)
 
-### BE-SET.01: Fastify project setup — TypeScript, Drizzle ORM, PostgreSQL schema, auth
+### 2.1 BE-SET.01: Fastify project setup — TypeScript, Drizzle ORM, PostgreSQL schema, auth
 - **Sprint:** [[sprint-05|Sprint 5]]
 - **Priority:** P0
 - **Points:** 5
@@ -51,7 +51,7 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 
 ---
 
-### BE-SET.02: Backend dev environment — Docker Compose, Swagger, CI pipeline
+### 2.2 BE-SET.02: Backend dev environment — Docker Compose, Swagger, CI pipeline
 - **Sprint:** [[sprint-05|Sprint 5]]
 - **Priority:** P0
 - **Points:** 3
@@ -71,7 +71,7 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 
 ---
 
-### BE-RCP.01: Recipe CRUD API — endpoints, schema, versioning
+### 2.3 BE-RCP.01: Recipe CRUD API — endpoints, schema, versioning
 - **Sprint:** [[sprint-06|Sprint 6]]
 - **Priority:** P0
 - **Points:** 5
@@ -92,7 +92,7 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 
 ---
 
-### BE-RCP.02: Recipe API — image upload, bulk export, testing
+### 2.4 BE-RCP.02: Recipe API — image upload, bulk export, testing
 - **Sprint:** [[sprint-06|Sprint 6]]
 - **Priority:** P0
 - **Points:** 3
@@ -113,9 +113,9 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 
 ---
 
-## Phase 2–3 — Device & MQTT (Sprints 7–8)
+## 3. Phase 2–3 — Device & MQTT (Sprints 7–8)
 
-### BE-DEV.01: Device management API — registration, telemetry, status
+### 3.1 BE-DEV.01: Device management API — registration, telemetry, status
 - **Sprint:** [[sprint-07|Sprint 7]]
 - **Priority:** P0
 - **Points:** 5
@@ -135,7 +135,7 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 
 ---
 
-### BE-DEV.02: Device API — commands, user claiming, testing
+### 3.2 BE-DEV.02: Device API — commands, user claiming, testing
 - **Sprint:** [[sprint-07|Sprint 7]]
 - **Priority:** P0
 - **Points:** 3
@@ -156,7 +156,7 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 
 ---
 
-### BE-MQT.01: MQTT cloud bridge — telemetry ingestion, command dispatch
+### 3.3 BE-MQT.01: MQTT cloud bridge — telemetry ingestion, command dispatch
 - **Sprint:** [[sprint-07|Sprint 7]]
 - **Priority:** P0
 - **Points:** 5
@@ -181,7 +181,7 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 
 ---
 
-### BE-USR.01: User management — profiles, cooking history, preferences
+### 3.4 BE-USR.01: User management — profiles, cooking history, preferences
 - **Sprint:** [[sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
@@ -205,7 +205,7 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 
 ---
 
-### BE-USR.02: Food preferences DB columns and API fields
+### 3.5 BE-USR.02: Food preferences DB columns and API fields
 - **Sprint:** [[sprint-08|Sprint 8]]
 - **Priority:** P1
 - **Points:** 3
@@ -228,7 +228,7 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 
 ---
 
-### BE-LCH.01: Production deployment — hosting, monitoring, security hardening
+### 3.6 BE-LCH.01: Production deployment — hosting, monitoring, security hardening
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 5
@@ -253,9 +253,9 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 
 ---
 
-## Dependencies
+## 4. Dependencies
 
-### What BE blocks
+### 4.1 What BE blocks
 
 | BE Story | Blocks | Reason |
 |----------|--------|--------|
@@ -270,7 +270,7 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 | BE-USR.02 | IOS-USR.02, AND-USR.02 | Food preferences API for mobile apps |
 | BE-LCH.01 | INT-LCH.01 | Production backend for launch |
 
-### What blocks BE
+### 4.2 What blocks BE
 
 | BE Story | Blocked by | Reason |
 |----------|------------|--------|
@@ -287,7 +287,7 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 
 ---
 
-## References
+## 5. References
 
 - [[__Workspaces/Epicura/docs/10-Backend/01-Backend-Architecture|Backend Architecture]]
 - [[__Workspaces/Epicura/docs/10-Backend/02-Database-Schema|Database Schema]]

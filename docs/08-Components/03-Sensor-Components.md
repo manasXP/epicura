@@ -7,11 +7,11 @@ status: Draft
 
 # Sensor Components
 
-## Overview
+## 1. Overview
 
 This document details the sensing subsystem components for the Epicura kitchen robot prototype, including the vision camera, infrared thermometer, load cells, temperature sensors, and supporting components.
 
-## Sensor Architecture
+## 2. Sensor Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -50,21 +50,21 @@ This document details the sensing subsystem components for the Epicura kitchen r
 
 ---
 
-## Component List
+## 3. Component List
 
-### Option A: Standard Camera (Recommended for Prototype)
+### 3.1 Option A: Standard Camera (Recommended for Prototype)
 
 | Component | Part Number | Qty | Unit Price | Subtotal | Supplier | Notes |
 |-----------|-------------|-----|------------|----------|----------|-------|
 | Camera Module IMX219 | RPi Camera Module V2 | 1 | $25.00 | $25.00 | RPi Foundation | 8MP, CSI-2, fixed focus, sufficient for CV |
 
-### Option B: Premium Camera (Production Consideration)
+### 3.2 Option B: Premium Camera (Production Consideration)
 
 | Component | Part Number | Qty | Unit Price | Subtotal | Supplier | Notes |
 |-----------|-------------|-----|------------|----------|----------|-------|
 | Camera Module IMX477 | RPi HQ Camera | 1 | $50.00 | $50.00 | RPi Foundation | 12.3MP, C-mount lens, adjustable focus |
 
-### Thermal & Weight Sensors
+### 3.3 Thermal & Weight Sensors
 
 | Component | Part Number | Qty | Unit Price | Subtotal | Supplier | Notes |
 |-----------|-------------|-----|------------|----------|----------|-------|
@@ -72,14 +72,14 @@ This document details the sensing subsystem components for the Epicura kitchen r
 | Load Cell (5kg) | CZL635 | 4 | $4.00 | $16.00 | Amazon / AliExpress | Wheatstone bridge, aluminum alloy |
 | HX711 ADC Module | HX711 breakout | 1 | $3.00 | $3.00 | Amazon / AliExpress | 24-bit, 80 SPS, SPI/GPIO interface |
 
-### Detection & Illumination
+### 3.4 Detection & Illumination
 
 | Component | Part Number | Qty | Unit Price | Subtotal | Supplier | Notes |
 |-----------|-------------|-----|------------|----------|----------|-------|
 | Reed Switch | MKA-14103 | 1 | $1.00 | $1.00 | Amazon | Pot detection (magnet in pot base) |
 | LED Ring (WS2812B) | 12-LED NeoPixel Ring | 1 | $5.00 | $5.00 | Adafruit / Amazon | Camera illumination, consistent lighting |
 
-### Passive Components
+### 3.5 Passive Components
 
 | Component | Part Number | Qty | Unit Price | Subtotal | Supplier | Notes |
 |-----------|-------------|-----|------------|----------|----------|-------|
@@ -88,9 +88,9 @@ This document details the sensing subsystem components for the Epicura kitchen r
 
 ---
 
-## Cost Summary
+## 4. Cost Summary
 
-### With IMX219 (Recommended for Prototype)
+### 4.1 With IMX219 (Recommended for Prototype)
 
 | Item | Cost |
 |------|------|
@@ -103,7 +103,7 @@ This document details the sensing subsystem components for the Epicura kitchen r
 | Passive Components | $0.70 |
 | **Category Subtotal** | **$62.70** |
 
-### With IMX477 (Premium Option)
+### 4.2 With IMX477 (Premium Option)
 
 | Item | Cost |
 |------|------|
@@ -113,9 +113,9 @@ This document details the sensing subsystem components for the Epicura kitchen r
 
 ---
 
-## Design Notes
+## 5. Design Notes
 
-### Camera Selection
+### 5.1 Camera Selection
 
 | Feature | IMX219 (V2) | IMX477 (HQ) |
 |---------|-------------|-------------|
@@ -129,14 +129,14 @@ This document details the sensing subsystem components for the Epicura kitchen r
 
 **Recommendation:** IMX219 for prototype. Fixed focus simplifies mounting. 8 MP is more than sufficient for food stage classification (model input is typically 224x224 pixels). Consider IMX477 for production if variable focus or better low-light performance is needed.
 
-### MLX90614ESF-BAA IR Thermometer
+### 5.2 MLX90614ESF-BAA IR Thermometer
 - **90° FOV (BAA variant):** Covers entire pot surface from overhead mounting
 - **Temperature range:** -70°C to +380°C (food range: 20°C to 250°C)
 - **Accuracy:** ±0.5°C in 0-50°C range, ±2°C at higher temperatures
 - **Interface:** I2C (SMBus compatible), default address 0x5A
 - **Mounting:** 15-20 cm above pot surface for full pot coverage
 
-### Load Cell Configuration
+### 5.3 Load Cell Configuration
 - **4x CZL635** in Wheatstone bridge configuration
 - Mounted at corners of platform base
 - Full-scale range: 5 kg per cell, 20 kg total (pot + ingredients max ~5 kg)
@@ -145,7 +145,7 @@ This document details the sensing subsystem components for the Epicura kitchen r
 
 ---
 
-## Related Documentation
+## 6. Related Documentation
 
 - [[01-Compute-Module-Components|Compute Module Components]]
 - [[02-Actuation-Components|Actuation Components]]
@@ -158,7 +158,7 @@ This document details the sensing subsystem components for the Epicura kitchen r
 
 ---
 
-## Revision History
+## 7. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

@@ -7,11 +7,11 @@ status: Draft
 
 # Controller PCB Design
 
-## Overview
+## 1. Overview
 
 This document covers the design of the custom controller PCB for Epicura. This board hosts the STM32G474RE microcontroller and all its peripheral interfaces — sensor inputs, PWM outputs for actuators, SPI communication to the CM5, and safety circuits.
 
-### Scope
+### 1.1 Scope
 
 | Item | Status | Notes |
 |------|--------|-------|
@@ -24,7 +24,7 @@ The CM5IO board is an off-the-shelf Raspberry Pi carrier board that sits on top 
 
 ---
 
-## Board-Level Block Diagram
+## 2. Board-Level Block Diagram
 
 ```
                    5V from J_STACK (UPS-backed)
@@ -77,9 +77,9 @@ The CM5IO board is an off-the-shelf Raspberry Pi carrier board that sits on top 
 
 ---
 
-## STM32G474RE Pin Allocation
+## 3. STM32G474RE Pin Allocation
 
-### Pin Map (LQFP-64)
+### 3.1 Pin Map (LQFP-64)
 
 ```
 STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
@@ -172,7 +172,7 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 └────────────────────────────────────────────────────────────────┘
 ```
 
-### Pin Summary Table
+### 3.2 Pin Summary Table
 
 | Pin | Function | Peripheral | Direction | Connector | Subsystem |
 |-----|----------|------------|-----------|-----------|-----------|
@@ -217,13 +217,13 @@ STM32G474RE (LQFP-64) — Controller PCB Pin Assignment
 
 ---
 
-## Power Supply
+## 4. Power Supply
 
-### Input
+### 4.1 Input
 
 The controller PCB receives 5V DC via J_STACK pins 11-12 from the Driver PCB's TPS54531 buck converter, which is powered from a UPS-backed 12V DC input. This ensures the STM32 remains powered during AC outages. A 3.3V LDO regulates this down for the STM32 and all 3.3V peripherals. No onboard buck converter is needed. The 5V rail is also fed upward through J_CM5 pins 2 and 4 to power the CM5IO board and CM5 module, eliminating the need for a separate USB-C power input on the CM5IO.
 
-### Regulator Circuit
+### 4.2 Regulator Circuit
 
 ```
 5V from J_STACK (pins 11-12, UPS-backed via TPS54531)
@@ -250,7 +250,7 @@ The controller PCB receives 5V DC via J_STACK pins 11-12 from the Driver PCB's T
 3.3V Rail ──► STM32 VDD, VDDA, sensors, pull-ups
 ```
 
-### Power Budget (Controller PCB Only)
+### 4.3 Power Budget (Controller PCB Only)
 
 | Consumer | Typical (mA) | Peak (mA) | Notes |
 |----------|-------------|----------|-------|
@@ -264,7 +264,7 @@ The controller PCB receives 5V DC via J_STACK pins 11-12 from the Driver PCB's T
 > [!note]
 > The BLDC stirring motor is powered directly from the 24V rail on the Driver PCB (integrated ESC). The 6.5V buck converter (MP1584EN #2) is retained for future use. The 5V rail is sourced from a UPS-backed 12V→5V converter (TPS54531) on the Driver PCB, ensuring the controller and CM5 stay powered during AC outages. The 5V rail passes through the Controller PCB upward to the CM5IO via J_CM5 pins 2/4 (up to 3A for CM5 peak load). Only the PWM signal lines route through the controller PCB.
 
-### Decoupling
+### 4.4 Decoupling
 
 - **Per VDD pin:** 100nF MLCC placed within 5mm of each VDD/VSS pin pair
 - **VDDA (analog supply):** 1uF MLCC + ferrite bead from main 3.3V
@@ -273,9 +273,9 @@ The controller PCB receives 5V DC via J_STACK pins 11-12 from the Driver PCB's T
 
 ---
 
-## CM5 to STM32 SPI Interface
+## 5. CM5 to STM32 SPI Interface
 
-### Physical Connection
+### 5.1 Physical Connection
 
 The CM5 IO Board's 40-pin GPIO header mates directly with **J_CM5** on the Controller PCB — a 2x20 pin socket (2.54mm pitch) that receives all 40 pins. No ribbon cable is needed; the boards stack directly. SPI, IRQ, LED ring data, 5V power, and GND all route through this single connector.
 
@@ -302,7 +302,7 @@ Logic level: 3.3V on both sides (no level shifter needed)
 5V direction: Controller PCB → CM5IO (UPS-backed power)
 ```
 
-### SPI Configuration
+### 5.2 SPI Configuration
 
 | Parameter | Value |
 |-----------|-------|
@@ -315,7 +315,7 @@ Logic level: 3.3V on both sides (no level shifter needed)
 | DMA | Enabled on STM32 SPI2 RX and TX |
 | IRQ Line | PB3 → CM5 GPIO4, active-low, pulse 10us |
 
-### Why SPI Over UART
+### 5.3 Why SPI Over UART
 
 | Criteria | SPI | UART |
 |----------|-----|------|
@@ -326,7 +326,7 @@ Logic level: 3.3V on both sides (no level shifter needed)
 | Wires | 5 (MOSI, MISO, SCK, NSS, IRQ) | 3 (TX, RX, GND) |
 | Error rate | Lower (clocked, no framing errors) | Higher at speed (noise-sensitive) |
 
-### SPI Transaction Protocol
+### 5.4 SPI Transaction Protocol
 
 The CM5 (master) initiates all SPI transactions. The STM32 (slave) asserts the IRQ line low to signal that it has telemetry or event data ready for the CM5 to read.
 
@@ -353,7 +353,7 @@ The CM5 (master) initiates all SPI transactions. The STM32 (slave) asserts the I
 4. CM5 initiates SPI read transaction (sends dummy bytes on MOSI, reads response on MISO)
 5. STM32 deasserts IRQ after data is clocked out
 
-### Message Types
+### 5.5 Message Types
 
 | Message | Type Code | Direction | Payload |
 |---------|-----------|-----------|---------|
@@ -373,7 +373,7 @@ The CM5 (master) initiates all SPI transactions. The STM32 (slave) asserts the I
 | POWER_FAIL | 0x14 | STM32 → CM5 | state (uint8: 0=OK, 1=FAIL), voltage_mV (uint16) |
 | ACK | 0xFF | Bidirectional | ack_msg_id, result_code |
 
-### STM32 SPI Slave Implementation Notes
+### 5.6 STM32 SPI Slave Implementation Notes
 
 - Configure SPI2 in slave mode with hardware NSS
 - Use DMA for both TX and RX to avoid CPU overhead
@@ -383,9 +383,9 @@ The CM5 (master) initiates all SPI transactions. The STM32 (slave) asserts the I
 
 ---
 
-## Connector Definitions
+## 6. Connector Definitions
 
-### J_CM5 — CM5IO GPIO Header Receptor (2x20 pin socket, 2.54mm)
+### 6.1 J_CM5 — CM5IO GPIO Header Receptor (2x20 pin socket, 2.54mm)
 
 Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed below are actively routed on the Controller PCB; all other pins pass through unconnected.
 
@@ -403,7 +403,7 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 > [!note]
 > The 5V pins (2, 4) are driven by the Controller PCB from the UPS-backed 5V rail received via J_STACK. This means the CM5 module is powered through the same UPS-backed supply as the STM32, ensuring both processors stay alive during AC outages. The CM5IO's USB-C port can still be used for debug console access but is not the primary power source.
 
-### J_IR — MLX90614 I2C (JST-SH 1.0mm, 4-pin)
+### 6.2 J_IR — MLX90614 I2C (JST-SH 1.0mm, 4-pin)
 
 | Pin | Signal | STM32 Pin | Notes |
 |-----|--------|-----------|-------|
@@ -412,7 +412,7 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 | 3 | VCC | 3.3V | — |
 | 4 | GND | GND | — |
 
-### J_SWD — SWD Debug (10-pin 1.27mm Cortex Debug or 6-pin TagConnect)
+### 6.3 J_SWD — SWD Debug (10-pin 1.27mm Cortex Debug or 6-pin TagConnect)
 
 | Pin | Signal | STM32 Pin |
 |-----|--------|-----------|
@@ -426,7 +426,7 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 > [!note]
 > PB3 is shared between SPI IRQ and SWD SWO. A solder jumper (SJ1) selects between the two. Default position: IRQ. Set to SWO for debug tracing only.
 
-### J_SAFE — Safety I/O (JST-XH 2.5mm, 4-pin)
+### 6.4 J_SAFE — Safety I/O (JST-XH 2.5mm, 4-pin)
 
 | Pin | Signal | STM32 Pin | Notes |
 |-----|--------|-----------|-------|
@@ -435,7 +435,7 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 | 3 | E_STOP | PB2 | NC button, 10k pull-up, RC debounce |
 | 4 | GND | GND | — |
 
-### J_LED — LED Ring (JST-XH 2.5mm, 3-pin)
+### 6.5 J_LED — LED Ring (JST-XH 2.5mm, 3-pin)
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
@@ -443,11 +443,11 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 | 2 | DATA | WS2812B data (passthrough from CM5 GPIO18) |
 | 3 | GND | Power ground |
 
-### J_STACK — Stacking Connector to Driver PCB (2x20 pin header, 2.54mm, 11mm stacking height)
+### 6.6 J_STACK — Stacking Connector to Driver PCB (2x20 pin header, 2.54mm, 11mm stacking height)
 
 The stacking connector passes 24V power, ground, 5V/3.3V references, all servo PWM signals, actuator GPIO signals, and I2C (for INA219 current monitor) down to the Driver PCB. Pins are organized by subsystem for cleaner wiring harnesses. See [[Driver-PCB-Design#Stacking Connector — J_STACK]] for the full 40-pin pinout.
 
-#### J_STACK Pinout (Top View — Controller PCB Side)
+#### 6.6.1 J_STACK Pinout (Top View — Controller PCB Side)
 
 | Pin | Signal | Direction | Pin | Signal | Direction |
 |-----|--------|-----------|-----|--------|-----------|
@@ -477,7 +477,7 @@ The stacking connector passes 24V power, ground, 5V/3.3V references, all servo P
 | 37 | BLDC_PWM (PA8) | Out | 38 | BUZZER_PWM (PA11) | Out |
 | 39 | BLDC_EN (PA4) | Out | 40 | BLDC_DIR (PA5) | Out |
 
-#### Pin Group Summary
+#### 6.6.2 Pin Group Summary
 
 | Group | Pins | Count | Purpose |
 |-------|------|-------|---------|
@@ -497,15 +497,15 @@ The stacking connector passes 24V power, ground, 5V/3.3V references, all servo P
 
 ---
 
-## Protection Circuits
+## 7. Protection Circuits
 
-### ESD Protection
+### 7.1 ESD Protection
 
 - TVS diode array (e.g., PRTR5V0U2X) on J_CM5 SPI lines
 - TVS diodes on J_SAFE safety inputs (E-stop, pot detection)
 - All external connectors have series 33 ohm resistors on signal lines
 
-### Relay Driver (Q1)
+### 7.2 Relay Driver (Q1)
 
 ```
 PB0 ────┤ 330R ├──── Gate ─┐
@@ -525,7 +525,7 @@ PB0 ────┤ 330R ├──── Gate ─┐
                           GND
 ```
 
-### E-Stop Input
+### 7.3 E-Stop Input
 
 ```
 E-Stop Button (NC)
@@ -540,7 +540,7 @@ Button pressed → PB2 goes LOW → immediate interrupt
 Button released (or wire break) → PB2 stays LOW → fail-safe
 ```
 
-### Pot Detection Input
+### 7.4 Pot Detection Input
 
 ```
 Reed Switch (NO)
@@ -553,7 +553,7 @@ Pot present → magnet closes reed → PB1 = LOW
 Pot absent → reed open → PB1 = HIGH (pulled up)
 ```
 
-### LED Ring Power Switch (Q2 + Q3)
+### 7.5 LED Ring Power Switch (Q2 + Q3)
 
 A high-side P-MOSFET switch controls 5V power to the WS2812B LED ring. An N-MOSFET (Q2) level-shifts the 3.3V STM32 GPIO to drive the P-MOSFET (Q3) gate. The LED ring data line (WS2812B protocol) is driven directly by CM5 GPIO18 and passes through J_LED as a signal passthrough — no STM32 involvement on the data path.
 
@@ -593,9 +593,9 @@ GND ─────────────── J_LED Pin 3 (GND)
 
 ---
 
-## PCB Stackup and Layout
+## 8. PCB Stackup and Layout
 
-### 4-Layer Stackup
+### 8.1 4-Layer Stackup
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -618,7 +618,7 @@ Total thickness: ~1.6mm (standard)
 Material: FR4 (Tg 150°C minimum)
 ```
 
-### Layout Guidelines
+### 8.2 Layout Guidelines
 
 **Component Placement Zones:**
 
@@ -664,7 +664,7 @@ Material: FR4 (Tg 150°C minimum)
 | Safety relay | Creepage >2mm between 5V/12V and 3.3V logic | IEC 60335 clearance |
 | Thermal pad | Via array under STM32 to GND plane (9 vias min) | Thermal dissipation |
 
-### Board Dimensions
+### 8.3 Board Dimensions
 
 - **Target size:** 160mm x 90mm (matches CM5IO and Driver PCB in 3-board stack)
 - **Mounting:** 4x M3 mounting holes at corners (3.2mm drill), positions match stack
@@ -673,7 +673,7 @@ Material: FR4 (Tg 150°C minimum)
 
 ---
 
-## Manufacturing Specifications
+## 9. Manufacturing Specifications
 
 | Parameter | Value |
 |-----------|-------|
@@ -691,7 +691,7 @@ Material: FR4 (Tg 150°C minimum)
 | Impedance control | 50 ohm single-ended on SPI lines |
 | Panelization | 2x2 panel with V-score for JLCPCB |
 
-### Assembly
+### 9.1 Assembly
 
 - All components SMT (both sides if needed, prefer top-side only)
 - Through-hole: 2.54mm pin headers for J_STACK (stacking connector) and J_SWD (debug)
@@ -700,7 +700,7 @@ Material: FR4 (Tg 150°C minimum)
 
 ---
 
-## Controller PCB BOM
+## 10. Controller PCB BOM
 
 | Ref | Part | Package | Quantity | Unit Cost (USD) | Notes |
 |-----|------|---------|----------|----------------|-------|
@@ -745,9 +745,9 @@ Material: FR4 (Tg 150°C minimum)
 
 ---
 
-## Design Verification Checklist
+## 11. Design Verification Checklist
 
-### Pre-Fabrication
+### 11.1 Pre-Fabrication
 
 - [ ] Schematic ERC (Electrical Rule Check) passes with zero errors
 - [ ] All STM32 pin assignments verified against datasheet alternate function table
@@ -759,7 +759,7 @@ Material: FR4 (Tg 150°C minimum)
 - [ ] Crystal load capacitors match crystal specifications
 - [ ] I2C pull-up values appropriate for 100 kHz bus speed
 
-### PCB Layout
+### 11.2 PCB Layout
 
 - [ ] DRC (Design Rule Check) passes with zero errors
 - [ ] GND plane continuous under STM32 (no splits or traces cutting plane)
@@ -770,7 +770,7 @@ Material: FR4 (Tg 150°C minimum)
 - [ ] Mounting holes clear of traces and copper (1mm clearance)
 - [ ] Silkscreen labels on all connectors and test points
 
-### Post-Assembly
+### 11.3 Post-Assembly
 
 - [ ] 3.3V rail measures 3.3V ±3% under load
 - [ ] STM32 responds to SWD probe (ST-Link connects, reads device ID)
@@ -783,7 +783,7 @@ Material: FR4 (Tg 150°C minimum)
 
 ---
 
-## Related Documentation
+## 12. Related Documentation
 
 - [[Driver-PCB-Design]] — Driver PCB: power conversion, actuator drivers, stacking connector details
 - [[../02-Hardware/Epicura-Architecture|Epicura Architecture]] — System-level wiring and block diagrams
@@ -798,7 +798,7 @@ Material: FR4 (Tg 150°C minimum)
 
 ---
 
-## Revision History
+## 13. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

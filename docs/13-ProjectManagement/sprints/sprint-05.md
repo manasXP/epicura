@@ -14,7 +14,7 @@ aliases: [Sprint 5]
 > **Phase:** Phase 2 — Dispensing & Vision
 > **Goal:** Implement P-ASD pneumatic seasoning and CID coarse ingredient dispensers. Start backend infrastructure with Fastify project setup.
 
-## Stories
+## 1. Stories
 
 | Status | ID | Title | Epic | Points | Blocked By |
 |:------:|-----|-------|------|:------:|------------|
@@ -24,7 +24,7 @@ aliases: [Sprint 5]
 
 **Total Points:** 21
 
-## Capacity Allocation
+## 2. Capacity Allocation
 
 | Team Member | Allocated | Available | Notes |
 |-------------|:---------:|:---------:|-------|
@@ -33,7 +33,7 @@ aliases: [Sprint 5]
 | Backend Dev 1 | 8 | 8 | Fastify project foundation (NEW TEAM MEMBER) |
 | **Total** | **21** | **40** | Backend team starts |
 
-## Sprint Review Checklist
+## 3. Sprint Review Checklist
 
 - [ ] All stories demo-ready
 - [ ] No P0 bugs remaining
@@ -45,7 +45,7 @@ aliases: [Sprint 5]
 - [ ] Fastify server runs with PostgreSQL connection
 - [ ] MQTT broker connected to Fastify
 
-## Retro Notes
+## 4. Retro Notes
 
 > _To be filled during sprint retrospective._
 >
@@ -60,7 +60,7 @@ aliases: [Sprint 5]
 
 ---
 
-## References
+## 5. References
 
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calendar]]
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/02-Stories|User Stories]]

@@ -7,7 +7,7 @@ status: Draft
 
 # Project Management - Epicura
 
-## Overview
+## 1. Overview
 
 This folder contains all project management documentation for the Epicura autonomous kitchen robot prototype development.
 
@@ -20,9 +20,9 @@ This folder contains all project management documentation for the Epicura autono
 
 ---
 
-## Document Index
+## 2. Document Index
 
-### Epics (12 subsystem-based epics)
+### 2.1 Epics (12 subsystem-based epics)
 
 Individual epic files with detailed stories, acceptance criteria, and task breakdowns:
 
@@ -45,7 +45,7 @@ See [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|Epic Index]] f
 
 ---
 
-### Sprints (12 two-week sprints + pre-sprint)
+### 2.2 Sprints (12 two-week sprints + pre-sprint)
 
 Individual sprint files with story assignments, capacity allocation, and review checklists:
 
@@ -69,7 +69,7 @@ See [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calen
 
 ---
 
-### Supporting Documents
+### 2.3 Supporting Documents
 
 | Doc | Description |
 |-----|-------------|
@@ -79,7 +79,7 @@ See [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calen
 
 ---
 
-## Change Log
+## 3. Change Log
 
 | Date | Version | Change |
 |------|---------|--------|

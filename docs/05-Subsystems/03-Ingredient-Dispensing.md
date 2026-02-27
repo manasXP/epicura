@@ -7,7 +7,7 @@ status: Draft
 
 # Ingredient Dispensing System
 
-## Overview
+## 1. Overview
 
 The ingredient dispensing system is divided into three purpose-built subsystems, each optimized for a different ingredient class. Together they surround the cooking pot and are orchestrated by the STM32 controller under commands from the CM5 recipe engine.
 
@@ -17,9 +17,9 @@ The ingredient dispensing system is divided into three purpose-built subsystems,
 | **CID** | Coarse Ingredients Dispenser | Pre-cut vegetables, meat, paneer, dal, rice | 2 Linear Actuators (slider mechanism) | Timed/position-based |
 | **SLD** | Standard Liquid Dispenser | Oil and water | 2 Peristaltic Pumps + 2 Solenoid Valves + 2 Load Cells (one per reservoir) | Closed-loop weight feedback + low-level alerts |
 
-## Layout
+## 2. Layout
 
-### Top-View Arrangement
+### 2.1 Top-View Arrangement
 
 ```
 ┌───────────────────────────────────────────────────────┐
@@ -59,7 +59,7 @@ The ingredient dispensing system is divided into three purpose-built subsystems,
 └───────────────────────────────────────────────────────┘
 ```
 
-### Side-View Cross Sections
+### 2.2 Side-View Cross Sections
 
 **P-ASD (Pneumatic Puff-Dosing):**
 
@@ -152,13 +152,13 @@ The ingredient dispensing system is divided into three purpose-built subsystems,
     └──────────────┘  └──────────────┘
 ```
 
-## P-ASD — Pneumatic Advanced Seasoning Dispenser
+## 3. P-ASD — Pneumatic Advanced Seasoning Dispenser
 
-### Mechanism Overview
+### 3.1 Mechanism Overview
 
 The P-ASD uses **puff-dosing** — a micro diaphragm pump pressurizes a small accumulator to ~1.0 bar. Individual solenoid valves open briefly (100–400 ms), delivering calibrated air bursts into sealed cartridges. The pressure forces powder through a 5 mm bottom orifice into a shared funnel chute leading to the pot. This eliminates all moving parts from the powder path, dramatically improving reliability with sticky Indian spices like turmeric and chili.
 
-### Cartridge Specifications
+### 3.2 Cartridge Specifications
 
 | Parameter | Value |
 |-----------|-------|
@@ -172,7 +172,7 @@ The P-ASD uses **puff-dosing** — a micro diaphragm pump pressurizes a small ac
 | Air Inlet | 4 mm barb on side wall (above powder line), self-sealing push-fit |
 | Weight (empty) | ~25 g |
 
-### Default Cartridge Assignment
+### 3.3 Default Cartridge Assignment
 
 | Cartridge | Position | Default Spice |
 |-----------|----------|---------------|
@@ -183,9 +183,9 @@ The P-ASD uses **puff-dosing** — a micro diaphragm pump pressurizes a small ac
 | P-ASD-5 | Row B, Center | Garam masala |
 | P-ASD-6 | Row B, Right | Coriander powder |
 
-### Pneumatic System
+### 3.4 Pneumatic System
 
-#### Air Source
+#### 3.4.1 Air Source
 
 | Parameter | Value |
 |-----------|-------|
@@ -197,7 +197,7 @@ The P-ASD uses **puff-dosing** — a micro diaphragm pump pressurizes a small ac
 | Noise | <45 dB |
 | Size | 65 × 40 × 40 mm |
 
-#### Accumulator & Regulation
+#### 3.4.2 Accumulator & Regulation
 
 | Component | Specification |
 |-----------|---------------|
@@ -207,7 +207,7 @@ The P-ASD uses **puff-dosing** — a micro diaphragm pump pressurizes a small ac
 | Relief Valve | 2.0 bar pop-off safety valve on accumulator |
 | Operating Pressure | 0.8–1.2 bar nominal |
 
-#### Solenoid Valves (×6)
+#### 3.4.3 Solenoid Valves (×6)
 
 | Parameter | Value |
 |-----------|-------|
@@ -218,7 +218,7 @@ The P-ASD uses **puff-dosing** — a micro diaphragm pump pressurizes a small ac
 | Driver | IRLML6344 N-MOSFET (SOT-23) with flyback diode on Driver PCB |
 | Cost | ~$3.50 each |
 
-#### Pneumatic Circuit
+#### 3.4.4 Pneumatic Circuit
 
 ```
 12V ───► Micro Diaphragm Pump (3-4 L/min, <45 dB)
@@ -242,7 +242,7 @@ The P-ASD uses **puff-dosing** — a micro diaphragm pump pressurizes a small ac
    C-1  C-2  C-3  C-4  C-5  C-6     Cartridges
 ```
 
-### Anti-Clog Design
+### 3.5 Anti-Clog Design
 
 Pneumatic dispensing inherently prevents clogging — the primary failure mode of gravity-fed systems:
 
@@ -257,7 +257,7 @@ Pneumatic dispensing inherently prevents clogging — the primary failure mode o
 
 **Clog Recovery (if no weight change after 3 pulses):** Rapid 50 ms on/off oscillating air pulses to vibrate powder loose — pneumatic equivalent of vibration motors, but with no additional hardware.
 
-### Metering Strategy
+### 3.6 Metering Strategy
 
 P-ASD uses **calibrated puff-dosing with weight feedback** (dual-loop):
 
@@ -285,9 +285,9 @@ P-ASD uses **calibrated puff-dosing with weight feedback** (dual-loop):
 
 Accuracy: ±10% of target weight (with weight feedback).
 
-## CID — Coarse Ingredients Dispenser
+## 4. CID — Coarse Ingredients Dispenser
 
-### Tray Specifications
+### 4.1 Tray Specifications
 
 | Parameter | Value |
 |-----------|-------|
@@ -297,7 +297,7 @@ Accuracy: ±10% of target weight (with weight feedback).
 | Removable | Yes (slide-out tray) |
 | Ingredient Types | Pre-cut vegetables, meat, paneer, dal, rice |
 
-### Actuator: Linear Actuator (Push-Plate Slider)
+### 4.2 Actuator: Linear Actuator (Push-Plate Slider)
 
 | Parameter | Value |
 |-----------|-------|
@@ -309,7 +309,7 @@ Accuracy: ±10% of target weight (with weight feedback).
 | Supply | 12V from PSU rail |
 | Cost | ~$8 each |
 
-### Dispensing Mechanism
+### 4.3 Dispensing Mechanism
 
 The push-plate slides along the tray, sweeping ingredients off the drop-off edge into the pot:
 
@@ -319,7 +319,7 @@ The push-plate slides along the tray, sweeping ingredients off the drop-off edge
 4. Actuator reaches full-extend limit switch → retract to home
 5. Dispense confirmed by limit switch + optional pot weight check
 
-### Metering Strategy
+### 4.4 Metering Strategy
 
 CID uses **position-based / timed dispensing**:
 
@@ -327,9 +327,9 @@ CID uses **position-based / timed dispensing**:
 - Partial push = actuator extends to a specified position (for partial dispense)
 - No closed-loop weight verification (coarse items are pre-measured by user when loading tray)
 
-## SLD — Standard Liquid Dispenser
+## 5. SLD — Standard Liquid Dispenser
 
-### Channel Specifications
+### 5.1 Channel Specifications
 
 | Parameter | Oil Channel (SLD-OIL) | Water Channel (SLD-WATER) |
 |-----------|----------------------|--------------------------|
@@ -339,7 +339,7 @@ CID uses **position-based / timed dispensing**:
 | Valve | 12V NC solenoid (drip prevention) | 12V NC solenoid (drip prevention) |
 | Nozzle | Directed into pot center | Directed into pot center |
 
-### Actuators
+### 5.2 Actuators
 
 **Peristaltic Pump (×2):**
 
@@ -363,7 +363,7 @@ CID uses **position-based / timed dispensing**:
 | Driver | N-channel MOSFET (IRLZ44N) with flyback diode |
 | Cost | ~$4 each |
 
-### Dedicated Load Cells (2×)
+### 5.3 Dedicated Load Cells (2×)
 
 | Parameter | Value |
 |-----------|-------|
@@ -376,7 +376,7 @@ CID uses **position-based / timed dispensing**:
 | Low-Level Alert | Configurable threshold per channel (default: 50 g remaining); alert sent to CM5 + UI when level drops below threshold |
 | Cost | ~$5 (load cell) × 2 + ~$3 (HX711) × 2 = ~$16 total |
 
-### Metering Strategy (Closed-Loop)
+### 5.4 Metering Strategy (Closed-Loop)
 
 SLD uses **two dedicated load cells** (one under each reservoir) for independent closed-loop dispensing and level monitoring:
 
@@ -422,9 +422,9 @@ SLD uses **two dedicated load cells** (one under each reservoir) for independent
 
 Accuracy: ±5% of target weight (significantly better than ASD due to dedicated load cell and controllable flow rate).
 
-## STM32 Control Interface
+## 6. STM32 Control Interface
 
-### GPIO and PWM Assignments
+### 6.1 GPIO and PWM Assignments
 
 | Subsystem | Actuator | STM32 Pin | Interface | Notes |
 |-----------|----------|-----------|-----------|-------|
@@ -448,7 +448,7 @@ Accuracy: ±5% of target weight (significantly better than ASD due to dedicated 
 
 > **Note:** Pot load cells remain on PC0/PC1 (existing allocation). Pin assignments match [[../09-PCB/02-Driver-PCB-Design|Driver PCB Design]] document. P-ASD solenoid valves are driven by IRLML6344 MOSFETs on the Driver PCB, with gates controlled by a PCF8574 I2C GPIO expander (addr 0x20) instead of direct STM32 GPIO. I2C1 bus devices: MLX90614 (0x5A), INA219 (0x40), ADS1015 (0x48), PCF8574 (0x20).
 
-### Dispensing Command Protocol (CM5 → STM32)
+### 6.2 Dispensing Command Protocol (CM5 → STM32)
 
 | Command | Code | Parameters | Response | Description |
 |---------|------|------------|----------|-------------|
@@ -461,9 +461,9 @@ Accuracy: ±5% of target weight (significantly better than ASD due to dedicated 
 | PREFLIGHT | 0x36 | subsystem_mask (1 byte) | status per subsystem | Check if required subsystems are loaded/ready |
 | TARE | 0x37 | source (1 byte: POT=0, SLD_OIL=1, SLD_WATER=2) | ACK | Zero the specified load cell readings |
 
-## Clog Prevention (P-ASD)
+## 7. Clog Prevention (P-ASD)
 
-### Clog Detection and Recovery Flow
+### 7.1 Clog Detection and Recovery Flow
 
 ```
 ┌──────────────┐     ┌───────────────┐     ┌──────────────┐
@@ -515,7 +515,7 @@ Accuracy: ±5% of target weight (significantly better than ASD due to dedicated 
                                                                  └──────────┘
 ```
 
-## Metering Accuracy Summary
+## 8. Metering Accuracy Summary
 
 | Factor | P-ASD Impact | CID Impact | SLD Impact | Mitigation |
 |--------|-------------|-----------|-----------|------------|
@@ -525,9 +525,9 @@ Accuracy: ±5% of target weight (significantly better than ASD due to dedicated 
 | Sticky ingredients | Pressurized air forces through orifice | Pieces stick to tray | Oil residue in tube | P-ASD: post-dispense purge. CID: angled tray. SLD: tube replacement |
 | Fill level variance | Air pressure compensates (consistent regardless of fill) | N/A | Pump rate independent of level | P-ASD: pressure regulation maintains consistent force |
 
-## Recipe Integration
+## 9. Recipe Integration
 
-### Dispensing Sequence Example (Dal Tadka)
+### 9.1 Dispensing Sequence Example (Dal Tadka)
 
 ```
 Step 1:  DISPENSE_SLD(OIL, 30g)                ──► Oil into hot pot
@@ -544,7 +544,7 @@ Step 10: DISPENSE_SLD(WATER, 400g)              ──► Water
 Step 11: Simmer until done (CV + timer)         ──► Camera detects thickening
 ```
 
-### Ingredient Loading Configuration
+### 9.2 Ingredient Loading Configuration
 
 Users configure subsystem contents when loading ingredients before cooking:
 
@@ -555,7 +555,7 @@ Users configure subsystem contents when loading ingredients before cooking:
 | Target Weight (g) | 5 | From recipe (adjusted for servings) |
 | Pre-loaded | Yes/No | User confirms via touchscreen or app |
 
-### Pre-Flight Check
+### 9.3 Pre-Flight Check
 
 Before starting a recipe, the system verifies all required subsystems:
 
@@ -565,9 +565,9 @@ Before starting a recipe, the system verifies all required subsystems:
 4. Display subsystem status on UI: loaded / insufficient / empty
 5. Block recipe start if any required subsystem is insufficient
 
-## Food Safety
+## 10. Food Safety
 
-### Temperature and Hold Time
+### 10.1 Temperature and Hold Time
 
 | Consideration | Guideline | Implementation |
 |--------------|-----------|----------------|
@@ -576,7 +576,7 @@ Before starting a recipe, the system verifies all required subsystems:
 | Allergen Cross-Contamination | Dedicated subsystems per ingredient type | ASD: dry spices only. CID: separate trays. SLD: separate tubes per liquid |
 | Raw Meat Handling | CID-1 designated for raw protein | Tray labeled, separate drop zone, cleaning reminder after use |
 
-### Contamination Prevention
+### 10.2 Contamination Prevention
 
 - P-ASD: each cartridge has a dedicated discharge path; shared funnel is air-purged between dispenses
 - CID: each tray drops into a distinct zone of the pot (no shared surfaces)
@@ -584,9 +584,9 @@ Before starting a recipe, the system verifies all required subsystems:
 - All removable parts are smooth, non-porous food-grade PP
 - Silicone pump tubing is replaceable (recommended every 3 months or 200 cycles)
 
-## Cleaning Design
+## 11. Cleaning Design
 
-### Removable Components
+### 11.1 Removable Components
 
 | Component | Removal Method | Dishwasher Safe | Cleaning Frequency |
 |-----------|----------------|-----------------|-------------------|
@@ -602,7 +602,7 @@ Before starting a recipe, the system verifies all required subsystems:
 | Linear Actuator / Push-Plate (CID) | Not user-removable | No | Wipe-down weekly |
 | Solenoid Valve Assembly (SLD) | Not user-removable | No | Wipe-down weekly |
 
-### Auto-Rinse Cycle
+### 11.2 Auto-Rinse Cycle
 
 For quick cleaning of SLD channels between recipes:
 
@@ -612,9 +612,9 @@ For quick cleaning of SLD channels between recipes:
 4. Water flushes through tubing and nozzle into pot
 5. User discards pot contents; repeat if needed
 
-## Testing and Validation
+## 12. Testing and Validation
 
-### Test Procedures
+### 12.1 Test Procedures
 
 | Test | Subsystem | Method | Pass Criteria |
 |------|-----------|--------|---------------|
@@ -633,7 +633,7 @@ For quick cleaning of SLD channels between recipes:
 | SLD Solenoid Endurance | SLD | 10,000 open/close cycles | No leaking when closed, consistent response |
 | Tubing Replacement | SLD | Replace tubing, verify flow rate matches spec | Flow rate within ±10% of calibrated value |
 
-### Prototype Validation Checklist
+### 12.2 Prototype Validation Checklist
 
 - [ ] All 6 P-ASD cartridges dock securely via bayonet lock and release easily
 - [ ] P-ASD air seals are airtight (no pressure loss when cartridge docked)
@@ -655,7 +655,7 @@ For quick cleaning of SLD channels between recipes:
 - [ ] All chutes/nozzles direct ingredients into pot center (no spillage)
 - [ ] Auto-rinse cycle clears visible residue from SLD tubing
 
-## Related Documentation
+## 13. Related Documentation
 
 - [[../01-Overview/01-Project-Overview|Project Overview]]
 - [[../02-Hardware/02-Technical-Specifications|Technical Specifications]]
@@ -669,7 +669,7 @@ For quick cleaning of SLD channels between recipes:
 
 ---
 
-## Revision History
+## 14. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

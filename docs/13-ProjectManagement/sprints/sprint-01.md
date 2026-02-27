@@ -14,7 +14,7 @@ aliases: [Sprint 1]
 > **Phase:** Phase 0 — Foundation
 > **Goal:** Establish core embedded platform with STM32 FreeRTOS, CM5 Yocto Linux + Docker, and SPI communication bridge between processors.
 
-## Stories
+## 1. Stories
 
 | Status | ID | Title | Epic | Points | Blocked By |
 |:------:|-----|-------|------|:------:|------------|
@@ -24,7 +24,7 @@ aliases: [Sprint 1]
 
 **Total Points:** 24
 
-## Capacity Allocation
+## 2. Capacity Allocation
 
 | Team Member | Allocated | Available | Notes |
 |-------------|:---------:|:---------:|-------|
@@ -32,7 +32,7 @@ aliases: [Sprint 1]
 | Embedded Dev 2 | 8 | 8 | Support Yocto image, Docker testing |
 | **Total** | **24** | **24** | |
 
-## Sprint Review Checklist
+## 3. Sprint Review Checklist
 
 - [ ] All stories demo-ready
 - [ ] No P0 bugs remaining
@@ -42,7 +42,7 @@ aliases: [Sprint 1]
 - [ ] CM5 boots Yocto with Docker Compose running
 - [ ] SPI bridge can send/receive basic messages
 
-## Retro Notes
+## 4. Retro Notes
 
 > _To be filled during sprint retrospective._
 >
@@ -57,7 +57,7 @@ aliases: [Sprint 1]
 
 ---
 
-## References
+## 5. References
 
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calendar]]
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/02-Stories|User Stories]]

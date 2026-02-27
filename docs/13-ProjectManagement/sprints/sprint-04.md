@@ -14,7 +14,7 @@ aliases: [Sprint 4]
 > **Phase:** Phase 1 — Thermal & Arm
 > **Goal:** Complete PID tuning, add thermal safety interlocks and exhaust fan, implement servo arm control. Achieve Milestone M2: Thermal + Arm.
 
-## Stories
+## 1. Stories
 
 | Status | ID | Title | Epic | Points | Blocked By |
 |:------:|-----|-------|------|:------:|------------|
@@ -25,7 +25,7 @@ aliases: [Sprint 4]
 
 **Total Points:** 18
 
-## Capacity Allocation
+## 2. Capacity Allocation
 
 | Team Member | Allocated | Available | Notes |
 |-------------|:---------:|:---------:|-------|
@@ -33,7 +33,7 @@ aliases: [Sprint 4]
 | Embedded Dev 2 | 8 | 16 | Exhaust fan + servo arm |
 | **Total** | **18** | **32** | |
 
-## Sprint Review Checklist
+## 3. Sprint Review Checklist
 
 - [ ] All stories demo-ready
 - [ ] No P0 bugs remaining
@@ -46,7 +46,7 @@ aliases: [Sprint 4]
 - [ ] Servo stall detection works
 - [ ] **Milestone M2: Thermal + Arm** achieved
 
-## Retro Notes
+## 4. Retro Notes
 
 > _To be filled during sprint retrospective._
 >
@@ -61,7 +61,7 @@ aliases: [Sprint 4]
 
 ---
 
-## References
+## 5. References
 
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calendar]]
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/02-Stories|User Stories]]

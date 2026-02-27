@@ -14,7 +14,7 @@ aliases: [ADM Epic, Admin Epic]
 
 Web-based admin dashboard for recipe management, device monitoring, and user administration. Built with Next.js App Router, shadcn/ui, TanStack Table.
 
-## Story Summary
+## 1. Story Summary
 
 | Module | Stories | Points | Sprints |
 |--------|:-------:|:------:|---------|
@@ -26,9 +26,9 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 
 ---
 
-## Phase 4 — Admin Portal (Sprints 10–12)
+## 2. Phase 4 — Admin Portal (Sprints 10–12)
 
-### ADM-SET.01: Next.js project setup — App Router, shadcn/ui, auth, layout
+### 2.1 ADM-SET.01: Next.js project setup — App Router, shadcn/ui, auth, layout
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 5
@@ -52,7 +52,7 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 
 ---
 
-### ADM-RCP.01: Recipe management — list, create/edit form, YAML editor
+### 2.2 ADM-RCP.01: Recipe management — list, create/edit form, YAML editor
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 5
@@ -72,7 +72,7 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 
 ---
 
-### ADM-RCP.02: Recipe management — image upload, preview, delete
+### 2.3 ADM-RCP.02: Recipe management — image upload, preview, delete
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 3
@@ -92,7 +92,7 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 
 ---
 
-### ADM-DEV.01: Device monitoring — list, status, telemetry, commands
+### 2.4 ADM-DEV.01: Device monitoring — list, status, telemetry, commands
 - **Sprint:** [[sprint-11|Sprint 11]]
 - **Priority:** P0
 - **Points:** 5
@@ -116,7 +116,7 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 
 ---
 
-### ADM-USR.01: User administration — list, detail, roles
+### 2.5 ADM-USR.01: User administration — list, detail, roles
 - **Sprint:** [[sprint-12|Sprint 12]]
 - **Priority:** P1
 - **Points:** 5
@@ -139,13 +139,13 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 
 ---
 
-## Dependencies
+## 3. Dependencies
 
-### What ADM blocks
+### 3.1 What ADM blocks
 
 None — Admin portal is a leaf node.
 
-### What blocks ADM
+### 3.2 What blocks ADM
 
 | ADM Story | Blocked by | Reason |
 |-----------|------------|--------|
@@ -157,7 +157,7 @@ None — Admin portal is a leaf node.
 
 ---
 
-## References
+## 4. References
 
 - [[__Workspaces/Epicura/docs/10-Backend/03-Admin-Portal|Admin Portal Design]]
 - [[__Workspaces/Epicura/docs/11-API/01-REST-API-Reference|REST API Reference]]

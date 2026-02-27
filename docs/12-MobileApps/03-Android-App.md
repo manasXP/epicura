@@ -7,7 +7,7 @@ status: Draft
 
 # Android App
 
-## Platform Requirements
+## 1. Platform Requirements
 
 | Requirement | Value |
 |-------------|-------|
@@ -21,7 +21,7 @@ status: Draft
 
 ---
 
-## Project Structure
+## 2. Project Structure
 
 ```
 app/src/main/java/io/epicura/app/
@@ -121,7 +121,7 @@ app/src/main/java/io/epicura/app/
 
 ---
 
-## Libraries
+## 3. Libraries
 
 | Library | Version | Purpose |
 |---------|---------|---------|
@@ -142,9 +142,9 @@ app/src/main/java/io/epicura/app/
 
 ---
 
-## BLE Implementation Notes
+## 4. BLE Implementation Notes
 
-### CompanionDeviceManager Approach
+### 4.1 CompanionDeviceManager Approach
 
 Android 8.0+ provides `CompanionDeviceManager` for BLE pairing, which avoids requiring `ACCESS_FINE_LOCATION` permission:
 
@@ -184,7 +184,7 @@ class BleManager @Inject constructor(
 }
 ```
 
-### Key Considerations
+### 4.2 Key Considerations
 
 - **Permissions (Android 12+):** Request `BLUETOOTH_CONNECT` and `BLUETOOTH_SCAN` at runtime
 - **CompanionDeviceManager:** Preferred for pairing — shows system UI, no location permission needed
@@ -195,7 +195,7 @@ class BleManager @Inject constructor(
 
 ---
 
-## Foreground Service for Cooking
+## 5. Foreground Service for Cooking
 
 When the user starts a cook remotely, a foreground service maintains the WebSocket connection and displays a persistent notification with cooking progress:
 
@@ -222,7 +222,7 @@ class CookingForegroundService : Service() {
 
 ---
 
-## WorkManager for Background Sync
+## 6. WorkManager for Background Sync
 
 Periodic background tasks using WorkManager:
 
@@ -251,9 +251,9 @@ WorkManager.getInstance(context).enqueueUniquePeriodicWork(
 
 ---
 
-## Push Notifications (FCM)
+## 7. Push Notifications (FCM)
 
-### Setup
+### 7.1 Setup
 
 ```kotlin
 class EpicuraFirebaseMessagingService : FirebaseMessagingService() {
@@ -275,7 +275,7 @@ class EpicuraFirebaseMessagingService : FirebaseMessagingService() {
 }
 ```
 
-### Notification Channels (Android 8.0+)
+### 7.2 Notification Channels (Android 8.0+)
 
 | Channel | ID | Importance | Description |
 |---------|----|------------|-------------|
@@ -285,9 +285,9 @@ class EpicuraFirebaseMessagingService : FirebaseMessagingService() {
 
 ---
 
-## Testing
+## 8. Testing
 
-### Unit Tests (JUnit 5)
+### 8.1 Unit Tests (JUnit 5)
 
 | Test Class | Scope |
 |-----------|-------|
@@ -298,7 +298,7 @@ class EpicuraFirebaseMessagingService : FirebaseMessagingService() {
 | `CookingViewModelTest` | WebSocket events, state transitions |
 | `PairingViewModelTest` | BLE pairing flow |
 
-### Flow Testing (Turbine)
+### 8.2 Flow Testing (Turbine)
 
 ```kotlin
 @Test
@@ -312,7 +312,7 @@ fun `recipes load successfully`() = runTest {
 }
 ```
 
-### UI Tests (Compose UI Test)
+### 8.3 UI Tests (Compose UI Test)
 
 ```kotlin
 @Test
@@ -327,7 +327,7 @@ fun recipeCard_displaysCorrectInfo() {
 }
 ```
 
-### Testing Tools
+### 8.4 Testing Tools
 
 | Tool | Purpose |
 |------|---------|
@@ -341,7 +341,7 @@ fun recipeCard_displaysCorrectInfo() {
 
 ---
 
-## Related Documentation
+## 9. Related Documentation
 
 - [[01-Mobile-Architecture|Mobile Architecture]] - Shared architecture and design system
 - [[02-iOS-App|iOS App]] - iOS counterpart
@@ -354,7 +354,7 @@ fun recipeCard_displaysCorrectInfo() {
 
 ---
 
-## Revision History
+## 10. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

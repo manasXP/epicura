@@ -13,7 +13,7 @@ aliases: [Sprint Calendar, Sprint Index]
 
 A 6-week pre-sprint PCB phase followed by 12 two-week sprints spanning ~30 weeks total.
 
-## Sprint Calendar
+## 1. Sprint Calendar
 
 | Sprint | Weeks | Phase | Focus | Milestone |
 |--------|:-----:|-------|-------|-----------|
@@ -31,7 +31,7 @@ A 6-week pre-sprint PCB phase followed by 12 two-week sprints spanning ~30 weeks
 | [[sprint-11]] | 21–22 | Phase 4 | Integration testing, safety testing, mobile profiles, device monitoring | |
 | [[sprint-12]] | 23–24 | Phase 4 | Reliability testing, launch readiness, admin users, production firmware | **M6** — Launch Ready |
 
-## Phase Mapping
+## 2. Phase Mapping
 
 | Phase | Sprints | Duration | Primary Deliverables |
 |-------|---------|----------|---------------------|
@@ -42,7 +42,7 @@ A 6-week pre-sprint PCB phase followed by 12 two-week sprints spanning ~30 weeks
 | **Phase 3** — Software | 8–10 | 6 weeks | Recipe engine, state machine, Kivy UI, mobile apps, admin portal |
 | **Phase 4** — Integration & Launch | 11–12 | 4 weeks | System integration, safety cert, reliability, production readiness |
 
-## Sprint Ceremonies
+## 3. Sprint Ceremonies
 
 | Ceremony | When | Duration |
 |----------|------|----------|
@@ -51,7 +51,7 @@ A 6-week pre-sprint PCB phase followed by 12 two-week sprints spanning ~30 weeks
 | Sprint Review | Friday, sprint end | 1 hour |
 | Sprint Retrospective | Friday, sprint end | 30 minutes |
 
-## Velocity Tracking
+## 4. Velocity Tracking
 
 | Metric | Target |
 |--------|--------|
@@ -63,7 +63,7 @@ A 6-week pre-sprint PCB phase followed by 12 two-week sprints spanning ~30 weeks
 
 ---
 
-## References
+## 5. References
 
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/01-Epics|Epic Index]]
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/__init|Project Management Index]]

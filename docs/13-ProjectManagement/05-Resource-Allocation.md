@@ -7,7 +7,7 @@ status: Draft
 
 # Resource Allocation & Gantt Chart
 
-## Overview
+## 1. Overview
 
 This document provides detailed resource allocation across all project phases, including the critical Pre-Sprint PCB Development Phase. It shows personnel assignments, workload distribution, and identifies potential bottlenecks.
 
@@ -16,7 +16,7 @@ This document provides detailed resource allocation across all project phases, i
 
 ---
 
-## Personnel Roles & Hourly Rates
+## 2. Personnel Roles & Hourly Rates
 
 | Role | Skills Required | Hourly Rate (USD) | Availability Model |
 |------|----------------|-------------------|-------------------|
@@ -32,9 +32,9 @@ This document provides detailed resource allocation across all project phases, i
 
 ---
 
-## Pre-Sprint Phase: PCB Development (Weeks -6 to 0)
+## 3. Pre-Sprint Phase: PCB Development (Weeks -6 to 0)
 
-### Week -6 to Week -3: PCB Design
+### 3.1 Week -6 to Week -3: PCB Design
 
 | Week | PCB Engineer | Embedded Dev | Power Engineer | Total Person-Weeks |
 |------|--------------|--------------|----------------|-------------------|
@@ -56,7 +56,7 @@ This document provides detailed resource allocation across all project phases, i
 
 ---
 
-### Week -3 to Week 0: PCB Fabrication & Testing
+### 3.2 Week -3 to Week 0: PCB Fabrication & Testing
 
 | Week | PCB Engineer | Embedded Dev | Mechanical Eng | Total Person-Weeks |
 |------|--------------|--------------|----------------|-------------------|
@@ -77,9 +77,9 @@ This document provides detailed resource allocation across all project phases, i
 
 ---
 
-## Sprint-by-Sprint Resource Allocation
+## 4. Sprint-by-Sprint Resource Allocation
 
-### Sprint 1 (Weeks 1-2): Foundation
+### 4.1 Sprint 1 (Weeks 1-2): Foundation
 
 | Role | Allocation | Tasks | Hours/Week |
 |------|------------|-------|------------|
@@ -90,7 +90,7 @@ This document provides detailed resource allocation across all project phases, i
 
 ---
 
-### Sprint 2 (Weeks 3-4): Power & Thermal Setup
+### 4.2 Sprint 2 (Weeks 3-4): Power & Thermal Setup
 
 | Role | Allocation | Tasks | Hours/Week |
 |------|------------|-------|------------|
@@ -101,7 +101,7 @@ This document provides detailed resource allocation across all project phases, i
 
 ---
 
-### Sprint 3 (Weeks 5-6): Thermal Control - PID & Safety
+### 4.3 Sprint 3 (Weeks 5-6): Thermal Control - PID & Safety
 
 | Role | Allocation | Tasks | Hours/Week |
 |------|------------|-------|------------|
@@ -112,7 +112,7 @@ This document provides detailed resource allocation across all project phases, i
 
 ---
 
-### Sprint 4 (Weeks 7-8): Robotic Arm
+### 4.4 Sprint 4 (Weeks 7-8): Robotic Arm
 
 | Role | Allocation | Tasks | Hours/Week |
 |------|------------|-------|------------|
@@ -124,7 +124,7 @@ This document provides detailed resource allocation across all project phases, i
 
 ---
 
-### Sprint 5 (Weeks 9-10): Load Cells
+### 4.5 Sprint 5 (Weeks 9-10): Load Cells
 
 | Role | Allocation | Tasks | Hours/Week |
 |------|------------|-------|------------|
@@ -135,7 +135,7 @@ This document provides detailed resource allocation across all project phases, i
 
 ---
 
-### Sprint 6 (Weeks 11-12): Computer Vision - Camera Setup
+### 4.6 Sprint 6 (Weeks 11-12): Computer Vision - Camera Setup
 
 | Role | Allocation | Tasks | Hours/Week |
 |------|------------|-------|------------|
@@ -147,7 +147,7 @@ This document provides detailed resource allocation across all project phases, i
 
 ---
 
-### Sprint 7 (Weeks 13-14): CV Training & Deployment
+### 4.7 Sprint 7 (Weeks 13-14): CV Training & Deployment
 
 | Role | Allocation | Tasks | Hours/Week |
 |------|------------|-------|------------|
@@ -159,7 +159,7 @@ This document provides detailed resource allocation across all project phases, i
 
 ---
 
-### Sprint 8 (Weeks 15-16): Recipe State Machine
+### 4.8 Sprint 8 (Weeks 15-16): Recipe State Machine
 
 | Role | Allocation | Tasks | Hours/Week |
 |------|------------|-------|------------|
@@ -170,7 +170,7 @@ This document provides detailed resource allocation across all project phases, i
 
 ---
 
-### Sprint 9 (Weeks 17-18): Dispensing & UI
+### 4.9 Sprint 9 (Weeks 17-18): Dispensing & UI
 
 | Role | Allocation | Tasks | Hours/Week |
 |------|------------|-------|------------|
@@ -183,7 +183,7 @@ This document provides detailed resource allocation across all project phases, i
 
 ---
 
-### Sprint 10 (Weeks 19-20): UI & API
+### 4.10 Sprint 10 (Weeks 19-20): UI & API
 
 | Role | Allocation | Tasks | Hours/Week |
 |------|------------|-------|------------|
@@ -196,7 +196,7 @@ This document provides detailed resource allocation across all project phases, i
 
 ---
 
-### Sprint 11 (Weeks 21-22): Integration Part 1
+### 4.11 Sprint 11 (Weeks 21-22): Integration Part 1
 
 | Role | Allocation | Tasks | Hours/Week |
 |------|------------|-------|------------|
@@ -209,7 +209,7 @@ This document provides detailed resource allocation across all project phases, i
 
 ---
 
-### Sprint 12 (Weeks 23-24): Integration Part 2
+### 4.12 Sprint 12 (Weeks 23-24): Integration Part 2
 
 | Role | Allocation | Tasks | Hours/Week |
 |------|------------|-------|------------|
@@ -222,7 +222,7 @@ This document provides detailed resource allocation across all project phases, i
 
 ---
 
-## Gantt Chart (Text-Based)
+## 5. Gantt Chart (Text-Based)
 
 ```
 Timeline (Weeks): -6  -5  -4  -3  -2  -1   0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24
@@ -258,9 +258,9 @@ Legend:
 
 ---
 
-## Detailed Resource Timeline
+## 6. Detailed Resource Timeline
 
-### Pre-Sprint Phase (Weeks -6 to 0)
+### 6.1 Pre-Sprint Phase (Weeks -6 to 0)
 
 | Week | PCB Eng | Embed Dev | Mech Eng | Power Eng | Total FTE |
 |------|---------|-----------|----------|-----------|-----------|
@@ -275,7 +275,7 @@ Legend:
 
 ---
 
-### Sprint Phase (Weeks 1-24)
+### 6.2 Sprint Phase (Weeks 1-24)
 
 | Sprint | Week | Embed | Mech | ML/CV | Front | Back | Mobile | QA | Cook | Total FTE |
 |--------|------|-------|------|-------|-------|------|--------|-----|------|-----------|
@@ -295,9 +295,9 @@ Legend:
 
 ---
 
-## Peak Resource Demand Analysis
+## 7. Peak Resource Demand Analysis
 
-### Highest Staffing Requirements
+### 7.1 Highest Staffing Requirements
 
 | Period | Total FTE | Roles Needed | Cost/Week | Bottleneck Risk |
 |--------|-----------|--------------|-----------|-----------------|
@@ -311,9 +311,9 @@ Legend:
 
 ---
 
-## Resource Optimization Strategies
+## 8. Resource Optimization Strategies
 
-### Strategy 1: Serial UI Development (Reduces Peak to 2.3 FTE)
+### 8.1 Strategy 1: Serial UI Development (Reduces Peak to 2.3 FTE)
 
 **Current Plan (Sprint 10):**
 - Frontend (100%) + Backend (100%) + Mobile (100%) = 3.0 FTE UI work
@@ -328,7 +328,7 @@ Legend:
 
 ---
 
-### Strategy 2: Outsource Mobile App (Flutter)
+### 8.2 Strategy 2: Outsource Mobile App (Flutter)
 
 **Approach:** Contract mobile app to external Flutter agency for fixed bid.
 
@@ -339,7 +339,7 @@ Legend:
 
 ---
 
-### Strategy 3: Part-Time Cook/Assistant
+### 8.3 Strategy 3: Part-Time Cook/Assistant
 
 **Current Plan:** 100% during Sprint 7, 11, 12
 **Optimized Plan:** 20 hrs/week across Weeks 13-24 (12 weeks)
@@ -350,9 +350,9 @@ Legend:
 
 ---
 
-## Labor Cost Estimates
+## 9. Labor Cost Estimates
 
-### Pre-Sprint Phase (Weeks -6 to 0)
+### 9.1 Pre-Sprint Phase (Weeks -6 to 0)
 
 | Role | Total Hours | Rate/Hr | Total Cost |
 |------|-------------|---------|------------|
@@ -364,7 +364,7 @@ Legend:
 
 ---
 
-### Sprint Phase (Weeks 1-24)
+### 9.2 Sprint Phase (Weeks 1-24)
 
 | Role | Total Weeks | Avg % | Total Hours | Rate/Hr | Total Cost |
 |------|-------------|-------|-------------|---------|------------|
@@ -380,7 +380,7 @@ Legend:
 
 ---
 
-### Total Project Labor Cost
+### 9.3 Total Project Labor Cost
 
 | Phase | Hours | Cost |
 |-------|-------|------|
@@ -390,7 +390,7 @@ Legend:
 
 ---
 
-## Budget Summary (Labor + Materials)
+## 10. Budget Summary (Labor + Materials)
 
 | Category | Cost | % of Total |
 |----------|------|------------|
@@ -404,9 +404,9 @@ Legend:
 
 ---
 
-## Team Composition Recommendations
+## 11. Team Composition Recommendations
 
-### Option 1: Solo Developer (Extended Timeline)
+### 11.1 Option 1: Solo Developer (Extended Timeline)
 
 **Team:**
 - 1 × Full-stack embedded/software developer (all roles except mechanical)
@@ -419,7 +419,7 @@ Legend:
 
 ---
 
-### Option 2: Core Team of 2 (Recommended)
+### 11.2 Option 2: Core Team of 2 (Recommended)
 
 **Team:**
 - 1 × Embedded developer (full-time, Weeks -2 to 24)
@@ -433,7 +433,7 @@ Legend:
 
 ---
 
-### Option 3: Full Team (Fastest)
+### 11.3 Option 3: Full Team (Fastest)
 
 **Team:**
 - 1 × Embedded developer (Weeks -2 to 24)
@@ -451,9 +451,9 @@ Legend:
 
 ---
 
-## Critical Path & Dependencies
+## 12. Critical Path & Dependencies
 
-### Sequential Dependencies (Cannot Parallelize)
+### 12.1 Sequential Dependencies (Cannot Parallelize)
 
 ```
 Week -6: PCB Design Complete
@@ -488,9 +488,9 @@ Week 24: Sprint 12 (Validation) ← Integration complete
 
 ---
 
-## Risk Mitigation - Resource Bottlenecks
+## 13. Risk Mitigation - Resource Bottlenecks
 
-### Risk 1: PCB Engineer Unavailable
+### 13.1 Risk 1: PCB Engineer Unavailable
 
 **Probability:** Medium (specialized skill)
 **Impact:** High (blocks entire project)
@@ -502,7 +502,7 @@ Week 24: Sprint 12 (Validation) ← Integration complete
 
 ---
 
-### Risk 2: Embedded Developer Leaves Mid-Project
+### 13.2 Risk 2: Embedded Developer Leaves Mid-Project
 
 **Probability:** Low-Medium
 **Impact:** Critical (single point of failure)
@@ -514,7 +514,7 @@ Week 24: Sprint 12 (Validation) ← Integration complete
 
 ---
 
-### Risk 3: ML/CV Model Fails to Achieve Accuracy
+### 13.3 Risk 3: ML/CV Model Fails to Achieve Accuracy
 
 **Probability:** Medium (new dataset, unproven approach)
 **Impact:** High (blocks recipe automation)
@@ -526,7 +526,7 @@ Week 24: Sprint 12 (Validation) ← Integration complete
 
 ---
 
-### Risk 4: Component Shortages (CM5, STM32, DRV8876)
+### 13.4 Risk 4: Component Shortages (CM5, STM32, DRV8876)
 
 **Probability:** Medium (ongoing chip shortage)
 **Impact:** High (blocks sprints)
@@ -538,9 +538,9 @@ Week 24: Sprint 12 (Validation) ← Integration complete
 
 ---
 
-## Deliverables by Phase
+## 14. Deliverables by Phase
 
-### Pre-Sprint Phase Deliverables (Week 0)
+### 14.1 Pre-Sprint Phase Deliverables (Week 0)
 - [ ] Controller PCB (10 pcs) assembled and powered
 - [ ] Driver PCB (10 pcs) assembled and powered
 - [ ] CM5IO PCB (5 pcs) assembled and powered
@@ -551,7 +551,7 @@ Week 24: Sprint 12 (Validation) ← Integration complete
 
 ---
 
-### Sprint Deliverables (Week 24)
+### 14.2 Sprint Deliverables (Week 24)
 - [ ] 5 recipes cook successfully end-to-end
 - [ ] Touchscreen UI functional (5 core screens)
 - [ ] Mobile app deployed (Android APK)
@@ -563,9 +563,9 @@ Week 24: Sprint 12 (Validation) ← Integration complete
 
 ---
 
-## Resource Allocation Tools
+## 15. Resource Allocation Tools
 
-### Recommended Project Management Tools
+### 15.1 Recommended Project Management Tools
 
 **For Small Team (1-2 people):**
 - **Trello** or **Notion**: Sprint boards, task tracking (free tier sufficient)
@@ -583,40 +583,40 @@ Week 24: Sprint 12 (Validation) ← Integration complete
 
 ---
 
-## Weekly Status Report Template
+## 16. Weekly Status Report Template
 
 ```markdown
 # Epicura Weekly Status - Week X
 
-## Sprint: [Sprint Name]
+## 17. Sprint: [Sprint Name]
 
-### Completed This Week
+### 17.1 Completed This Week
 - [ ] Task 1 (8 story points)
 - [ ] Task 2 (5 story points)
 
-### In Progress
+### 17.2 In Progress
 - [ ] Task 3 (13 story points) - 60% complete
 
-### Blocked
+### 17.3 Blocked
 - [ ] Task 4 - waiting on component delivery (ETA: Week X+1)
 
-### Resource Utilization
+### 17.4 Resource Utilization
 | Role | Planned % | Actual % | Variance |
 |------|-----------|----------|----------|
 | Embedded Dev | 100% | 85% | -15% (sick day Wed) |
 | Mechanical Eng | 60% | 70% | +10% (extra iteration) |
 
-### Budget Status
+### 17.5 Budget Status
 - Spent this week: $X,XXX
 - Cumulative spend: $X,XXX / $164,666 budget
 - Projected variance: +/- $X,XXX
 
-### Risks & Issues
+### 17.6 Risks & Issues
 1. **Issue:** PCB connector J3 intermittent contact
    - **Impact:** Sprint 2 delayed 1 day
    - **Mitigation:** Ordered replacement connectors, arriving Friday
 
-### Next Week Plan
+### 17.7 Next Week Plan
 - Complete ST-004 (Power Distribution)
 - Begin ST-005 (CAN Integration)
 - Order Sprint 3 components (thermal fuse)
@@ -624,7 +624,7 @@ Week 24: Sprint 12 (Validation) ← Integration complete
 
 ---
 
-## Related Documentation
+## 18. Related Documentation
 
 - [[03-Sprints|Sprint Planning]]
 - [[02-Stories|User Stories]]
@@ -638,7 +638,7 @@ Week 24: Sprint 12 (Validation) ← Integration complete
 
 ---
 
-## Revision History
+## 19. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

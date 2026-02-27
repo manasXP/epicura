@@ -9,82 +9,82 @@ status: Draft
 
 Welcome to the comprehensive documentation for the Epicura autonomous kitchen robot project. This documentation provides detailed specifications, design considerations, and implementation guidance for all subsystems of an AI-powered countertop cooking robot designed for Indian kitchens.
 
-## Quick Navigation
+## 1. Quick Navigation
 
-### Core Documentation
+### 1.1 Core Documentation
 
-#### 01. Overview
+#### 1.1.1 Overview
 1. **[[01-Overview/01-Project-Overview|Project Overview]]** - Executive summary, key features, and target use cases
 
-#### 02. Hardware
+#### 1.1.2 Hardware
 2. **[[02-Hardware/02-Technical-Specifications|Technical Specifications]]** - Induction, robotic arm, sensors, and performance requirements
 3. **[[02-Hardware/Epicura-Architecture|Epicura Architecture]]** - System block diagrams and hardware wiring
 4. **[[02-Hardware/05-Sensors-Acquisition|Sensors & Acquisition]]** - Camera, IR thermometer, and load cells
 5. **[[02-Hardware/07-Mechanical-Design|Mechanical Design]]** - Enclosure, arm mechanism, and industrial design
 
-#### 03. Software
+#### 1.1.3 Software
 6. **[[03-Software/04-Controller-Software-Architecture|Controller & Software Architecture]]** - Dual-processor software modules, recipe state machine, and control flow
 7. **[[03-Software/03-Main-Loop-State-Machine|Main Loop State Machine]]** - Cooking state diagram, state-layer impact matrix, sequence diagrams, and transition triggers
 8. **[[03-Software/08-Tech-Stack|Tech Stack]]** - Hardware platforms, software frameworks, and development tools
 9. **[[03-Software/04-MPU-Functional-Specification|MPU Functional Specification]]** - CM5 (Cortex-A76) functional requirements, interfaces, and software architecture
 10. **[[03-Software/05-MCU-Functional-Specification|MCU Functional Specification]]** - STM32G474RE functional requirements, pin assignments, and FreeRTOS tasks
 
-#### 04. User Interface
+#### 1.1.4 User Interface
 8. **[[04-UserInterface/03-UI-UX-Design|UI/UX Design]]** - Touchscreen interface, companion app, and multi-language support
 
-#### 05. Subsystems
+#### 1.1.5 Subsystems
 9. **[[05-Subsystems/09-Induction-Heating|Induction Heating]]** - 1,800W microwave induction surface (CAN bus), PID temperature control, and power management
 10. **[[05-Subsystems/10-Robotic-Arm|Robotic Arm]]** - Single-axis servo arm, stirring patterns, and STM32 motor control
 11. **[[05-Subsystems/03-Ingredient-Dispensing|Ingredient Dispensing]]** - Three-subsystem dispensing: ASD (seasonings), CID (coarse), SLD (liquids)
 12. **[[05-Subsystems/12-Vision-System|Vision System]]** - HD camera, edge AI inference, and cooking stage detection
 13. **[[05-Subsystems/13-Exhaust-Fume-Management|Exhaust & Fume Management]]** - Exhaust fan, grease/carbon filtration, and fume extraction
 
-#### 06. Compliance
+#### 1.1.6 Compliance
 13. **[[06-Compliance/06-Safety-Compliance|Safety & Compliance]]** - Electrical safety, food contact regulations, and BIS standards
 
-#### 07. Development
+#### 1.1.7 Development
 14. **[[07-Development/01-Prototype-Development-Plan|Prototype Development Plan]]** - Phased plan from prototype to production (20-24 weeks)
 15. **[[07-Development/02-Repository-Plan|Repository Plan]]** - 6 GitHub repositories, directory structures, CI/CD, and cross-repo dependencies
 16. **[[07-Development/03-Submodule-Setup|Docs Submodule Setup]]** - Linking the docs repo as a submodule in all other repositories
 
-#### 08. Project Management
+#### 1.1.8 Project Management
 15. **[[13-ProjectManagement/epics/__init|Epics]]** - 12 subsystem-based epics (~58 stories, ~365 points) covering PCB, embedded, thermal, actuation, vision, recipe, UI, backend, iOS, Android, admin, and integration
 16. **[[13-ProjectManagement/sprints/__init|Sprint Calendar]]** - 6-week pre-sprint PCB phase + 12 two-week sprints (30 weeks total)
 
-#### 09. Components (BOM)
+#### 1.1.9 Components (BOM)
 18. **[[08-Components/01-Compute-Module-Components|Compute Module Components]]** - Raspberry Pi CM5, STM32, carrier boards
 19. **[[08-Components/02-Actuation-Components|Actuation Components]]** - Servo motors, induction driver, solenoids
 20. **[[08-Components/03-Sensor-Components|Sensor Components]]** - Camera, IR thermometer, load cells
 21. **[[08-Components/04-Total-Component-Cost|Total Component Cost]]** - Full BOM and cost analysis ($614 prototype)
 
-#### 10. PCB Design
+#### 1.1.10 PCB Design
 22. **[[09-PCB/01-Controller-PCB-Design|Controller PCB Design]]** - STM32G474RE controller board (160x90mm)
 23. **[[09-PCB/02-Driver-PCB-Design|Driver PCB Design]]** - Power electronics and actuator driver board (160x90mm)
 
-#### 11. Backend
+#### 1.1.11 Backend
 24. **[[10-Backend/01-Backend-Architecture|Backend Architecture]]** - Cloud backend (Fastify, PostgreSQL, Redis, MQTT bridge)
 25. **[[10-Backend/02-Database-Schema|Database Schema]]** - PostgreSQL tables, indexes, sync strategy
 26. **[[10-Backend/03-Admin-Portal|Admin Portal]]** - Next.js admin dashboard for recipe and appliance management
 
-#### 12. API
+#### 1.1.12 API
 27. **[[11-API/01-REST-API-Reference|REST API Reference]]** - Complete endpoint documentation with examples
 28. **[[11-API/02-WebSocket-Events|WebSocket Events]]** - Real-time cooking event protocol
 29. **[[11-API/03-MQTT-Topics|MQTT Topics]]** - Device telemetry topic hierarchy
 30. **[[11-API/04-BLE-Services|BLE Services]]** - BLE GATT services for pairing and WiFi provisioning
 
-#### 13. Mobile Apps
+#### 1.1.13 Mobile Apps
 31. **[[12-MobileApps/01-Mobile-Architecture|Mobile Architecture]]** - MVVM architecture, networking, design system
 32. **[[12-MobileApps/02-iOS-App|iOS App]]** - Swift/SwiftUI implementation (Core Bluetooth, APNs)
 33. **[[12-MobileApps/03-Android-App|Android App]]** - Kotlin/Compose implementation (CompanionDeviceManager, FCM)
 
-#### 14. Testing
+#### 1.1.14 Testing
 34. **[[14-Testing/01-Firmware-Test-Strategy|Firmware Test Strategy]]** - Unity/CMock unit tests, HIL tests, MISRA static analysis, safety tests
 35. **[[14-Testing/02-CM5-Test-Strategy|CM5 Test Strategy]]** - pytest per Docker service, Docker Compose integration, CV model validation
 36. **[[14-Testing/03-API-Test-Strategy|API & Admin Test Strategy]]** - Vitest monorepo tests, Testcontainers integration, API contract tests
 37. **[[14-Testing/04-iOS-Test-Strategy|iOS Test Strategy]]** - XCTest/XCUITest, performance benchmarks, security tests
 38. **[[14-Testing/05-Android-Test-Strategy|Android Test Strategy]]** - JUnit 5/Compose UI tests, Macrobenchmark, security tests
 
-## Documentation Structure
+## 2. Documentation Structure
 
 ```
 docs/
@@ -174,9 +174,9 @@ docs/
         └── sprint-12.md                         Reliability, launch readiness
 ```
 
-## Getting Started
+## 3. Getting Started
 
-### For Project Managers
+### 3.1 For Project Managers
 Start with:
 1. [[01-Overview/01-Project-Overview|Project Overview]] - Understand the project scope and target market
 2. [[13-ProjectManagement/epics/__init|Epics]] - 12 subsystem-based epics (~58 stories, ~365 points)
@@ -185,40 +185,40 @@ Start with:
 6. [[03-Software/01-Tech-Stack|Tech Stack]] - Review technology choices
 7. [[06-Compliance/01-Safety-Compliance|Safety & Compliance]] - Understand electrical and food safety requirements
 
-### For Hardware Engineers
+### 3.2 For Hardware Engineers
 Start with:
 1. [[02-Hardware/02-Technical-Specifications|Technical Specifications]] - System requirements and power budget
 2. [[02-Hardware/01-Epicura-Architecture|Epicura Architecture]] - Block diagrams and wiring
 3. [[02-Hardware/03-Sensors-Acquisition|Sensors & Acquisition]] - Camera, IR thermometer, and load cell design
 4. [[02-Hardware/04-Mechanical-Design|Mechanical Design]] - Enclosure, arm mechanism, and thermal management
 
-### For Software Engineers
+### 3.3 For Software Engineers
 Start with:
 1. [[03-Software/02-Controller-Software-Architecture|Controller & Software Architecture]] - Dual-processor design and recipe state machine
 2. [[03-Software/01-Tech-Stack|Tech Stack]] - Development environment and tools
 3. [[04-UserInterface/01-UI-UX-Design|UI/UX Design]] - Touchscreen and companion app interface requirements
 
-### For Backend Engineers
+### 3.4 For Backend Engineers
 Start with:
 1. [[10-Backend/01-Backend-Architecture|Backend Architecture]] - Fastify, PostgreSQL, Redis, MQTT bridge
 2. [[10-Backend/02-Database-Schema|Database Schema]] - Tables, indexes, CM5 sync strategy
 3. [[11-API/01-REST-API-Reference|REST API Reference]] - Endpoint specifications with examples
 4. [[11-API/03-MQTT-Topics|MQTT Topics]] - Device telemetry protocol
 
-### For Mobile Developers
+### 3.5 For Mobile Developers
 Start with:
 1. [[12-MobileApps/01-Mobile-Architecture|Mobile Architecture]] - MVVM architecture, networking, BLE
 2. [[12-MobileApps/02-iOS-App|iOS App]] or [[12-MobileApps/03-Android-App|Android App]] - Platform-specific guide
 3. [[11-API/04-BLE-Services|BLE Services]] - Device pairing and WiFi provisioning
 4. [[11-API/01-REST-API-Reference|REST API Reference]] - Backend API endpoints
 
-### For Industrial Designers
+### 3.6 For Industrial Designers
 Start with:
 1. [[02-Hardware/04-Mechanical-Design|Mechanical Design]] - Enclosure form factor and material selection
 2. [[04-UserInterface/01-UI-UX-Design|UI/UX Design]] - Physical controls, display layout, and user flow
 3. [[01-Overview/01-Project-Overview|Project Overview]] - Product vision and target user profile
 
-## Key Features Summary
+## 4. Key Features Summary
 
 - **Autonomous Cooking** - Hands-off operation after ingredient loading; state machine recipe execution
 - **AI Vision Monitoring** - Overhead HD camera with TFLite edge AI for food color/texture analysis and cooking stage detection
@@ -230,7 +230,7 @@ Start with:
 - **Cloud + Offline Operation** - Cloud-updatable recipe library with full local SQLite fallback for offline cooking
 - **Under 2kW Power Draw** - Designed for standard Indian household 15A outlets with dynamic power management
 
-## Development Phases
+## 5. Development Phases
 
 | Phase | Duration | Key Deliverables |
 |-------|----------|------------------|
@@ -240,9 +240,9 @@ Start with:
 | **Production** | 3-6 months | Manufacturing, final certifications, market launch |
 | **Total** | 12-24 months | Market-ready product |
 
-## Subsystem Overview
+## 6. Subsystem Overview
 
-### Hardware Subsystems
+### 6.1 Hardware Subsystems
 - **Compute Platform** - Raspberry Pi CM5 (AI/vision/UI) + STM32 (motor/arm control)
 - **Induction Heater** - 1,800W induction cooktop with CAN coil temp + IR temperature feedback
 - **Display** - 10" 1280x800 capacitive touchscreen (Kivy interface)
@@ -250,7 +250,7 @@ Start with:
 - **CAN + IR Sensors** - Overhead HD camera + IR thermometer + load cells
 - **Ingredient Dispensing** - ASD (seasoning servos) + CID (linear actuator sliders) + SLD (peristaltic pumps + solenoids)
 
-### Software Subsystems
+### 6.2 Software Subsystems
 - **CM5 (Yocto Linux)** - Recipe engine, computer vision pipeline, Kivy UI, cloud sync, SQLite data management
 - **STM32 (FreeRTOS)** - PID temperature control, servo motor driver, sensor polling, safety watchdog
 
@@ -276,13 +276,13 @@ Start with:
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-## Tags
+## 7. Tags
 
 #epicura #kitchen-robot #documentation #index
 
 ---
 
-## Revision History
+## 8. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

@@ -14,7 +14,7 @@ Seed recipes for the Epicura `recipes` table. Based on Posha's 500+ one-pot reci
 
 ---
 
-## Schema Mapping
+## 1. Schema Mapping
 
 | Column | Source Field |
 |--------|-------------|
@@ -33,9 +33,9 @@ Seed recipes for the Epicura `recipes` table. Based on Posha's 500+ one-pot reci
 
 ---
 
-## Indian Cuisine
+## 2. Indian Cuisine
 
-### Dals
+### 2.1 Dals
 
 | # | Name | Category | Cuisine | Tags | Difficulty | Time | Servings | Cal | Protein | Carbs | Fats | Image Slug |
 |---|------|----------|---------|------|------------|------|----------|-----|---------|-------|------|------------|
@@ -50,7 +50,7 @@ Seed recipes for the Epicura `recipes` table. Based on Posha's 500+ one-pot reci
 | 9 | Panchmel Dal | dal | indian | vegetarian, protein-rich, gluten-free | medium | 40 | 4 | 310 | 20 | 40 | 7 | panchmel-dal |
 | 10 | Sambar | dal | indian | vegan, healthy, gluten-free | medium | 40 | 4 | 280 | 12 | 44 | 6 | sambar |
 
-### Curries
+### 2.2 Curries
 
 | # | Name | Category | Cuisine | Tags | Difficulty | Time | Servings | Cal | Protein | Carbs | Fats | Image Slug |
 |---|------|----------|---------|------|------------|------|----------|-----|---------|-------|------|------------|
@@ -75,7 +75,7 @@ Seed recipes for the Epicura `recipes` table. Based on Posha's 500+ one-pot reci
 | 29 | Dum Aloo | curry | indian | vegetarian, gluten-free | medium | 40 | 4 | 320 | 8 | 38 | 16 | dum-aloo |
 | 30 | Mixed Veg Curry | curry | indian | vegan, healthy, gluten-free | easy | 30 | 4 | 210 | 6 | 28 | 8 | mixed-veg-curry |
 
-### Rice Dishes
+### 2.3 Rice Dishes
 
 | # | Name | Category | Cuisine | Tags | Difficulty | Time | Servings | Cal | Protein | Carbs | Fats | Image Slug |
 |---|------|----------|---------|------|------------|------|----------|-----|---------|-------|------|------------|
@@ -92,7 +92,7 @@ Seed recipes for the Epicura `recipes` table. Based on Posha's 500+ one-pot reci
 | 41 | Curd Rice | rice | indian | vegetarian, gluten-free, quick | easy | 15 | 4 | 260 | 8 | 44 | 6 | curd-rice |
 | 42 | Bisibele Bath | rice | indian | vegetarian, protein-rich | medium | 45 | 4 | 380 | 14 | 56 | 10 | bisibele-bath |
 
-### Breakfast / Snacks
+### 2.4 Breakfast / Snacks
 
 | # | Name | Category | Cuisine | Tags | Difficulty | Time | Servings | Cal | Protein | Carbs | Fats | Image Slug |
 |---|------|----------|---------|------|------------|------|----------|-----|---------|-------|------|------------|
@@ -104,7 +104,7 @@ Seed recipes for the Epicura `recipes` table. Based on Posha's 500+ one-pot reci
 
 ---
 
-## Italian Cuisine
+## 3. Italian Cuisine
 
 | # | Name | Category | Cuisine | Tags | Difficulty | Time | Servings | Cal | Protein | Carbs | Fats | Image Slug |
 |---|------|----------|---------|------|------------|------|----------|-----|---------|-------|------|------------|
@@ -121,7 +121,7 @@ Seed recipes for the Epicura `recipes` table. Based on Posha's 500+ one-pot reci
 
 ---
 
-## American Cuisine
+## 4. American Cuisine
 
 | # | Name | Category | Cuisine | Tags | Difficulty | Time | Servings | Cal | Protein | Carbs | Fats | Image Slug |
 |---|------|----------|---------|------|------------|------|----------|-----|---------|-------|------|------------|
@@ -135,7 +135,7 @@ Seed recipes for the Epicura `recipes` table. Based on Posha's 500+ one-pot reci
 
 ---
 
-## Chinese Cuisine
+## 5. Chinese Cuisine
 
 | # | Name | Category | Cuisine | Tags | Difficulty | Time | Servings | Cal | Protein | Carbs | Fats | Image Slug |
 |---|------|----------|---------|------|------------|------|----------|-----|---------|-------|------|------------|
@@ -152,7 +152,7 @@ Seed recipes for the Epicura `recipes` table. Based on Posha's 500+ one-pot reci
 
 ---
 
-## Mexican Cuisine
+## 6. Mexican Cuisine
 
 | # | Name | Category | Cuisine | Tags | Difficulty | Time | Servings | Cal | Protein | Carbs | Fats | Image Slug |
 |---|------|----------|---------|------|------------|------|----------|-----|---------|-------|------|------------|
@@ -165,7 +165,7 @@ Seed recipes for the Epicura `recipes` table. Based on Posha's 500+ one-pot reci
 
 ---
 
-## Korean Cuisine
+## 7. Korean Cuisine
 
 | # | Name | Category | Cuisine | Tags | Difficulty | Time | Servings | Cal | Protein | Carbs | Fats | Image Slug |
 |---|------|----------|---------|------|------------|------|----------|-----|---------|-------|------|------------|
@@ -178,7 +178,7 @@ Seed recipes for the Epicura `recipes` table. Based on Posha's 500+ one-pot reci
 
 ---
 
-## Thai Cuisine
+## 8. Thai Cuisine
 
 | # | Name | Category | Cuisine | Tags | Difficulty | Time | Servings | Cal | Protein | Carbs | Fats | Image Slug |
 |---|------|----------|---------|------|------------|------|----------|-----|---------|-------|------|------------|
@@ -193,7 +193,7 @@ Seed recipes for the Epicura `recipes` table. Based on Posha's 500+ one-pot reci
 
 ---
 
-## Asian (Pan-Asian)
+## 9. Asian (Pan-Asian)
 
 | # | Name | Category | Cuisine | Tags | Difficulty | Time | Servings | Cal | Protein | Carbs | Fats | Image Slug |
 |---|------|----------|---------|------|------------|------|----------|-----|---------|-------|------|------------|
@@ -206,7 +206,7 @@ Seed recipes for the Epicura `recipes` table. Based on Posha's 500+ one-pot reci
 
 ---
 
-## Global Cuisine
+## 10. Global Cuisine
 
 | # | Name | Category | Cuisine | Tags | Difficulty | Time | Servings | Cal | Protein | Carbs | Fats | Image Slug |
 |---|------|----------|---------|------|------------|------|----------|-----|---------|-------|------|------------|
@@ -221,7 +221,7 @@ Seed recipes for the Epicura `recipes` table. Based on Posha's 500+ one-pot reci
 
 ---
 
-## Summary Statistics
+## 11. Summary Statistics
 
 | Metric | Value |
 |--------|-------|
@@ -241,7 +241,7 @@ Seed recipes for the Epicura `recipes` table. Based on Posha's 500+ one-pot reci
 
 ---
 
-## SQL Insert Template
+## 12. SQL Insert Template
 
 ```sql
 INSERT INTO recipes (name, category, cuisine, tags, difficulty, time_minutes, servings,
@@ -257,7 +257,7 @@ VALUES
 
 ---
 
-## Image Requirements
+## 13. Image Requirements
 
 Each recipe needs a hero image:
 - **Format:** JPEG, 800x800px, 80% quality
@@ -271,7 +271,7 @@ Each recipe needs a hero image:
 
 ---
 
-## Related Documentation
+## 14. Related Documentation
 
 - [[../10-Backend/02-Database-Schema|Database Schema]] — `recipes` table definition
 - [[../11-API/01-REST-API-Reference|REST API Reference]] — Recipe CRUD endpoints
@@ -281,7 +281,7 @@ Each recipe needs a hero image:
 
 ---
 
-## Revision History
+## 15. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

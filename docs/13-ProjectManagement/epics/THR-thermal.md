@@ -14,7 +14,7 @@ aliases: [THR Epic, Thermal Epic]
 
 CAN bus interface to the commercial microwave induction surface, closed-loop PID temperature control using IR and CAN coil temperature feedback, thermal safety interlocks, and PWM exhaust fan control. Owned by **Embedded Engineer**.
 
-## Story Summary
+## 1. Story Summary
 
 | Module | Stories | Points | Sprints |
 |--------|:-------:|:------:|---------|
@@ -26,9 +26,9 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 
 ---
 
-## Phase 1 — Thermal Control (Sprints 3–4)
+## 2. Phase 1 — Thermal Control (Sprints 3–4)
 
-### THR-CAN.01: CAN bus driver — FDCAN1 init, TX power command, RX status parsing
+### 2.1 THR-CAN.01: CAN bus driver — FDCAN1 init, TX power command, RX status parsing
 - **Sprint:** [[sprint-03|Sprint 3]]
 - **Priority:** P0
 - **Points:** 5
@@ -48,7 +48,7 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 
 ---
 
-### THR-CAN.02: CAN bus error handling and induction commands — bus-off recovery, power ramp, e-stop
+### 2.2 THR-CAN.02: CAN bus error handling and induction commands — bus-off recovery, power ramp, e-stop
 - **Sprint:** [[sprint-03|Sprint 3]]
 - **Priority:** P0
 - **Points:** 3
@@ -69,7 +69,7 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 
 ---
 
-### THR-PID.01: PID controller — sensor drivers, closed-loop temperature control
+### 2.3 THR-PID.01: PID controller — sensor drivers, closed-loop temperature control
 - **Sprint:** [[sprint-03|Sprint 3]]
 - **Priority:** P0
 - **Points:** 5
@@ -92,7 +92,7 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 
 ---
 
-### THR-PID.02: PID tuning and telemetry — gain storage, SPI reporting, performance validation
+### 2.4 THR-PID.02: PID tuning and telemetry — gain storage, SPI reporting, performance validation
 - **Sprint:** [[sprint-03|Sprint 3]] → [[sprint-04|Sprint 4]]
 - **Priority:** P0
 - **Points:** 3
@@ -112,7 +112,7 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 
 ---
 
-### THR-SAF.01: Thermal safety interlocks — runaway detection, coil overtemp, pan detection
+### 2.5 THR-SAF.01: Thermal safety interlocks — runaway detection, coil overtemp, pan detection
 - **Sprint:** [[sprint-04|Sprint 4]]
 - **Priority:** P0
 - **Points:** 5
@@ -137,7 +137,7 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 
 ---
 
-### THR-EXH.01: PWM exhaust fan control — temperature-proportional speed, grease filter monitor
+### 2.6 THR-EXH.01: PWM exhaust fan control — temperature-proportional speed, grease filter monitor
 - **Sprint:** [[sprint-04|Sprint 4]]
 - **Priority:** P1
 - **Points:** 5
@@ -161,9 +161,9 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 
 ---
 
-## Dependencies
+## 3. Dependencies
 
-### What THR blocks (downstream consumers)
+### 3.1 What THR blocks (downstream consumers)
 
 | THR Story | Blocks | Reason |
 |-----------|--------|--------|
@@ -173,7 +173,7 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 | THR-PID.02 | RCP-FSM.01, INT-SYS.01 | Tuned PID with telemetry needed for cooking and integration |
 | THR-SAF.01 | INT-SAF.01 | Thermal safety needed for certification |
 
-### What blocks THR (upstream dependencies)
+### 3.2 What blocks THR (upstream dependencies)
 
 | THR Story | Blocked by | Reason |
 |-----------|------------|--------|
@@ -186,7 +186,7 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 
 ---
 
-## References
+## 4. References
 
 - [[__Workspaces/Epicura/docs/05-Subsystems/01-Induction-Heating|Induction Heating Subsystem]]
 - [[__Workspaces/Epicura/docs/05-Subsystems/05-Exhaust-Fume-Management|Exhaust & Fume Management]]

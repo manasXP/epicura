@@ -14,7 +14,7 @@ aliases: [Sprint 12]
 > **Phase:** Phase 4 — Integration & Launch
 > **Goal:** Complete reliability testing, finalize production firmware, verify launch readiness, and deliver user administration features.
 
-## Stories
+## 1. Stories
 
 | Status | ID | Title | Epic | Points | Blocked By |
 |:------:|-----|-------|------|:------:|------------|
@@ -25,7 +25,7 @@ aliases: [Sprint 12]
 
 **Total Points:** 20
 
-## Capacity Allocation
+## 2. Capacity Allocation
 
 | Team Member | Allocated | Available | Notes |
 |-------------|:---------:|:---------:|-------|
@@ -33,7 +33,7 @@ aliases: [Sprint 12]
 | Web Developer | 5 | 20 | ADM-USR.01 (5) |
 | **Total** | **20** | **40** | Final sprint before launch |
 
-## Sprint Review Checklist
+## 3. Sprint Review Checklist
 
 - [ ] All stories demo-ready
 - [ ] No P0 bugs remaining
@@ -44,7 +44,7 @@ aliases: [Sprint 12]
 - [ ] Launch readiness review completed
 - [ ] All deployment runbooks validated
 
-## Retro Notes
+## 4. Retro Notes
 
 > _To be filled during sprint retrospective._
 >
@@ -59,7 +59,7 @@ aliases: [Sprint 12]
 
 ---
 
-## References
+## 5. References
 
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calendar]]
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/01-Epics|Milestone M6: Launch Ready]]

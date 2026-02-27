@@ -14,7 +14,7 @@ aliases: [STM32 Spec, MCU Spec]
 
 ---
 
-## 1 Overview
+## 1. Overview
 
 The STM32G474RE is the real-time motor/sensor controller and safety guardian for Epicura. It runs FreeRTOS with four primary tasks: PID temperature control (10 Hz), BLDC motor drive (50 Hz task rate), sensor polling (10 Hz), and CM5 communications (20 Hz). It owns all safety-critical paths including the heater relay, E-stop handling, and watchdog supervision.
 
@@ -33,7 +33,7 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 
 ---
 
-## 2 Functional Requirements
+## 2. Functional Requirements
 
 ### 2.1 PID Temperature Control
 
@@ -136,7 +136,7 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 
 ---
 
-## 3 Hardware Interfaces
+## 3. Hardware Interfaces
 
 ### 3.1 Pin Assignment (LQFP-64)
 
@@ -210,7 +210,7 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 
 ---
 
-## 4 Software Architecture
+## 4. Software Architecture
 
 ### 4.1 RTOS Configuration
 
@@ -262,7 +262,7 @@ CRITICAL ──[condition cleared within timeout]──→ WARNING
 
 ---
 
-## 5 Communication Protocols
+## 5. Communication Protocols
 
 ### 5.1 SPI Slave Protocol (STM32 ↔ CM5)
 
@@ -295,7 +295,7 @@ See [[04-MPU-Functional-Specification#5.1 SPI Protocol]] for full frame definiti
 
 ---
 
-## 6 Power Management
+## 6. Power Management
 
 ### 6.1 Power Supply
 
@@ -315,7 +315,7 @@ See [[04-MPU-Functional-Specification#5.1 SPI Protocol]] for full frame definiti
 
 ---
 
-## 7 Safety & Fault Handling
+## 7. Safety & Fault Handling
 
 ### 7.1 Safety Mechanisms
 
@@ -359,7 +359,7 @@ See [[04-MPU-Functional-Specification#5.1 SPI Protocol]] for full frame definiti
 
 ---
 
-## 8 Performance Requirements
+## 8. Performance Requirements
 
 | Metric | Target | Measurement |
 |--------|--------|-------------|
@@ -378,7 +378,7 @@ See [[04-MPU-Functional-Specification#5.1 SPI Protocol]] for full frame definiti
 
 ---
 
-## 9 Dependencies & Constraints
+## 9. Dependencies & Constraints
 
 ### 9.1 Hardware Dependencies
 

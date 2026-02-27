@@ -14,7 +14,7 @@ aliases: [Sprint 3]
 > **Phase:** Phase 1 — Thermal & Arm
 > **Goal:** Establish thermal control foundation with CAN bus interface to induction module and begin PID temperature controller implementation.
 
-## Stories
+## 1. Stories
 
 | Status | ID | Title | Epic | Points | Blocked By |
 |:------:|-----|-------|------|:------:|------------|
@@ -23,7 +23,7 @@ aliases: [Sprint 3]
 
 **Total Points:** 16
 
-## Capacity Allocation
+## 2. Capacity Allocation
 
 | Team Member | Allocated | Available | Notes |
 |-------------|:---------:|:---------:|-------|
@@ -31,7 +31,7 @@ aliases: [Sprint 3]
 | Embedded Dev 2 | 8 | 16 | PID controller foundation |
 | **Total** | **16** | **32** | Conservative sprint for Phase 1 start |
 
-## Sprint Review Checklist
+## 3. Sprint Review Checklist
 
 - [ ] All stories demo-ready
 - [ ] No P0 bugs remaining
@@ -42,7 +42,7 @@ aliases: [Sprint 3]
 - [ ] PID controller structure implemented (tuning continues Sprint 4)
 - [ ] IR thermometer reading integrated into PID loop
 
-## Retro Notes
+## 4. Retro Notes
 
 > _To be filled during sprint retrospective._
 >
@@ -57,7 +57,7 @@ aliases: [Sprint 3]
 
 ---
 
-## References
+## 5. References
 
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calendar]]
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/02-Stories|User Stories]]

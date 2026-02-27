@@ -7,7 +7,7 @@ status: Draft
 
 # Controller & Software Architecture
 
-## Architecture Overview
+## 1. Architecture Overview
 
 Epicura uses a dual-processor architecture: a Raspberry Pi CM5 running Yocto Linux for AI vision, UI, and cloud connectivity, paired with an STM32G4 microcontroller running FreeRTOS for real-time motor control, PID loops, and safety monitoring.
 
@@ -23,7 +23,7 @@ Epicura uses a dual-processor architecture: a Raspberry Pi CM5 running Yocto Lin
 
 ---
 
-## System Architecture
+## 2. System Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -72,7 +72,7 @@ Epicura uses a dual-processor architecture: a Raspberry Pi CM5 running Yocto Lin
 
 ---
 
-## Component Distribution
+## 3. Component Distribution
 
 | Module | Processor | Rationale |
 |--------|-----------|-----------|
@@ -91,9 +91,9 @@ Epicura uses a dual-processor architecture: a Raspberry Pi CM5 running Yocto Lin
 
 ---
 
-## Software Stack
+## 4. Software Stack
 
-### CM5 Docker-based Stack
+### 4.1 CM5 Docker-based Stack
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -153,7 +153,7 @@ Epicura uses a dual-processor architecture: a Raspberry Pi CM5 running Yocto Lin
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### STM32 FreeRTOS Stack
+### 4.2 STM32 FreeRTOS Stack
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -179,11 +179,11 @@ Epicura uses a dual-processor architecture: a Raspberry Pi CM5 running Yocto Lin
 
 ---
 
-## Core Modules
+## 5. Core Modules
 
-### 1. Recipe Engine (CM5)
+### 5.1 Recipe Engine (CM5)
 
-#### State Machine Design
+#### 5.1.1 State Machine Design
 
 Each recipe is modeled as a finite state machine. The Recipe Engine loads a YAML recipe definition, then drives the cooking process by transitioning between stages based on CV analysis, temperature readings, and timer events.
 
@@ -214,7 +214,7 @@ Each recipe is modeled as a finite state machine. The Recipe Engine loads a YAML
             └──────────┘
 ```
 
-#### Recipe Format (YAML)
+#### 5.1.2 Recipe Format (YAML)
 
 ```yaml
 recipe:
@@ -262,7 +262,7 @@ recipe:
       stir_pattern: "intermittent"
 ```
 
-#### Key Functions
+#### 5.1.3 Key Functions
 
 ```python
 class RecipeEngine:
@@ -286,9 +286,9 @@ class RecipeEngine:
 
 ---
 
-### 2. CV Pipeline (CM5)
+### 5.2 CV Pipeline (CM5)
 
-#### Pipeline Architecture
+#### 5.2.1 Pipeline Architecture
 
 ```
 ┌────────────┐    ┌────────────────┐    ┌───────────────┐    ┌────────────────┐
@@ -309,7 +309,7 @@ class RecipeEngine:
                                                               └──────────────┘
 ```
 
-#### Pipeline Implementation
+#### 5.2.2 Pipeline Implementation
 
 ```python
 import cv2
@@ -368,9 +368,9 @@ class CVPipeline:
 
 ---
 
-### 3. Motor Control (STM32)
+### 5.3 Motor Control (STM32)
 
-#### PID Controller
+#### 5.3.1 PID Controller
 
 ```c
 typedef struct {
@@ -418,7 +418,7 @@ float pid_compute(pid_controller_t *pid, float measurement, float dt)
 }
 ```
 
-#### Stirring Patterns
+#### 5.3.2 Stirring Patterns
 
 | Pattern | Speed (RPM) | Behavior | Use Case |
 |---------|-------------|----------|----------|
@@ -430,9 +430,9 @@ float pid_compute(pid_controller_t *pid, float measurement, float dt)
 
 ---
 
-### 4. Safety Monitor (STM32)
+### 5.4 Safety Monitor (STM32)
 
-#### Safety State Machine
+#### 5.4.1 Safety State Machine
 
 ```
 ┌─────────┐   temp > warn_thresh    ┌──────────┐   temp > crit_thresh   ┌───────────┐
@@ -481,9 +481,9 @@ float pid_compute(pid_controller_t *pid, float measurement, float dt)
 
 ---
 
-### 5. Data Management (CM5)
+### 5.5 Data Management (CM5)
 
-#### PostgreSQL Schema (Docker Container)
+#### 5.5.1 PostgreSQL Schema (Docker Container)
 
 The CM5 uses the same PostgreSQL schema as the cloud backend for consistency. See [[../../10-Backend/02-Database-Schema|Database Schema]] for full table definitions.
 
@@ -553,9 +553,9 @@ volumes:
 
 ---
 
-### 6. Cloud Sync (CM5)
+### 5.6 Cloud Sync (CM5)
 
-#### PostgreSQL Sync Strategy
+#### 5.6.1 PostgreSQL Sync Strategy
 
 The CM5 PostgreSQL database syncs with the cloud PostgreSQL instance using a hybrid approach:
 
@@ -592,7 +592,7 @@ class CloudSyncService:
             await self.db.mark_session_synced(log['id'])
 ```
 
-#### MQTT Telemetry
+#### 5.6.2 MQTT Telemetry
 
 - **Local Broker:** Mosquitto container with bridge to cloud
 - **Topic structure:** `epicura/{device_id}/telemetry`
@@ -614,7 +614,7 @@ class CloudSyncService:
 }
 ```
 
-#### OTA Firmware Updates
+#### 5.6.3 OTA Firmware Updates
 
 | Target | Method | Mechanism |
 |--------|--------|-----------|
@@ -629,9 +629,9 @@ class CloudSyncService:
 
 ---
 
-## Control Flow
+## 6. Control Flow
 
-### Cooking Workflow (10-Step Sequence)
+### 6.1 Cooking Workflow (10-Step Sequence)
 
 ```
  1. User selects recipe on touchscreen
@@ -674,9 +674,9 @@ class CloudSyncService:
 
 ---
 
-## CM5-STM32 Communication Protocol
+## 7. CM5-STM32 Communication Protocol
 
-### Message Structure
+### 7.1 Message Structure
 
 ```c
 typedef struct {
@@ -688,7 +688,7 @@ typedef struct {
 } cmd_msg_t;
 ```
 
-### Message Types
+### 7.2 Message Types
 
 | Message | Type Code | Direction | Payload |
 |---------|-----------|-----------|---------|
@@ -704,7 +704,7 @@ typedef struct {
 | STATUS | 0x12 | STM32 → CM5 | safety_state, error_code, flags |
 | ACK | 0xFF | Bidirectional | ack_msg_id, result_code |
 
-### Protocol Details
+### 7.3 Protocol Details
 
 - **Clock speed:** 2 MHz (SPI) or 500 kbps (CAN)
 - **Framing:** Type byte, MSG_ID, length, payload, CRC-16 (no start/end bytes needed — SPI is clocked)
@@ -714,7 +714,7 @@ typedef struct {
 
 ---
 
-## Real-Time Requirements
+## 8. Real-Time Requirements
 
 | Task | Frequency | Deadline | Processor | Priority |
 |------|-----------|----------|-----------|----------|
@@ -730,9 +730,9 @@ typedef struct {
 
 ---
 
-## Error Handling
+## 9. Error Handling
 
-### Common Errors
+### 9.1 Common Errors
 
 | Error | Detection | Severity | Recovery |
 |-------|-----------|----------|----------|
@@ -744,7 +744,7 @@ typedef struct {
 | Power anomaly | Voltage/current out of range | CRITICAL | Graceful shutdown, save state to flash |
 | Recipe parse error | Invalid YAML or missing fields | WARNING | Reject recipe, notify user, suggest re-download |
 
-### Fallback Strategies
+### 9.2 Fallback Strategies
 
 1. **CV fallback:** If camera or model fails, every recipe stage includes `duration_seconds` and `temp_target` as backup transition criteria
 2. **Communication fallback:** STM32 operates autonomously with last-known setpoints for up to 30 seconds, then enters safe shutdown
@@ -752,7 +752,7 @@ typedef struct {
 
 ---
 
-## Related Documentation
+## 10. Related Documentation
 
 - [[../01-Overview/01-Project-Overview|Project Overview]]
 - [[03-Main-Loop-State-Machine|Main Loop State Machine]]
@@ -763,7 +763,7 @@ typedef struct {
 
 ---
 
-## Revision History
+## 11. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

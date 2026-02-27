@@ -7,9 +7,9 @@ status: Draft
 
 # Technical Specifications
 
-## Heating System
+## 1. Heating System
 
-### Induction Heater (Microwave Surface Module)
+### 1.1 Induction Heater (Microwave Surface Module)
 
 The primary cooking element is a commercial microwave induction surface — a self-contained module with its own power coil, driver electronics, and AC power stage. The module handles all high-voltage power electronics internally and exposes a CAN bus interface for external control. This eliminates the need for custom IGBT driver circuits.
 
@@ -22,7 +22,7 @@ The primary cooking element is a commercial microwave induction surface — a se
 - **Pot Detection:** Internal to module (won't heat without compatible pot)
 - **Internal Safety:** Pot detection, thermal cutoff, overcurrent protection (all module-internal)
 
-### Power Level Profiles
+### 1.2 Power Level Profiles
 
 | Profile | Power (W) | Temp Range (C) | Use Case | Duty Cycle |
 |---------|-----------|-----------------|----------|------------|
@@ -32,7 +32,7 @@ The primary cooking element is a commercial microwave induction surface — a se
 | **Warm** | 200 | 60-70 | Keep-warm after cooking complete | 10-15% |
 | **Off** | 0 | Ambient | Idle, cool-down | 0% |
 
-### PID Control Parameters
+### 1.3 PID Control Parameters
 
 - **Setpoint Source:** Recipe state machine (via CM5 command)
 - **Feedback:** IR thermometer (primary), CAN coil temperature (secondary/safety)
@@ -41,9 +41,9 @@ The primary cooking element is a commercial microwave induction surface — a se
 - **Overshoot Protection:** Maximum 10C above setpoint triggers power reduction
 - **Safety Cutoff:** CAN coil over-temp or IR >270C triggers immediate shutdown
 
-## Sensor Specifications
+## 2. Sensor Specifications
 
-### Camera Module
+### 2.1 Camera Module
 
 | Parameter | Value |
 |-----------|-------|
@@ -57,7 +57,7 @@ The primary cooking element is a commercial microwave induction surface — a se
 | Mounting | Overhead gantry, 20-30cm above pot center |
 | Purpose | Food color/texture analysis, stage detection via CV |
 
-### IR Thermometer
+### 2.2 IR Thermometer
 
 | Parameter | Value |
 |-----------|-------|
@@ -72,7 +72,7 @@ The primary cooking element is a commercial microwave induction surface — a se
 | Mounting | Angled toward pot center, 5-10cm distance |
 | Purpose | Food surface temperature, PID feedback |
 
-### Load Cells
+### 2.3 Load Cells
 
 | Parameter | Value |
 |-----------|-------|
@@ -87,9 +87,9 @@ The primary cooking element is a commercial microwave induction surface — a se
 | Purpose | Ingredient weight, evaporation tracking, pot detection |
 
 
-## Data Storage
+## 3. Data Storage
 
-### Storage Architecture
+### 3.1 Storage Architecture
 
 | Storage | Medium | Capacity | Purpose |
 |---------|--------|----------|---------|
@@ -97,7 +97,7 @@ The primary cooking element is a commercial microwave induction surface — a se
 | **SD Card** | MicroSD slot on CM5 | 16-64 GB (optional) | Recipe backup, logs archive, user media |
 | **RAM** | LPDDR4 on CM5 | 4-8 GB | Runtime, CV inference, UI frame buffer |
 
-### Recipe Database
+### 3.2 Recipe Database
 
 - **Format:** JSON or YAML per recipe file
 - **Recipe Count:** 100+ initial, expandable via OTA
@@ -106,20 +106,20 @@ The primary cooking element is a commercial microwave induction surface — a se
 - **Storage:** SQLite index + individual recipe files on eMMC
 - **Sync:** Cloud download to local, offline fallback guaranteed
 
-### Cooking Logs
+### 3.3 Cooking Logs
 
 - **Format:** SQLite database
 - **Fields:** Timestamp, recipe ID, step transitions, temperatures (IR + CAN coil), weights, durations, errors, user feedback
 - **Retention:** Last 500 cook sessions (~50 MB)
 - **Export:** JSON via app or USB
 
-### User Preferences
+### 3.4 User Preferences
 
 - **Format:** JSON configuration file
 - **Contents:** Spice levels, allergens, dietary restrictions, portion sizes, WiFi credentials
 - **Backup:** Synced to cloud account when connected
 
-## Power Specifications
+## 4. Power Specifications
 
 | Parameter | Specification |
 |-----------|---------------|
@@ -135,7 +135,7 @@ The primary cooking element is a commercial microwave induction surface — a se
 | **PSU Type** | Mean Well enclosed AC-DC, single 24V output |
 | **Efficiency** | >87% at full load (Mean Well LRS-75 series) |
 
-### 12V UPS Recommended Specifications
+### 4.1 12V UPS Recommended Specifications
 
 An off-the-shelf 12V UPS powers the 5V rail (CM5 + STM32) independently of the 24V PSU, allowing the system to detect AC power loss, save cooking state, and gracefully pause.
 
@@ -155,7 +155,7 @@ An off-the-shelf 12V UPS powers the 5V rail (CM5 + STM32) independently of the 2
 > [!tip]
 > During AC power failure, only the 5V rail (CM5 + STM32 + display) remains powered. The 24V rail (actuators, induction) goes down immediately. The STM32 detects 24V loss via COMP2 comparator (<100µs), disables all actuators, and notifies the CM5 to save state. At ~20W idle draw, a 7Ah 12V battery provides approximately 25 minutes — enough time to save state and wait for power restoration. If power returns within 5 minutes, cooking auto-resumes; otherwise the user is prompted.
 
-### Power Budget Breakdown
+### 4.2 Power Budget Breakdown
 
 | Subsystem | Typical (W) | Peak (W) |
 |-----------|-------------|----------|
@@ -171,7 +171,7 @@ An off-the-shelf 12V UPS powers the 5V rail (CM5 + STM32) independently of the 2
 | PSU losses | 10 | 30 |
 | **Total** | **644** | **1,927** |
 
-## Performance Requirements
+## 5. Performance Requirements
 
 | Parameter | Target | Notes |
 |-----------|--------|-------|
@@ -187,7 +187,7 @@ An off-the-shelf 12V UPS powers the 5V rail (CM5 + STM32) independently of the 2
 | WiFi Connection | <10s | Auto-reconnect to saved network |
 | OTA Update | <5 min | Full recipe DB refresh over WiFi |
 
-## Communication Interfaces
+## 6. Communication Interfaces
 
 | Interface | Protocol | Speed | Endpoints | Purpose |
 |-----------|----------|-------|-----------|---------|
@@ -204,7 +204,7 @@ An off-the-shelf 12V UPS powers the 5V rail (CM5 + STM32) independently of the 2
 | CM5 <-> WiFi | 802.11ac | Up to 867 Mbps | Onboard CM5 radio | App, cloud, OTA |
 | CM5 <-> BT | BLE 5.0 | 2 Mbps | Onboard CM5 radio | Initial app pairing, proximity |
 
-## Related Documentation
+## 7. Related Documentation
 
 - [[Epicura-Architecture|Hardware Architecture & Wiring Diagrams]]
 - [[05-Sensors-Acquisition|Sensors & Data Acquisition]]
@@ -216,7 +216,7 @@ An off-the-shelf 12V UPS powers the 5V rail (CM5 + STM32) independently of the 2
 
 ---
 
-## Revision History
+## 8. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

@@ -14,7 +14,7 @@ aliases: [IOS Epic, iOS Epic]
 
 Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, recipe browsing, live cooking view with camera stream, and user profile. Built with SwiftUI, MVVM, async/await.
 
-## Story Summary
+## 1. Story Summary
 
 | Module | Stories | Points | Sprints |
 |--------|:-------:|:------:|---------|
@@ -27,9 +27,9 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 
 ---
 
-## Phase 3 — Mobile Foundation (Sprint 8)
+## 2. Phase 3 — Mobile Foundation (Sprint 8)
 
-### IOS-SET.01: Xcode project setup — SwiftUI, MVVM, networking, auth
+### 2.1 IOS-SET.01: Xcode project setup — SwiftUI, MVVM, networking, auth
 - **Sprint:** [[sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
@@ -54,7 +54,7 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 
 ---
 
-### IOS-BLE.01: BLE pairing — CoreBluetooth scanning, WiFi provisioning
+### 2.2 IOS-BLE.01: BLE pairing — CoreBluetooth scanning, WiFi provisioning
 - **Sprint:** [[sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
@@ -75,7 +75,7 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 
 ---
 
-### IOS-BLE.02: BLE device management — claim API, home screen status, end-to-end test
+### 2.3 IOS-BLE.02: BLE device management — claim API, home screen status, end-to-end test
 - **Sprint:** [[sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 3
@@ -95,9 +95,9 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 
 ---
 
-## Phase 3 — Recipe & Cooking (Sprints 9–10)
+## 3. Phase 3 — Recipe & Cooking (Sprints 9–10)
 
-### IOS-RCP.01: Recipe browsing — list, detail, search, favorites
+### 3.1 IOS-RCP.01: Recipe browsing — list, detail, search, favorites
 - **Sprint:** [[sprint-09|Sprint 9]]
 - **Priority:** P0
 - **Points:** 5
@@ -126,7 +126,7 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 
 ---
 
-### IOS-COK.01: Live cooking view — camera stream, status, temperature, timer
+### 3.2 IOS-COK.01: Live cooking view — camera stream, status, temperature, timer
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 5
@@ -148,7 +148,7 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 
 ---
 
-### IOS-COK.02: Cooking controls and notifications — pause/abort, push notifications, background alerts
+### 3.3 IOS-COK.02: Cooking controls and notifications — pause/abort, push notifications, background alerts
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 3
@@ -169,9 +169,9 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 
 ---
 
-## Phase 4 — User Profile (Sprint 11)
+## 4. Phase 4 — User Profile (Sprint 11)
 
-### IOS-USR.01: User profile — settings, cooking history, preferences
+### 4.1 IOS-USR.01: User profile — settings, cooking history, preferences
 - **Sprint:** [[sprint-11|Sprint 11]]
 - **Priority:** P1
 - **Points:** 5
@@ -195,7 +195,7 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 
 ---
 
-### IOS-USR.02: Food Preferences UI — diet, cuisines, seasoning, servings
+### 4.2 IOS-USR.02: Food Preferences UI — diet, cuisines, seasoning, servings
 - **Sprint:** [[sprint-11|Sprint 11]]
 - **Priority:** P1
 - **Points:** 3
@@ -219,7 +219,7 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 
 ---
 
-### IOS-LIVE.01: Live Activity — Cooking Progress on Lock Screen & Dynamic Island
+### 4.3 IOS-LIVE.01: Live Activity — Cooking Progress on Lock Screen & Dynamic Island
 - **Sprint:** [[sprint-11|Sprint 11]]
 - **Priority:** P1
 - **Points:** 5
@@ -246,15 +246,15 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 
 ---
 
-## Dependencies
+## 5. Dependencies
 
-### What IOS blocks
+### 5.1 What IOS blocks
 
 | IOS Story | Blocks | Reason |
 |-----------|--------|--------|
 | None | — | iOS app is a leaf node; no other epics depend on it |
 
-### What blocks IOS
+### 5.2 What blocks IOS
 
 | IOS Story | Blocked by | Reason |
 |-----------|------------|--------|
@@ -269,7 +269,7 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 
 ---
 
-## References
+## 6. References
 
 - [[__Workspaces/Epicura/docs/12-MobileApps/02-iOS-App|iOS App Details]]
 - [[__Workspaces/Epicura/docs/12-MobileApps/01-Mobile-Architecture|Mobile Architecture]]

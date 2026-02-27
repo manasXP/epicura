@@ -7,13 +7,13 @@ status: Draft
 
 # Robotic Arm System
 
-## Overview
+## 1. Overview
 
 The robotic arm is a single-axis rotary stirring mechanism mounted above the cooking pot on a gantry frame. It provides autonomous stirring, scraping, and folding actions driven by the recipe state machine. The arm is driven by a 24V BLDC motor with integrated ESC, controlled by the STM32 via PWM speed control, EN (enable), and DIR (direction) signals, and communicates with the CM5 application processor for pattern selection and speed commands.
 
-## Arm Assembly Design
+## 2. Arm Assembly Design
 
-### Mechanical Configuration
+### 2.1 Mechanical Configuration
 
 - **Type:** Single-axis rotary arm, gantry-mounted above pot center
 - **Motion:** 360-degree continuous rotation around the vertical axis
@@ -21,7 +21,7 @@ The robotic arm is a single-axis rotary stirring mechanism mounted above the coo
 - **Paddle:** Removable silicone or nylon blade, heat-resistant, food-safe
 - **Drive:** 24V BLDC motor at top of gantry, coupled to a vertical drive shaft through a bearing and seal
 
-### Assembly Diagram
+### 2.2 Assembly Diagram
 
 ```
 ┌─────────────────────────────────────────────┐
@@ -63,9 +63,9 @@ The robotic arm is a single-axis rotary stirring mechanism mounted above the coo
 └─────────────────────────────────────────────┘
 ```
 
-## Motor Selection
+## 3. Motor Selection
 
-### BLDC Motor Specifications
+### 3.1 BLDC Motor Specifications
 
 | Parameter | Value |
 |-----------|-------|
@@ -80,7 +80,7 @@ The robotic arm is a single-axis rotary stirring mechanism mounted above the coo
 | Weight | ~200-400g (varies by model) |
 | Price (approx.) | $20-30 USD |
 
-### Selection Rationale
+### 3.2 Selection Rationale
 
 The 24V BLDC motor replaces the DS3225 hobby servo for the following advantages:
 
@@ -92,9 +92,9 @@ The 24V BLDC motor replaces the DS3225 hobby servo for the following advantages:
 - **Speed feedback** — FG (tachometer) output available for closed-loop speed control (deferred to post-prototype)
 - **Direction control** — hardware DIR pin for instant CW/CCW switching (no pulse-width manipulation)
 
-## Materials
+## 4. Materials
 
-### Food-Contact Components
+### 4.1 Food-Contact Components
 
 | Component | Material | Properties | Compliance |
 |-----------|----------|------------|------------|
@@ -105,9 +105,9 @@ The 24V BLDC motor replaces the DS3225 hobby servo for the following advantages:
 | Shaft Coupler | 6061 Aluminum (anodized) | Lightweight, corrosion resistant | Not food-contact (above seal line) |
 | Motor Housing | ABS or 3D-printed PETG | Steam resistant, lightweight | Not food-contact (above seal line) |
 
-## Stirring Patterns
+## 5. Stirring Patterns
 
-### Pattern Definitions
+### 5.1 Pattern Definitions
 
 | Pattern | Speed (RPM) | Motion Type | Duration | Use Case |
 |---------|-------------|-------------|----------|----------|
@@ -119,7 +119,7 @@ The 24V BLDC motor replaces the DS3225 hobby servo for the following advantages:
 | Vigorous | 90 | Fast constant clockwise | 10-30s bursts | Emulsifying, breaking up lumps |
 | Off | 0 | Stationary (parked at home position) | - | Idle, ingredient loading, dispensing |
 
-### Pattern Timing Diagram
+### 5.2 Pattern Timing Diagram
 
 ```
 Continuous:  ┌──────────────────────────────────────────────────┐
@@ -137,9 +137,9 @@ Reverse:     ┌────CW────┐┌───CCW────┐┌�
                  10s          10s         10s          10s
 ```
 
-## Speed Control
+## 6. Speed Control
 
-### PWM Configuration
+### 6.1 PWM Configuration
 
 | Parameter | Value |
 |-----------|-------|
@@ -151,7 +151,7 @@ Reverse:     ┌────CW────┐┌───CCW────┐┌�
 | DIR Pin | PA5 (GPIO) — high = CW, low = CCW |
 | STM32 Timer | TIM1_CH1 (PA8), ARR=16999, PSC=0 at 170 MHz → 10 kHz |
 
-### Speed Ramping
+### 6.2 Speed Ramping
 
 To prevent splashing and mechanical shock, speed changes are ramped:
 
@@ -173,9 +173,9 @@ Target Speed
 - **Deceleration limit:** 60 RPM/s (faster stop for safety)
 - **Emergency stop:** Immediate halt (no ramp, used for safety conditions only)
 
-## Home Position Sensor
+## 7. Home Position Sensor
 
-### Calibration Reference
+### 7.1 Calibration Reference
 
 - **Sensor Type:** Hall effect sensor (SS49E or equivalent) with small magnet on shaft
 - **Position:** Fixed mount at gantry, detects one specific rotational position
@@ -183,9 +183,9 @@ Target Speed
 - **Calibration:** On system boot, arm rotates slowly until Hall sensor triggers, establishing home position
 - **Parking:** Arm returns to home position after cooking to allow pot removal and ingredient loading
 
-## STM32 Control Interface
+## 8. STM32 Control Interface
 
-### PWM Hardware Configuration
+### 8.1 PWM Hardware Configuration
 
 ```c
 // Timer configuration for BLDC motor PWM
@@ -199,7 +199,7 @@ TIM1->CCR1 = 0;                                   // Initial: stopped (0% duty)
 // PA5 = BLDC_DIR (output, default LOW = CW)
 ```
 
-### Command Protocol (CM5 to STM32)
+### 8.2 Command Protocol (CM5 to STM32)
 
 | Command | Code | Parameters | Response | Description |
 |---------|------|------------|----------|-------------|
@@ -210,7 +210,7 @@ TIM1->CCR1 = 0;                                   // Initial: stopped (0% duty)
 | STATUS | 0x24 | none | status_byte, current_rpm, position | Query arm status |
 | SET_RAMP | 0x25 | accel_limit (2 bytes, RPM/s) | ACK/NAK | Configure acceleration limit |
 
-### FreeRTOS Task Configuration
+### 8.3 FreeRTOS Task Configuration
 
 | Task | Priority | Stack Size | Update Rate | Description |
 |------|----------|------------|-------------|-------------|
@@ -218,9 +218,9 @@ TIM1->CCR1 = 0;                                   // Initial: stopped (0% duty)
 | Home Seek | 2 (medium) | 128 words | On-demand | Calibration sequence on boot or command |
 | Stall Monitor | 3 (high) | 128 words | 10 Hz | Current monitoring for stall detection |
 
-## Safety
+## 9. Safety
 
-### Torque and Stall Protection
+### 9.1 Torque and Stall Protection
 
 | Safety Feature | Detection Method | Threshold | Action |
 |----------------|------------------|-----------|--------|
@@ -229,7 +229,7 @@ TIM1->CCR1 = 0;                                   // Initial: stopped (0% duty)
 | Thermal Protection | Motor current monitoring (thermal proxy) | Sustained high current | Reduce speed 50%, alert if threshold exceeded |
 | Mechanical Guard | Physical shroud above pot rim | - | Prevents finger access to paddle zone |
 
-### Stall Recovery Sequence
+### 9.2 Stall Recovery Sequence
 
 ```
 ┌─────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
@@ -250,15 +250,15 @@ TIM1->CCR1 = 0;                                   // Initial: stopped (0% duty)
                                               └────────────────┘
 ```
 
-### Lid Interlock (Future Enhancement)
+### 9.3 Lid Interlock (Future Enhancement)
 
 - Magnetic reed switch on lid detects open/closed state
 - Arm will not operate if lid is open (user safety)
 - Opening lid during operation triggers arm stop and cook pause
 
-## Cleaning Design
+## 10. Cleaning Design
 
-### Tool-Less Disassembly
+### 10.1 Tool-Less Disassembly
 
 | Component | Removal Method | Dishwasher Safe | Notes |
 |-----------|----------------|-----------------|-------|
@@ -268,7 +268,7 @@ TIM1->CCR1 = 0;                                   // Initial: stopped (0% duty)
 | Motor Housing | Wipe-down only | No | Above splash zone, sealed |
 | Drive Shaft | Not user-removable | N/A | Cleaned in-place with damp cloth |
 
-### Cleaning Sequence
+### 10.2 Cleaning Sequence
 
 1. Remove pot from unit
 2. Twist-lock paddle counterclockwise (quarter turn) and pull down to release
@@ -277,9 +277,9 @@ TIM1->CCR1 = 0;                                   // Initial: stopped (0% duty)
 5. Wipe exposed shaft with damp cloth
 6. Reassemble in reverse order (sleeve on shaft, paddle twist-lock clockwise)
 
-## Testing and Validation
+## 11. Testing and Validation
 
-### Test Procedures
+### 11.1 Test Procedures
 
 | Test | Method | Pass Criteria |
 |------|--------|---------------|
@@ -293,7 +293,7 @@ TIM1->CCR1 = 0;                                   // Initial: stopped (0% duty)
 | Ramp Profile | Record speed vs. time during acceleration | Within +/- 10% of configured ramp rate |
 | Home Position | 50 consecutive home-seek operations | Repeatable within +/- 2 degrees |
 
-### Prototype Validation Checklist
+### 11.2 Prototype Validation Checklist
 
 - [ ] BLDC motor drives paddle through 360-degree rotation smoothly
 - [ ] Twist-lock paddle attachment holds securely during vigorous stirring
@@ -304,7 +304,7 @@ TIM1->CCR1 = 0;                                   // Initial: stopped (0% duty)
 - [ ] All food-contact surfaces pass dishwasher cycle without degradation
 - [ ] Noise level below 50 dB(A) at maximum operational speed
 
-## Related Documentation
+## 12. Related Documentation
 
 - [[../01-Overview/01-Project-Overview|Project Overview]]
 - [[../02-Hardware/02-Technical-Specifications|Technical Specifications]]
@@ -318,7 +318,7 @@ TIM1->CCR1 = 0;                                   // Initial: stopped (0% duty)
 
 ---
 
-## Revision History
+## 13. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

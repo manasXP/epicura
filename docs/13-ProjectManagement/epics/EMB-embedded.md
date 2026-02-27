@@ -14,7 +14,7 @@ aliases: [EMB Epic, Embedded Epic]
 
 Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and CM5 Yocto Linux + Docker environment. This epic establishes the hardware abstraction layer, inter-processor communication, database, MQTT broker, safety systems, and OTA update infrastructure.
 
-## Story Summary
+## 1. Story Summary
 
 | Module | Stories | Points | Sprints |
 |--------|:-------:|:------:|---------|
@@ -27,9 +27,9 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 
 ---
 
-## Phase 0 — Foundation (Sprints 1–2)
+## 2. Phase 0 — Foundation (Sprints 1–2)
 
-### EMB-SET.01: STM32 FreeRTOS project — HAL config, task scaffold
+### 2.1 EMB-SET.01: STM32 FreeRTOS project — HAL config, task scaffold
 - **Sprint:** [[sprint-01|Sprint 1]]
 - **Priority:** P0
 - **Points:** 5
@@ -49,7 +49,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 
 ---
 
-### EMB-SET.01b: STM32 debug and watchdog — IWDG, UART printf, heartbeat
+### 2.2 EMB-SET.01b: STM32 debug and watchdog — IWDG, UART printf, heartbeat
 - **Sprint:** [[sprint-01|Sprint 1]]
 - **Priority:** P0
 - **Points:** 3
@@ -71,7 +71,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 
 ---
 
-### EMB-SET.02: CM5 Yocto image — BSP layer, Docker engine, Compose
+### 2.3 EMB-SET.02: CM5 Yocto image — BSP layer, Docker engine, Compose
 - **Sprint:** [[sprint-01|Sprint 1]]
 - **Priority:** P0
 - **Points:** 5
@@ -91,7 +91,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 
 ---
 
-### EMB-SET.02b: CM5 database and MQTT — PostgreSQL schema, Mosquitto config, boot validation
+### 2.4 EMB-SET.02b: CM5 database and MQTT — PostgreSQL schema, Mosquitto config, boot validation
 - **Sprint:** [[sprint-01|Sprint 1]]
 - **Priority:** P0
 - **Points:** 3
@@ -111,7 +111,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 
 ---
 
-### EMB-COM.01: CM5-STM32 SPI bridge — protocol, drivers, command dispatch
+### 2.5 EMB-COM.01: CM5-STM32 SPI bridge — protocol, drivers, command dispatch
 - **Sprint:** [[sprint-01|Sprint 1]]
 - **Priority:** P0
 - **Points:** 5
@@ -134,7 +134,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 
 ---
 
-### EMB-COM.02: CM5-STM32 health monitoring — heartbeat, timeout detection, UART fallback
+### 2.6 EMB-COM.02: CM5-STM32 health monitoring — heartbeat, timeout detection, UART fallback
 - **Sprint:** [[sprint-01|Sprint 1]]
 - **Priority:** P0
 - **Points:** 3
@@ -154,7 +154,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 
 ---
 
-### EMB-SET.03: Docker service containers — recipe engine, CV pipeline, Kivy UI scaffolds
+### 2.7 EMB-SET.03: Docker service containers — recipe engine, CV pipeline, Kivy UI scaffolds
 - **Sprint:** [[sprint-02|Sprint 2]]
 - **Priority:** P0
 - **Points:** 5
@@ -180,7 +180,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 
 ---
 
-### EMB-SAF.01: Safety systems — e-stop relay, thermal cutoffs, safety relay for AC disconnect
+### 2.8 EMB-SAF.01: Safety systems — e-stop relay, thermal cutoffs, safety relay for AC disconnect
 - **Sprint:** [[sprint-02|Sprint 2]]
 - **Priority:** P0
 - **Points:** 5
@@ -206,7 +206,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 
 ---
 
-### EMB-OTA.01: OTA update system — swupdate, A/B partitions, rollback
+### 2.9 EMB-OTA.01: OTA update system — swupdate, A/B partitions, rollback
 - **Sprint:** [[sprint-02|Sprint 2]]
 - **Priority:** P1
 - **Points:** 5
@@ -232,7 +232,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 
 ---
 
-### EMB-LCH.01: Production firmware — release build, configuration management, factory provisioning
+### 2.10 EMB-LCH.01: Production firmware — release build, configuration management, factory provisioning
 - **Sprint:** [[sprint-12|Sprint 12]]
 - **Priority:** P0
 - **Points:** 5
@@ -256,9 +256,9 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 
 ---
 
-## Dependencies
+## 3. Dependencies
 
-### What EMB blocks (downstream consumers)
+### 3.1 What EMB blocks (downstream consumers)
 
 | EMB Story | Blocks | Reason |
 |-----------|--------|--------|
@@ -273,7 +273,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 | EMB-OTA.01 | INT-LCH.01 | OTA needed for production deployment |
 | EMB-LCH.01 | INT-LCH.01 | Production firmware for launch |
 
-### What blocks EMB (upstream dependencies)
+### 3.2 What blocks EMB (upstream dependencies)
 
 | EMB Story | Blocked by | Reason |
 |-----------|------------|--------|
@@ -290,7 +290,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 
 ---
 
-## References
+## 4. References
 
 - [[__Workspaces/Epicura/docs/02-Hardware/01-Epicura-Architecture|System Architecture]]
 - [[__Workspaces/Epicura/docs/03-Software/02-Controller-Software-Architecture|Controller Software Architecture]]

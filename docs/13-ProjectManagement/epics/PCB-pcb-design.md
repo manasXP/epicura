@@ -15,7 +15,7 @@ aliases: [PCB Epic, PCB Design Epic]
 
 Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160×90mm) and the Power/Actuator Driver Board (160×90mm). The CM5 IO Board is off-the-shelf (Raspberry Pi official) and requires no custom design. This epic has no upstream dependencies and must complete before Sprint 2 to unblock embedded firmware development.
 
-## Story Summary
+## 1. Story Summary
 
 | Module | Stories | Points | Sprints |
 |--------|:-------:|:------:|---------|
@@ -26,9 +26,9 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160�
 
 ---
 
-## Pre-Sprint — Controller Board Design (Weeks -6 to -4)
+## 2. Pre-Sprint — Controller Board Design (Weeks -6 to -4)
 
-### PCB-CTL.01: Controller PCB schematic — STM32G474RE core, power regulation, debug headers
+### 2.1 PCB-CTL.01: Controller PCB schematic — STM32G474RE core, power regulation, debug headers
 - **Sprint:** Pre-Sprint (Weeks -6 to -5)
 - **Priority:** P0
 - **Points:** 5
@@ -50,7 +50,7 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160�
 
 ---
 
-### PCB-CTL.01b: Controller PCB schematic — ADC, GPIO, connector interface, ERC validation
+### 2.2 PCB-CTL.01b: Controller PCB schematic — ADC, GPIO, connector interface, ERC validation
 - **Sprint:** Pre-Sprint (Weeks -6 to -5)
 - **Priority:** P0
 - **Points:** 3
@@ -71,7 +71,7 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160�
 
 ---
 
-### PCB-CTL.02: Controller PCB layout — 4-layer, 160×90mm, mounting holes
+### 2.3 PCB-CTL.02: Controller PCB layout — 4-layer, 160×90mm, mounting holes
 - **Sprint:** Pre-Sprint (Weeks -5 to -4)
 - **Priority:** P0
 - **Points:** 5
@@ -98,9 +98,9 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160�
 
 ---
 
-## Pre-Sprint — Driver Board Design (Weeks -6 to -4)
+## 3. Pre-Sprint — Driver Board Design (Weeks -6 to -4)
 
-### PCB-DRV.01: Driver PCB schematic — motor drivers, power regulation
+### 3.1 PCB-DRV.01: Driver PCB schematic — motor drivers, power regulation
 - **Sprint:** Pre-Sprint (Weeks -6 to -5)
 - **Priority:** P0
 - **Points:** 5
@@ -123,7 +123,7 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160�
 
 ---
 
-### PCB-DRV.01b: Driver PCB schematic — MOSFET drivers, protection, connector interface
+### 3.2 PCB-DRV.01b: Driver PCB schematic — MOSFET drivers, protection, connector interface
 - **Sprint:** Pre-Sprint (Weeks -6 to -5)
 - **Priority:** P0
 - **Points:** 3
@@ -145,7 +145,7 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160�
 
 ---
 
-### PCB-DRV.02: Driver PCB layout — 4-layer, 160×90mm, thermal management
+### 3.3 PCB-DRV.02: Driver PCB layout — 4-layer, 160×90mm, thermal management
 - **Sprint:** Pre-Sprint (Weeks -5 to -4)
 - **Priority:** P0
 - **Points:** 5
@@ -172,9 +172,9 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160�
 
 ---
 
-## Pre-Sprint — Fabrication & Assembly (Weeks -4 to -1)
+## 4. Pre-Sprint — Fabrication & Assembly (Weeks -4 to -1)
 
-### PCB-FAB.01: PCB fabrication — JLCPCB order, SMT assembly
+### 4.1 PCB-FAB.01: PCB fabrication — JLCPCB order, SMT assembly
 - **Sprint:** Pre-Sprint (Weeks -4 to -2)
 - **Priority:** P0
 - **Points:** 5
@@ -198,7 +198,7 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160�
 
 ---
 
-### PCB-FAB.02: Board bring-up — power test, STM32 flash, basic I/O validation
+### 4.2 PCB-FAB.02: Board bring-up — power test, STM32 flash, basic I/O validation
 - **Sprint:** Pre-Sprint (Weeks -2 to -1)
 - **Priority:** P0
 - **Points:** 3
@@ -222,22 +222,22 @@ Design and fabricate the two custom PCBs: the STM32G474RE Controller Board (160�
 
 ---
 
-## Dependencies
+## 5. Dependencies
 
-### What PCB blocks (downstream consumers)
+### 5.1 What PCB blocks (downstream consumers)
 
 | PCB Story | Blocks | Reason |
 |-----------|--------|--------|
 | PCB-FAB.02 | EMB-SET.01 | STM32 firmware needs validated hardware |
 | PCB-FAB.02 | EMB-SET.02 | CM5 platform needs carrier board verified |
 
-### What blocks PCB (upstream dependencies)
+### 5.2 What blocks PCB (upstream dependencies)
 
 None — PCB is the first epic in the critical path.
 
 ---
 
-## References
+## 6. References
 
 - [[__Workspaces/Epicura/docs/09-PCB/01-Controller-PCB-Design|Controller PCB Design]]
 - [[__Workspaces/Epicura/docs/09-PCB/02-Driver-PCB-Design|Driver PCB Design]]

@@ -7,7 +7,7 @@ status: Draft
 
 # Mobile Architecture
 
-## Native vs Cross-Platform Decision
+## 1. Native vs Cross-Platform Decision
 
 Epicura uses native mobile development (Swift/SwiftUI for iOS, Kotlin/Jetpack Compose for Android) instead of the originally considered Flutter approach.
 
@@ -26,7 +26,7 @@ Epicura uses native mobile development (Swift/SwiftUI for iOS, Kotlin/Jetpack Co
 
 ---
 
-## MVVM Architecture
+## 2. MVVM Architecture
 
 Both iOS and Android apps use the MVVM (Model-View-ViewModel) pattern with a shared architectural philosophy:
 
@@ -72,7 +72,7 @@ Both iOS and Android apps use the MVVM (Model-View-ViewModel) pattern with a sha
 
 ---
 
-## Feature Priority Matrix
+## 3. Feature Priority Matrix
 
 | Priority | Feature | iOS | Android |
 |----------|---------|-----|---------|
@@ -94,9 +94,9 @@ Both iOS and Android apps use the MVVM (Model-View-ViewModel) pattern with a sha
 
 ---
 
-## Networking Layer
+## 4. Networking Layer
 
-### API Client
+### 4.1 API Client
 
 Both platforms implement a type-safe API client wrapping the [[../11-API/01-REST-API-Reference|REST API]]:
 
@@ -126,7 +126,7 @@ Both platforms implement a type-safe API client wrapping the [[../11-API/01-REST
 └─────────────────────────────────────────────────────┘
 ```
 
-### WebSocket Client
+### 4.2 WebSocket Client
 
 Real-time cooking updates via WebSocket (see [[../11-API/02-WebSocket-Events|WebSocket Events]]):
 
@@ -159,7 +159,7 @@ Real-time cooking updates via WebSocket (see [[../11-API/02-WebSocket-Events|Web
 └─────────────────────────────────────────────────────┘
 ```
 
-### BLE Manager
+### 4.3 BLE Manager
 
 BLE state machine for device pairing (see [[../11-API/04-BLE-Services|BLE Services]]):
 
@@ -192,7 +192,7 @@ BLE state machine for device pairing (see [[../11-API/04-BLE-Services|BLE Servic
 
 ---
 
-## MJPEG Camera Streaming
+## 5. MJPEG Camera Streaming
 
 The CM5 serves a live MJPEG stream during cooking at `http://<device-ip>:8080/camera/stream`. The mobile app renders this as a live video feed.
 
@@ -222,7 +222,7 @@ Target: 10-15 fps at 640x480 resolution.
 
 ---
 
-## Offline Strategy
+## 6. Offline Strategy
 
 | Data | Cache Strategy | Sync Direction |
 |------|---------------|----------------|
@@ -242,9 +242,9 @@ Target: 10-15 fps at 640x480 resolution.
 
 ---
 
-## Design System
+## 7. Design System
 
-### Epicura Color Palette
+### 7.1 Epicura Color Palette
 
 | Color | Name | Hex | Usage |
 |-------|------|-----|-------|
@@ -261,7 +261,7 @@ Target: 10-15 fps at 640x480 resolution.
 
 This palette matches the Kivy touchscreen UI colors defined in [[../04-UserInterface/03-UI-UX-Design#Styling|UI/UX Design - Styling]].
 
-### Platform-Native Patterns
+### 7.2 Platform-Native Patterns
 
 | Pattern | iOS (SwiftUI) | Android (Compose) |
 |---------|--------------|-------------------|
@@ -272,14 +272,14 @@ This palette matches the Kivy touchscreen UI colors defined in [[../04-UserInter
 | System Theme | `@Environment(\.colorScheme)` | `isSystemInDarkTheme()` |
 | Typography | SF Pro (system) | Roboto / Material 3 type scale |
 
-### Recipe Card Layout
+### 7.3 Recipe Card Layout
 
 Recipe cards in the list use a horizontal layout:
 - **Left:** Food image in a bowl (square thumbnail, rounded corners)
 - **Right:** Recipe name, cooking time, difficulty badge
 - **Bottom-right:** Nutrition per serving — Protein (g), Carbs (g), Fats (g), Calories (kcal)
 
-### Recipe List Filters
+### 7.4 Recipe List Filters
 
 | Filter Layer | Options |
 |-------------|---------|
@@ -288,7 +288,7 @@ Recipe cards in the list use a horizontal layout:
 
 ---
 
-## Related Documentation
+## 8. Related Documentation
 
 - [[02-iOS-App|iOS App]] - SwiftUI implementation details
 - [[03-Android-App|Android App]] - Jetpack Compose implementation details
@@ -302,7 +302,7 @@ Recipe cards in the list use a horizontal layout:
 
 ---
 
-## Revision History
+## 9. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

@@ -14,7 +14,7 @@ aliases: [Sprint 9]
 > **Phase:** Phase 3 — Software Integration
 > **Goal:** Complete recipe state machine, build dispensing orchestration, implement Kivy UI scaffold, and develop mobile BLE pairing.
 
-## Stories
+## 1. Stories
 
 | Status | ID | Title | Epic | Points | Blocked By |
 |:------:|-----|-------|------|:------:|------------|
@@ -28,7 +28,7 @@ aliases: [Sprint 9]
 
 **Total Points:** 49
 
-## Capacity Allocation
+## 2. Capacity Allocation
 
 | Team Member | Allocated | Available | Notes |
 |-------------|:---------:|:---------:|-------|
@@ -39,7 +39,7 @@ aliases: [Sprint 9]
 | Android Developer | 8 | 20 | AND-BLE.01 (8) |
 | **Total** | **49** | **100** | Peak sprint — may need to defer lower-priority stories |
 
-## Sprint Review Checklist
+## 3. Sprint Review Checklist
 
 - [ ] All stories demo-ready
 - [ ] No P0 bugs remaining
@@ -47,7 +47,7 @@ aliases: [Sprint 9]
 - [ ] QA sign-off on completed stories
 - [ ] Capacity adjustment plan if stories deferred
 
-## Retro Notes
+## 4. Retro Notes
 
 > _To be filled during sprint retrospective._
 >
@@ -62,6 +62,6 @@ aliases: [Sprint 9]
 
 ---
 
-## References
+## 5. References
 
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calendar]]

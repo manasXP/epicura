@@ -14,7 +14,7 @@ aliases: [INT Epic, Integration Epic]
 
 Full system integration testing, safety certification testing, reliability endurance testing, and production readiness. This epic depends on all other epics and validates the complete Epicura system.
 
-## Story Summary
+## 1. Story Summary
 
 | Module | Stories | Points | Sprints |
 |--------|:-------:|:------:|---------|
@@ -26,9 +26,9 @@ Full system integration testing, safety certification testing, reliability endur
 
 ---
 
-## Phase 4 — Integration (Sprints 11–12)
+## 2. Phase 4 — Integration (Sprints 11–12)
 
-### INT-SYS.01: System integration test — end-to-end autonomous cooking of 3 recipes
+### 2.1 INT-SYS.01: System integration test — end-to-end autonomous cooking of 3 recipes
 - **Sprint:** [[sprint-11|Sprint 11]]
 - **Priority:** P0
 - **Points:** 5
@@ -51,7 +51,7 @@ Full system integration testing, safety certification testing, reliability endur
 
 ---
 
-### INT-SYS.02: Integration test analysis — telemetry review, UI validation, defect documentation
+### 2.2 INT-SYS.02: Integration test analysis — telemetry review, UI validation, defect documentation
 - **Sprint:** [[sprint-11|Sprint 11]]
 - **Priority:** P0
 - **Points:** 3
@@ -72,7 +72,7 @@ Full system integration testing, safety certification testing, reliability endur
 
 ---
 
-### INT-SAF.01: Safety certification testing — IEC 60335, food safety, BIS
+### 2.3 INT-SAF.01: Safety certification testing — IEC 60335, food safety, BIS
 - **Sprint:** [[sprint-11|Sprint 11]]
 - **Priority:** P0
 - **Points:** 5
@@ -99,7 +99,7 @@ Full system integration testing, safety certification testing, reliability endur
 
 ---
 
-### INT-REL.01: Reliability testing — 100-hour endurance, MTBF estimation
+### 2.4 INT-REL.01: Reliability testing — 100-hour endurance, MTBF estimation
 - **Sprint:** [[sprint-12|Sprint 12]]
 - **Priority:** P0
 - **Points:** 5
@@ -125,7 +125,7 @@ Full system integration testing, safety certification testing, reliability endur
 
 ---
 
-### INT-LCH.01: Production readiness — documentation, packaging, launch checklist
+### 2.5 INT-LCH.01: Production readiness — documentation, packaging, launch checklist
 - **Sprint:** [[sprint-12|Sprint 12]]
 - **Priority:** P0
 - **Points:** 5
@@ -152,9 +152,9 @@ Full system integration testing, safety certification testing, reliability endur
 
 ---
 
-## Dependencies
+## 3. Dependencies
 
-### What INT blocks
+### 3.1 What INT blocks
 
 | INT Story | Blocks | Reason |
 |-----------|--------|--------|
@@ -163,7 +163,7 @@ Full system integration testing, safety certification testing, reliability endur
 | INT-SAF.01 | INT-LCH.01 | Safety certification required for launch |
 | INT-REL.01 | INT-LCH.01 | Reliability validation required for launch |
 
-### What blocks INT
+### 3.2 What blocks INT
 
 | INT Story | Blocked by | Reason |
 |-----------|------------|--------|
@@ -175,7 +175,7 @@ Full system integration testing, safety certification testing, reliability endur
 
 ---
 
-## References
+## 4. References
 
 - [[__Workspaces/Epicura/docs/06-Compliance/01-Safety-Compliance|Safety & Compliance]]
 - [[__Workspaces/Epicura/docs/07-Development/01-Prototype-Development-Plan|Prototype Development Plan]]

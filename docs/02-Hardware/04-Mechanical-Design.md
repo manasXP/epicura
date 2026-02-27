@@ -7,19 +7,19 @@ status: Draft
 
 # Mechanical Design
 
-## Form Factor
+## 1. Form Factor
 
-### Device Type
+### 1.1 Device Type
 **Autonomous Countertop Kitchen Robot** - Stationary appliance designed for compact Indian kitchens
 
-### Dimensions
+### 1.2 Dimensions
 - **Width:** 500 mm
 - **Depth:** 400 mm
 - **Height:** 300 mm
 - **Weight:** 8-12 kg (assembled, without pot contents)
 - **Comparable Size:** Large microwave oven or bread maker
 
-### Design Philosophy
+### 1.3 Design Philosophy
 - Compact footprint for limited countertop space
 - All cooking operations contained within enclosure
 - Removable components for easy cleaning
@@ -28,9 +28,9 @@ status: Draft
 
 ---
 
-## Enclosure Design
+## 2. Enclosure Design
 
-### Material Selection
+### 2.1 Material Selection
 
 | Material | Pros | Cons | Cost | Recommendation |
 |----------|------|------|------|----------------|
@@ -39,7 +39,7 @@ status: Draft
 | **PC/ABS Blend** | Balanced strength/cost, good finish, common in appliances | Requires food-safe coating on interior surfaces | Medium | Production standard model |
 | **Sheet Metal + PP Interior** | Hybrid: metal exterior, PP food-contact surfaces | More complex assembly | Medium-High | Best compromise |
 
-### Pot Specifications
+### 2.2 Pot Specifications
 
 | Parameter | Value |
 |-----------|-------|
@@ -54,7 +54,7 @@ status: Draft
 | Cleaning | Dishwasher-safe, removable |
 | Detection | Ferromagnetic base detected by microwave surface module (internal pot detection) |
 
-### Surface Finish
+### 2.3 Surface Finish
 
 - **Exterior:** Matte anti-fingerprint texture (fine sand or soft-touch)
 - **Interior (food zone):** Smooth, non-porous, food-grade approved
@@ -63,9 +63,9 @@ status: Draft
 
 ---
 
-## Enclosure Layout
+## 3. Enclosure Layout
 
-### Top View
+### 3.1 Top View
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -105,7 +105,7 @@ status: Draft
                         500 mm
 ```
 
-### Front View
+### 3.2 Front View
 
 ```
                          500 mm
@@ -138,7 +138,7 @@ status: Draft
   Non-slip rubber feet (4x corner)
 ```
 
-### Rear View
+### 3.3 Rear View
 
 ```
                          500 mm
@@ -165,7 +165,7 @@ status: Draft
 └──────────────────────────────────────────────────────────────┘
 ```
 
-### Side View (Cross-Section)
+### 3.4 Side View (Cross-Section)
 
 ```
                          400 mm (depth)
@@ -199,9 +199,9 @@ status: Draft
 
 ---
 
-## Internal Layout
+## 4. Internal Layout
 
-### Component Arrangement (Cross-Section, Top Down)
+### 4.1 Component Arrangement (Cross-Section, Top Down)
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -236,9 +236,9 @@ status: Draft
 
 ---
 
-## Pot Design
+## 5. Pot Design
 
-### Specifications
+### 5.1 Specifications
 
 | Parameter | Value |
 |-----------|-------|
@@ -254,14 +254,14 @@ status: Draft
 | Weight (empty) | 0.8-1.2 kg |
 | Max Operating Temp | 260C (limited by non-stick coating) |
 
-### Detection Mechanism
+### 5.2 Detection Mechanism
 
 - Pot detection is handled internally by the microwave induction surface module
 - Module detects ferromagnetic pot base via impedance sensing
 - No external reed switch or magnet required
 - Interlock: module will not heat without pot detected (internal safety)
 
-### Handle Design
+### 5.3 Handle Design
 
 - Two folding side handles: stow flat against pot body, flip out for lifting
 - Material: Bakelite or silicone-wrapped stainless steel
@@ -270,9 +270,9 @@ status: Draft
 
 ---
 
-## Robotic Arm Assembly
+## 6. Robotic Arm Assembly
 
-### Gantry-Mounted Stirring System
+### 6.1 Gantry-Mounted Stirring System
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -309,7 +309,7 @@ status: Draft
 └──────────────────────────────────────────────────────────┘
 ```
 
-### Arm Specifications
+### 6.2 Arm Specifications
 
 | Parameter | Value |
 |-----------|-------|
@@ -323,7 +323,7 @@ status: Draft
 | Seal | Silicone gasket around shaft penetration (IPX5 rated) |
 | Cleaning | Shaft and paddle removable, dishwasher-safe |
 
-### Stirring Patterns
+### 6.3 Stirring Patterns
 
 The recipe engine commands different stirring patterns:
 
@@ -338,11 +338,11 @@ The recipe engine commands different stirring patterns:
 
 ---
 
-## Ingredient Dispensing Subsystems
+## 7. Ingredient Dispensing Subsystems
 
 See [[../05-Subsystems/03-Ingredient-Dispensing|Ingredient Dispensing System]] for full details.
 
-### Layout and Design
+### 7.1 Layout and Design
 
 ```
                     ┌─────────────────────────────────────┐
@@ -374,7 +374,7 @@ See [[../05-Subsystems/03-Ingredient-Dispensing|Ingredient Dispensing System]] f
                     └─────────────────────────────────────┘
 ```
 
-### Subsystem Specifications
+### 7.2 Subsystem Specifications
 
 | Parameter | ASD (Seasonings) | CID (Coarse) | SLD (Liquids) |
 |-----------|-----------------|-------------|--------------|
@@ -385,7 +385,7 @@ See [[../05-Subsystems/03-Ingredient-Dispensing|Ingredient Dispensing System]] f
 | Metering | Pot load cells (±10%) | Position-based | Dedicated load cell (±5%) |
 | Cleaning | Removable, dishwasher-safe | Slide-out, dishwasher-safe | Removable reservoir; tubing replaceable |
 
-### Dispensing Sequence
+### 7.3 Dispensing Sequence
 
 **ASD:** Recipe engine sends `DISPENSE_ASD(id, target_g)` → STM32 opens servo gate → monitors pot weight → closes at target
 
@@ -396,9 +396,9 @@ See [[../05-Subsystems/03-Ingredient-Dispensing|Ingredient Dispensing System]] f
 
 ---
 
-## Thermal Management
+## 8. Thermal Management
 
-### Heat Sources
+### 8.1 Heat Sources
 
 | Source | Typical Heat Dissipation | Location |
 |--------|--------------------------|----------|
@@ -408,7 +408,7 @@ See [[../05-Subsystems/03-Ingredient-Dispensing|Ingredient Dispensing System]] f
 | STM32 + sensors | <1W | Side |
 | BLDC stirring motor | 12-48W (intermittent) | Top gantry |
 
-### Cooling Strategy
+### 8.2 Cooling Strategy
 
 ```
 ┌────────────────────────────────────────────────────────────┐
@@ -446,14 +446,14 @@ Dual-fan push-pull configuration:
   Airflow path avoids pot/food zone (no contamination risk)
 ```
 
-### Thermal Barriers
+### 8.3 Thermal Barriers
 
 - **Silicone thermal pad** or **aluminum shield** between microwave surface module and PSU compartment
 - **Air gap** (minimum 10mm) between microwave surface module and PSU
 - **Operating ambient range:** 0-40C (indoor kitchen environment)
 - **Maximum internal temp:** 70C at any PCB location (exhaust fan manages airflow)
 
-### Cooking Fume Exhaust
+### 8.4 Cooking Fume Exhaust
 
 A separate exhaust system handles cooking fumes (steam, oil smoke, spice volatiles) from the pot zone. This is independent of the electronics cooling airflow to prevent food contamination of electronic components.
 
@@ -466,16 +466,16 @@ See [[../05-Subsystems/13-Exhaust-Fume-Management|Exhaust & Fume Management]] fo
 
 ---
 
-## Ergonomics
+## 9. Ergonomics
 
-### Touchscreen
+### 9.1 Touchscreen
 
 - **Angle:** Tilted 15-30 degrees from vertical (optimal viewing while standing at kitchen counter)
 - **Height:** Screen center at ~200mm from countertop (within natural downward gaze)
 - **Size:** 10.1" diagonal, large enough for recipe steps and camera feed
 - **Touch:** Capacitive (works with dry fingers, not with wet/gloved hands -- design assumes user dries hands)
 
-### Cleaning Design
+### 9.2 Cleaning Design
 
 | Component | Cleaning Method | Removable |
 |-----------|----------------|-----------|
@@ -491,18 +491,18 @@ See [[../05-Subsystems/13-Exhaust-Fume-Management|Exhaust & Fume Management]] fo
 | Display | Wipe with soft cloth | No |
 | Gantry area | Wipe with damp cloth | No (sealed against steam) |
 
-### Auto-Rinse Cycle (Future Feature)
+### 9.3 Auto-Rinse Cycle (Future Feature)
 
 Optional automated cleaning: fill pot with water, heat to 60C, stir for 5 minutes, drain. Requires drain valve (not included in prototype).
 
-### Cable Management
+### 9.4 Cable Management
 
 - Single power cable (IEC C14 with detachable cord)
 - Cable exit from rear-bottom
 - No user-facing cables during operation
 - USB-C debug port recessed on rear panel (not for daily use)
 
-### Non-Slip Feet
+### 9.5 Non-Slip Feet
 
 - 4x rubber feet at corners of base
 - Diameter: 20mm each
@@ -511,9 +511,9 @@ Optional automated cleaning: fill pot with water, heat to 60C, stir for 5 minute
 
 ---
 
-## DFM Considerations
+## 10. DFM Considerations
 
-### Prototype Phase
+### 10.1 Prototype Phase
 
 | Component | Fabrication Method | Notes |
 |-----------|-------------------|-------|
@@ -525,7 +525,7 @@ Optional automated cleaning: fill pot with water, heat to 60C, stir for 5 minute
 | PCBs | 4-layer custom PCB (JLCPCB or similar) | 2 boards: CM5 carrier, STM32 control |
 | Wiring | Hand-soldered, JST/Dupont connectors | Label all connectors |
 
-### Production Phase
+### 10.2 Production Phase
 
 | Component | Fabrication Method | Notes |
 |-----------|-------------------|-------|
@@ -537,7 +537,7 @@ Optional automated cleaning: fill pot with water, heat to 60C, stir for 5 minute
 | PCBs | SMT assembly (pick-and-place) | Panelized, automated testing |
 | Assembly | Semi-automated line | Target 30 min per unit |
 
-### Assembly Sequence (Prototype)
+### 10.3 Assembly Sequence (Prototype)
 
 1. Mount microwave induction surface module into base
 2. Route CAN bus cable from module to controller PCB
@@ -559,7 +559,7 @@ Optional automated cleaning: fill pot with water, heat to 60C, stir for 5 minute
 
 ---
 
-## Related Documentation
+## 11. Related Documentation
 
 - [[02-Technical-Specifications|Technical Specifications]]
 - [[Epicura-Architecture|Hardware Architecture & Wiring Diagrams]]
@@ -572,7 +572,7 @@ Optional automated cleaning: fill pot with water, heat to 60C, stir for 5 minute
 
 ---
 
-## Revision History
+## 12. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

@@ -7,7 +7,7 @@ status: Draft
 
 # MQTT Topics
 
-## Overview
+## 1. Overview
 
 MQTT is the primary telemetry protocol between Epicura devices (CM5) and the cloud backend. The CM5 publishes real-time cooking data, device status, and alerts; the backend publishes commands for remote cooking control, OTA triggers, and configuration updates.
 
@@ -15,7 +15,7 @@ This document extends the MQTT telemetry format defined in [[../03-Software/04-C
 
 ---
 
-## Broker Configuration
+## 2. Broker Configuration
 
 | Setting | Development | Production |
 |---------|-------------|------------|
@@ -30,7 +30,7 @@ This document extends the MQTT telemetry format defined in [[../03-Software/04-C
 
 ---
 
-## Topic Hierarchy
+## 3. Topic Hierarchy
 
 All topics follow the pattern: `epicura/{device_id}/{category}/{event}`
 
@@ -55,9 +55,9 @@ epicura/
 
 ---
 
-## Device Telemetry (CM5 → Cloud)
+## 4. Device Telemetry (CM5 → Cloud)
 
-### `epicura/{device_id}/telemetry`
+### 4.1 `epicura/{device_id}/telemetry`
 
 Periodic sensor readings published every 10 seconds during cooking, every 60 seconds when idle.
 
@@ -90,7 +90,7 @@ This extends the telemetry payload format from [[../03-Software/04-Controller-So
 
 ---
 
-### `epicura/{device_id}/session/started`
+### 4.2 `epicura/{device_id}/session/started`
 
 Published when a cooking session begins.
 
@@ -113,7 +113,7 @@ Published when a cooking session begins.
 }
 ```
 
-### `epicura/{device_id}/session/progress`
+### 4.3 `epicura/{device_id}/session/progress`
 
 Published on stage transitions and significant events (every 5-10 seconds during cooking).
 
@@ -140,7 +140,7 @@ Published on stage transitions and significant events (every 5-10 seconds during
 }
 ```
 
-### `epicura/{device_id}/session/completed`
+### 4.4 `epicura/{device_id}/session/completed`
 
 Published when cooking finishes successfully.
 
@@ -160,7 +160,7 @@ Published when cooking finishes successfully.
 }
 ```
 
-### `epicura/{device_id}/session/error`
+### 4.5 `epicura/{device_id}/session/error`
 
 Published when a cooking error or abort occurs.
 
@@ -182,7 +182,7 @@ Published when a cooking error or abort occurs.
 
 ---
 
-### `epicura/{device_id}/status`
+### 4.6 `epicura/{device_id}/status`
 
 Device health and connectivity status. Published on state changes and every 60 seconds as a heartbeat.
 
@@ -205,7 +205,7 @@ Device health and connectivity status. Published on state changes and every 60 s
 }
 ```
 
-### `epicura/{device_id}/alert`
+### 4.7 `epicura/{device_id}/alert`
 
 Device alerts that require backend processing or user notification.
 
@@ -229,11 +229,11 @@ Device alerts that require backend processing or user notification.
 
 ---
 
-## Device Commands (Cloud → CM5)
+## 5. Device Commands (Cloud → CM5)
 
 The CM5 subscribes to command topics and acts on received messages. All commands use **QoS 1**.
 
-### `epicura/{device_id}/cmd/cook`
+### 5.1 `epicura/{device_id}/cmd/cook`
 
 Remotely start cooking a recipe (initiated from mobile app via backend).
 
@@ -253,7 +253,7 @@ Remotely start cooking a recipe (initiated from mobile app via backend).
 
 **CM5 Response:** Publishes to `epicura/{device_id}/session/started` on success, or `epicura/{device_id}/session/error` on failure.
 
-### `epicura/{device_id}/cmd/stop`
+### 5.2 `epicura/{device_id}/cmd/stop`
 
 Emergency stop command.
 
@@ -267,7 +267,7 @@ Emergency stop command.
 }
 ```
 
-### `epicura/{device_id}/cmd/ota`
+### 5.3 `epicura/{device_id}/cmd/ota`
 
 Trigger firmware update download and installation.
 
@@ -284,7 +284,7 @@ Trigger firmware update download and installation.
 }
 ```
 
-### `epicura/{device_id}/cmd/recipe-sync`
+### 5.4 `epicura/{device_id}/cmd/recipe-sync`
 
 Trigger the CM5 to sync recipes from the cloud API.
 
@@ -296,7 +296,7 @@ Trigger the CM5 to sync recipes from the cloud API.
 }
 ```
 
-### `epicura/{device_id}/cmd/config`
+### 5.5 `epicura/{device_id}/cmd/config`
 
 Push configuration updates to the device.
 
@@ -315,7 +315,7 @@ Push configuration updates to the device.
 
 ---
 
-## Retained Messages
+## 6. Retained Messages
 
 | Topic | Retained | Reason |
 |-------|----------|--------|
@@ -327,7 +327,7 @@ Push configuration updates to the device.
 
 ---
 
-## Last Will and Testament (LWT)
+## 7. Last Will and Testament (LWT)
 
 Each CM5 device registers an LWT message on MQTT connect. If the device disconnects unexpectedly (without a clean DISCONNECT), the broker publishes the LWT:
 
@@ -346,15 +346,15 @@ Each CM5 device registers an LWT message on MQTT connect. If the device disconne
 
 ---
 
-## TLS Security
+## 8. TLS Security
 
-### Development (Mosquitto)
+### 8.1 Development (Mosquitto)
 
 - TLS optional for local development
 - Username/password authentication: `epicura_dev` / configured password
 - ACL: devices can only publish/subscribe to their own `epicura/{device_id}/` subtree
 
-### Production (AWS IoT Core)
+### 8.2 Production (AWS IoT Core)
 
 - Mutual TLS with X.509 device certificates
 - Each device provisioned with unique certificate + private key during manufacturing
@@ -370,7 +370,7 @@ Each CM5 device registers an LWT message on MQTT connect. If the device disconne
 
 ---
 
-## Backend Subscription and Bridging
+## 9. Backend Subscription and Bridging
 
 The API server subscribes to device topics and processes messages:
 
@@ -402,7 +402,7 @@ The wildcard `+` in subscriptions matches any device ID, so the server handles a
 
 ---
 
-## Related Documentation
+## 10. Related Documentation
 
 - [[01-REST-API-Reference|REST API Reference]] - HTTP endpoints
 - [[02-WebSocket-Events|WebSocket Events]] - Mobile app real-time events (bridged from MQTT)
@@ -414,7 +414,7 @@ The wildcard `+` in subscriptions matches any device ID, so the server handles a
 
 ---
 
-## Revision History
+## 11. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

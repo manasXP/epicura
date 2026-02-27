@@ -8,11 +8,11 @@ tags: [epicura, project-overview, kitchen-robot]
 
 # Epicura - Project Overview
 
-## Project Description
+## 1. Project Description
 
 Development of an autonomous countertop kitchen robot that cooks complete one-pot meals using AI-powered computer vision, robotic stirring, and precise induction heat control. Epicura is designed for the Indian home market, inspired by the commercial Posha robot chef, and engineered to operate within compact Indian kitchens on standard household outlets (under 2kW). The system combines embedded Linux compute, real-time motor control, and edge AI inference to deliver fully autonomous cooking from ingredient loading to finished meal.
 
-## Key Components
+## 2. Key Components
 
 This project encompasses the following major subsystems:
 
@@ -30,40 +30,40 @@ This project encompasses the following major subsystems:
 - [[../05-Subsystems/13-Exhaust-Fume-Management|Exhaust & Fume Management]] - Exhaust fan, grease/carbon filtration
 - [[../06-Compliance/06-Safety-Compliance|Safety & Compliance]] - Electrical safety and food contact regulations
 
-## Core Features
+## 3. Core Features
 
-### Autonomous Cooking
+### 3.1 Autonomous Cooking
 - Fully hands-off operation after ingredient loading and recipe selection
 - State machine recipe execution: detect cooking stage via CV, adjust heat/stir, dispense ingredients
 - Automatic ingredient dispensing via three subsystems: ASD (seasonings, servo-gated), CID (coarse items, linear actuator), SLD (liquids, peristaltic pump)
 - Supports one-pot recipes: curries, dal, rice, biryani, stir-fries, pasta, soups
 
-### Recipe Intelligence
+### 3.2 Recipe Intelligence
 - 100+ curated Indian recipes at launch with regional variations (North, South, East, West)
 - App-driven customization for spice levels, allergen substitutions, and dietary preferences
 - Cloud-updatable recipe library with new recipes pushed via OTA
 - Full offline fallback with local SQLite recipe database for uninterrupted cooking
 
-### Precision Control
+### 3.3 Precision Control
 - PID-controlled induction heating with dynamic temperature range (60-250°C)
 - IR non-contact thermometer + CAN coil temperature from induction module
 - Sear at 200-250°C, simmer at 60-100°C with ±5°C accuracy
 - Dynamic power management to stay within 2kW household limit
 
-### Vision System
+### 3.4 Vision System
 - Overhead HD camera (1080p minimum) mounted inside enclosure lid
 - Food color and texture analysis using TFLite edge AI models on Raspberry Pi CM5
 - Real-time cooking stage detection: raw, browning, simmering, thickening, done
 - Anomaly detection for burning, boiling over, or ingredient issues
 
-### User Experience
+### 3.5 User Experience
 - 10" capacitive touchscreen with Kivy-based interface for recipe browsing and cooking status
 - Native companion mobile apps (SwiftUI + Jetpack Compose) for remote recipe selection, live camera feed, and notifications
 - Multi-language support: English, Hindi, Tamil, Telugu (extensible to more regional languages)
 - Live camera feed on both touchscreen and mobile app during cooking
 - Grocery list generation and meal planning features in companion app
 
-## Target Use Cases
+## 4. Target Use Cases
 
 - **Daily Indian Cooking** - Curries, dal tadka, rajma, sambar, biryani, pulao, and everyday meals
 - **Apartment/Compact Kitchens** - Countertop form factor (50x40x30cm) designed for space-constrained urban homes
@@ -71,7 +71,7 @@ This project encompasses the following major subsystems:
 - **Hostel/Mess Kitchen Automation** - Scalable for small institutional kitchens with repeatable batch cooking
 - **Meal Prep (Set-and-Forget)** - Load ingredients before work, schedule cooking, return to a ready meal
 
-## Key Features Comparison
+## 5. Key Features Comparison
 
 | Feature | Posha (Commercial) | Epicura (Design Target) |
 |---------|--------------------|-----------------------|
@@ -84,12 +84,12 @@ This project encompasses the following major subsystems:
 | **Connectivity** | WiFi, app-paired | WiFi + BT, native companion apps (iOS + Android), OTA updates |
 | **Price Target** | ~$800 USD (commercial) | $400-600 USD (target retail for Indian market) |
 
-## System Architecture
+## 6. System Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                       Epicura System Architecture                            │
-│                                                                              │
+│                       Epicura System Architecture                           │
+│                                                                             │
 │  ┌──────────────────────────────────────┐  ┌─────────────────────────────┐  │
 │  │     Raspberry Pi CM5 + Carrier       │  │     STM32 MCU               │  │
 │  │     (Application Processor)          │  │     (Real-Time Controller)  │  │
@@ -97,37 +97,37 @@ This project encompasses the following major subsystems:
 │  │  ┌──────────────────────────────┐    │  │  ┌─────────────────────┐    │  │
 │  │  │  Yocto Linux                 │    │  │  │  FreeRTOS           │    │  │
 │  │  └────────────┬─────────────────┘    │  │  └────────────┬────────┘    │  │
-│  │               │                      │  │               │            │  │
-│  │  ┌────────────▼─────────────────┐    │  │  ┌────────────▼────────┐   │  │
-│  │  │  Recipe State Machine        │    │  │  │  PID Temperature    │   │  │
-│  │  │  CV Pipeline (TFLite)        │◄───┼──┼─►│  Servo Motor Driver │   │  │
-│  │  │  Kivy Touchscreen UI         │UART│  │  │  Sensor Polling     │   │  │
-│  │  │  Cloud Sync / OTA            │/SPI│  │  │  Safety Watchdog    │   │  │
-│  │  │  SQLite Recipe DB            │    │  │  │  Dispensing Control │   │  │
-│  │  └──────────────────────────────┘    │  │  └─────────────────────┘   │  │
+│  │               │                      │  │               │             │  │
+│  │  ┌────────────▼─────────────────┐    │  │  ┌────────────▼────────┐    │  │
+│  │  │  Recipe State Machine        │    │  │  │  PID Temperature    │    │  │
+│  │  │  CV Pipeline (TFLite)        │◄───┼──┼─►│  Servo Motor Driver │    │  │
+│  │  │  Kivy Touchscreen UI         │UART│  │  │  Sensor Polling     │    │  │
+│  │  │  Cloud Sync / OTA            │/SPI│  │  │  Safety Watchdog    │    │  │
+│  │  │  SQLite Recipe DB            │    │  │  │  Dispensing Control │    │  │
+│  │  └──────────────────────────────┘    │  │  └─────────────────────┘    │  │
 │  │                                      │  │                             │  │
-│  └──────────┬─────────────┬─────────────┘  └──────┬──────────┬──────────┘  │
+│  └──────────┬─────────────┬─────────────┘  └──────┬──────────┬───────────┘  │
 │             │             │                       │          │              │
-│     ┌───────▼──────┐ ┌───▼──────────┐    ┌───────▼────┐ ┌───▼──────────┐  │
-│     │ 10" Touch    │ │ HD Camera    │    │ Induction  │ │ Servo Arm    │  │
-│     │ Display      │ │ (1080p)      │    │ Heater     │ │ (Stirring)   │  │
-│     │ (Kivy UI)    │ │              │    │ (1,800W)   │ │              │  │
-│     └──────────────┘ └──────────────┘    └────────────┘ └──────────────┘  │
-│                                                                            │
-│     ┌──────────────┐ ┌──────────────┐    ┌────────────┐ ┌──────────────┐  │
-│     │ WiFi / BT    │ │ IR Thermo-   │    │ Load       │ │ Ingredient   │  │
-│     │ Module       │ │ meter        │    │ Cells      │ │ Hoppers      │  │
-│     │              │ │              │    │            │ │ (4-6 compt.) │  │
-│     └──────────────┘ └──────────────┘    └────────────┘ └──────────────┘  │
-│                                                                            │
-│     ┌──────────────────────────────────────────────────────────────────┐   │
-│     │                    Load Cells (Pot Weight Sensing)               │   │
-│     └──────────────────────────────────────────────────────────────────┘   │
-│                                                                              │
-└──────────────────────────────────────────────────────────────────────────────┘
+│     ┌───────▼──────┐ ┌───▼──────────┐    ┌───────▼────┐ ┌───▼──────────┐.   │
+│     │ 10" Touch    │ │ HD Camera    │    │ Induction  │ │ Servo Arm    │    │
+│     │ Display      │ │ (1080p)      │    │ Heater     │ │ (Stirring)   │    │
+│     │ (Kivy UI)    │ │              │    │ (1,800W)   │ │              │    │
+│     └──────────────┘ └──────────────┘    └────────────┘ └──────────────┘    │
+│                                                                             │
+│     ┌──────────────┐ ┌──────────────┐    ┌────────────┐ ┌──────────────┐    │
+│     │ WiFi / BT    │ │ IR Thermo-   │    │ Load       │ │ Ingredient   │    │
+│     │ Module       │ │ meter        │    │ Cells      │ │ Hoppers      │    │
+│     │              │ │              │    │            │ │ (4-6 compt.) │    │
+│     └──────────────┘ └──────────────┘    └────────────┘ └──────────────┘    │
+│                                                                             │
+│     ┌──────────────────────────────────────────────────────────────────┐    │
+│     │                    Load Cells (Pot Weight Sensing)               │    │
+│     └──────────────────────────────────────────────────────────────────┘    │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Data Flow Overview
+### 6.1 Data Flow Overview
 
 ```
 ┌──────────┐    ┌──────────────┐    ┌───────────────┐    ┌──────────────┐
@@ -136,7 +136,7 @@ This project encompasses the following major subsystems:
 │  (App/   │    │  Machine     │    │               │    │   Dispense)  │
 │   Touch) │    │  (CM5)       │    │  Stage?       │    │  (STM32)     │
 └──────────┘    └──────┬───────┘    └───────┬───────┘    └──────┬───────┘
-                       │                    │                    │
+                       │                    │                   │
                        │            ┌───────▼───────┐           │
                        │            │  HD Camera    │           │
                        │            │  IR Thermo    │           │
@@ -152,7 +152,7 @@ This project encompasses the following major subsystems:
                 └──────────────┘                    └──────────────┘
 ```
 
-## Physical Specifications
+## 7. Physical Specifications
 
 | Parameter | Value |
 |-----------|-------|
@@ -168,11 +168,11 @@ This project encompasses the following major subsystems:
 | Ingredient Dispensing | ASD (3 seasoning hoppers) + CID (2 coarse trays) + SLD (2 liquid channels) |
 | Operating Temperature | 5°C - 45°C ambient |
 
-## Project Status
+## 8. Project Status
 
 Early concept and design phase. No source code or hardware prototypes exist yet. The project definition and subsystem documentation are being established. Estimated timeline from prototype to production-ready product is 12-24 months.
 
-### Milestone Timeline
+### 8.1 Milestone Timeline
 
 ```
 Phase 1: Prototype          Phase 2: Alpha              Phase 3: Beta               Phase 4: Production
@@ -185,7 +185,7 @@ Phase 1: Prototype          Phase 2: Alpha              Phase 3: Beta           
 └───────────────────┘       └───────────────────┘       └───────────────────┘       └───────────────────┘
 ```
 
-## Related Documentation
+## 9. Related Documentation
 
 - [[../02-Hardware/02-Technical-Specifications|Technical Specifications]] - Detailed hardware specs
 - [[../02-Hardware/Epicura-Architecture|Epicura Architecture]] - System block diagrams and wiring
@@ -203,7 +203,7 @@ Phase 1: Prototype          Phase 2: Alpha              Phase 3: Beta           
 - [[../07-Development/Prototype-Development-Plan|Prototype Development Plan]] - Development roadmap
 - [[../08-Components/04-Total-Component-Cost|Total Component Cost]] - Full BOM and cost analysis
 
-## Revision History
+## 10. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

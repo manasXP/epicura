@@ -14,7 +14,7 @@ aliases: [CV Epic, Vision Epic]
 
 Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification model, and cooking stage detection with anomaly alerts. Runs on CM5 as a Docker container service.
 
-## Story Summary
+## 1. Story Summary
 
 | Module | Stories | Points | Sprints |
 |--------|:-------:|:------:|---------|
@@ -26,9 +26,9 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 
 ---
 
-## Phase 2 — Vision Setup (Sprint 6)
+## 2. Phase 2 — Vision Setup (Sprint 6)
 
-### CV-CAM.01: Camera setup — IMX219, libcamera, CSI-2, image capture service
+### 2.1 CV-CAM.01: Camera setup — IMX219, libcamera, CSI-2, image capture service
 - **Sprint:** [[sprint-06|Sprint 6]]
 - **Priority:** P0
 - **Points:** 5
@@ -53,7 +53,7 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 
 ---
 
-### CV-PRE.01: Image preprocessing — OpenCV pipeline, ROI extraction, augmentation
+### 2.2 CV-PRE.01: Image preprocessing — OpenCV pipeline, ROI extraction, augmentation
 - **Sprint:** [[sprint-06|Sprint 6]]
 - **Priority:** P0
 - **Points:** 5
@@ -77,9 +77,9 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 
 ---
 
-## Phase 2 — ML Model & Detection (Sprint 7)
+## 3. Phase 2 — ML Model & Detection (Sprint 7)
 
-### CV-MDL.01: TFLite model training — dataset collection, MobileNetV2 fine-tuning
+### 3.1 CV-MDL.01: TFLite model training — dataset collection, MobileNetV2 fine-tuning
 - **Sprint:** [[sprint-07|Sprint 7]]
 - **Priority:** P0
 - **Points:** 5
@@ -98,7 +98,7 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 
 ---
 
-### CV-MDL.02: TFLite model deployment — INT8 quantization, inference service, benchmarking
+### 3.2 CV-MDL.02: TFLite model deployment — INT8 quantization, inference service, benchmarking
 - **Sprint:** [[sprint-07|Sprint 7]]
 - **Priority:** P0
 - **Points:** 5
@@ -120,7 +120,7 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 
 ---
 
-### CV-DET.01: Cooking stage detection — sliding window classifier, transition detection, anomaly alerts
+### 3.3 CV-DET.01: Cooking stage detection — sliding window classifier, transition detection, anomaly alerts
 - **Sprint:** [[sprint-07|Sprint 7]]
 - **Priority:** P0
 - **Points:** 5
@@ -141,7 +141,7 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 
 ---
 
-### CV-DET.02: Stage detection logging and visualization — PostgreSQL logging, UI overlay, video testing
+### 3.4 CV-DET.02: Stage detection logging and visualization — PostgreSQL logging, UI overlay, video testing
 - **Sprint:** [[sprint-07|Sprint 7]]
 - **Priority:** P0
 - **Points:** 3
@@ -161,9 +161,9 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 
 ---
 
-## Dependencies
+## 4. Dependencies
 
-### What CV blocks (downstream consumers)
+### 4.1 What CV blocks (downstream consumers)
 
 | CV Story | Blocks | Reason |
 |----------|--------|--------|
@@ -174,7 +174,7 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 | CV-DET.01 | CV-DET.02, RCP-FSM.01 | Core detection needed for logging/UI and recipe state machine |
 | CV-DET.02 | RCP-FSM.01 | Stage detection logging feeds recipe state machine |
 
-### What blocks CV (upstream dependencies)
+### 4.2 What blocks CV (upstream dependencies)
 
 | CV Story | Blocked by | Reason |
 |----------|------------|--------|
@@ -187,7 +187,7 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 
 ---
 
-## References
+## 5. References
 
 - [[__Workspaces/Epicura/docs/05-Subsystems/04-Vision-System|Vision System]]
 - [[__Workspaces/Epicura/docs/02-Hardware/03-Sensors-Acquisition|Sensors & Acquisition]]

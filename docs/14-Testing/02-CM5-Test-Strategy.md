@@ -6,15 +6,15 @@ aliases: [CM5 Test Strategy]
 
 # CM5 Test Strategy — epicura-cm5
 
-## Scope
+## 1. Scope
 
 Testing strategy for all CM5-side Docker Compose services: recipe engine, CV pipeline, Kivy UI, CM5-STM32 bridge, PostgreSQL, and Mosquitto broker.
 
 ---
 
-## Test Levels
+## 2. Test Levels
 
-### 1. Unit Tests
+### 2.1 Unit Tests
 
 **Framework:** pytest + pytest-cov
 **Runs on:** Host (x86/ARM), no hardware required
@@ -32,7 +32,7 @@ Testing strategy for all CM5-side Docker Compose services: recipe engine, CV pip
 - Test YAML recipes against a schema validator (e.g., Cerberus or jsonschema)
 - CV tests use a fixture set of 20+ labeled food images (stored in `tests/fixtures/`)
 
-### 2. Integration Tests
+### 2.2 Integration Tests
 
 **Framework:** pytest + Docker Compose (test profile)
 **Runs on:** Host with Docker
@@ -50,7 +50,7 @@ Testing strategy for all CM5-side Docker Compose services: recipe engine, CV pip
 - Test database seeded with `seed.sql` before each test suite
 - MQTT messages captured by a test subscriber container
 
-### 3. CV Model Validation
+### 2.3 CV Model Validation
 
 | Test | Dataset | Pass Criteria |
 |------|---------|--------------|
@@ -58,7 +58,7 @@ Testing strategy for all CM5-side Docker Compose services: recipe engine, CV pip
 | Inference latency | 50 sample images on CM5 hardware | < 200ms per frame (MobileNetV2 INT8) |
 | Edge cases | Burnt food, empty pot, partially obscured | No false "DONE" detection; anomaly flag raised |
 
-### 4. Performance Tests
+### 2.4 Performance Tests
 
 | Test | Method | Pass Criteria |
 |------|--------|--------------|
@@ -70,7 +70,7 @@ Testing strategy for all CM5-side Docker Compose services: recipe engine, CV pip
 
 ---
 
-## CI Pipeline
+## 3. CI Pipeline
 
 ```yaml
 # .github/workflows/ci.yml
@@ -91,7 +91,7 @@ steps:
 
 ---
 
-## Test Fixtures
+## 4. Test Fixtures
 
 - **Sample recipes:** 10 YAML recipes covering all dispenser types, multi-step cooking, edge cases (empty steps, zero quantities)
 - **CV test images:** 200 labeled images across 5 food stages (raw, simmering, boiling, thickened, done) + 20 anomaly images
@@ -100,7 +100,7 @@ steps:
 
 ---
 
-## Yocto Image Testing
+## 5. Yocto Image Testing
 
 | Test | Method | Pass Criteria |
 |------|--------|--------------|
@@ -112,7 +112,7 @@ steps:
 
 ---
 
-## References
+## 6. References
 
 - [[__Workspaces/Epicura/docs/07-Development/02-Repository-Plan|Repository Plan]]
 - [[__Workspaces/Epicura/docs/03-Software/02-Controller-Software-Architecture|Controller Software Architecture]]

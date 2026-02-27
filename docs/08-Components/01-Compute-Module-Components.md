@@ -7,11 +7,11 @@ status: Draft
 
 # Compute Module Components
 
-## Overview
+## 1. Overview
 
 This document details the compute subsystem components for the Epicura kitchen robot prototype, including the Raspberry Pi CM5 (AI/vision processing), STM32G474RE (motor/safety control), display module, and supporting components.
 
-## Compute Architecture
+## 2. Compute Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -34,7 +34,7 @@ This document details the compute subsystem components for the Epicura kitchen r
 
 ---
 
-## Component List
+## 3. Component List
 
 | Component | Part Number | Qty | Unit Price | Subtotal | Supplier | Notes |
 |-----------|-------------|-----|------------|----------|----------|-------|
@@ -49,7 +49,7 @@ This document details the compute subsystem components for the Epicura kitchen r
 
 ---
 
-## Cost Summary
+## 4. Cost Summary
 
 | Item | Cost |
 |------|------|
@@ -62,9 +62,9 @@ This document details the compute subsystem components for the Epicura kitchen r
 
 ---
 
-## Design Notes
+## 5. Design Notes
 
-### CM5 Selection Rationale
+### 5.1 CM5 Selection Rationale
 - **4GB RAM** sufficient for Yocto Linux + Docker + PostgreSQL + Python services + OpenCV + TFLite
 - **64GB eMMC** provides ample space for:
   - Base OS (~500MB)
@@ -78,7 +78,7 @@ This document details the compute subsystem components for the Epicura kitchen r
 - WiFi 802.11ac + Bluetooth 5.0 built-in (no external wireless module needed)
 - 40-pin GPIO header provides UART, I2C, SPI for STM32 bridge communication
 
-### STM32G474RE Selection Rationale
+### 5.2 STM32G474RE Selection Rationale
 - **Cortex-M4F @ 170 MHz** with FPU for PID calculations
 - **CAN-FD** peripheral (future production bus architecture)
 - **Advanced timers** (TIM1, TIM8) with complementary PWM for servo control
@@ -86,12 +86,12 @@ This document details the compute subsystem components for the Epicura kitchen r
 - **UART** for CM5 communication link
 - Nucleo board provides ST-Link debugger and Arduino-compatible headers
 
-### Display Choice
+### 5.3 Display Choice
 - Prototype uses standalone HDMI display (simpler integration)
 - Production will use **OEM panel** with direct DSI connection to CM5
 - I2C touch controller allows CM5 to handle touch input directly
 
-### Production Upgrade Path
+### 5.4 Production Upgrade Path
 
 | Item | Prototype | Production |
 |------|-----------|------------|
@@ -103,7 +103,7 @@ This document details the compute subsystem components for the Epicura kitchen r
 
 ---
 
-## Related Documentation
+## 6. Related Documentation
 
 - [[02-Actuation-Components|Actuation Components]]
 - [[03-Sensor-Components|Sensor Components]]
@@ -116,7 +116,7 @@ This document details the compute subsystem components for the Epicura kitchen r
 
 ---
 
-## Revision History
+## 7. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

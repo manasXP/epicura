@@ -6,7 +6,7 @@ Design rules reference for the Epicura controller and driver boards. Rules are e
 
 ---
 
-## Applicable Standards
+## 1. Applicable Standards
 
 | Standard | Scope |
 |----------|-------|
@@ -17,7 +17,7 @@ Design rules reference for the Epicura controller and driver boards. Rules are e
 
 ---
 
-## Board Stackup
+## 2. Board Stackup
 
 | Parameter | Value |
 |-----------|-------|
@@ -32,7 +32,7 @@ Design rules reference for the Epicura controller and driver boards. Rules are e
 
 ---
 
-## Track Width by Current
+## 3. Track Width by Current
 
 Based on IPC-2221B external layer, 10°C temperature rise, 1 oz copper.
 
@@ -50,7 +50,7 @@ Based on IPC-2221B external layer, 10°C temperature rise, 1 oz copper.
 
 ---
 
-## Clearance Rules
+## 4. Clearance Rules
 
 | Context | Clearance (mm) | Rationale |
 |---------|---------------|-----------|
@@ -63,7 +63,7 @@ Based on IPC-2221B external layer, 10°C temperature rise, 1 oz copper.
 
 ---
 
-## Via Specifications
+## 5. Via Specifications
 
 | Type | Pad Dia (mm) | Drill (mm) | Annular Ring (mm) | Usage |
 |------|-------------|-----------|-------------------|-------|
@@ -75,7 +75,7 @@ Based on IPC-2221B external layer, 10°C temperature rise, 1 oz copper.
 
 ---
 
-## Copper Pour
+## 6. Copper Pour
 
 | Parameter | Value |
 |-----------|-------|
@@ -88,7 +88,7 @@ Based on IPC-2221B external layer, 10°C temperature rise, 1 oz copper.
 
 ---
 
-## Creepage & Clearance (IEC 60335-1)
+## 7. Creepage & Clearance (IEC 60335-1)
 
 These rules apply to the **driver board** where mains-referenced signals exist (relay AC switching, induction module interface).
 
@@ -104,7 +104,7 @@ These rules apply to the **driver board** where mains-referenced signals exist (
 
 ---
 
-## Silkscreen
+## 8. Silkscreen
 
 | Parameter | Min Value |
 |-----------|-----------|
@@ -115,7 +115,7 @@ These rules apply to the **driver board** where mains-referenced signals exist (
 
 ---
 
-## JLCPCB Capability Limits
+## 9. JLCPCB Capability Limits
 
 Absolute manufacturing minimums — our design rules are set above these for margin.
 
@@ -132,9 +132,9 @@ Absolute manufacturing minimums — our design rules are set above these for mar
 
 ---
 
-## Net Class Definitions
+## 10. Net Class Definitions
 
-### Controller Board
+### 10.1 Controller Board
 
 | Net Class | Track (mm) | Clearance (mm) | Via Pad/Drill (mm) | Nets |
 |-----------|-----------|----------------|--------------------:|------|
@@ -143,7 +143,7 @@ Absolute manufacturing minimums — our design rules are set above these for mar
 | SPI | 0.25 | 0.20 | 0.6 / 0.3 | `SPI2_*` |
 | I2C | 0.25 | 0.20 | 0.6 / 0.3 | `I2C1_SCL`, `I2C1_SDA` |
 
-### Driver Board
+### 10.2 Driver Board
 
 | Net Class | Track (mm) | Clearance (mm) | Via Pad/Drill (mm) | Nets |
 |-----------|-----------|----------------|--------------------:|------|
@@ -157,7 +157,7 @@ Absolute manufacturing minimums — our design rules are set above these for mar
 
 ---
 
-## DRC Severity Policy
+## 11. DRC Severity Policy
 
 Rules configured in each `.kicad_pro` — key severity overrides from KiCad defaults:
 
@@ -175,7 +175,7 @@ Rules configured in each `.kicad_pro` — key severity overrides from KiCad defa
 
 ---
 
-## Design Settings Summary (`.kicad_pro`)
+## 12. Design Settings Summary (`.kicad_pro`)
 
 Both boards share these global DRC minimums:
 

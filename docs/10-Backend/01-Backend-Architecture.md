@@ -7,7 +7,7 @@ status: Draft
 
 # Backend Architecture
 
-## System Overview
+## 1. System Overview
 
 Epicura's cloud backend provides centralized services for recipe management, appliance registration, user accounts, cooking telemetry, OTA firmware updates, and push notifications. The backend serves both the native mobile apps (iOS/Android) and the admin portal, while also receiving telemetry from Epicura devices via MQTT.
 
@@ -44,7 +44,7 @@ Epicura's cloud backend provides centralized services for recipe management, app
 
 ---
 
-## Tech Stack
+## 2. Tech Stack
 
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
@@ -65,9 +65,9 @@ Epicura's cloud backend provides centralized services for recipe management, app
 
 ---
 
-## Service Modules
+## 3. Service Modules
 
-### Module Overview
+### 3.1 Module Overview
 
 | Module | Responsibility | Key Endpoints |
 |--------|---------------|---------------|
@@ -80,7 +80,7 @@ Epicura's cloud backend provides centralized services for recipe management, app
 | **OTA** | Firmware release management, update checks | `/firmware/*` |
 | **Admin** | Admin-only endpoints for portal | `/admin/*` |
 
-### Module Architecture
+### 3.2 Module Architecture
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -112,7 +112,7 @@ Epicura's cloud backend provides centralized services for recipe management, app
 
 ---
 
-## JWT Authentication Flow
+## 4. JWT Authentication Flow
 
 ```
 ┌──────────┐                          ┌──────────┐                ┌──────────┐
@@ -161,7 +161,7 @@ Epicura's cloud backend provides centralized services for recipe management, app
 
 ---
 
-## Monorepo Structure
+## 5. Monorepo Structure
 
 ```
 epicura-cloud/
@@ -213,7 +213,7 @@ epicura-cloud/
 
 ---
 
-## Environment Configuration
+## 6. Environment Configuration
 
 | Variable | Dev Default | Description |
 |----------|-------------|-------------|
@@ -231,9 +231,9 @@ epicura-cloud/
 
 ---
 
-## Deployment
+## 7. Deployment
 
-### Development (Docker Compose)
+### 7.1 Development (Docker Compose)
 
 ```yaml
 # docker-compose.yml (simplified)
@@ -268,7 +268,7 @@ services:
     depends_on: [api]
 ```
 
-### Production
+### 7.2 Production
 
 | Service | Platform | Notes |
 |---------|----------|-------|
@@ -282,7 +282,7 @@ services:
 
 ---
 
-## MQTT Bridge (Device to Backend)
+## 8. MQTT Bridge (Device to Backend)
 
 The backend subscribes to device MQTT topics and bridges telemetry data to WebSocket clients (mobile apps) and to PostgreSQL for persistence.
 
@@ -304,7 +304,7 @@ The backend subscribes to device MQTT topics and bridges telemetry data to WebSo
 
 ---
 
-## Design Decisions
+## 9. Design Decisions
 
 | Decision | Chosen | Alternative | Rationale |
 |----------|--------|-------------|-----------|
@@ -320,7 +320,7 @@ The backend subscribes to device MQTT topics and bridges telemetry data to WebSo
 
 ---
 
-## Related Documentation
+## 10. Related Documentation
 
 - [[02-Database-Schema|Database Schema]] - Full table definitions and ER diagram
 - [[03-Admin-Portal|Admin Portal]] - Next.js admin interface
@@ -334,7 +334,7 @@ The backend subscribes to device MQTT topics and bridges telemetry data to WebSo
 
 ---
 
-## Revision History
+## 11. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

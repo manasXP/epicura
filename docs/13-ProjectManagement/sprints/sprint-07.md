@@ -14,7 +14,7 @@ aliases: [Sprint 7]
 > **Phase:** Phase 2 — Vision & Recipe
 > **Goal:** Train food classification model and establish device management backend infrastructure.
 
-## Stories
+## 1. Stories
 
 | Status | ID | Title | Epic | Points | Blocked By |
 |:------:|-----|-------|------|:------:|------------|
@@ -25,7 +25,7 @@ aliases: [Sprint 7]
 
 **Total Points:** 31
 
-## Capacity Allocation
+## 2. Capacity Allocation
 
 | Team Member | Allocated | Available | Notes |
 |-------------|:---------:|:---------:|-------|
@@ -33,14 +33,14 @@ aliases: [Sprint 7]
 | Backend Engineer | 13 | 20 | BE-DEV.01 (8), BE-MQT.01 (5) |
 | **Total** | **31** | **40** | |
 
-## Sprint Review Checklist
+## 3. Sprint Review Checklist
 
 - [ ] All stories demo-ready
 - [ ] No P0 bugs remaining
 - [ ] Documentation updated
 - [ ] QA sign-off on completed stories
 
-## Retro Notes
+## 4. Retro Notes
 
 > _To be filled during sprint retrospective._
 >
@@ -55,6 +55,6 @@ aliases: [Sprint 7]
 
 ---
 
-## References
+## 5. References
 
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calendar]]

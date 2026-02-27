@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
-modified: 2026-02-20
-version: 2.0
+modified: 2026-02-27
+version: 2.1
 status: Draft
 tags: [epicura, state-machine, software-architecture, recipe-engine]
 ---
@@ -15,13 +15,14 @@ This document describes the main cooking loop state machine and how each state d
 
 ---
 
-## State Diagram
+## 1. State Diagram
 
 ```mermaid
 stateDiagram-v2
     [*] --> IDLE
 
     IDLE --> LOADING : User selects recipe
+    IDLE --> RECOVERING : Interrupted session found on boot (see §5.3)
     LOADING --> AWAITING_LOAD : Recipe validated
     LOADING --> ERROR : Parse/validation failure
 
@@ -54,6 +55,9 @@ stateDiagram-v2
     PAUSED --> IDLE : User cancels cook
     PAUSED --> ERROR : Timeout in paused state (>30 min)
 
+    RECOVERING --> RESUMING : User confirms resume
+    RECOVERING --> IDLE : User discards session or safety timeout exceeded
+
     RESUMING --> COOKING : Surface temp within ±5°C of target
     RESUMING --> PAUSED : New pause trigger during recovery
     RESUMING --> ERROR : Temp recovery timeout (>300s)
@@ -65,13 +69,14 @@ stateDiagram-v2
     E_STOP --> IDLE : Manual hardware reset
 
     note right of PAUSED : Cooking suspended.\nActuators OFF, heater OFF.\nState saved to DB.
+    note right of RECOVERING : Boot recovery.\nLoad snapshot from DB.\nPrompt user to resume.
     note right of RESUMING : Heater ramp to target.\nStir OFF until temp OK.\nActuators remain OFF.
     note right of E_STOP : Hardware relay cut.\nRequires physical reset.
 ```
 
 ---
 
-## State-Layer Impact Table
+## 2. State-Layer Impact Table
 
 | State | UI (Kivy) | Controller (CM5 Recipe Engine) | Driver (STM32) |
 |-------|-----------|-------------------------------|----------------|
@@ -84,6 +89,7 @@ stateDiagram-v2
 | **MONITORING** | CV confidence overlay on camera feed, "Analyzing..." indicator | Run TFLite inference on latest frame, evaluate `cv_check` condition, apply timer fallback | Continue current PID + stir setpoints unchanged |
 | **TRANSITIONING** | "Stage 3/6 complete — next: Add Dal", brief animation | Compute next stage parameters from YAML, send new `SET_TEMP` / `DISPENSE` commands | Ramp temp to new target, stop or change stir pattern |
 | **COMPLETING** | "Cooking Complete!" summary card, rating prompt, share option | Log session to PostgreSQL, publish MQTT `cook/complete`, compute nutrition estimate | Heater OFF (CAN `SET_POWER(0)`), stir OFF, exhaust fan cooldown ramp |
+| **RECOVERING** | Boot recovery dialog: "Previous cook interrupted — Resume {recipe_name}? Stage {n}/{total}, {elapsed} elapsed" with [Resume] and [Discard] buttons; shows time since power loss | On boot, query `cooking_sessions` for `status IN ('paused', 'cooking', 'started')` on this appliance. If found: load pause snapshot from `stages_log`, validate recipe still exists, check elapsed time since `paused_at` against 30-min food safety limit. If valid → show prompt. If expired → auto-discard and mark session `aborted` | Sensors polling at 1 Hz, heartbeat to CM5, all actuators OFF, heater OFF. Report current surface temperature (used by UI to show how far below target) |
 | **PAUSED** | Pause overlay showing reason (power loss / sensor fault / induction error / user), elapsed pause timer, cancel button; resume button enabled only when condition cleared | Suspend stage timer, save cooking state snapshot to PostgreSQL (stage index, elapsed time, setpoints, pause reason), hold setpoints in memory, log pause event with telemetry | Heater OFF (CAN `SET_POWER(0)`), all actuators OFF (MOSFET gates LOW, PCF8574 outputs LOW), stir OFF, exhaust fan continues at idle (25%), sensors continue polling at 1 Hz |
 | **RESUMING** | "Resuming — Heating to {target}°C" with live temp progress bar, stir/dispense paused indicator | Send `SET_TEMP(saved_target, ramp_rate)` via bridge, poll telemetry at 2 Hz, wait for IR temp within ±5°C of target for 3 consecutive readings, then transition to COOKING with restored stage timer | PID ramp-up to saved target, CAN `SET_POWER` active, stir OFF (resumes on COOKING entry), actuators OFF, report telemetry |
 | **ERROR** | Error description banner, retry / skip stage / abort buttons | Classify error (recoverable vs critical), determine recovery options, log to DB | Depends on error: reduce power, stop dispensing, or hold safe state |
@@ -91,7 +97,7 @@ stateDiagram-v2
 
 ---
 
-## Sequence Diagram: Single Cooking Stage
+## 3. Sequence Diagram: Single Cooking Stage
 
 The following shows message flow for a typical "Add Spices" stage from the Dal Tadka recipe (stage 3: add cumin seeds to hot oil).
 
@@ -138,7 +144,7 @@ sequenceDiagram
 
 ---
 
-## Transition Trigger Table
+## 4. Transition Trigger Table
 
 | From | To | Trigger | Details |
 |------|----|---------|---------|
@@ -163,6 +169,9 @@ sequenceDiagram
 | TRANSITIONING | DISPENSING | New ingredients | Next stage has `ingredients` list to dispense |
 | TRANSITIONING | COMPLETING | Last stage | No more stages in recipe YAML |
 | COMPLETING | IDLE | Session end | Log written, user dismisses summary or 5 min auto-return |
+| IDLE | RECOVERING | Boot recovery | On system boot, Recipe Engine queries `cooking_sessions` for rows with `status IN ('paused', 'cooking', 'started')` and `appliance_id` matching this device. If an interrupted session exists and was paused less than 30 min ago, transition to RECOVERING to prompt the user |
+| RECOVERING | RESUMING | User confirms | User taps "Resume" on the boot recovery dialog. Recipe Engine restores the pause snapshot (stage index, elapsed time, temp target, stir pattern) from `stages_log` and transitions to RESUMING to ramp the surface back to the saved target temperature |
+| RECOVERING | IDLE | User discards or timeout | User taps "Discard" or the 30-min food safety window has already elapsed. Session is marked `status = 'aborted'` with `notes = 'Discarded after power loss recovery'`. System returns to IDLE |
 | PAUSED | RESUMING | Condition cleared | Pause condition resolved: AC power restored (POWER_FAIL state=OK + 2s debounce), sensor/actuator fault cleared (healthy telemetry for 3 consecutive readings), induction error cleared (CAN status OK), or user taps "Resume" (manual pause only). Auto-resume if pause duration <5 min; user prompt if >5 min |
 | PAUSED | IDLE | User cancel | User taps "Cancel Cook" during pause |
 | PAUSED | ERROR | Pause timeout | Paused longer than 30 min without action |
@@ -176,7 +185,7 @@ sequenceDiagram
 
 ---
 
-## Pause Triggers
+## 5. Pause Triggers
 
 Any active cooking state (PREHEATING, DISPENSING, COOKING, MONITORING) can transition to PAUSED when one of the following conditions is detected. The pause reason is stored in the cooking state snapshot to determine the appropriate resume behavior.
 
@@ -188,7 +197,7 @@ Any active cooking state (PREHEATING, DISPENSING, COOKING, MONITORING) can trans
 | **Induction Cooktop Error** | STM32 CAN bus | CAN error frame received, induction module reports fault code (overcurrent, overtemp, IGBT failure), or CAN bus timeout (no heartbeat for >2s) | Depends on fault | Transient faults (e.g., CAN timeout, momentary overtemp): auto-retry once after 5s, then pause. Permanent faults (IGBT failure): pause and prompt user. CAN bus offline: pause immediately |
 | **User Pause** | UI touch event | User taps "Pause" button on cooking screen | No — user must tap "Resume" | Manual pause for lid check, ingredient addition, etc. |
 
-### Pause State Persistence
+### 5.1 Pause State Persistence
 
 On entering PAUSED, the Recipe Engine saves a snapshot to PostgreSQL:
 
@@ -209,7 +218,7 @@ On entering PAUSED, the Recipe Engine saves a snapshot to PostgreSQL:
 
 This snapshot enables RESUMING to restore exact cooking parameters. If the CM5 reboots during a long power outage (UPS depleted), the saved state is recovered from PostgreSQL on next boot.
 
-### Resume Decision Logic
+### 5.2 Resume Decision Logic
 
 ```
 On pause condition cleared:
@@ -226,9 +235,69 @@ On pause condition cleared:
 > [!warning]
 > The 30-minute pause timeout is a food safety limit. If food has been sitting at unsafe temperatures (between 5°C and 60°C) for more than 30 minutes, the system transitions to ERROR and the cook session is marked as failed. This aligns with general food safety guidelines for the temperature danger zone.
 
+### 5.3 Boot Recovery (Power Loss Resume)
+
+When AC power is lost and the UPS is eventually depleted, the CM5 shuts down. The pause snapshot has already been persisted to PostgreSQL (section 5.1) before shutdown. On next power-up, the system must detect the interrupted session and offer to resume.
+
+**Boot Recovery Sequence:**
+
+```
+On CM5 boot → Recipe Engine init:
+  1. Query: SELECT * FROM cooking_sessions
+            WHERE appliance_id = <this_device>
+            AND status IN ('paused', 'cooking', 'started')
+            ORDER BY started_at DESC LIMIT 1
+
+  2. If no interrupted session found:
+      → remain in IDLE (normal boot)
+
+  3. If interrupted session found:
+      a. Read pause snapshot from stages_log JSONB
+      b. Compute pause_duration = now() - paused_at
+
+      c. If pause_duration > 30 minutes:
+          → mark session status = 'aborted',
+            notes = 'Food safety timeout after power loss'
+          → remain in IDLE
+          → UI shows: "Previous cook was abandoned (too long without power)"
+
+      d. If pause_duration ≤ 30 minutes:
+          → transition to RECOVERING
+          → UI shows boot recovery dialog with:
+            - Recipe name, current stage, elapsed time
+            - Time since power loss
+            - Current surface temp (from STM32 sensor poll)
+            - Saved target temp
+            - [Resume Cooking] and [Discard] buttons
+```
+
+**Resume flow after user confirms:**
+
+```
+RECOVERING → RESUMING:
+  1. Restore from snapshot: stage_index, stage_elapsed_s,
+     temp_target_c, stir_pattern, stir_speed_rpm
+  2. Send SET_TEMP(temp_target_c, ramp_rate) to STM32
+  3. Poll IR sensor at 2 Hz until temp within ±5°C of target
+     for 3 consecutive readings (same as PREHEATING → DISPENSING)
+  4. On temp reached → transition to COOKING:
+     - Resume stage timer from stage_elapsed_s
+     - Restore stir pattern and speed
+     - Resume CV capture if applicable
+```
+
+**Schema support:** The existing `cooking_sessions` table supports boot recovery without modification:
+- `status = 'paused'` identifies interrupted sessions
+- `stages_log` JSONB stores the pause snapshot (stage index, elapsed time, setpoints)
+- `started_at` and snapshot `paused_at` enable duration calculation
+- `recipe_id` FK allows reloading the full recipe for the remaining segments
+
+> [!tip]
+> The STM32 watchdog ensures all actuators and the heater are OFF during an uncontrolled power loss. When power returns, the STM32 boots into its safe idle state (sensors polling, actuators OFF) before the CM5 completes its boot sequence. The surface temperature at boot time will be below the saved target — the RESUMING state handles the ramp-up.
+
 ---
 
-## Related Documentation
+## 6. Related Documentation
 
 - [[02-Controller-Software-Architecture|Controller Software Architecture]] — Recipe YAML format, CV pipeline, PID tuning
 - [[08-Tech-Stack|Tech Stack]] — Yocto, Kivy, FreeRTOS, Docker stack
@@ -238,9 +307,10 @@ On pause condition cleared:
 
 ---
 
-## Revision History
+## 7. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
 | 2.0 | 2026-02-20 | Manas Pradhan | Expanded PAUSED state with multi-cause triggers (power failure, sensor/actuator malfunction, induction error); added RESUMING state for temperature recovery before returning to COOKING; PAUSED now reachable from PREHEATING, DISPENSING, MONITORING (not just COOKING); added pause triggers table, state persistence schema, and resume decision logic; ERROR → RESUMING replaces ERROR → COOKING |
+| 2.1 | 2026-02-27 | Manas Pradhan | Added RECOVERING state and boot recovery flow (§5.3) for resuming cooking after full power loss; IDLE → RECOVERING transition on boot when interrupted session found in DB; 30-min food safety cutoff enforced at boot time |

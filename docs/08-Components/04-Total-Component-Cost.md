@@ -7,13 +7,13 @@ status: Draft
 
 # Total Component Cost Summary
 
-## Overview
+## 1. Overview
 
 This document provides a consolidated view of all component costs for the Epicura kitchen robot prototype, including electronic components, mechanical parts, and projected production costs.
 
 ---
 
-## Category Summary
+## 2. Category Summary
 
 | Category | Subtotal | % of Total | Details |
 |----------|----------|------------|---------|
@@ -24,9 +24,9 @@ This document provides a consolidated view of all component costs for the Epicur
 
 ---
 
-## Detailed Component Breakdown
+## 3. Detailed Component Breakdown
 
-### Compute Modules ($196.00)
+### 3.1 Compute Modules ($196.00)
 
 | Item | Cost |
 |------|------|
@@ -36,7 +36,7 @@ This document provides a consolidated view of all component costs for the Epicur
 | 10.1" IPS Display | $80.00 |
 | Storage + Cables | $25.00 |
 
-### Actuation ($292.35)
+### 3.2 Actuation ($292.35)
 
 | Item | Cost |
 |------|------|
@@ -57,7 +57,7 @@ This document provides a consolidated view of all component costs for the Epicur
 | Exhaust Fan + Filtration | $22.50 |
 | Piezo Buzzer + MOSFET | $0.85 |
 
-### Sensors ($62.70)
+### 3.3 Sensors ($62.70)
 
 | Item | Cost |
 |------|------|
@@ -70,7 +70,7 @@ This document provides a consolidated view of all component costs for the Epicur
 
 ---
 
-## Additional Costs
+## 4. Additional Costs
 
 | Item | Cost | Notes |
 |------|------|-------|
@@ -84,7 +84,7 @@ This document provides a consolidated view of all component costs for the Epicur
 
 ---
 
-## Prototype Total BOM
+## 5. Prototype Total BOM
 
 | Category | Cost |
 |----------|------|
@@ -96,7 +96,7 @@ This document provides a consolidated view of all component costs for the Epicur
 
 ---
 
-## Prototype vs Production Cost Comparison
+## 6. Prototype vs Production Cost Comparison
 
 | Item | Prototype | Production (1000 qty) | Notes |
 |------|-----------|----------------------|-------|
@@ -121,7 +121,7 @@ This document provides a consolidated view of all component costs for the Epicur
 
 ---
 
-## Cost Breakdown Chart
+## 7. Cost Breakdown Chart
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────┐
@@ -155,7 +155,7 @@ This document provides a consolidated view of all component costs for the Epicur
 
 ---
 
-## Budget Planning by Development Phase
+## 8. Budget Planning by Development Phase
 
 | Phase | Description | Estimated Spend | Cumulative |
 |-------|-------------|----------------|------------|
@@ -172,9 +172,9 @@ This document provides a consolidated view of all component costs for the Epicur
 
 ---
 
-## Cost Drivers Analysis
+## 9. Cost Drivers Analysis
 
-### Highest Cost Components
+### 9.1 Highest Cost Components
 
 | Rank | Component | Cost | % of BOM | Notes |
 |------|-----------|------|----------|-------|
@@ -186,7 +186,7 @@ This document provides a consolidated view of all component costs for the Epicur
 | 6 | Raspberry Pi CM5 | $45.00 | 6% | Volume pricing: $35 |
 | 7 | Custom PCBs | $40.00 | 5% | Panel production: $8/unit |
 
-### Cost Reduction Opportunities
+### 9.2 Cost Reduction Opportunities
 
 | Opportunity | Potential Savings | Effort | Risk |
 |-------------|-------------------|--------|------|
@@ -199,7 +199,7 @@ This document provides a consolidated view of all component costs for the Epicur
 
 ---
 
-## Target Pricing (Production)
+## 10. Target Pricing (Production)
 
 | Volume | Unit BOM Cost | Target Selling Price | Gross Margin |
 |--------|--------------|---------------------|-------------|
@@ -209,7 +209,7 @@ This document provides a consolidated view of all component costs for the Epicur
 
 ---
 
-## Related Documentation
+## 11. Related Documentation
 
 - [[01-Compute-Module-Components|Compute Module Components]]
 - [[02-Actuation-Components|Actuation Components]]
@@ -224,7 +224,7 @@ This document provides a consolidated view of all component costs for the Epicur
 
 ---
 
-## Revision History
+## 12. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

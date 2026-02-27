@@ -14,7 +14,7 @@ aliases: [Sprint 6]
 > **Phase:** Phase 2 — Dispensing & Vision
 > **Goal:** Complete all dispensing systems with SLD liquid dispenser and calibration. Start vision pipeline with camera setup and preprocessing. Build backend recipe API. Achieve Milestone M3: Dispensing Complete.
 
-## Stories
+## 1. Stories
 
 | Status | ID | Title | Epic | Points | Blocked By |
 |:------:|-----|-------|------|:------:|------------|
@@ -26,7 +26,7 @@ aliases: [Sprint 6]
 
 **Total Points:** 31
 
-## Capacity Allocation
+## 2. Capacity Allocation
 
 | Team Member | Allocated | Available | Notes |
 |-------------|:---------:|:---------:|-------|
@@ -36,7 +36,7 @@ aliases: [Sprint 6]
 | Backend Dev 1 | 8 | 8 | Recipe CRUD API |
 | **Total** | **31** | **56** | CV team starts |
 
-## Sprint Review Checklist
+## 3. Sprint Review Checklist
 
 - [ ] All stories demo-ready
 - [ ] No P0 bugs remaining
@@ -50,7 +50,7 @@ aliases: [Sprint 6]
 - [ ] Backend recipe API supports CRUD operations
 - [ ] **Milestone M3: Dispensing Complete** achieved
 
-## Retro Notes
+## 4. Retro Notes
 
 > _To be filled during sprint retrospective._
 >
@@ -65,7 +65,7 @@ aliases: [Sprint 6]
 
 ---
 
-## References
+## 5. References
 
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calendar]]
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/02-Stories|User Stories]]

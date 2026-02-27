@@ -14,7 +14,7 @@ aliases: [UI Epic, Touchscreen Epic]
 
 10" capacitive touchscreen interface built with Kivy, running as a Docker container on CM5. Provides recipe browsing, live cooking status with camera feed, and settings/diagnostics screens.
 
-## Story Summary
+## 1. Story Summary
 
 | Module | Stories | Points | Sprints |
 |--------|:-------:|:------:|---------|
@@ -26,9 +26,9 @@ aliases: [UI Epic, Touchscreen Epic]
 
 ---
 
-## Phase 3 — UI Development (Sprints 9–10)
+## 2. Phase 3 — UI Development (Sprints 9–10)
 
-### UI-SET.01: Kivy app scaffold — screen manager, theme, navigation, GPU acceleration
+### 2.1 UI-SET.01: Kivy app scaffold — screen manager, theme, navigation, GPU acceleration
 - **Sprint:** [[sprint-09|Sprint 9]]
 - **Priority:** P0
 - **Points:** 5
@@ -54,7 +54,7 @@ aliases: [UI Epic, Touchscreen Epic]
 
 ---
 
-### UI-RCP.01: Recipe browser — grid view, detail view, search, favorites
+### 2.2 UI-RCP.01: Recipe browser — grid view, detail view, search, favorites
 - **Sprint:** [[sprint-09|Sprint 9]]
 - **Priority:** P0
 - **Points:** 5
@@ -80,7 +80,7 @@ aliases: [UI Epic, Touchscreen Epic]
 
 ---
 
-### UI-COK.01: Live cooking screen — camera feed, status, temperature, timer
+### 2.3 UI-COK.01: Live cooking screen — camera feed, status, temperature, timer
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 5
@@ -103,7 +103,7 @@ aliases: [UI Epic, Touchscreen Epic]
 
 ---
 
-### UI-COK.02: Cooking screen controls and alerts — pause/resume, abort, alert banners
+### 2.4 UI-COK.02: Cooking screen controls and alerts — pause/resume, abort, alert banners
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 3
@@ -124,7 +124,7 @@ aliases: [UI Epic, Touchscreen Epic]
 
 ---
 
-### UI-MNT.01: Settings & maintenance — WiFi, calibration, diagnostics, about
+### 2.5 UI-MNT.01: Settings & maintenance — WiFi, calibration, diagnostics, about
 - **Sprint:** [[sprint-10|Sprint 10]]
 - **Priority:** P1
 - **Points:** 5
@@ -150,15 +150,15 @@ aliases: [UI Epic, Touchscreen Epic]
 
 ---
 
-## Dependencies
+## 3. Dependencies
 
-### What UI blocks (downstream consumers)
+### 3.1 What UI blocks (downstream consumers)
 
 | UI Story | Blocks | Reason |
 |----------|--------|--------|
 | UI-COK.02 | INT-SYS.01 | Cooking UI needed for end-to-end integration test |
 
-### What blocks UI (upstream dependencies)
+### 3.2 What blocks UI (upstream dependencies)
 
 | UI Story | Blocked by | Reason |
 |----------|------------|--------|
@@ -170,7 +170,7 @@ aliases: [UI Epic, Touchscreen Epic]
 
 ---
 
-## References
+## 4. References
 
 - [[__Workspaces/Epicura/docs/04-UserInterface/01-UI-UX-Design|UI/UX Design]]
 - [[__Workspaces/Epicura/docs/03-Software/01-Tech-Stack|Tech Stack]]

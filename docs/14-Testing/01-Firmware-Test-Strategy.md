@@ -6,15 +6,15 @@ aliases: [Firmware Test Strategy]
 
 # Firmware Test Strategy — epicura-firmware
 
-## Scope
+## 1. Scope
 
 Testing strategy for the STM32G474RE real-time control firmware: PID controller, servo driver, sensor polling, CAN bus interface, dispensers (P-ASD, CID, SLD), safety manager, and SPI protocol handler.
 
 ---
 
-## Test Levels
+## 2. Test Levels
 
-### 1. Unit Tests (Host-Based)
+### 2.1 Unit Tests (Host-Based)
 
 **Framework:** Unity + CMock (or CeedlingTest)
 **Runs on:** x86 host (CI-compatible, no hardware required)
@@ -36,7 +36,7 @@ Testing strategy for the STM32G474RE real-time control firmware: PID controller,
 - Use CMock to auto-generate mocks from HAL headers
 - All safety-critical paths (thermal cutoff, e-stop, watchdog) must have 100% branch coverage
 
-### 2. Integration Tests (Hardware-in-Loop — HIL)
+### 2.2 Integration Tests (Hardware-in-Loop — HIL)
 
 **Runs on:** STM32G474RE dev board + test jig
 
@@ -56,7 +56,7 @@ Testing strategy for the STM32G474RE real-time control firmware: PID controller,
 - Logic analyzer (Saleae) for SPI/I2C/PWM timing verification
 - Custom Python test harness on host PC for automated HIL sequencing
 
-### 3. Static Analysis
+### 2.3 Static Analysis
 
 | Tool | Purpose | CI Gate |
 |------|---------|---------|
@@ -64,7 +64,7 @@ Testing strategy for the STM32G474RE real-time control firmware: PID controller,
 | `PC-lint` or `MISRA-C checker` | MISRA C:2012 compliance for safety-critical modules | Advisory = warn, Required = fail |
 | `arm-none-eabi-gcc -Wall -Werror` | Compiler warnings as errors | Any warning = fail |
 
-### 4. Timing / Real-Time Tests
+### 2.4 Timing / Real-Time Tests
 
 | Test | Method | Pass Criteria |
 |------|--------|--------------|
@@ -76,7 +76,7 @@ Testing strategy for the STM32G474RE real-time control firmware: PID controller,
 
 ---
 
-## CI Pipeline
+## 3. CI Pipeline
 
 ```yaml
 # .github/workflows/ci.yml
@@ -95,7 +95,7 @@ steps:
 
 ---
 
-## Test Data & Fixtures
+## 4. Test Data & Fixtures
 
 - **PID test vectors:** Step response profiles (ramp, overshoot, steady-state) as CSV, compared against expected output
 - **CAN test frames:** Known-good CAN frames captured from microwave induction module datasheet
@@ -103,7 +103,7 @@ steps:
 
 ---
 
-## Safety-Specific Testing
+## 5. Safety-Specific Testing
 
 Per IEC 60335-1 and ISO 13482 requirements:
 
@@ -118,7 +118,7 @@ Per IEC 60335-1 and ISO 13482 requirements:
 
 ---
 
-## References
+## 6. References
 
 - [[__Workspaces/Epicura/docs/07-Development/02-Repository-Plan|Repository Plan]]
 - [[__Workspaces/Epicura/docs/03-Software/02-Controller-Software-Architecture|Controller Software Architecture]]

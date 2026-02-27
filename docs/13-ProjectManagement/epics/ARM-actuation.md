@@ -14,7 +14,7 @@ aliases: [ARM Epic, Actuation Epic]
 
 Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic seasoning), CID (coarse ingredients), and SLD (standard liquids). Covers motor drivers, closed-loop feedback, and calibration routines.
 
-## Story Summary
+## 1. Story Summary
 
 | Module | Stories | Points | Sprints |
 |--------|:-------:|:------:|---------|
@@ -27,9 +27,9 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 
 ---
 
-## Phase 1 — Robotic Arm (Sprint 4)
+## 2. Phase 1 — Robotic Arm (Sprint 4)
 
-### ARM-SRV.01: BLDC motor control — PWM driver, stirring patterns, smooth motion
+### 2.1 ARM-SRV.01: BLDC motor control — PWM driver, stirring patterns, smooth motion
 - **Sprint:** [[sprint-04|Sprint 4]]
 - **Priority:** P0
 - **Points:** 5
@@ -50,7 +50,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 
 ---
 
-### ARM-SRV.02: BLDC motor feedback — stall detection, SPI commands, testing
+### 2.2 ARM-SRV.02: BLDC motor feedback — stall detection, SPI commands, testing
 - **Sprint:** [[sprint-04|Sprint 4]]
 - **Priority:** P0
 - **Points:** 3
@@ -71,9 +71,9 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 
 ---
 
-## Phase 2 — Dispensing Subsystems (Sprints 5–6)
+## 3. Phase 2 — Dispensing Subsystems (Sprints 5–6)
 
-### ARM-ASD.01: P-ASD hardware control — pump PWM, solenoid GPIO, pressure sensor
+### 3.1 ARM-ASD.01: P-ASD hardware control — pump PWM, solenoid GPIO, pressure sensor
 - **Sprint:** [[sprint-05|Sprint 5]]
 - **Priority:** P0
 - **Points:** 5
@@ -95,7 +95,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 
 ---
 
-### ARM-ASD.02: P-ASD dispensing sequence — state machine, anti-clog, accuracy testing
+### 3.2 ARM-ASD.02: P-ASD dispensing sequence — state machine, anti-clog, accuracy testing
 - **Sprint:** [[sprint-05|Sprint 5]]
 - **Priority:** P0
 - **Points:** 3
@@ -115,7 +115,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 
 ---
 
-### ARM-CID.01: CID coarse ingredient dispenser — linear actuator control, position sensing
+### 3.3 ARM-CID.01: CID coarse ingredient dispenser — linear actuator control, position sensing
 - **Sprint:** [[sprint-05|Sprint 5]]
 - **Priority:** P0
 - **Points:** 5
@@ -140,7 +140,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 
 ---
 
-### ARM-SLD.01: SLD hardware control — peristaltic pumps, valves, load cells
+### 3.4 ARM-SLD.01: SLD hardware control — peristaltic pumps, valves, load cells
 - **Sprint:** [[sprint-06|Sprint 6]]
 - **Priority:** P0
 - **Points:** 5
@@ -162,7 +162,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 
 ---
 
-### ARM-SLD.02: SLD dispensing and monitoring — closed-loop dispense, level alerts, priming
+### 3.5 ARM-SLD.02: SLD dispensing and monitoring — closed-loop dispense, level alerts, priming
 - **Sprint:** [[sprint-06|Sprint 6]]
 - **Priority:** P0
 - **Points:** 3
@@ -186,7 +186,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 
 ---
 
-### ARM-CAL.01: Dispenser calibration — automated routines, persistent storage
+### 3.6 ARM-CAL.01: Dispenser calibration — automated routines, persistent storage
 - **Sprint:** [[sprint-06|Sprint 6]]
 - **Priority:** P1
 - **Points:** 5
@@ -212,9 +212,9 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 
 ---
 
-## Dependencies
+## 4. Dependencies
 
-### What ARM blocks (downstream consumers)
+### 4.1 What ARM blocks (downstream consumers)
 
 | ARM Story | Blocks | Reason |
 |-----------|--------|--------|
@@ -227,7 +227,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 | ARM-SLD.02 | RCP-DSP.01, ARM-CAL.01 | Closed-loop dispensing needed for recipe dispensing and calibration |
 | ARM-CAL.01 | RCP-DSP.01 | Calibration needed for accurate dispensing |
 
-### What blocks ARM (upstream dependencies)
+### 4.2 What blocks ARM (upstream dependencies)
 
 | ARM Story | Blocked by | Reason |
 |-----------|------------|--------|
@@ -242,7 +242,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 
 ---
 
-## References
+## 5. References
 
 - [[__Workspaces/Epicura/docs/05-Subsystems/02-Robotic-Arm|Robotic Arm Subsystem]]
 - [[__Workspaces/Epicura/docs/05-Subsystems/03-Ingredient-Dispensing|Ingredient Dispensing Subsystem]]
