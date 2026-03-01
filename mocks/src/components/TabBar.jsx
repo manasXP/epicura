@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Heart, Clock, User } from 'lucide-react'
+import { Grid, Heart, Clock, User, Activity } from 'lucide-react'
 import { colors, glassMorphism, typography } from '../theme'
 
 const TabBar = ({ activeTab, onTabChange }) => {
@@ -7,6 +7,7 @@ const TabBar = ({ activeTab, onTabChange }) => {
     { id: 'recipe', label: 'Recipe', icon: Grid },
     { id: 'favourite', label: 'Favourite', icon: Heart },
     { id: 'session', label: 'Session', icon: Clock },
+    { id: 'glance', label: 'Glance', icon: Activity },
     { id: 'profile', label: 'Profile', icon: User }
   ]
 

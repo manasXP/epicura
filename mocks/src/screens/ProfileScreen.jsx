@@ -1,11 +1,19 @@
 import React, { useState } from 'react'
-import { User, Wifi, Bell, Globe, LogOut, ChevronRight } from 'lucide-react'
+import { User, Wifi, Bell, Globe, LogOut, ChevronRight, Minus, Plus } from 'lucide-react'
 import { user } from '../data/mockData'
 import { colors, glassMorphism, typography, spacing } from '../theme'
 
 const ProfileScreen = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true)
   const [language, setLanguage] = useState('English')
+
+  // Food Preferences state
+  const [diet, setDiet] = useState('No Restrictions')
+  const [cuisines, setCuisines] = useState(['Indian', 'Italian', 'Thai', 'Mexican'])
+  const [spiceLevel, setSpiceLevel] = useState(3)
+  const [saltLevel, setSaltLevel] = useState(3)
+  const [oilLevel, setOilLevel] = useState(3)
+  const [servings, setServings] = useState(2)
 
   const containerStyle = {
     padding: spacing.md,
@@ -203,23 +211,140 @@ const ProfileScreen = () => {
         <div style={phoneStyle}>{user.phone}</div>
       </div>
 
+      {/* ── Food Preferences ────────────────────────────────────────── */}
       <div style={sectionStyle}>
-        <div style={sectionTitleStyle}>Preferences</div>
-        <div style={preferenceRowStyle}>
-          <div style={preferenceLabelStyle}>Spice Level</div>
-          <div style={spiceDotsContainerStyle}>
-            {[1, 2, 3, 4, 5].map(level => (
-              <div key={level} style={spiceDotStyle(level <= user.preferences.spiceLevel)} />
+        <div style={sectionTitleStyle}>Food Preferences</div>
+
+        {/* Diet selector — segmented control */}
+        <div style={{ marginBottom: spacing.md }}>
+          <div style={{ ...preferenceLabelStyle, marginBottom: spacing.sm }}>Diet</div>
+          <div style={{
+            display: 'flex',
+            borderRadius: '12px',
+            overflow: 'hidden',
+            background: 'rgba(62, 39, 35, 0.06)'
+          }}>
+            {['Vegetarian', 'Vegan', 'Pescatarian', 'No Restrictions'].map((d) => (
+              <button
+                key={d}
+                onClick={() => setDiet(d)}
+                style={{
+                  flex: 1,
+                  padding: '10px 4px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  fontWeight: diet === d ? '700' : '500',
+                  color: diet === d ? colors.surface : colors.textSecondary,
+                  background: diet === d ? colors.primary : 'transparent',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                {d}
+              </button>
             ))}
           </div>
         </div>
-        <div style={preferenceRowStyle}>
-          <div style={preferenceLabelStyle}>Default Servings</div>
-          <div style={preferenceValueStyle}>{user.preferences.defaultServings} people</div>
+
+        {/* Preferred Cuisines — multi-select chips */}
+        <div style={{ marginBottom: spacing.md }}>
+          <div style={{ ...preferenceLabelStyle, marginBottom: spacing.sm }}>Preferred Cuisines</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: spacing.sm }}>
+            {['Indian', 'Italian', 'Thai', 'Chinese', 'American', 'Mexican', 'Korean', 'Global'].map((c) => {
+              const selected = cuisines.includes(c)
+              return (
+                <button
+                  key={c}
+                  onClick={() => setCuisines(prev =>
+                    selected ? prev.filter(x => x !== c) : [...prev, c]
+                  )}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '20px',
+                    border: selected ? `2px solid ${colors.primary}` : '2px solid rgba(62,39,35,0.12)',
+                    background: selected ? 'rgba(230,81,0,0.1)' : 'transparent',
+                    color: selected ? colors.primary : colors.textSecondary,
+                    fontSize: '13px',
+                    fontWeight: selected ? '600' : '400',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  {c}
+                </button>
+              )
+            })}
+          </div>
         </div>
-        <div style={preferenceRowLastStyle}>
-          <div style={preferenceLabelStyle}>Dietary Preference</div>
-          <div style={preferenceValueStyle}>{user.preferences.dietaryTags.join(', ')}</div>
+
+        {/* Seasoning Levels — 5-point discrete sliders */}
+        <div style={{ marginBottom: spacing.md }}>
+          <div style={{ ...preferenceLabelStyle, marginBottom: spacing.md }}>Seasoning Levels</div>
+          {[
+            { label: 'Spice', value: spiceLevel, set: setSpiceLevel, color: colors.emergency },
+            { label: 'Salt', value: saltLevel, set: setSaltLevel, color: colors.warning },
+            { label: 'Oil', value: oilLevel, set: setOilLevel, color: colors.secondary }
+          ].map(({ label, value, set, color }) => (
+            <div key={label} style={{ marginBottom: spacing.md }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                <span style={{ ...typography.caption, color: colors.textSecondary }}>{label}</span>
+                <span style={{ ...typography.caption, color: colors.textSecondary, fontWeight: '600' }}>{value}/5</span>
+              </div>
+              <div style={{ display: 'flex', gap: '6px' }}>
+                {[1, 2, 3, 4, 5].map((lvl) => (
+                  <button
+                    key={lvl}
+                    onClick={() => set(lvl)}
+                    style={{
+                      flex: 1,
+                      height: '8px',
+                      borderRadius: '4px',
+                      border: 'none',
+                      cursor: 'pointer',
+                      backgroundColor: lvl <= value ? color : 'rgba(62,39,35,0.1)',
+                      transition: 'background-color 0.2s ease'
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Typical Servings — stepper */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={preferenceLabelStyle}>Typical Servings</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: spacing.sm }}>
+            <button
+              onClick={() => setServings(s => Math.max(1, s - 1))}
+              style={{
+                width: '32px', height: '32px', borderRadius: '50%',
+                border: 'none', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: servings > 1 ? 'rgba(230,81,0,0.1)' : 'rgba(62,39,35,0.06)',
+                color: servings > 1 ? colors.primary : colors.textSecondary,
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <Minus size={16} />
+            </button>
+            <span style={{ ...typography.heading, color: colors.textPrimary, minWidth: '24px', textAlign: 'center' }}>
+              {servings}
+            </span>
+            <button
+              onClick={() => setServings(s => Math.min(4, s + 1))}
+              style={{
+                width: '32px', height: '32px', borderRadius: '50%',
+                border: 'none', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: servings < 4 ? 'rgba(230,81,0,0.1)' : 'rgba(62,39,35,0.06)',
+                color: servings < 4 ? colors.primary : colors.textSecondary,
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <Plus size={16} />
+            </button>
+          </div>
         </div>
       </div>
 
