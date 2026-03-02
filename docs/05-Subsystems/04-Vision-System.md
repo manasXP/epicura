@@ -387,6 +387,9 @@ class CookingCameraView(FloatLayout):
 
 ### 10.3 MJPEG Streaming (Mobile App)
 
+> [!note] Bundled in cv-pipeline container
+> This MJPEG streaming server runs inside the **cv-pipeline Docker container** (port 8080), alongside TFLite inference and OpenCV preprocessing. It shares the camera device and frame buffers with the CV pipeline for efficiency. It is separate from the main Fastify REST API (port 3000).
+
 ```python
 # Minimal MJPEG HTTP streaming server
 # Runs on CM5, accessible at http://<epicura-ip>:8080/stream

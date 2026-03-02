@@ -30,7 +30,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 ## 2. Phase 1 — Robotic Arm (Sprint 4)
 
 ### 2.1 ARM-SRV.01: BLDC motor control — PWM driver, stirring patterns, smooth motion
-- **Sprint:** [[sprint-04|Sprint 4]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-04|Sprint 4]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#119](https://github.com/manasXP/epicura/issues/119)
@@ -51,7 +51,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 ---
 
 ### 2.2 ARM-SRV.02: BLDC motor feedback — stall detection, SPI commands, testing
-- **Sprint:** [[sprint-04|Sprint 4]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-04|Sprint 4]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#120](https://github.com/manasXP/epicura/issues/120)
@@ -74,7 +74,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 ## 3. Phase 2 — Dispensing Subsystems (Sprints 5–6)
 
 ### 3.1 ARM-ASD.01: P-ASD hardware control — pump PWM, solenoid GPIO, pressure sensor
-- **Sprint:** [[sprint-05|Sprint 5]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-05|Sprint 5]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#122](https://github.com/manasXP/epicura/issues/122)
@@ -96,7 +96,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 ---
 
 ### 3.2 ARM-ASD.02: P-ASD dispensing sequence — state machine, anti-clog, accuracy testing
-- **Sprint:** [[sprint-05|Sprint 5]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-05|Sprint 5]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#123](https://github.com/manasXP/epicura/issues/123)
@@ -116,7 +116,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 ---
 
 ### 3.3 ARM-CID.01: CID coarse ingredient dispenser — linear actuator control, position sensing
-- **Sprint:** [[sprint-05|Sprint 5]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-05|Sprint 5]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#125](https://github.com/manasXP/epicura/issues/125)
@@ -141,7 +141,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 ---
 
 ### 3.4 ARM-SLD.01: SLD hardware control — peristaltic pumps, valves, load cells
-- **Sprint:** [[sprint-06|Sprint 6]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-06|Sprint 6]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#127](https://github.com/manasXP/epicura/issues/127)
@@ -163,7 +163,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 ---
 
 ### 3.5 ARM-SLD.02: SLD dispensing and monitoring — closed-loop dispense, level alerts, priming
-- **Sprint:** [[sprint-06|Sprint 6]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-06|Sprint 6]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#128](https://github.com/manasXP/epicura/issues/128)
@@ -187,7 +187,7 @@ Servo arm stirring control and all three dispensing subsystems: P-ASD (pneumatic
 ---
 
 ### 3.6 ARM-CAL.01: Dispenser calibration — automated routines, persistent storage
-- **Sprint:** [[sprint-06|Sprint 6]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-06|Sprint 6]]
 - **Priority:** P1
 - **Points:** 5
 - **GitHub:** [#130](https://github.com/manasXP/epicura/issues/130)

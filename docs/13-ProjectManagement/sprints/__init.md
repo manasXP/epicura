@@ -18,18 +18,18 @@ A 6-week pre-sprint PCB phase followed by 12 two-week sprints spanning ~30 weeks
 | Sprint | Weeks | Phase | Focus | Milestone |
 |--------|:-----:|-------|-------|-----------|
 | Pre-Sprint | -6 to 0 | PCB | PCB design, fabrication, board bring-up | **M0** — Hardware Ready |
-| [[sprint-01]] | 1–2 | Phase 0 | STM32 FreeRTOS, CM5 Yocto, SPI bridge | |
-| [[sprint-02]] | 3–4 | Phase 0 | Docker containers, safety, OTA | **M1** — Platform Ready |
-| [[sprint-03]] | 5–6 | Phase 1 | CAN bus, PID controller start | |
-| [[sprint-04]] | 7–8 | Phase 1 | PID completion, thermal safety, servo arm | **M2** — Thermal + Arm |
-| [[sprint-05]] | 9–10 | Phase 2 | P-ASD, CID dispensing, backend start | |
-| [[sprint-06]] | 11–12 | Phase 2 | SLD, calibration, camera, backend API | **M3** — Dispensing Complete |
-| [[sprint-07]] | 13–14 | Phase 2 | ML model, stage detection, device API | |
-| [[sprint-08]] | 15–16 | Phase 3 | Recipe engine, mobile apps start, user API | **M4** — Vision + Recipe |
-| [[sprint-09]] | 17–18 | Phase 3 | State machine, dispensing orchestration, Kivy UI, recipe sync | |
-| [[sprint-10]] | 19–20 | Phase 3 | Cooking UI, admin portal, backend launch | **M5** — Software Complete |
-| [[sprint-11]] | 21–22 | Phase 4 | Integration testing, safety testing, mobile profiles, device monitoring | |
-| [[sprint-12]] | 23–24 | Phase 4 | Reliability testing, launch readiness, admin users, production firmware | **M6** — Launch Ready |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-01]] | 1–2 | Phase 0 | STM32 FreeRTOS, CM5 Yocto, SPI bridge | |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-02]] | 3–4 | Phase 0 | Docker containers, safety, OTA | **M1** — Platform Ready |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-03]] | 5–6 | Phase 1 | CAN bus, PID controller start | |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-04]] | 7–8 | Phase 1 | PID completion, thermal safety, servo arm | **M2** — Thermal + Arm |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-05]] | 9–10 | Phase 2 | P-ASD, CID dispensing, backend start | |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-06]] | 11–12 | Phase 2 | SLD, calibration, camera, backend API | **M3** — Dispensing Complete |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-07]] | 13–14 | Phase 2 | ML model, stage detection, device API | |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-08]] | 15–16 | Phase 3 | Recipe engine, mobile apps start, user API | **M4** — Vision + Recipe |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-09]] | 17–18 | Phase 3 | State machine, dispensing orchestration, Kivy UI, recipe sync | |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-10]] | 19–20 | Phase 3 | Cooking UI, admin portal, backend launch | **M5** — Software Complete |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-11]] | 21–22 | Phase 4 | Integration testing, safety testing, mobile profiles, device monitoring | |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-12]] | 23–24 | Phase 4 | Reliability testing, launch readiness, admin users, production firmware | **M6** — Launch Ready |
 
 ## 2. Phase Mapping
 

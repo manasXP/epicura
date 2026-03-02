@@ -561,7 +561,7 @@ Optional automated cleaning: fill pot with water, heat to 60C, stir for 5 minute
 
 ## 11. Related Documentation
 
-- [[02-Technical-Specifications|Technical Specifications]]
+- [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications|Technical Specifications]]
 - [[Epicura-Architecture|Hardware Architecture & Wiring Diagrams]]
 - [[05-Sensors-Acquisition|Sensors & Data Acquisition]]
 - [[../01-Overview/01-Project-Overview|Project Overview]]

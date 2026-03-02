@@ -776,17 +776,22 @@ curl "https://api.epicura.io/api/v1/firmware/latest?target=cm5&current_version=1
 
 ---
 
-## 7. CM5 Local API Cross-Reference
+## 7. CM5 Local API
 
-The CM5 also runs a local REST API (Flask/FastAPI) for direct WiFi communication with mobile apps on the same network. See [[../03-Software/04-Controller-Software-Architecture|Controller & Software Architecture]] and [[../07-Development/Prototype-Development-Plan#Phase 6|Prototype Dev Plan - Phase 6]] for local endpoints:
+The CM5 runs the **same Fastify API server** as the cloud backend (same codebase, same endpoints), excluding admin-only routes (`/admin/*`). Mobile apps on the local network connect directly to the CM5 via mDNS discovery at `http://<epicura-local>:3000/api/v1/...`.
+
+This unified deployment means:
+- **No API drift** — cloud and device serve identical endpoint contracts
+- **Single codebase** — the `epicura-api` repo deploys to both cloud and CM5 Docker
+- **Admin routes excluded** — the CM5 Fastify instance disables the admin module via environment flag (`DISABLE_ADMIN=true`)
 
 | Local Endpoint | Cloud Equivalent | Notes |
 |----------------|------------------|-------|
-| `GET /recipes` | `GET /recipes` | Local serves from SQLite; cloud from Postgres |
+| `GET /recipes` | `GET /recipes` | Both serve from PostgreSQL; identical response format |
 | `GET /status` | WebSocket events | Local is REST polling; cloud uses WebSocket |
-| `POST /cook/start` | `POST /sessions` | Local directly starts; cloud creates session record |
-| `POST /cook/stop` | WebSocket `cooking:stop` | Local sends UART E_STOP; cloud relays via MQTT |
-| `GET /camera/stream` | MJPEG via WebSocket | Local MJPEG direct; cloud relay not supported |
+| `POST /sessions` | `POST /sessions` | Identical endpoint on both |
+| `POST /cook/stop` | WebSocket `cooking:stop` | Local sends command via bridge → SPI E_STOP; cloud relays via MQTT |
+| `GET /camera/stream` | — | Served by cv-pipeline container (Flask MJPEG on port 8080), not part of Fastify |
 
 ---
 

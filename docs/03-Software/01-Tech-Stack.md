@@ -65,7 +65,7 @@ All application services run as Docker containers on the CM5:
 │  │                                                        │  │
 │  │  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐  │  │
 │  │  │ PostgreSQL   │ │ MQTT Broker  │ │ Backend API  │  │  │
-│  │  │ Container    │ │ (Mosquitto)  │ │ (FastAPI)    │  │  │
+│  │  │ Container    │ │ (Mosquitto)  │ │ (Fastify)    │  │  │
 │  │  └──────────────┘ └──────────────┘ └──────────────┘  │  │
 │  │                                                        │  │
 │  │  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐  │  │
@@ -73,10 +73,11 @@ All application services run as Docker containers on the CM5:
 │  │  │ (Kivy)       │ │ (Python)     │ │ Bridge       │  │  │
 │  │  └──────────────┘ └──────────────┘ └──────────────┘  │  │
 │  │                                                        │  │
-│  │  ┌──────────────┐ ┌──────────────┐                   │  │
-│  │  │ CV Pipeline  │ │ Cloud Sync   │                   │  │
-│  │  │ (TFLite/OCV) │ │ Service      │                   │  │
-│  │  └──────────────┘ └──────────────┘                   │  │
+│  │  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐  │  │
+│  │  │ CV Pipeline  │ │ Cloud Sync   │ │    Redis     │  │  │
+│  │  │(TFLite/OCV/  │ │ Service      │ │  (Queue/     │  │  │
+│  │  │ MJPEG:8080)  │ │ (Python)     │ │   Pub/Sub)   │  │  │
+│  │  └──────────────┘ └──────────────┘ └──────────────┘  │  │
 │  └───────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -129,9 +130,9 @@ All application services run as Docker containers on the CM5:
 │  • Network: URLRequest (async HTTP)                      │
 ├─────────────────────────────────────────────────────────┤
 │                   Backend Integration                    │
-│  • REST API client (requests library)                    │
+│  • REST API client (requests / URLRequest)               │
 │  • Redis pub/sub for real-time updates                   │
-│  • PostgreSQL client (psycopg2) for local queries        │
+│  • All data access via Fastify HTTP endpoints            │
 ├─────────────────────────────────────────────────────────┤
 │                   Yocto Linux                            │
 └─────────────────────────────────────────────────────────┘
@@ -151,7 +152,7 @@ All application services run as Docker containers on the CM5:
 
 - **Language:** Python 3.11+
 - **Container:** Dedicated Docker container with Python runtime
-- **Libraries:** PyYAML (recipe parsing), jsonschema (validation), transitions (state machine), psycopg2 (PostgreSQL driver)
+- **Libraries:** PyYAML (recipe parsing), jsonschema (validation), transitions (state machine), requests (Fastify API client)
 - **Interface:** REST API endpoints consumed by Kivy frontend
 - **Communication:**
   - PostgreSQL for recipe data
@@ -165,7 +166,7 @@ All application services run as Docker containers on the CM5:
 | Telemetry | Mosquitto MQTT (Docker container) | Local broker + cloud bridge for cooking data |
 | Recipe Sync | PostgreSQL replication / REST API | Bidirectional sync with cloud database |
 | OTA Updates | swupdate | A/B partition firmware updates |
-| Backend API | FastAPI (Python, Docker container) | REST API for UI and mobile app |
+| Backend API | Fastify (Node.js/TypeScript, Docker container) | REST API for UI and mobile app — same codebase as cloud (minus admin module) |
 | Live Camera | MJPEG over HTTP or WebSocket | Stream cooking video to mobile app |
 | CM5-STM32 Bridge | Python service (Docker container) | SPI/UART protocol handler, message queuing |
 
@@ -266,8 +267,7 @@ The bridge service runs as a Python Docker container and handles all communicati
 ├── pyserial (UART fallback)
 ├── spidev (SPI communication)
 ├── redis (message queue)
-├── psycopg2 (PostgreSQL for telemetry storage)
-├── fastapi (REST API endpoints)
+├── requests (Fastify API client for telemetry storage)
 ├── pydantic (message validation)
 └── asyncio (async I/O)
 

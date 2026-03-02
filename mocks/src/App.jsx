@@ -5,7 +5,6 @@ import RecipeScreen from './screens/RecipeScreen'
 import FavouriteScreen from './screens/FavouriteScreen'
 import SessionScreen from './screens/SessionScreen'
 import ProfileScreen from './screens/ProfileScreen'
-import GlanceScreen from './screens/GlanceScreen'
 import TabBar from './components/TabBar'
 
 const App = () => {
@@ -30,8 +29,6 @@ const App = () => {
         return <FavouriteScreen />
       case 'session':
         return <SessionScreen />
-      case 'glance':
-        return <GlanceScreen />
       case 'profile':
         return <ProfileScreen />
       default:

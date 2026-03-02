@@ -14,23 +14,23 @@ Welcome to the comprehensive documentation for the Epicura autonomous kitchen ro
 ### 1.1 Core Documentation
 
 #### 1.1.1 Overview
-1. **[[01-Overview/01-Project-Overview|Project Overview]]** - Executive summary, key features, and target use cases
+1. **[[__Workspaces/Epicura/docs/01-Overview/01-Project-Overview|Project Overview]]** - Executive summary, key features, and target use cases
 
 #### 1.1.2 Hardware
-2. **[[02-Hardware/02-Technical-Specifications|Technical Specifications]]** - Induction, robotic arm, sensors, and performance requirements
+2. **[[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications|Technical Specifications]]** - Induction, robotic arm, sensors, and performance requirements
 3. **[[02-Hardware/Epicura-Architecture|Epicura Architecture]]** - System block diagrams and hardware wiring
 4. **[[02-Hardware/05-Sensors-Acquisition|Sensors & Acquisition]]** - Camera, IR thermometer, and load cells
-5. **[[02-Hardware/07-Mechanical-Design|Mechanical Design]]** - Enclosure, arm mechanism, and industrial design
+5. **[[07-Mechanical-Design|Mechanical Design]]** - Enclosure, arm mechanism, and industrial design
 
 #### 1.1.3 Software
-6. **[[03-Software/04-Controller-Software-Architecture|Controller & Software Architecture]]** - Dual-processor software modules, recipe state machine, and control flow
+6. **[[04-Controller-Software-Architecture|Controller & Software Architecture]]** - Dual-processor software modules, recipe state machine, and control flow
 7. **[[03-Software/03-Main-Loop-State-Machine|Main Loop State Machine]]** - Cooking state diagram, state-layer impact matrix, sequence diagrams, and transition triggers
-8. **[[03-Software/08-Tech-Stack|Tech Stack]]** - Hardware platforms, software frameworks, and development tools
+8. **[[08-Tech-Stack|Tech Stack]]** - Hardware platforms, software frameworks, and development tools
 9. **[[03-Software/04-MPU-Functional-Specification|MPU Functional Specification]]** - CM5 (Cortex-A76) functional requirements, interfaces, and software architecture
 10. **[[03-Software/05-MCU-Functional-Specification|MCU Functional Specification]]** - STM32G474RE functional requirements, pin assignments, and FreeRTOS tasks
 
 #### 1.1.4 User Interface
-8. **[[04-UserInterface/03-UI-UX-Design|UI/UX Design]]** - Touchscreen interface, companion app, and multi-language support
+8. **[[03-UI-UX-Design|UI/UX Design]]** - Touchscreen interface, companion app, and multi-language support
 
 #### 1.1.5 Subsystems
 9. **[[05-Subsystems/09-Induction-Heating|Induction Heating]]** - 1,800W microwave induction surface (CAN bus), PID temperature control, and power management
@@ -40,7 +40,7 @@ Welcome to the comprehensive documentation for the Epicura autonomous kitchen ro
 13. **[[05-Subsystems/13-Exhaust-Fume-Management|Exhaust & Fume Management]]** - Exhaust fan, grease/carbon filtration, and fume extraction
 
 #### 1.1.6 Compliance
-13. **[[06-Compliance/06-Safety-Compliance|Safety & Compliance]]** - Electrical safety, food contact regulations, and BIS standards
+13. **[[06-Safety-Compliance|Safety & Compliance]]** - Electrical safety, food contact regulations, and BIS standards
 
 #### 1.1.7 Development
 14. **[[07-Development/01-Prototype-Development-Plan|Prototype Development Plan]]** - Phased plan from prototype to production (20-24 weeks)
@@ -55,7 +55,7 @@ Welcome to the comprehensive documentation for the Epicura autonomous kitchen ro
 18. **[[08-Components/01-Compute-Module-Components|Compute Module Components]]** - Raspberry Pi CM5, STM32, carrier boards
 19. **[[08-Components/02-Actuation-Components|Actuation Components]]** - Servo motors, induction driver, solenoids
 20. **[[08-Components/03-Sensor-Components|Sensor Components]]** - Camera, IR thermometer, load cells
-21. **[[08-Components/04-Total-Component-Cost|Total Component Cost]]** - Full BOM and cost analysis ($614 prototype)
+21. **[[__Workspaces/Epicura/docs/08-Components/04-Total-Component-Cost|Total Component Cost]]** - Full BOM and cost analysis ($614 prototype)
 
 #### 1.1.10 PCB Design
 22. **[[09-PCB/01-Controller-PCB-Design|Controller PCB Design]]** - STM32G474RE controller board (160x90mm)
@@ -178,7 +178,7 @@ docs/
 
 ### 3.1 For Project Managers
 Start with:
-1. [[01-Overview/01-Project-Overview|Project Overview]] - Understand the project scope and target market
+1. [[__Workspaces/Epicura/docs/01-Overview/01-Project-Overview|Project Overview]] - Understand the project scope and target market
 2. [[13-ProjectManagement/epics/__init|Epics]] - 12 subsystem-based epics (~58 stories, ~365 points)
 3. [[13-ProjectManagement/sprints/__init|Sprint Calendar]] - 6-week pre-sprint PCB phase + 12 two-week sprints
 5. [[07-Development/01-Prototype-Development-Plan|Prototype Development Plan]] - Phased development roadmap (20-24 weeks)
@@ -187,7 +187,7 @@ Start with:
 
 ### 3.2 For Hardware Engineers
 Start with:
-1. [[02-Hardware/02-Technical-Specifications|Technical Specifications]] - System requirements and power budget
+1. [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications|Technical Specifications]] - System requirements and power budget
 2. [[02-Hardware/01-Epicura-Architecture|Epicura Architecture]] - Block diagrams and wiring
 3. [[02-Hardware/03-Sensors-Acquisition|Sensors & Acquisition]] - Camera, IR thermometer, and load cell design
 4. [[02-Hardware/04-Mechanical-Design|Mechanical Design]] - Enclosure, arm mechanism, and thermal management
@@ -216,7 +216,7 @@ Start with:
 Start with:
 1. [[02-Hardware/04-Mechanical-Design|Mechanical Design]] - Enclosure form factor and material selection
 2. [[04-UserInterface/01-UI-UX-Design|UI/UX Design]] - Physical controls, display layout, and user flow
-3. [[01-Overview/01-Project-Overview|Project Overview]] - Product vision and target user profile
+3. [[__Workspaces/Epicura/docs/01-Overview/01-Project-Overview|Project Overview]] - Product vision and target user profile
 
 ## 4. Key Features Summary
 
@@ -227,7 +227,7 @@ Start with:
 - **Three-Subsystem Dispensing** - ASD (3 servo-gated seasoning hoppers), CID (2 linear actuator coarse trays), SLD (2 peristaltic pump liquid channels with dedicated per-reservoir load cells + low-level alerts)
 - **Touchscreen + Companion Apps** - 10" Kivy touchscreen on device, native mobile apps (iOS + Android) for remote control and live camera feed
 - **100+ Indian Recipes** - Curated recipe database covering curries, dal, rice, biryani, and more with regional variations
-- **Cloud + Offline Operation** - Cloud-updatable recipe library with full local SQLite fallback for offline cooking
+- **Cloud + Offline Operation** - Cloud-updatable recipe library with full local PostgreSQL for offline cooking
 - **Under 2kW Power Draw** - Designed for standard Indian household 15A outlets with dynamic power management
 
 ## 5. Development Phases
@@ -251,7 +251,7 @@ Start with:
 - **Ingredient Dispensing** - ASD (seasoning servos) + CID (linear actuator sliders) + SLD (peristaltic pumps + solenoids)
 
 ### 6.2 Software Subsystems
-- **CM5 (Yocto Linux)** - Recipe engine, computer vision pipeline, Kivy UI, cloud sync, SQLite data management
+- **CM5 (Yocto Linux)** - Recipe engine, computer vision pipeline, Kivy UI, Fastify API, cloud sync, PostgreSQL
 - **STM32 (FreeRTOS)** - PID temperature control, servo motor driver, sensor polling, safety watchdog
 
 ```

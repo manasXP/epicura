@@ -29,7 +29,7 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 ## 2. Phase 2 — Vision Setup (Sprint 6)
 
 ### 2.1 CV-CAM.01: Camera setup — IMX219, libcamera, CSI-2, image capture service
-- **Sprint:** [[sprint-06|Sprint 6]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-06|Sprint 6]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#126](https://github.com/manasXP/epicura/issues/126)
@@ -54,7 +54,7 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 ---
 
 ### 2.2 CV-PRE.01: Image preprocessing — OpenCV pipeline, ROI extraction, augmentation
-- **Sprint:** [[sprint-06|Sprint 6]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-06|Sprint 6]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#129](https://github.com/manasXP/epicura/issues/129)
@@ -80,7 +80,7 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 ## 3. Phase 2 — ML Model & Detection (Sprint 7)
 
 ### 3.1 CV-MDL.01: TFLite model training — dataset collection, MobileNetV2 fine-tuning
-- **Sprint:** [[sprint-07|Sprint 7]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-07|Sprint 7]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#132](https://github.com/manasXP/epicura/issues/132)
@@ -99,7 +99,7 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 ---
 
 ### 3.2 CV-MDL.02: TFLite model deployment — INT8 quantization, inference service, benchmarking
-- **Sprint:** [[sprint-07|Sprint 7]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-07|Sprint 7]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#135](https://github.com/manasXP/epicura/issues/135)
@@ -121,7 +121,7 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 ---
 
 ### 3.3 CV-DET.01: Cooking stage detection — sliding window classifier, transition detection, anomaly alerts
-- **Sprint:** [[sprint-07|Sprint 7]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-07|Sprint 7]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#139](https://github.com/manasXP/epicura/issues/139)
@@ -142,7 +142,7 @@ Camera setup, image preprocessing, TFLite MobileNetV2 INT8 food classification m
 ---
 
 ### 3.4 CV-DET.02: Stage detection logging and visualization — PostgreSQL logging, UI overlay, video testing
-- **Sprint:** [[sprint-07|Sprint 7]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-07|Sprint 7]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#142](https://github.com/manasXP/epicura/issues/142)

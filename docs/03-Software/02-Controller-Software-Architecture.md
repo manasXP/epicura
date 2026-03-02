@@ -38,8 +38,8 @@ Epicura uses a dual-processor architecture: a Raspberry Pi CM5 running Yocto Lin
 │  ├─────────────────────────────────────────────────────────────────────┤    │
 │  │                      Middleware Layer                                │    │
 │  │  ┌──────────┐  ┌──────────────┐  ┌────────────┐  ┌─────────────┐  │    │
-│  │  │  SQLite  │  │  MQTT Client │  │  GStreamer  │  │  SPI/CAN    │  │    │
-│  │  │ Database │  │ (Eclipse Paho)│  │  (Camera)  │  │   Driver    │  │    │
+│  │  │PostgreSQL│  │  MQTT Client │  │  GStreamer  │  │  SPI/CAN    │  │    │
+│  │  │(Fastify) │  │ (Eclipse Paho)│  │  (Camera)  │  │   Driver    │  │    │
 │  │  └──────────┘  └──────────────┘  └────────────┘  └──────┬──────┘  │    │
 │  ├─────────────────────────────────────────────────────────────────────┤    │
 │  │                      Yocto Linux (systemd)                          │    │
@@ -80,7 +80,7 @@ Epicura uses a dual-processor architecture: a Raspberry Pi CM5 running Yocto Lin
 | Computer Vision Pipeline | CM5 | TFLite inference, camera access, OpenCV |
 | Kivy User Interface | CM5 | GPU-accelerated UI, touchscreen driver |
 | Cloud Sync (MQTT/HTTPS) | CM5 | Full Linux networking stack |
-| SQLite Database | CM5 | Filesystem access, complex queries |
+| PostgreSQL Database | CM5 | Accessed via Fastify API, complex queries |
 | OTA Firmware Updates | CM5 | Network + flash management |
 | PID Temperature Control | STM32 | Hard real-time, deterministic timing |
 | Servo Motor Control | STM32 | PWM generation, position feedback |
@@ -112,10 +112,16 @@ Epicura uses a dual-processor architecture: a Raspberry Pi CM5 running Yocto Lin
 │  └────────────────────────────────────────────────────────┘ │
 │                                                             │
 │  ┌────────────────────────────────────────────────────────┐ │
-│  │  Backend API Container (FastAPI + Python)              │ │
-│  │  • Recipe Engine (state machine)                       │ │
-│  │  • REST endpoints for UI                               │ │
-│  │  • Cloud sync service                                  │ │
+│  │  Backend API Container (Fastify + Node.js/TypeScript)   │ │
+│  │  • REST endpoints for UI and mobile                    │ │
+│  │  • Same codebase as cloud (minus admin module)         │ │
+│  └────────────────────────────────────────────────────────┘ │
+│                                                             │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │  Recipe Engine Container (Python)                      │ │
+│  │  • YAML recipe parsing and validation                  │ │
+│  │  • Cooking state machine                               │ │
+│  │  • Calls Fastify API for data access                   │ │
 │  └────────────────────────────────────────────────────────┘ │
 │                                                             │
 │  ┌────────────────────────────────────────────────────────┐ │
@@ -123,6 +129,14 @@ Epicura uses a dual-processor architecture: a Raspberry Pi CM5 running Yocto Lin
 │  │  • Camera capture (V4L2/GStreamer)                     │ │
 │  │  • OpenCV preprocessing                                │ │
 │  │  • MobileNetV2 INT8 inference                          │ │
+│  │  • MJPEG streaming server (port 8080)                  │ │
+│  └────────────────────────────────────────────────────────┘ │
+│                                                             │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │  Cloud Sync Container (Python)                         │ │
+│  │  • Bidirectional recipe sync with cloud                │ │
+│  │  • Cooking log upload                                  │ │
+│  │  • Recipe image caching                                │ │
 │  └────────────────────────────────────────────────────────┘ │
 │                                                             │
 │  ┌────────────────────────────────────────────────────────┐ │
@@ -666,7 +680,7 @@ class CloudSyncService:
  8. UI displays "Cooking Complete" with summary
                 │
                 ▼
- 9. Log results to SQLite (temps, times, stages, rating)
+ 9. Log results to PostgreSQL via Fastify API (temps, times, stages, rating)
                 │
                 ▼
 10. Publish summary to cloud via MQTT
@@ -748,7 +762,7 @@ typedef struct {
 
 1. **CV fallback:** If camera or model fails, every recipe stage includes `duration_seconds` and `temp_target` as backup transition criteria
 2. **Communication fallback:** STM32 operates autonomously with last-known setpoints for up to 30 seconds, then enters safe shutdown
-3. **Power loss recovery:** Cooking state saved to SQLite every 10 seconds; on restart, offer to resume or discard
+3. **Power loss recovery:** Cooking state saved to PostgreSQL every 10 seconds; on restart, offer to resume or discard
 
 ---
 

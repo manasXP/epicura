@@ -30,12 +30,12 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 ## 2. Phase 3 — Mobile Foundation (Sprint 8)
 
 ### 2.1 AND-SET.01: Gradle project setup — Compose, Hilt, networking, auth
-- **Sprint:** [[sprint-08|Sprint 8]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#73](https://github.com/manasXP/epicura/issues/73)
-- **Blocked by:** [[BE-backend#BE-SET.01|BE-SET.01]]
-- **Blocks:** [[AND-android#AND-BLE.01|AND-BLE.01]], [[AND-android#AND-RCP.01|AND-RCP.01]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-SET.01|BE-SET.01]]
+- **Blocks:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/AND-android#AND-BLE.01|AND-BLE.01]], [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/AND-android#AND-RCP.01|AND-RCP.01]]
 
 **Acceptance Criteria:**
 - [ ] Android project with Kotlin, Jetpack Compose, minimum SDK 28 (Android 9)
@@ -55,12 +55,12 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 ---
 
 ### 2.2 AND-BLE.01: BLE pairing — CompanionDeviceManager scanning, WiFi provisioning
-- **Sprint:** [[sprint-08|Sprint 8]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#74](https://github.com/manasXP/epicura/issues/74)
-- **Blocked by:** [[AND-android#AND-SET.01|AND-SET.01]], [[BE-backend#BE-DEV.01|BE-DEV.01]]
-- **Blocks:** [[AND-android#AND-BLE.02|AND-BLE.02]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/AND-android#AND-SET.01|AND-SET.01]], [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-DEV.01|BE-DEV.01]]
+- **Blocks:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/AND-android#AND-BLE.02|AND-BLE.02]]
 
 **Acceptance Criteria:**
 - [ ] CompanionDeviceManager discovers Epicura devices by service UUID
@@ -76,12 +76,12 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 ---
 
 ### 2.3 AND-BLE.02: BLE device management — claim API, home screen status, permissions edge cases
-- **Sprint:** [[sprint-08|Sprint 8]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#75](https://github.com/manasXP/epicura/issues/75)
-- **Blocked by:** [[AND-android#AND-BLE.01|AND-BLE.01]]
-- **Blocks:** [[AND-android#AND-COK.01|AND-COK.01]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/AND-android#AND-BLE.01|AND-BLE.01]]
+- **Blocks:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/AND-android#AND-COK.01|AND-COK.01]]
 
 **Acceptance Criteria:**
 - [ ] Device claim via API after WiFi connection confirmed
@@ -98,11 +98,11 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 ## 3. Phase 3 — Recipe & Cooking (Sprints 9–10)
 
 ### 3.1 AND-RCP.01: Recipe browsing — list, detail, search, favorites
-- **Sprint:** [[sprint-09|Sprint 9]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-09|Sprint 9]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#76](https://github.com/manasXP/epicura/issues/76)
-- **Blocked by:** [[AND-android#AND-SET.01|AND-SET.01]], [[BE-backend#BE-RCP.01|BE-RCP.01]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/AND-android#AND-SET.01|AND-SET.01]], [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-RCP.01|BE-RCP.01]]
 - **Blocks:** None
 
 **Acceptance Criteria:**
@@ -127,12 +127,12 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 ---
 
 ### 3.2 AND-COK.01: Live cooking view — camera stream, status, temperature, timer
-- **Sprint:** [[sprint-10|Sprint 10]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#77](https://github.com/manasXP/epicura/issues/77)
-- **Blocked by:** [[AND-android#AND-BLE.02|AND-BLE.02]]
-- **Blocks:** [[AND-android#AND-COK.02|AND-COK.02]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/AND-android#AND-BLE.02|AND-BLE.02]]
+- **Blocks:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/AND-android#AND-COK.02|AND-COK.02]]
 
 **Acceptance Criteria:**
 - [ ] Live camera stream via WebSocket rendered in AndroidView or Compose Canvas
@@ -150,11 +150,11 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 ---
 
 ### 3.3 AND-COK.02: Cooking controls and notifications — pause/abort, FCM push, testing
-- **Sprint:** [[sprint-10|Sprint 10]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#78](https://github.com/manasXP/epicura/issues/78)
-- **Blocked by:** [[AND-android#AND-COK.01|AND-COK.01]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/AND-android#AND-COK.01|AND-COK.01]]
 - **Blocks:** None
 
 **Acceptance Criteria:**
@@ -172,11 +172,11 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 ## 4. Phase 4 — User Profile (Sprint 11)
 
 ### 4.1 AND-USR.01: User profile — settings, cooking history, preferences
-- **Sprint:** [[sprint-11|Sprint 11]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-11|Sprint 11]]
 - **Priority:** P1
 - **Points:** 5
 - **GitHub:** [#79](https://github.com/manasXP/epicura/issues/79)
-- **Blocked by:** [[BE-backend#BE-USR.01|BE-USR.01]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-USR.01|BE-USR.01]]
 - **Blocks:** None
 
 **Acceptance Criteria:**
@@ -196,11 +196,11 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 ---
 
 ### 4.2 AND-USR.02: Food Preferences UI — diet, cuisines, seasoning, servings
-- **Sprint:** [[sprint-11|Sprint 11]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-11|Sprint 11]]
 - **Priority:** P1
 - **Points:** 3
 - **GitHub:** [#56](https://github.com/manasXP/epicura/issues/56)
-- **Blocked by:** [[BE-backend#BE-USR.02|BE-USR.02]], [[AND-android#AND-SET.01|AND-SET.01]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-USR.02|BE-USR.02]], [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/AND-android#AND-SET.01|AND-SET.01]]
 - **Blocks:** None
 
 **Acceptance Criteria:**
@@ -220,11 +220,11 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 ---
 
 ### 4.3 AND-LIVE.01: Glance Widget — Cooking Progress App Widget (Jetpack Glance)
-- **Sprint:** [[sprint-11|Sprint 11]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-11|Sprint 11]]
 - **Priority:** P1
 - **Points:** 5
 - **GitHub:** [#51](https://github.com/manasXP/epicura/issues/51)
-- **Blocked by:** [[AND-android#AND-COK.01|AND-COK.01]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/AND-android#AND-COK.01|AND-COK.01]]
 - **Blocks:** None
 
 **Acceptance Criteria:**

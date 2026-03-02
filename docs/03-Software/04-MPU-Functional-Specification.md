@@ -168,12 +168,12 @@ The CM5 is the main application processor for Epicura. It runs Yocto Linux with 
 | Service | Image Base | Port(s) | Resource Limits |
 |---------|-----------|---------|----------------|
 | `recipe-engine` | Python 3.11-slim | — | 256 MB RAM |
-| `cv-pipeline` | Python 3.11 + OpenCV | — | 512 MB RAM |
+| `cv-pipeline` | Python 3.11 + OpenCV | 8080 | 512 MB RAM |
 | `kivy-ui` | Python 3.11 + Kivy | framebuffer | 512 MB RAM, GPU access |
 | `cm5-stm32-bridge` | Python 3.11-slim | — | 128 MB RAM, SPI device |
 | `postgresql` | postgres:16-alpine | 5432 | 512 MB RAM |
 | `mosquitto` | eclipse-mosquitto:2 | 1883, 8883 | 64 MB RAM |
-| `fastapi-backend` | Python 3.11-slim | 8000 | 256 MB RAM |
+| `fastify-api` | node:20-slim | 3000 | 256 MB RAM |
 | `cloud-sync` | Python 3.11-slim | — | 128 MB RAM |
 
 ### 4.3 Boot Sequence
@@ -181,7 +181,7 @@ The CM5 is the main application processor for Epicura. It runs Yocto Linux with 
 1. **U-Boot** → select active A/B partition
 2. **Yocto kernel** → hardware init, CSI-2/GPU/SPI drivers
 3. **systemd** → mount eMMC, start Docker daemon
-4. **Docker Compose up** → PostgreSQL → Mosquitto → bridge → recipe-engine → cv-pipeline → UI → backend → sync
+4. **Docker Compose up** → PostgreSQL → Mosquitto → bridge → fastify-api → recipe-engine → cv-pipeline → UI → sync
 5. **Bridge service** → establish SPI link, send first heartbeat
 6. **UI** → display IDLE / recipe browser (target: <30 s from power-on)
 

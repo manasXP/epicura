@@ -416,7 +416,7 @@ This document outlines the comprehensive plan for building a functional Epicura 
 **Week 19: Camera Feed & REST API**
 - [ ] Embed live camera feed in Cooking screen (MJPEG or V4L2 widget)
 - [ ] Overlay CV annotations (stage label, confidence, temperature)
-- [ ] Implement REST API on CM5 (Flask or FastAPI):
+- [ ] Deploy Fastify API on CM5 (same codebase as cloud, minus admin module):
   - `GET /recipes` - List available recipes
   - `GET /status` - Current cooking state, temperature, stage
   - `POST /cook/start` - Start cooking a recipe

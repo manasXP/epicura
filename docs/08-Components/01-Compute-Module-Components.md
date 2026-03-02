@@ -107,7 +107,7 @@ This document details the compute subsystem components for the Epicura kitchen r
 
 - [[02-Actuation-Components|Actuation Components]]
 - [[03-Sensor-Components|Sensor Components]]
-- [[04-Total-Component-Cost|Total Component Cost]]
+- [[__Workspaces/Epicura/docs/08-Components/04-Total-Component-Cost|Total Component Cost]]
 - [[../02-Hardware/02-Technical-Specifications|Technical Specifications]]
 
 ---

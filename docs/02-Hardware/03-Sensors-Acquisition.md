@@ -526,7 +526,7 @@ The recipe engine on CM5 combines data from multiple sensors to determine the cu
 
 ## 9. Related Documentation
 
-- [[02-Technical-Specifications|Technical Specifications]]
+- [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications|Technical Specifications]]
 - [[Epicura-Architecture|Hardware Architecture & Wiring Diagrams]]
 - [[07-Mechanical-Design|Mechanical Design]]
 - [[../03-Software/04-Controller-Software-Architecture|Controller & Software]]

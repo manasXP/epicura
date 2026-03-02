@@ -37,25 +37,25 @@ Start with off-the-shelf: Raspberry Pi CM5 carrier board for AI/compute, ST STM3
 
 ## Documentation
 
-Comprehensive documentation has been organized in the [[docs/README|docs folder]]. See the following detailed specifications:
+Comprehensive documentation has been organized in the [[__Workspaces/Epicura/docs/README|docs folder]]. See the following detailed specifications:
 
 ### Core Documentation
 
 **Overview**
-1. [[docs/01-Overview/01-Project-Overview|Project Overview]] - Product definition, features, and target use cases
+1. [[__Workspaces/Epicura/docs/01-Overview/01-Project-Overview|Project Overview]] - Product definition, features, and target use cases
 
 **Hardware**
-2. [[docs/02-Hardware/02-Technical-Specifications|Technical Specifications]] - Induction, sensors, power, and performance specs
+2. [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications|Technical Specifications]] - Induction, sensors, power, and performance specs
 3. [[docs/02-Hardware/Epicura-Architecture|Epicura Architecture]] - System block diagrams and hardware wiring
 4. [[docs/02-Hardware/05-Sensors-Acquisition|Sensors & Acquisition]] - Camera, IR thermometer, load cells, and NTC probes
-5. [[docs/02-Hardware/07-Mechanical-Design|Mechanical Design]] - Enclosure, arm mechanism, and industrial design
+5. [[07-Mechanical-Design|Mechanical Design]] - Enclosure, arm mechanism, and industrial design
 
 **Software**
-6. [[docs/03-Software/04-Controller-Software-Architecture|Controller & Software Architecture]] - Dual-processor software modules and recipe state machine
-7. [[docs/03-Software/08-Tech-Stack|Tech Stack]] - Hardware platforms, software frameworks, and development tools
+6. [[04-Controller-Software-Architecture|Controller & Software Architecture]] - Dual-processor software modules and recipe state machine
+7. [[08-Tech-Stack|Tech Stack]] - Hardware platforms, software frameworks, and development tools
 
 **User Interface**
-8. [[docs/04-UserInterface/03-UI-UX-Design|UI/UX Design]] - Touchscreen interface, companion app, and multi-language support
+8. [[03-UI-UX-Design|UI/UX Design]] - Touchscreen interface, companion app, and multi-language support
 
 **Subsystems**
 9. [[docs/05-Subsystems/09-Induction-Heating|Induction Heating]] - 1,800W microwave induction surface (CAN bus), PID control, and power management
@@ -65,18 +65,18 @@ Comprehensive documentation has been organized in the [[docs/README|docs folder]
 13. [[docs/05-Subsystems/13-Exhaust-Fume-Management|Exhaust & Fume Management]] - Exhaust fan, grease/carbon filtration, and fume extraction
 
 **Compliance**
-13. [[docs/06-Compliance/06-Safety-Compliance|Safety & Compliance]] - Electrical safety, food contact regulations, and BIS standards
+13. [[06-Safety-Compliance|Safety & Compliance]] - Electrical safety, food contact regulations, and BIS standards
 
 **Development**
-14. [[docs/07-Development/Prototype-Development-Plan|Prototype Development Plan]] - Phased plan from prototype to production
+14. [[__Workspaces/Medical/ECG/docs/07-Development/Prototype-Development-Plan|Prototype Development Plan]] - Phased plan from prototype to production
 
 **Components & BOM**
 15. [[docs/08-Components/01-Compute-Module-Components|Compute Module Components]] - Raspberry Pi CM5, STM32, carrier boards
 16. [[docs/08-Components/02-Actuation-Components|Actuation Components]] - Servo motors, induction driver, solenoids
 17. [[docs/08-Components/03-Sensor-Components|Sensor Components]] - Camera, IR thermometer, NTC probes, load cells
-18. [[docs/08-Components/04-Total-Component-Cost|Total Component Cost]] - Full BOM and cost analysis
+18. [[__Workspaces/Epicura/docs/08-Components/04-Total-Component-Cost|Total Component Cost]] - Full BOM and cost analysis
 
-**Start here:** [[docs/README|Documentation Index]]
+**Start here:** [[__Workspaces/Epicura/docs/README|Documentation Index]]
 
 ---
 

@@ -30,12 +30,12 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 ## 2. Phase 3 — Mobile Foundation (Sprint 8)
 
 ### 2.1 IOS-SET.01: Xcode project setup — SwiftUI, MVVM, networking, auth
-- **Sprint:** [[sprint-08|Sprint 8]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#64](https://github.com/manasXP/epicura/issues/64)
-- **Blocked by:** [[BE-backend#BE-SET.01|BE-SET.01]]
-- **Blocks:** [[IOS-ios#IOS-BLE.01|IOS-BLE.01]], [[IOS-ios#IOS-RCP.01|IOS-RCP.01]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-SET.01|BE-SET.01]]
+- **Blocks:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/IOS-ios#IOS-BLE.01|IOS-BLE.01]], [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/IOS-ios#IOS-RCP.01|IOS-RCP.01]]
 
 **Acceptance Criteria:**
 - [ ] Xcode project created with SwiftUI, minimum iOS 17
@@ -55,12 +55,12 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 ---
 
 ### 2.2 IOS-BLE.01: BLE pairing — CoreBluetooth scanning, WiFi provisioning
-- **Sprint:** [[sprint-08|Sprint 8]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#66](https://github.com/manasXP/epicura/issues/66)
-- **Blocked by:** [[IOS-ios#IOS-SET.01|IOS-SET.01]], [[BE-backend#BE-DEV.01|BE-DEV.01]]
-- **Blocks:** [[IOS-ios#IOS-BLE.02|IOS-BLE.02]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/IOS-ios#IOS-SET.01|IOS-SET.01]], [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-DEV.01|BE-DEV.01]]
+- **Blocks:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/IOS-ios#IOS-BLE.02|IOS-BLE.02]]
 
 **Acceptance Criteria:**
 - [ ] BLE scan discovers Epicura devices advertising service UUID
@@ -76,12 +76,12 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 ---
 
 ### 2.3 IOS-BLE.02: BLE device management — claim API, home screen status, end-to-end test
-- **Sprint:** [[sprint-08|Sprint 8]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#68](https://github.com/manasXP/epicura/issues/68)
-- **Blocked by:** [[IOS-ios#IOS-BLE.01|IOS-BLE.01]]
-- **Blocks:** [[IOS-ios#IOS-COK.01|IOS-COK.01]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/IOS-ios#IOS-BLE.01|IOS-BLE.01]]
+- **Blocks:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/IOS-ios#IOS-COK.01|IOS-COK.01]]
 
 **Acceptance Criteria:**
 - [ ] App claims device via POST `/api/devices/:id/claim`
@@ -98,11 +98,11 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 ## 3. Phase 3 — Recipe & Cooking (Sprints 9–10)
 
 ### 3.1 IOS-RCP.01: Recipe browsing — list, detail, search, favorites
-- **Sprint:** [[sprint-09|Sprint 9]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-09|Sprint 9]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#69](https://github.com/manasXP/epicura/issues/69)
-- **Blocked by:** [[IOS-ios#IOS-SET.01|IOS-SET.01]], [[BE-backend#BE-RCP.01|BE-RCP.01]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/IOS-ios#IOS-SET.01|IOS-SET.01]], [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-RCP.01|BE-RCP.01]]
 - **Blocks:** None
 
 **Acceptance Criteria:**
@@ -127,12 +127,12 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 ---
 
 ### 3.2 IOS-COK.01: Live cooking view — camera stream, status, temperature, timer
-- **Sprint:** [[sprint-10|Sprint 10]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#70](https://github.com/manasXP/epicura/issues/70)
-- **Blocked by:** [[IOS-ios#IOS-BLE.02|IOS-BLE.02]]
-- **Blocks:** [[IOS-ios#IOS-COK.02|IOS-COK.02]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/IOS-ios#IOS-BLE.02|IOS-BLE.02]]
+- **Blocks:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/IOS-ios#IOS-COK.02|IOS-COK.02]]
 
 **Acceptance Criteria:**
 - [ ] Live camera stream from device via WebSocket (MJPEG or H.264)
@@ -149,11 +149,11 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 ---
 
 ### 3.3 IOS-COK.02: Cooking controls and notifications — pause/abort, push notifications, background alerts
-- **Sprint:** [[sprint-10|Sprint 10]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#71](https://github.com/manasXP/epicura/issues/71)
-- **Blocked by:** [[IOS-ios#IOS-COK.01|IOS-COK.01]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/IOS-ios#IOS-COK.01|IOS-COK.01]]
 - **Blocks:** None
 
 **Acceptance Criteria:**
@@ -172,11 +172,11 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 ## 4. Phase 4 — User Profile (Sprint 11)
 
 ### 4.1 IOS-USR.01: User profile — settings, cooking history, preferences
-- **Sprint:** [[sprint-11|Sprint 11]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-11|Sprint 11]]
 - **Priority:** P1
 - **Points:** 5
 - **GitHub:** [#72](https://github.com/manasXP/epicura/issues/72)
-- **Blocked by:** [[BE-backend#BE-USR.01|BE-USR.01]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-USR.01|BE-USR.01]]
 - **Blocks:** None
 
 **Acceptance Criteria:**
@@ -196,11 +196,11 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 ---
 
 ### 4.2 IOS-USR.02: Food Preferences UI — diet, cuisines, seasoning, servings
-- **Sprint:** [[sprint-11|Sprint 11]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-11|Sprint 11]]
 - **Priority:** P1
 - **Points:** 3
 - **GitHub:** [#55](https://github.com/manasXP/epicura/issues/55)
-- **Blocked by:** [[BE-backend#BE-USR.02|BE-USR.02]], [[IOS-ios#IOS-SET.01|IOS-SET.01]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-USR.02|BE-USR.02]], [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/IOS-ios#IOS-SET.01|IOS-SET.01]]
 - **Blocks:** None
 
 **Acceptance Criteria:**
@@ -220,11 +220,11 @@ Native iOS companion app for Epicura: BLE device pairing, WiFi provisioning, rec
 ---
 
 ### 4.3 IOS-LIVE.01: Live Activity — Cooking Progress on Lock Screen & Dynamic Island
-- **Sprint:** [[sprint-11|Sprint 11]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-11|Sprint 11]]
 - **Priority:** P1
 - **Points:** 5
 - **GitHub:** [#50](https://github.com/manasXP/epicura/issues/50)
-- **Blocked by:** [[IOS-ios#IOS-COK.01|IOS-COK.01]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/IOS-ios#IOS-COK.01|IOS-COK.01]]
 - **Blocks:** None
 
 **Acceptance Criteria:**

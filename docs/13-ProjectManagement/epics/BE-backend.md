@@ -31,12 +31,12 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 ## 2. Phase 2 — Backend Foundation (Sprints 5–6)
 
 ### 2.1 BE-SET.01: Fastify project setup — TypeScript, Drizzle ORM, PostgreSQL schema, auth
-- **Sprint:** [[sprint-05|Sprint 5]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-05|Sprint 5]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#57](https://github.com/manasXP/epicura/issues/57)
 - **Blocked by:** None
-- **Blocks:** [[BE-backend#BE-SET.02|BE-SET.02]], All subsequent BE stories
+- **Blocks:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-SET.02|BE-SET.02]], All subsequent BE stories
 
 **Acceptance Criteria:**
 - [ ] Fastify app bootstraps with TypeScript; health-check returns 200
@@ -52,12 +52,12 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 ---
 
 ### 2.2 BE-SET.02: Backend dev environment — Docker Compose, Swagger, CI pipeline
-- **Sprint:** [[sprint-05|Sprint 5]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-05|Sprint 5]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#58](https://github.com/manasXP/epicura/issues/58)
-- **Blocked by:** [[BE-backend#BE-SET.01|BE-SET.01]]
-- **Blocks:** [[BE-backend#BE-RCP.01|BE-RCP.01]], [[BE-backend#BE-DEV.01|BE-DEV.01]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-SET.01|BE-SET.01]]
+- **Blocks:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-RCP.01|BE-RCP.01]], [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-DEV.01|BE-DEV.01]]
 
 **Acceptance Criteria:**
 - [ ] Docker Compose for local development (PostgreSQL + Redis + API)
@@ -72,12 +72,12 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 ---
 
 ### 2.3 BE-RCP.01: Recipe CRUD API — endpoints, schema, versioning
-- **Sprint:** [[sprint-06|Sprint 6]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-06|Sprint 6]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#59](https://github.com/manasXP/epicura/issues/59)
-- **Blocked by:** [[BE-backend#BE-SET.02|BE-SET.02]]
-- **Blocks:** [[BE-backend#BE-RCP.02|BE-RCP.02]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-SET.02|BE-SET.02]]
+- **Blocks:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-RCP.02|BE-RCP.02]]
 
 **Acceptance Criteria:**
 - [ ] CRUD endpoints for recipes at `/api/recipes` with pagination and search
@@ -93,12 +93,12 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 ---
 
 ### 2.4 BE-RCP.02: Recipe API — image upload, bulk export, testing
-- **Sprint:** [[sprint-06|Sprint 6]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-06|Sprint 6]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#60](https://github.com/manasXP/epicura/issues/60)
-- **Blocked by:** [[BE-backend#BE-RCP.01|BE-RCP.01]]
-- **Blocks:** [[RCP-recipe#RCP-SYN.01|RCP-SYN.01]], [[IOS-ios#IOS-RCP.01|IOS-RCP.01]], [[AND-android#AND-RCP.01|AND-RCP.01]], [[ADM-admin#ADM-RCP.01|ADM-RCP.01]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-RCP.01|BE-RCP.01]]
+- **Blocks:** [[RCP-recipe#RCP-SYN.01|RCP-SYN.01]], [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/IOS-ios#IOS-RCP.01|IOS-RCP.01]], [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/AND-android#AND-RCP.01|AND-RCP.01]], [[ADM-admin#ADM-RCP.01|ADM-RCP.01]]
 
 **Acceptance Criteria:**
 - [ ] Image upload via presigned S3/R2 URL; CDN delivery
@@ -116,12 +116,12 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 ## 3. Phase 2–3 — Device & MQTT (Sprints 7–8)
 
 ### 3.1 BE-DEV.01: Device management API — registration, telemetry, status
-- **Sprint:** [[sprint-07|Sprint 7]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-07|Sprint 7]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#61](https://github.com/manasXP/epicura/issues/61)
-- **Blocked by:** [[BE-backend#BE-SET.02|BE-SET.02]]
-- **Blocks:** [[BE-backend#BE-DEV.02|BE-DEV.02]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-SET.02|BE-SET.02]]
+- **Blocks:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-DEV.02|BE-DEV.02]]
 
 **Acceptance Criteria:**
 - [ ] Device registration: POST `/api/devices/register` with device UUID, firmware version, returns device token
@@ -136,12 +136,12 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 ---
 
 ### 3.2 BE-DEV.02: Device API — commands, user claiming, testing
-- **Sprint:** [[sprint-07|Sprint 7]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-07|Sprint 7]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#62](https://github.com/manasXP/epicura/issues/62)
-- **Blocked by:** [[BE-backend#BE-DEV.01|BE-DEV.01]]
-- **Blocks:** [[IOS-ios#IOS-BLE.01|IOS-BLE.01]], [[AND-android#AND-BLE.01|AND-BLE.01]], [[ADM-admin#ADM-DEV.01|ADM-DEV.01]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-DEV.01|BE-DEV.01]]
+- **Blocks:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/IOS-ios#IOS-BLE.01|IOS-BLE.01]], [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/AND-android#AND-BLE.01|AND-BLE.01]], [[ADM-admin#ADM-DEV.01|ADM-DEV.01]]
 
 **Acceptance Criteria:**
 - [ ] Device commands: POST `/api/devices/:id/commands` queues command (start_cook, abort, update)
@@ -157,11 +157,11 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 ---
 
 ### 3.3 BE-MQT.01: MQTT cloud bridge — telemetry ingestion, command dispatch
-- **Sprint:** [[sprint-07|Sprint 7]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-07|Sprint 7]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#63](https://github.com/manasXP/epicura/issues/63)
-- **Blocked by:** [[BE-backend#BE-DEV.01|BE-DEV.01]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-DEV.01|BE-DEV.01]]
 - **Blocks:** [[ADM-admin#ADM-DEV.01|ADM-DEV.01]]
 
 **Acceptance Criteria:**
@@ -182,12 +182,12 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 ---
 
 ### 3.4 BE-USR.01: User management — profiles, cooking history, preferences
-- **Sprint:** [[sprint-08|Sprint 8]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#65](https://github.com/manasXP/epicura/issues/65)
-- **Blocked by:** [[BE-backend#BE-SET.01|BE-SET.01]]
-- **Blocks:** [[IOS-ios#IOS-USR.01|IOS-USR.01]], [[AND-android#AND-USR.01|AND-USR.01]], [[ADM-admin#ADM-USR.01|ADM-USR.01]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-SET.01|BE-SET.01]]
+- **Blocks:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/IOS-ios#IOS-USR.01|IOS-USR.01]], [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/AND-android#AND-USR.01|AND-USR.01]], [[ADM-admin#ADM-USR.01|ADM-USR.01]]
 
 **Acceptance Criteria:**
 - [ ] User profile: GET/PATCH `/api/users/me` with name, email, avatar, dietary preferences
@@ -206,12 +206,12 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 ---
 
 ### 3.5 BE-USR.02: Food preferences DB columns and API fields
-- **Sprint:** [[sprint-08|Sprint 8]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-08|Sprint 8]]
 - **Priority:** P1
 - **Points:** 3
 - **GitHub:** [#54](https://github.com/manasXP/epicura/issues/54)
-- **Blocked by:** [[BE-backend#BE-SET.01|BE-SET.01]]
-- **Blocks:** [[IOS-ios#IOS-USR.02|IOS-USR.02]], [[AND-android#AND-USR.02|AND-USR.02]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-SET.01|BE-SET.01]]
+- **Blocks:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/IOS-ios#IOS-USR.02|IOS-USR.02]], [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/AND-android#AND-USR.02|AND-USR.02]]
 
 **Acceptance Criteria:**
 - [ ] Drizzle migration adds `diet`, `cuisines`, `salt_level`, `oil_level` columns with correct defaults and constraints
@@ -229,11 +229,11 @@ Fastify API server with PostgreSQL, MQTT cloud bridge, recipe management, device
 ---
 
 ### 3.6 BE-LCH.01: Production deployment — hosting, monitoring, security hardening
-- **Sprint:** [[sprint-10|Sprint 10]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#67](https://github.com/manasXP/epicura/issues/67)
-- **Blocked by:** [[BE-backend#BE-USR.01|BE-USR.01]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-USR.01|BE-USR.01]]
 - **Blocks:** [[INT-integration#INT-LCH.01|INT-LCH.01]]
 
 **Acceptance Criteria:**

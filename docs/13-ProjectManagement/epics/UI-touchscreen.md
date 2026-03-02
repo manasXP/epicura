@@ -29,7 +29,7 @@ aliases: [UI Epic, Touchscreen Epic]
 ## 2. Phase 3 — UI Development (Sprints 9–10)
 
 ### 2.1 UI-SET.01: Kivy app scaffold — screen manager, theme, navigation, GPU acceleration
-- **Sprint:** [[sprint-09|Sprint 9]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-09|Sprint 9]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#138](https://github.com/manasXP/epicura/issues/138)
@@ -55,7 +55,7 @@ aliases: [UI Epic, Touchscreen Epic]
 ---
 
 ### 2.2 UI-RCP.01: Recipe browser — grid view, detail view, search, favorites
-- **Sprint:** [[sprint-09|Sprint 9]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-09|Sprint 9]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#141](https://github.com/manasXP/epicura/issues/141)
@@ -81,7 +81,7 @@ aliases: [UI Epic, Touchscreen Epic]
 ---
 
 ### 2.3 UI-COK.01: Live cooking screen — camera feed, status, temperature, timer
-- **Sprint:** [[sprint-10|Sprint 10]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#143](https://github.com/manasXP/epicura/issues/143)
@@ -104,7 +104,7 @@ aliases: [UI Epic, Touchscreen Epic]
 ---
 
 ### 2.4 UI-COK.02: Cooking screen controls and alerts — pause/resume, abort, alert banners
-- **Sprint:** [[sprint-10|Sprint 10]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#144](https://github.com/manasXP/epicura/issues/144)
@@ -125,7 +125,7 @@ aliases: [UI Epic, Touchscreen Epic]
 ---
 
 ### 2.5 UI-MNT.01: Settings & maintenance — WiFi, calibration, diagnostics, about
-- **Sprint:** [[sprint-10|Sprint 10]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-10|Sprint 10]]
 - **Priority:** P1
 - **Points:** 5
 - **GitHub:** [#145](https://github.com/manasXP/epicura/issues/145)

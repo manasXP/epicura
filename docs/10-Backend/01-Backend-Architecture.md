@@ -12,34 +12,34 @@ status: Draft
 Epicura's cloud backend provides centralized services for recipe management, appliance registration, user accounts, cooking telemetry, OTA firmware updates, and push notifications. The backend serves both the native mobile apps (iOS/Android) and the admin portal, while also receiving telemetry from Epicura devices via MQTT.
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                         Epicura Cloud Architecture                          │
-│                                                                             │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐   │
-│  │  iOS App     │  │ Android App  │  │ Admin Portal │  │ Epicura CM5  │   │
-│  │  (SwiftUI)   │  │ (Compose)    │  │ (Next.js)    │  │ (Yocto)      │   │
-│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘   │
-│         │ HTTPS           │ HTTPS           │ HTTPS           │ MQTT/HTTPS│
+┌────────────────────────────────────────────────────────────────────────────┐
+│                         Epicura Cloud Architecture                         │
+│                                                                            │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │
+│  │  iOS App     │  │ Android App  │  │ Admin Portal │  │ Epicura CM5  │    │
+│  │  (SwiftUI)   │  │ (Compose)    │  │ (Next.js)    │  │ (Yocto)      │    │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘    │
+│         │ HTTPS           │ HTTPS           │ HTTPS           │ MQTT/HTTPS │
 │         └────────┬────────┘                 │                 │            │
 │                  │                          │                 │            │
-│         ┌────────▼──────────────────────────▼─────┐   ┌──────▼───────┐   │
-│         │              Fastify API Server          │   │ MQTT Broker  │   │
-│         │              (Node.js / TypeScript)      │◄──┤ (Mosquitto / │   │
-│         │                                          │   │  AWS IoT)    │   │
-│         │  ┌──────────────────────────────────┐    │   └──────────────┘   │
-│         │  │ Service Modules:                  │    │                      │
-│         │  │  Auth  │ Recipes  │ Appliances    │    │                      │
-│         │  │  Sessions │ Telemetry │ Notifications│  │                      │
-│         │  │  OTA   │ Admin                    │    │                      │
-│         │  └──────────────────────────────────┘    │                      │
-│         └──────────┬──────────────┬────────────────┘                      │
+│         ┌────────▼──────────────────────────▼──────┐   ┌──────▼───────┐    │
+│         │              Fastify API Server          │   │ MQTT Broker  │    │
+│         │              (Node.js / TypeScript)      │◄──┤ (Mosquitto / │    │ 
+│         │                                          │   │  AWS IoT)    │    │
+│         │  ┌──────────────────────────────────┐    │   └──────────────┘    │
+│         │  │ Service Modules:                 │    │                       │
+│         │  │  Auth  │ Recipes  │ Appliances   │    │                       │
+│         │  │  Sessions │ Telemetry │ Notifications │                       │
+│         │  │  OTA   │ Admin                   │    │                       │
+│         │  └──────────────────────────────────┘    │                       │
+│         └──────────┬──────────────┬────────────────┘                       │
 │                    │              │                                        │
-│           ┌────────▼───┐  ┌──────▼──────┐                                │
-│           │ PostgreSQL │  │    Redis    │                                 │
-│           │ (Primary)  │  │  (Cache +   │                                 │
-│           │            │  │   Sessions) │                                 │
-│           └────────────┘  └─────────────┘                                │
-└─────────────────────────────────────────────────────────────────────────────┘
+│           ┌────────▼───┐  ┌───────▼─────┐                                  │
+│           │ PostgreSQL │  │    Redis    │                                  │
+│           │ (Primary)  │  │  (Cache +   │                                  │
+│           │            │  │   Sessions) │                                  │
+│           └────────────┘  └─────────────┘                                  │
+└────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -84,29 +84,29 @@ Epicura's cloud backend provides centralized services for recipe management, app
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│                        Fastify Server                         │
-│                                                               │
+│                        Fastify Server                        │
+│                                                              │
 │  ┌─────────────┐  ┌──────────────────────────────────────┐   │
-│  │   Plugins    │  │            Route Modules              │   │
-│  │  ┌────────┐  │  │  ┌──────┐ ┌────────┐ ┌───────────┐  │   │
-│  │  │  Auth  │  │  │  │ Auth │ │Recipes │ │Appliances │  │   │
-│  │  │ (JWT)  │  │  │  └──┬───┘ └───┬────┘ └─────┬─────┘  │   │
-│  │  ├────────┤  │  │     │         │             │         │   │
-│  │  │  CORS  │  │  │  ┌──▼─────────▼─────────────▼──────┐ │   │
-│  │  ├────────┤  │  │  │         Service Layer            │ │   │
-│  │  │  Rate  │  │  │  │  (Business logic, validation)    │ │   │
-│  │  │ Limit  │  │  │  └──┬─────────┬─────────────┬──────┘ │   │
-│  │  └────────┘  │  │     │         │             │         │   │
+│  │   Plugins   │  │            Route Modules             │   │
+│  │  ┌────────┐ │  │  ┌──────┐ ┌────────┐ ┌───────────┐   │   │
+│  │  │  Auth  │ │  │  │ Auth │ │Recipes │ │Appliances │   │   │
+│  │  │ (JWT)  │ │  │  └──┬───┘ └───┬────┘ └──────┬────┘   │   │
+│  │  ├────────┤ │  │     │         │             │        │   │
+│  │  │  CORS  │ │  │  ┌──▼─────────▼─────────────▼──────┐ │   │
+│  │  ├────────┤ │  │  │         Service Layer           │ │   │
+│  │  │  Rate  │ │  │  │  (Business logic, validation)   │ │   │
+│  │  │ Limit  │ │  │  └──┬─────────┬─────────────┬──────┘ │   │
+│  │  └────────┘ │  │     │         │             │        │   │
 │  └─────────────┘  │  ┌──▼─────────▼─────────────▼──────┐ │   │
-│                    │  │       Repository Layer            │ │   │
-│                    │  │  (Drizzle ORM queries)            │ │   │
-│                    │  └──┬─────────┬─────────────┬──────┘ │   │
-│                    │     │         │             │         │   │
-│                    └─────┼─────────┼─────────────┼────────┘   │
-│                          │         │             │             │
-│                   ┌──────▼──┐  ┌───▼────┐  ┌────▼────┐       │
-│                   │PostgreSQL│  │ Redis  │  │   S3    │       │
-│                   └─────────┘  └────────┘  └─────────┘       │
+│                   │  │       Repository Layer          │ │   │
+│                   │  │  (Drizzle ORM queries)          │ │   │
+│                   │  └──┬─────────┬─────────────┬──────┘ │   │
+│                   │     │         │             │        │   │
+│                   └─────┼─────────┼─────────────┼────────┘   │
+│                         │         │             │            │
+│                  ┌──────▼──┐  ┌───▼────┐  ┌─────▼───┐        │
+│                  │PostgreSQL  │ Redis  │  │   S3    │        │
+│                  └─────────┘  └────────┘  └─────────┘        │
 └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -287,10 +287,10 @@ services:
 The backend subscribes to device MQTT topics and bridges telemetry data to WebSocket clients (mobile apps) and to PostgreSQL for persistence.
 
 ```
-┌──────────┐     MQTT      ┌──────────────┐     Internal     ┌───────────┐
-│ Epicura  │──────────────►│  MQTT Broker  │────────────────►│ API Server│
-│ CM5      │               │  (Mosquitto / │                 │ (Fastify) │
-│          │               │   AWS IoT)    │                 │           │
+┌──────────┐     MQTT      ┌──────────────┐     Internal    ┌───────────┐
+│ Epicura  │──────────────►│  MQTT Broker │────────────────►│ API Server│
+│ CM5      │               │  (Mosquitto /│                 │ (Fastify) │
+│          │               │   AWS IoT)   │                 │           │
 └──────────┘               └──────────────┘                 └─────┬─────┘
                                                                    │
                                                           ┌────────┼────────┐
@@ -320,14 +320,36 @@ The backend subscribes to device MQTT topics and bridges telemetry data to WebSo
 
 ---
 
-## 10. Related Documentation
+## 10. Unified Deployment Model (Cloud + CM5)
+
+The same Fastify codebase deploys to both the cloud and each CM5 device. This eliminates API drift and reduces maintenance to a single implementation.
+
+| Aspect | Cloud | CM5 (On-Device) |
+|--------|-------|-----------------|
+| **Runtime** | Node.js 20 LTS (cloud VM / container) | Node.js 20 LTS (Docker on Yocto) |
+| **Database** | PostgreSQL 16 (RDS/Neon) | PostgreSQL 16 (Docker container) |
+| **Schema** | Identical | Identical |
+| **Modules Enabled** | All (Auth, Recipes, Appliances, Sessions, Telemetry, Notifications, OTA, **Admin**) | All except **Admin** (`DISABLE_ADMIN=true`) |
+| **Port** | 3000 | 3000 |
+| **Access** | Public internet (HTTPS) | Local network only (HTTP via mDNS) |
+
+**How it works:**
+- The `epicura-api` monorepo builds a single Docker image
+- An environment variable (`DISABLE_ADMIN=true`) excludes the admin module on CM5
+- Kivy UI calls `http://api:3000/api/v1/...` endpoints via Python `requests` — the interface is identical regardless of whether Fastify or any other framework serves it
+- Recipe engine, CV pipeline, and bridge services also call Fastify endpoints over HTTP rather than touching PostgreSQL directly
+- Camera MJPEG streaming (port 8080) is bundled inside the cv-pipeline container
+
+---
+
+## 11. Related Documentation
 
 - [[02-Database-Schema|Database Schema]] - Full table definitions and ER diagram
 - [[03-Admin-Portal|Admin Portal]] - Next.js admin interface
 - [[../11-API/01-REST-API-Reference|REST API Reference]] - Complete endpoint documentation
 - [[../11-API/02-WebSocket-Events|WebSocket Events]] - Real-time event protocol
 - [[../11-API/03-MQTT-Topics|MQTT Topics]] - Device telemetry topic hierarchy
-- [[../03-Software/04-Controller-Software-Architecture|Controller & Software Architecture]] - CM5 SQLite schema and cloud sync
+- [[../03-Software/04-Controller-Software-Architecture|Controller & Software Architecture]] - CM5 PostgreSQL schema and cloud sync
 - [[../03-Software/08-Tech-Stack|Tech Stack]] - Overall technology choices
 
 #epicura #backend #fastify #typescript #postgresql #redis #mqtt #architecture

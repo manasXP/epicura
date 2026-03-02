@@ -25,8 +25,8 @@ This document provides detailed resource allocation across all project phases, i
 | **Mechanical Engineer** | CAD (Fusion 360), 3D printing, fabrication | $50-80/hr | Part-time (8 weeks) |
 | **ML/CV Engineer** | Python, TensorFlow, OpenCV, data labeling | $70-110/hr | Full-time (4 weeks) |
 | **Frontend Developer** | Kivy, Python, UI/UX design | $55-90/hr | Full-time (4 weeks) |
-| **Backend Developer** | Python, Flask/FastAPI, REST API, MQTT | $60-95/hr | Full-time (2 weeks) |
-| **Mobile Developer** | Flutter, Dart, REST integration | $60-95/hr | Full-time (2 weeks) |
+| **Backend Developer** | Node.js, TypeScript, Fastify, REST API, MQTT | $60-95/hr | Full-time (2 weeks) |
+| **Mobile Developer** | Swift (iOS) / Kotlin (Android), REST integration | $60-95/hr | Full-time (2 weeks) |
 | **QA/Test Engineer** | Safety testing, reliability analysis, documentation | $45-70/hr | Full-time (4 weeks) |
 | **Cook/Lab Assistant** | Food prep, data collection, taste testing | $20-30/hr | Part-time (12 weeks) |
 
@@ -188,7 +188,7 @@ This document provides detailed resource allocation across all project phases, i
 | Role | Allocation | Tasks | Hours/Week |
 |------|------------|-------|------------|
 | Frontend Developer | 100% | Kivy touchscreen UI completion, camera widget | 40 |
-| Backend Developer | 100% | Flask REST API, MQTT telemetry | 40 |
+| Backend Developer | 100% | Fastify REST API, MQTT telemetry | 40 |
 | Mobile Developer | 100% | Flutter app (discovery, browse, live view) | 40 |
 | Embedded Developer | 30% | API integration with recipe engine | 12 |
 

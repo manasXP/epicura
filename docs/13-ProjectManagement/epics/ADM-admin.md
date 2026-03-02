@@ -29,11 +29,11 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 ## 2. Phase 4 — Admin Portal (Sprints 10–12)
 
 ### 2.1 ADM-SET.01: Next.js project setup — App Router, shadcn/ui, auth, layout
-- **Sprint:** [[sprint-10|Sprint 10]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#87](https://github.com/manasXP/epicura/issues/87)
-- **Blocked by:** [[BE-backend#BE-SET.01|BE-SET.01]]
+- **Blocked by:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-SET.01|BE-SET.01]]
 - **Blocks:** [[ADM-admin#ADM-RCP.01|ADM-RCP.01]], [[ADM-admin#ADM-DEV.01|ADM-DEV.01]], [[ADM-admin#ADM-USR.01|ADM-USR.01]]
 
 **Acceptance Criteria:**
@@ -53,11 +53,11 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 ---
 
 ### 2.2 ADM-RCP.01: Recipe management — list, create/edit form, YAML editor
-- **Sprint:** [[sprint-10|Sprint 10]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#88](https://github.com/manasXP/epicura/issues/88)
-- **Blocked by:** [[ADM-admin#ADM-SET.01|ADM-SET.01]], [[BE-backend#BE-RCP.01|BE-RCP.01]]
+- **Blocked by:** [[ADM-admin#ADM-SET.01|ADM-SET.01]], [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-RCP.01|BE-RCP.01]]
 - **Blocks:** [[ADM-admin#ADM-RCP.02|ADM-RCP.02]]
 
 **Acceptance Criteria:**
@@ -73,7 +73,7 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 ---
 
 ### 2.3 ADM-RCP.02: Recipe management — image upload, preview, delete
-- **Sprint:** [[sprint-10|Sprint 10]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#89](https://github.com/manasXP/epicura/issues/89)
@@ -93,11 +93,11 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 ---
 
 ### 2.4 ADM-DEV.01: Device monitoring — list, status, telemetry, commands
-- **Sprint:** [[sprint-11|Sprint 11]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-11|Sprint 11]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#90](https://github.com/manasXP/epicura/issues/90)
-- **Blocked by:** [[ADM-admin#ADM-SET.01|ADM-SET.01]], [[BE-backend#BE-DEV.01|BE-DEV.01]], [[BE-backend#BE-MQT.01|BE-MQT.01]]
+- **Blocked by:** [[ADM-admin#ADM-SET.01|ADM-SET.01]], [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-DEV.01|BE-DEV.01]], [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-MQT.01|BE-MQT.01]]
 - **Blocks:** None
 
 **Acceptance Criteria:**
@@ -117,11 +117,11 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 ---
 
 ### 2.5 ADM-USR.01: User administration — list, detail, roles
-- **Sprint:** [[sprint-12|Sprint 12]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-12|Sprint 12]]
 - **Priority:** P1
 - **Points:** 5
 - **GitHub:** [#91](https://github.com/manasXP/epicura/issues/91)
-- **Blocked by:** [[ADM-admin#ADM-SET.01|ADM-SET.01]], [[BE-backend#BE-USR.01|BE-USR.01]]
+- **Blocked by:** [[ADM-admin#ADM-SET.01|ADM-SET.01]], [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend#BE-USR.01|BE-USR.01]]
 - **Blocks:** None
 
 **Acceptance Criteria:**

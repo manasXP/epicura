@@ -25,9 +25,9 @@ Thirteen subsystem-based epics spanning a 6-week pre-sprint PCB phase and 12 two
 | **CV** — Computer Vision | [[CV-vision]] | 6 | ~28 | 6–7 | ML Engineer |
 | **RCP** — Recipe Engine | [[RCP-recipe]] | 6 | ~28 | 8–9 | Software Engineer |
 | **UI** — Touchscreen UI (Kivy) | [[UI-touchscreen]] | 5 | ~24 | 9–10 | Frontend Engineer |
-| **BE** — Cloud Backend (Fastify) | [[BE-backend]] | 9 | ~38 | 5–10 | Backend Engineer |
-| **IOS** — iOS App (SwiftUI) | [[IOS-ios]] | 7 | ~30 | 8–12 | iOS Developer |
-| **AND** — Android App (Kotlin/Compose) | [[AND-android]] | 7 | ~30 | 8–12 | Android Developer |
+| **BE** — Cloud Backend (Fastify) | [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend]] | 9 | ~38 | 5–10 | Backend Engineer |
+| **IOS** — iOS App (SwiftUI) | [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/IOS-ios]] | 7 | ~30 | 8–12 | iOS Developer |
+| **AND** — Android App (Kotlin/Compose) | [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/AND-android]] | 7 | ~30 | 8–12 | Android Developer |
 | **ADM** — Admin Portal (Next.js) | [[ADM-admin]] | 5 | ~22 | 10–12 | Web Developer |
 | **INT** — Integration & Validation | [[INT-integration]] | 5 | ~24 | 11–12 | All Team |
 | **UX** — User Experience Design | [[UX-ux]] | 7 | ~18 | Parallel | UX / Frontend |

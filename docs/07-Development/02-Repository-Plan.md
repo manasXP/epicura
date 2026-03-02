@@ -157,8 +157,8 @@ epicura-cm5/
 │   │   ├── requirements.txt
 │   │   ├── src/
 │   │   │   ├── main.py
-│   │   │   ├── screens/              # home, recipe_list, recipe_detail, cooking, settings
-│   │   │   ├── widgets/              # temp_gauge, timer, camera_feed, alert_banner
+│   │   │   ├── screens/  # home, recipe_list, recipe_detail, cooking, settings
+│   │   │   ├── widgets/  # temp_gauge, timer, camera_feed, alert_banner
 │   │   │   └── assets/               # fonts, icons, images
 │   │   └── tests/
 │   ├── cm5-bridge/

@@ -149,7 +149,7 @@ This document details the sensing subsystem components for the Epicura kitchen r
 
 - [[01-Compute-Module-Components|Compute Module Components]]
 - [[02-Actuation-Components|Actuation Components]]
-- [[04-Total-Component-Cost|Total Component Cost]]
+- [[__Workspaces/Epicura/docs/08-Components/04-Total-Component-Cost|Total Component Cost]]
 - [[../02-Hardware/02-Technical-Specifications|Technical Specifications]]
 
 ---

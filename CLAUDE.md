@@ -58,6 +58,7 @@ Design/documentation phase. Comprehensive documentation exists across 35+ docume
 | Mobile apps | Native (SwiftUI + Kotlin/Compose) over Flutter | Direct BLE/camera APIs, platform-native UX, reliable background processing |
 | Cloud backend | Fastify (Node.js/TypeScript) | High-performance API server, TypeScript type safety, modular service architecture |
 | Admin portal | Next.js | React-based, SSR, recipe/device/user management |
+| CM5 local API | Fastify (same codebase as cloud) | Single-codebase parity eliminates API drift; admin module excluded on-device via env flag |
 | CM5-STM32 Comm | Python bridge service | Dedicated service for protocol handling, message queuing, health monitoring |
 
 ## Software Stack
@@ -68,11 +69,12 @@ Design/documentation phase. Comprehensive documentation exists across 35+ docume
 - **Container Orchestration**: Docker Compose for all services
 - **Database**: PostgreSQL 16 (Docker container) - same schema as cloud for consistency
 - **MQTT**: Mosquitto broker (Docker container) with cloud bridge
-- **Recipe Engine**: Python service (Docker container) - YAML parsing, state machine
+- **Backend API**: Fastify (Node.js/TypeScript, Docker container) - same codebase as cloud (minus admin module)
+- **Recipe Engine**: Python service (Docker container) - YAML parsing, state machine, calls Fastify API
 - **CV Pipeline**: Python service (Docker container) - OpenCV + TFLite MobileNetV2 INT8
-- **UI**: Kivy (Python, Docker container) - touchscreen interface, camera widget
+- **UI**: Kivy (Python, Docker container) - touchscreen interface, camera widget, calls Fastify API
 - **CM5-STM32 Bridge**: Python service (Docker container) - SPI/UART protocol handler
-- **Cloud Sync**: Bidirectional PostgreSQL sync, recipe/image caching
+- **Cloud Sync**: Bidirectional PostgreSQL sync via Fastify API, recipe/image caching
 - **OTA Updates**: swupdate with A/B partitions
 
 ### STM32 (FreeRTOS)

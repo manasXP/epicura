@@ -3,26 +3,26 @@
 ## Documentation
 
 - [x] Create documentation folder structure
-- [x] [[docs/README|Documentation Index]] (README.md)
-- [x] [[docs/01-Overview/01-Project-Overview|Project Overview]]
-- [x] [[docs/02-Hardware/02-Technical-Specifications|Technical Specifications]]
+- [x] [[__Workspaces/Epicura/docs/README|Documentation Index]] (README.md)
+- [x] [[__Workspaces/Epicura/docs/01-Overview/01-Project-Overview|Project Overview]]
+- [x] [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications|Technical Specifications]]
 - [x] [[docs/02-Hardware/Epicura-Architecture|Epicura Architecture]]
 - [x] [[docs/02-Hardware/05-Sensors-Acquisition|Sensors & Acquisition]]
-- [x] [[docs/02-Hardware/07-Mechanical-Design|Mechanical Design]]
-- [x] [[docs/03-Software/04-Controller-Software-Architecture|Controller & Software Architecture]]
-- [x] [[docs/03-Software/08-Tech-Stack|Tech Stack]]
-- [x] [[docs/04-UserInterface/03-UI-UX-Design|UI/UX Design]]
+- [x] [[07-Mechanical-Design|Mechanical Design]]
+- [x] [[04-Controller-Software-Architecture|Controller & Software Architecture]]
+- [x] [[08-Tech-Stack|Tech Stack]]
+- [x] [[03-UI-UX-Design|UI/UX Design]]
 - [x] [[docs/05-Subsystems/09-Induction-Heating|Induction Heating]]
 - [x] [[docs/05-Subsystems/10-Robotic-Arm|Robotic Arm]]
 - [x] [[docs/05-Subsystems/11-Ingredient-Dispensing|Ingredient Dispensing]]
 - [x] [[docs/05-Subsystems/12-Vision-System|Vision System]]
 - [x] [[docs/05-Subsystems/13-Exhaust-Fume-Management|Exhaust & Fume Management]]
-- [x] [[docs/06-Compliance/06-Safety-Compliance|Safety & Compliance]]
-- [x] [[docs/07-Development/Prototype-Development-Plan|Prototype Development Plan]]
+- [x] [[06-Safety-Compliance|Safety & Compliance]]
+- [x] [[__Workspaces/Medical/ECG/docs/07-Development/Prototype-Development-Plan|Prototype Development Plan]]
 - [x] [[docs/08-Components/01-Compute-Module-Components|Compute Module Components]]
 - [x] [[docs/08-Components/02-Actuation-Components|Actuation Components]]
 - [x] [[docs/08-Components/03-Sensor-Components|Sensor Components]]
-- [x] [[docs/08-Components/04-Total-Component-Cost|Total Component Cost]]
+- [x] [[__Workspaces/Epicura/docs/08-Components/04-Total-Component-Cost|Total Component Cost]]
 - [x] Update `__init.md` with documentation links
 - [x] Expand `CLAUDE.md` with technical context
 

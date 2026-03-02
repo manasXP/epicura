@@ -55,7 +55,7 @@ An autonomous countertop kitchen robot that cooks one-pot meals using AI vision,
 
 - **Database**: PostgreSQL 16 — same schema as cloud
 - **MQTT**: Mosquitto broker with cloud bridge
-- **Backend API**: FastAPI (Python) — REST endpoints
+- **Backend API**: Fastify (Node.js/TypeScript) — same codebase as cloud (minus admin module)
 - **Recipe Engine**: Python — YAML parsing, state machine
 - **CV Pipeline**: OpenCV + TFLite MobileNetV2 INT8
 - **UI**: Kivy — touchscreen interface
@@ -73,11 +73,24 @@ An autonomous countertop kitchen robot that cooks one-pot meals using AI vision,
 
 Comprehensive documentation exists across 30+ documents covering hardware, software, subsystems, compliance, PCB design, backend, APIs, mobile apps, and project management.
 
-See [`docs/README.md`](docs/README.md) for the full documentation index.
+See [`docs/README.md`](__Workspaces/Epicura/docs/README.md) for the full documentation index.
+
+## Repositories
+
+| Repository                                                          | Stack                          | Purpose                                                               |
+| ------------------------------------------------------------------- | ------------------------------ | --------------------------------------------------------------------- |
+| **[epicura](https://github.com/manasXP/epicura)**                   | Markdown + KiCAD 9             | Documentation, specifications, PCB design (this repo)                 |
+| **[epicura-firmware](https://github.com/manasXP/epicura-firmware)** | C (FreeRTOS, STM32 HAL)        | STM32G474RE real-time control — PID, servo, sensors, CAN, safety      |
+| **[epicura-cm5](https://github.com/manasXP/epicura-cm5)**           | Python (Docker Compose)        | CM5 services — recipe engine, CV pipeline, Kivy UI, bridge, Yocto BSP |
+| **[epicura-api](https://github.com/manasXP/epicura-api)**           | TypeScript (Fastify + Next.js) | Cloud API server and admin portal monorepo                            |
+| **[epicura-ios](https://github.com/manasXP/epicura-ios)**           | Swift (SwiftUI)                | iOS companion app — BLE pairing, recipes, live cooking                |
+| **[epicura-android](https://github.com/manasXP/epicura-android)**   | Kotlin (Jetpack Compose)       | Android companion app                                                 |
+
+See [Repository Plan](docs/07-Development/02-Repository-Plan.md) for directory structures, CI/CD, and cross-repo dependencies.
 
 ## Estimated BOM
 
-~$614 for prototype. See [Total Component Cost](docs/08-Components/04-Total-Component-Cost.md) for breakdown.
+~$614 for prototype. See [Total Component Cost](__Workspaces/Epicura/docs/08-Components/04-Total-Component-Cost.md) for breakdown.
 
 ## Development Roadmap
 

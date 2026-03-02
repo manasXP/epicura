@@ -35,9 +35,9 @@ Individual epic files with detailed stories, acceptance criteria, and task break
 | **CV** — Computer Vision | [[CV-vision]] | 4 | ~28 |
 | **RCP** — Recipe Engine | [[RCP-recipe]] | 4 | ~28 |
 | **UI** — Touchscreen UI (Kivy) | [[UI-touchscreen]] | 4 | ~24 |
-| **BE** — Cloud Backend (Fastify) | [[BE-backend]] | 6 | ~38 |
-| **IOS** — iOS App (SwiftUI) | [[IOS-ios]] | 5 | ~30 |
-| **AND** — Android App (Kotlin/Compose) | [[AND-android]] | 5 | ~30 |
+| **BE** — Cloud Backend (Fastify) | [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/BE-backend]] | 6 | ~38 |
+| **IOS** — iOS App (SwiftUI) | [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/IOS-ios]] | 5 | ~30 |
+| **AND** — Android App (Kotlin/Compose) | [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/AND-android]] | 5 | ~30 |
 | **ADM** — Admin Portal (Next.js) | [[ADM-admin]] | 4 | ~22 |
 | **INT** — Integration & Validation | [[INT-integration]] | 4 | ~24 |
 
@@ -52,18 +52,18 @@ Individual sprint files with story assignments, capacity allocation, and review 
 | Sprint | Weeks | Focus | Milestone |
 |--------|:-----:|-------|-----------|
 | Pre-Sprint | -6 to 0 | PCB design & fabrication | **M0** — Hardware Ready |
-| [[sprint-01]] | 1–2 | STM32 FreeRTOS, CM5 Yocto, SPI bridge | |
-| [[sprint-02]] | 3–4 | Docker containers, safety, OTA | **M1** — Platform Ready |
-| [[sprint-03]] | 5–6 | CAN bus, PID controller | |
-| [[sprint-04]] | 7–8 | Thermal safety, servo arm | **M2** — Thermal + Arm |
-| [[sprint-05]] | 9–10 | P-ASD, CID, backend start | |
-| [[sprint-06]] | 11–12 | SLD, calibration, camera, recipe API | **M3** — Dispensing Complete |
-| [[sprint-07]] | 13–14 | ML model, stage detection, device API | |
-| [[sprint-08]] | 15–16 | Recipe engine, mobile apps start | **M4** — Vision + Recipe |
-| [[sprint-09]] | 17–18 | State machine, Kivy UI, BLE pairing | |
-| [[sprint-10]] | 19–20 | Cooking UI, admin portal, backend launch | **M5** — Software Complete |
-| [[sprint-11]] | 21–22 | Integration testing, safety testing | |
-| [[sprint-12]] | 23–24 | Reliability, launch readiness | **M6** — Launch Ready |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-01]] | 1–2 | STM32 FreeRTOS, CM5 Yocto, SPI bridge | |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-02]] | 3–4 | Docker containers, safety, OTA | **M1** — Platform Ready |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-03]] | 5–6 | CAN bus, PID controller | |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-04]] | 7–8 | Thermal safety, servo arm | **M2** — Thermal + Arm |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-05]] | 9–10 | P-ASD, CID, backend start | |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-06]] | 11–12 | SLD, calibration, camera, recipe API | **M3** — Dispensing Complete |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-07]] | 13–14 | ML model, stage detection, device API | |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-08]] | 15–16 | Recipe engine, mobile apps start | **M4** — Vision + Recipe |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-09]] | 17–18 | State machine, Kivy UI, BLE pairing | |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-10]] | 19–20 | Cooking UI, admin portal, backend launch | **M5** — Software Complete |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-11]] | 21–22 | Integration testing, safety testing | |
+| [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-12]] | 23–24 | Reliability, launch readiness | **M6** — Launch Ready |
 
 See [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calendar]] for phase mapping and velocity tracking.
 

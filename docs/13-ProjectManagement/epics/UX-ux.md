@@ -157,7 +157,7 @@ JSX mock screens (Vite + React) for rapid prototyping of mobile app flows. Cover
 - **Points:** 3
 - **GitHub:** [#53](https://github.com/manasXP/epicura/issues/53)
 - **Blocked by:** [[UX-ux#UX-TAB.01|UX-TAB.01]]
-- **Blocks:** [[IOS-ios#IOS-USR.02|IOS-USR.02]], [[AND-android#AND-USR.02|AND-USR.02]]
+- **Blocks:** [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/IOS-ios#IOS-USR.02|IOS-USR.02]], [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/AND-android#AND-USR.02|AND-USR.02]]
 
 **Acceptance Criteria:**
 - [ ] Diet selector: single-select segmented control — `Vegetarian | Vegan | Pescatarian | No Restrictions` (default: No Restrictions)

@@ -29,7 +29,7 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 ## 2. Phase 1 — Thermal Control (Sprints 3–4)
 
 ### 2.1 THR-CAN.01: CAN bus driver — FDCAN1 init, TX power command, RX status parsing
-- **Sprint:** [[sprint-03|Sprint 3]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-03|Sprint 3]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#109](https://github.com/manasXP/epicura/issues/109)
@@ -49,7 +49,7 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 ---
 
 ### 2.2 THR-CAN.02: CAN bus error handling and induction commands — bus-off recovery, power ramp, e-stop
-- **Sprint:** [[sprint-03|Sprint 3]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-03|Sprint 3]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#111](https://github.com/manasXP/epicura/issues/111)
@@ -70,7 +70,7 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 ---
 
 ### 2.3 THR-PID.01: PID controller — sensor drivers, closed-loop temperature control
-- **Sprint:** [[sprint-03|Sprint 3]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-03|Sprint 3]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#115](https://github.com/manasXP/epicura/issues/115)
@@ -93,7 +93,7 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 ---
 
 ### 2.4 THR-PID.02: PID tuning and telemetry — gain storage, SPI reporting, performance validation
-- **Sprint:** [[sprint-03|Sprint 3]] → [[sprint-04|Sprint 4]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-03|Sprint 3]] → [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-04|Sprint 4]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#118](https://github.com/manasXP/epicura/issues/118)
@@ -113,7 +113,7 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 ---
 
 ### 2.5 THR-SAF.01: Thermal safety interlocks — runaway detection, coil overtemp, pan detection
-- **Sprint:** [[sprint-04|Sprint 4]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-04|Sprint 4]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#121](https://github.com/manasXP/epicura/issues/121)
@@ -138,7 +138,7 @@ CAN bus interface to the commercial microwave induction surface, closed-loop PID
 ---
 
 ### 2.6 THR-EXH.01: PWM exhaust fan control — temperature-proportional speed, grease filter monitor
-- **Sprint:** [[sprint-04|Sprint 4]]
+- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-04|Sprint 4]]
 - **Priority:** P1
 - **Points:** 5
 - **GitHub:** [#124](https://github.com/manasXP/epicura/issues/124)

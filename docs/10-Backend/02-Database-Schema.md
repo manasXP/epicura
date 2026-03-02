@@ -11,7 +11,7 @@ status: Draft
 
 Epicura's cloud database uses PostgreSQL 16 with Drizzle ORM. The schema supports user management, normalized recipe storage (with relational tables for cooking segments, dispensing actions, and ingredients), appliance registration, cooking session tracking, time-series telemetry (partitioned by month), push notification tokens, and firmware release management.
 
-The cloud schema is designed to complement the [[../03-Software/04-Controller-Software-Architecture#5. Data Management (CM5)|CM5 on-device SQLite schema]], with a sync strategy that keeps recipes and user preferences consistent between cloud and device.
+Both the cloud and CM5 device run PostgreSQL 16 with the same schema. The sync strategy keeps recipes and user preferences consistent between cloud and device.
 
 ---
 
@@ -395,32 +395,32 @@ CREATE INDEX idx_recipes_fts ON recipes USING GIN (search_vector);
 
 ---
 
-## 5. CM5 SQLite Sync Strategy
+## 5. CM5 PostgreSQL Sync Strategy
 
-The Epicura CM5 device stores recipes and cooking logs locally in SQLite (see [[../03-Software/04-Controller-Software-Architecture#5. Data Management (CM5)|CM5 Data Management]]). The cloud sync strategy ensures consistency:
+Both the CM5 device and cloud run PostgreSQL 16 with the same schema. The CM5 runs its own Fastify API server (same codebase as cloud, minus admin module), which manages the local PostgreSQL instance. Sync happens between the two PostgreSQL databases via the Fastify API.
 
 ### 5.1 Recipe Sync (Cloud → Device)
 
 ```
 ┌──────────┐     GET /recipes/sync?since=<timestamp>     ┌──────────┐
 │  CM5     │ ──────────────────────────────────────────► │  Cloud   │
-│  SQLite  │                                             │  Postgres│
+│ Postgres │                                             │ Postgres │
 │          │ ◄────────────────────────────────────────── │          │
 │          │     {recipes: [...], deleted_ids: [...]}     │          │
 └──────────┘                                             └──────────┘
 ```
 
 1. CM5 stores `last_sync_at` timestamp in `user_preferences`
-2. On sync, CM5 requests `GET /recipes/sync?since=<last_sync_at>`
-3. Backend returns recipes with `updated_at > since` and list of deleted recipe IDs
-4. CM5 upserts recipes into local SQLite and removes deleted ones
+2. On sync, CM5 cloud-sync service requests `GET /recipes/sync?since=<last_sync_at>` from cloud Fastify
+3. Cloud returns recipes with `updated_at > since` and list of deleted recipe IDs
+4. CM5 upserts recipes into local PostgreSQL and removes deleted ones
 5. CM5 updates `last_sync_at` to server timestamp
 
 ### 5.2 Cooking Log Sync (Device → Cloud)
 
-1. CM5 stores cooking logs locally in SQLite
-2. Logs marked `synced = false` are uploaded via `POST /sessions` on next connection
-3. Backend stores in `cooking_sessions` table and marks as synced
+1. CM5 stores cooking logs locally in PostgreSQL
+2. Logs marked `synced = false` are uploaded via `POST /sessions` to cloud on next connection
+3. Cloud stores in `cooking_sessions` table and marks as synced
 4. Device marks local logs as `synced = true`
 
 ### 5.3 Conflict Resolution
@@ -454,7 +454,7 @@ Migration files are stored in `packages/db/migrations/` and version-controlled. 
 
 - [[01-Backend-Architecture|Backend Architecture]] - Service architecture and deployment
 - [[../11-API/01-REST-API-Reference|REST API Reference]] - Endpoints that query this schema
-- [[../03-Software/04-Controller-Software-Architecture|Controller & Software Architecture]] - CM5 SQLite schema
+- [[../03-Software/04-Controller-Software-Architecture|Controller & Software Architecture]] - CM5 PostgreSQL schema
 - [[03-Admin-Portal|Admin Portal]] - Admin interface for managing this data
 
 #epicura #database #postgresql #schema #drizzle #backend
