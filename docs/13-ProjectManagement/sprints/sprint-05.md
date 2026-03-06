@@ -18,9 +18,9 @@ aliases: [Sprint 5]
 
 | Status | ID | Title | Epic | Points | Blocked By |
 |:------:|-----|-------|------|:------:|------------|
-| [ ] | [[02-Stories#ARM-ASD.01\|ARM-ASD.01]] | P-ASD pneumatic seasoning dispenser | ARM-ASD | 8 | EMB-SET.01 |
-| [ ] | [[02-Stories#ARM-CID.01\|ARM-CID.01]] | CID coarse ingredient dispenser | ARM-CID | 5 | EMB-SET.01 |
-| [ ] | [[02-Stories#BE-SET.01\|BE-SET.01]] | Fastify project setup (TypeScript, PostgreSQL, MQTT) | BE-SET | 8 | - |
+| [ ] | [[ARM-actuation#ARM-ASD.01\|ARM-ASD.01]] | P-ASD pneumatic seasoning dispenser | ARM-ASD | 8 | EMB-SET.01 |
+| [ ] | [[ARM-actuation#ARM-CID.01\|ARM-CID.01]] | CID coarse ingredient dispenser | ARM-CID | 5 | EMB-SET.01 |
+| [ ] | [[BE-backend#BE-SET.01\|BE-SET.01]] | Fastify project setup (TypeScript, PostgreSQL, MQTT) | BE-SET | 8 | - |
 
 **Total Points:** 21
 
@@ -63,5 +63,5 @@ aliases: [Sprint 5]
 ## 5. References
 
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calendar]]
-- [[__Workspaces/Epicura/docs/13-ProjectManagement/02-Stories|User Stories]]
-- [[__Workspaces/Epicura/docs/13-ProjectManagement/01-Epics|Epic Index]]
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|User Stories]]
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|Epic Index]]

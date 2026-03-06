@@ -98,7 +98,7 @@ Both iOS and Android apps use the MVVM (Model-View-ViewModel) pattern with a sha
 
 ### 4.1 API Client
 
-Both platforms implement a type-safe API client wrapping the [[../11-API/01-REST-API-Reference|REST API]]:
+Both platforms implement a type-safe API client wrapping the [[01-REST-API-Reference|REST API]]:
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -128,7 +128,7 @@ Both platforms implement a type-safe API client wrapping the [[../11-API/01-REST
 
 ### 4.2 WebSocket Client
 
-Real-time cooking updates via WebSocket (see [[../11-API/02-WebSocket-Events|WebSocket Events]]):
+Real-time cooking updates via WebSocket (see [[02-WebSocket-Events|WebSocket Events]]):
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -161,7 +161,7 @@ Real-time cooking updates via WebSocket (see [[../11-API/02-WebSocket-Events|Web
 
 ### 4.3 BLE Manager
 
-BLE state machine for device pairing (see [[../11-API/04-BLE-Services|BLE Services]]):
+BLE state machine for device pairing (see [[04-BLE-Services|BLE Services]]):
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -259,7 +259,7 @@ Target: 10-15 fps at 640x480 resolution.
 | Success | Green | `#43A047` | Cooking complete, success states |
 | Warning | Amber | `#FFB300` | Warnings, caution states |
 
-This palette matches the Kivy touchscreen UI colors defined in [[../04-UserInterface/03-UI-UX-Design#Styling|UI/UX Design - Styling]].
+This palette matches the Kivy touchscreen UI colors defined in [[../04-UserInterface/01-UI-UX-Design#Styling|UI/UX Design - Styling]].
 
 ### 7.2 Platform-Native Patterns
 
@@ -292,11 +292,11 @@ Recipe cards in the list use a horizontal layout:
 
 - [[02-iOS-App|iOS App]] - SwiftUI implementation details
 - [[03-Android-App|Android App]] - Jetpack Compose implementation details
-- [[../11-API/01-REST-API-Reference|REST API Reference]] - Backend endpoints
-- [[../11-API/02-WebSocket-Events|WebSocket Events]] - Real-time event protocol
-- [[../11-API/04-BLE-Services|BLE Services]] - BLE pairing services
-- [[../04-UserInterface/03-UI-UX-Design|UI/UX Design]] - Design language and color palette
-- [[../03-Software/08-Tech-Stack|Tech Stack]] - Overall technology choices
+- [[01-REST-API-Reference|REST API Reference]] - Backend endpoints
+- [[02-WebSocket-Events|WebSocket Events]] - Real-time event protocol
+- [[04-BLE-Services|BLE Services]] - BLE pairing services
+- [[../04-UserInterface/01-UI-UX-Design|UI/UX Design]] - Design language and color palette
+- [[../03-Software/01-Tech-Stack|Tech Stack]] - Overall technology choices
 
 #epicura #mobile #architecture #mvvm #ios #android #swift #kotlin #native-mobile
 

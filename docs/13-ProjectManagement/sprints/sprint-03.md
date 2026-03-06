@@ -18,8 +18,8 @@ aliases: [Sprint 3]
 
 | Status | ID | Title | Epic | Points | Blocked By |
 |:------:|-----|-------|------|:------:|------------|
-| [ ] | [[02-Stories#THR-CAN.01\|THR-CAN.01]] | CAN bus interface to induction module | THR-CAN | 8 | EMB-SET.01 |
-| [ ] | [[02-Stories#THR-PID.01\|THR-PID.01]] | PID temperature controller (start, continues Sprint 4) | THR-PID | 8 | EMB-COM.01, THR-CAN.01 |
+| [ ] | [[THR-thermal#THR-CAN.01\|THR-CAN.01]] | CAN bus interface to induction module | THR-CAN | 8 | EMB-SET.01 |
+| [ ] | [[THR-thermal#THR-PID.01\|THR-PID.01]] | PID temperature controller (start, continues Sprint 4) | THR-PID | 8 | EMB-COM.01, THR-CAN.01 |
 
 **Total Points:** 16
 
@@ -60,5 +60,5 @@ aliases: [Sprint 3]
 ## 5. References
 
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calendar]]
-- [[__Workspaces/Epicura/docs/13-ProjectManagement/02-Stories|User Stories]]
-- [[__Workspaces/Epicura/docs/13-ProjectManagement/01-Epics|Epic Index]]
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|User Stories]]
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|Epic Index]]

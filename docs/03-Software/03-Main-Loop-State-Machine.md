@@ -300,9 +300,9 @@ RECOVERING → RESUMING:
 ## 6. Related Documentation
 
 - [[02-Controller-Software-Architecture|Controller Software Architecture]] — Recipe YAML format, CV pipeline, PID tuning
-- [[08-Tech-Stack|Tech Stack]] — Yocto, Kivy, FreeRTOS, Docker stack
-- [[../../04-UserInterface/03-UI-UX-Design|UI/UX Design]] — Touchscreen wireframes and screen flows
-- [[../../05-Subsystems/09-Induction-Heating|Induction Heating]] — PID control and CAN bus protocol
+- [[01-Tech-Stack|Tech Stack]] — Yocto, Kivy, FreeRTOS, Docker stack
+- [[../../04-UserInterface/01-UI-UX-Design|UI/UX Design]] — Touchscreen wireframes and screen flows
+- [[../../05-Subsystems/01-Induction-Heating|Induction Heating]] — PID control and CAN bus protocol
 - [[../../05-Subsystems/03-Ingredient-Dispensing|Ingredient Dispensing]] — ASD/CID/SLD subsystem details
 
 ---

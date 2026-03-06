@@ -18,9 +18,9 @@ aliases: [Sprint 2]
 
 | Status | ID | Title | Epic | Points | Blocked By |
 |:------:|-----|-------|------|:------:|------------|
-| [ ] | [[02-Stories#EMB-SET.03\|EMB-SET.03]] | Docker service containers (PostgreSQL, MQTT, Recipe, CV, UI) | EMB-SET | 5 | EMB-SET.02 |
-| [ ] | [[02-Stories#EMB-SAF.01\|EMB-SAF.01]] | Safety systems (watchdog, e-stop, relay) | EMB-SAF | 5 | EMB-SET.01 |
-| [ ] | [[02-Stories#EMB-OTA.01\|EMB-OTA.01]] | OTA update system (swupdate + A/B partitions) | EMB-OTA | 5 | EMB-SET.02 |
+| [ ] | [[EMB-embedded#EMB-SET.03\|EMB-SET.03]] | Docker service containers (PostgreSQL, MQTT, Recipe, CV, UI) | EMB-SET | 5 | EMB-SET.02 |
+| [ ] | [[EMB-embedded#EMB-SAF.01\|EMB-SAF.01]] | Safety systems (watchdog, e-stop, relay) | EMB-SAF | 5 | EMB-SET.01 |
+| [ ] | [[EMB-embedded#EMB-OTA.01\|EMB-OTA.01]] | OTA update system (swupdate + A/B partitions) | EMB-OTA | 5 | EMB-SET.02 |
 
 **Total Points:** 15
 
@@ -61,5 +61,5 @@ aliases: [Sprint 2]
 ## 5. References
 
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calendar]]
-- [[__Workspaces/Epicura/docs/13-ProjectManagement/02-Stories|User Stories]]
-- [[__Workspaces/Epicura/docs/13-ProjectManagement/01-Epics|Epic Index]]
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|User Stories]]
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|Epic Index]]

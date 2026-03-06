@@ -340,7 +340,7 @@ The recipe engine commands different stirring patterns:
 
 ## 7. Ingredient Dispensing Subsystems
 
-See [[../05-Subsystems/03-Ingredient-Dispensing|Ingredient Dispensing System]] for full details.
+See [[03-Ingredient-Dispensing|Ingredient Dispensing System]] for full details.
 
 ### 7.1 Layout and Design
 
@@ -462,7 +462,7 @@ A separate exhaust system handles cooking fumes (steam, oil smoke, spice volatil
 - **Collection hood:** Integrated into gantry above pot, directs fumes toward exhaust duct
 - **Intake:** Passive side/bottom vents provide makeup air via negative pressure
 
-See [[../05-Subsystems/13-Exhaust-Fume-Management|Exhaust & Fume Management]] for full specifications, filter design, and safety interlocks.
+See [[../05-Subsystems/05-Exhaust-Fume-Management|Exhaust & Fume Management]] for full specifications, filter design, and safety interlocks.
 
 ---
 
@@ -562,11 +562,11 @@ Optional automated cleaning: fill pot with water, heat to 60C, stir for 5 minute
 ## 11. Related Documentation
 
 - [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications|Technical Specifications]]
-- [[Epicura-Architecture|Hardware Architecture & Wiring Diagrams]]
-- [[05-Sensors-Acquisition|Sensors & Data Acquisition]]
-- [[../01-Overview/01-Project-Overview|Project Overview]]
-- [[../05-Subsystems/13-Exhaust-Fume-Management|Exhaust & Fume Management]]
-- [[../06-Compliance/06-Safety-Compliance|Safety & Compliance]]
+- [[01-Epicura-Architecture|Hardware Architecture & Wiring Diagrams]]
+- [[03-Sensors-Acquisition|Sensors & Data Acquisition]]
+- [[__Workspaces/Epicura/docs/01-Overview/01-Project-Overview|Project Overview]]
+- [[../05-Subsystems/05-Exhaust-Fume-Management|Exhaust & Fume Management]]
+- [[../06-Compliance/01-Safety-Compliance|Safety & Compliance]]
 
 #epicura #mechanical-design #enclosure #industrial-design
 

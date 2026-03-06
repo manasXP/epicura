@@ -414,4 +414,4 @@ See [[04-MPU-Functional-Specification#5.1 SPI Protocol]] for full frame definiti
 | Driver PCB design | [[02-Driver-PCB-Design]] |
 | Dispensing subsystems | [[03-Ingredient-Dispensing]] |
 | Hardware architecture | [[01-Epicura-Architecture]] |
-| Technical specifications | [[__Workspaces/Medical/ECG/docs/02-Hardware/02-Technical-Specifications]] |
+| Technical specifications | [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications]] |

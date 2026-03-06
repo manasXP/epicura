@@ -113,7 +113,7 @@ steps:
 
 ## 5. References
 
-- [[__Workspaces/Epicura/docs/07-Development/02-Repository-Plan|Repository Plan]]
-- [[__Workspaces/Epicura/docs/12-MobileApps/02-iOS-App|iOS App]]
-- [[__Workspaces/Epicura/docs/12-MobileApps/01-Mobile-Architecture|Mobile Architecture]]
-- [[__Workspaces/Epicura/docs/11-API/04-BLE-Services|BLE Services]]
+- [[02-Repository-Plan|Repository Plan]]
+- [[02-iOS-App|iOS App]]
+- [[01-Mobile-Architecture|Mobile Architecture]]
+- [[04-BLE-Services|BLE Services]]

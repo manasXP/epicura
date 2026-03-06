@@ -345,10 +345,10 @@ fun recipeCard_displaysCorrectInfo() {
 
 - [[01-Mobile-Architecture|Mobile Architecture]] - Shared architecture and design system
 - [[02-iOS-App|iOS App]] - iOS counterpart
-- [[../11-API/01-REST-API-Reference|REST API Reference]] - Backend API
-- [[../11-API/02-WebSocket-Events|WebSocket Events]] - Real-time events
-- [[../11-API/04-BLE-Services|BLE Services]] - BLE GATT services and pairing flow
-- [[../04-UserInterface/03-UI-UX-Design|UI/UX Design]] - Design language
+- [[01-REST-API-Reference|REST API Reference]] - Backend API
+- [[02-WebSocket-Events|WebSocket Events]] - Real-time events
+- [[04-BLE-Services|BLE Services]] - BLE GATT services and pairing flow
+- [[../04-UserInterface/01-UI-UX-Design|UI/UX Design]] - Design language
 
 #epicura #android #kotlin #jetpack-compose #mobile #ble #native-mobile
 

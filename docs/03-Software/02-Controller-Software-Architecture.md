@@ -768,10 +768,10 @@ typedef struct {
 
 ## 10. Related Documentation
 
-- [[../01-Overview/01-Project-Overview|Project Overview]]
+- [[__Workspaces/Epicura/docs/01-Overview/01-Project-Overview|Project Overview]]
 - [[03-Main-Loop-State-Machine|Main Loop State Machine]]
-- [[08-Tech-Stack|Tech Stack]]
-- [[../04-UserInterface/03-UI-UX-Design|UI/UX Design]]
+- [[01-Tech-Stack|Tech Stack]]
+- [[../04-UserInterface/01-UI-UX-Design|UI/UX Design]]
 
 #epicura #software-architecture #controller #firmware #recipe-engine #computer-vision #pid-control #safety #stm32 #raspberry-pi
 

@@ -472,14 +472,14 @@ def generate_frames():
 
 ## 14. Related Documentation
 
-- [[../01-Overview/01-Project-Overview|Project Overview]]
-- [[../02-Hardware/02-Technical-Specifications|Technical Specifications]]
-- [[../02-Hardware/Epicura-Architecture|Hardware Architecture]]
-- [[../03-Software/04-Controller-Software-Architecture|Controller & Software Architecture]]
-- [[09-Induction-Heating|Induction Heating System]]
-- [[10-Robotic-Arm|Robotic Arm System]]
+- [[__Workspaces/Epicura/docs/01-Overview/01-Project-Overview|Project Overview]]
+- [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications|Technical Specifications]]
+- [[../02-Hardware/01-Epicura-Architecture|Hardware Architecture]]
+- [[../03-Software/02-Controller-Software-Architecture|Controller & Software Architecture]]
+- [[01-Induction-Heating|Induction Heating System]]
+- [[02-Robotic-Arm|Robotic Arm System]]
 - [[03-Ingredient-Dispensing|Ingredient Dispensing System]]
-- [[../06-Compliance/06-Safety-Compliance|Safety & Compliance]]
+- [[../06-Compliance/01-Safety-Compliance|Safety & Compliance]]
 
 #epicura #vision-system #computer-vision #ai-ml #subsystem
 

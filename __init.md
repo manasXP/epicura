@@ -71,9 +71,9 @@ Comprehensive documentation has been organized in the [[__Workspaces/Epicura/doc
 14. [[__Workspaces/Medical/ECG/docs/07-Development/Prototype-Development-Plan|Prototype Development Plan]] - Phased plan from prototype to production
 
 **Components & BOM**
-15. [[docs/08-Components/01-Compute-Module-Components|Compute Module Components]] - Raspberry Pi CM5, STM32, carrier boards
-16. [[docs/08-Components/02-Actuation-Components|Actuation Components]] - Servo motors, induction driver, solenoids
-17. [[docs/08-Components/03-Sensor-Components|Sensor Components]] - Camera, IR thermometer, NTC probes, load cells
+15. [[01-Compute-Module-Components|Compute Module Components]] - Raspberry Pi CM5, STM32, carrier boards
+16. [[02-Actuation-Components|Actuation Components]] - Servo motors, induction driver, solenoids
+17. [[03-Sensor-Components|Sensor Components]] - Camera, IR thermometer, NTC probes, load cells
 18. [[__Workspaces/Epicura/docs/08-Components/04-Total-Component-Cost|Total Component Cost]] - Full BOM and cost analysis
 
 **Start here:** [[__Workspaces/Epicura/docs/README|Documentation Index]]

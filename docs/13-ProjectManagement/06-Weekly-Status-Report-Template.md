@@ -350,7 +350,7 @@ Story Points Remaining
 ## 16. Attachments & References
 
 ### 16.1 Documents Updated This Week
-- [[03-Sprints|Sprint Planning]] — Updated velocity tracking
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Planning]] — Updated velocity tracking
 - [[04-Procurement-Schedule|Procurement Schedule]] — Added new component orders
 - [PCB Design Files] — v1.2 committed to git
 
@@ -425,7 +425,7 @@ Friday,[X],[Y]
 
 ## 20. Related Documentation
 
-- [[03-Sprints|Sprint Planning]] — Current sprint details
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Planning]] — Current sprint details
 - [[04-Procurement-Schedule|Procurement Schedule]] — Component ordering timeline
 - [[05-Resource-Allocation|Resource Allocation]] — Team assignments and budget
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/__init|Project Management Hub]] — Dashboard and overview

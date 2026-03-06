@@ -18,10 +18,10 @@ aliases: [Sprint 12]
 
 | Status | ID | Title | Epic | Points | Blocked By |
 |:------:|-----|-------|------|:------:|------------|
-| [ ] | [[01-Epics#INT-REL.01\|INT-REL.01]] | Reliability testing | INT | 5 | INT-SYS.01 |
-| [ ] | [[01-Epics#INT-LCH.01\|INT-LCH.01]] | Launch readiness | INT | 5 | INT-SAF.01, INT-REL.01, EMB-LCH.01, EMB-OTA.01, BE-LCH.01 |
-| [ ] | [[01-Epics#EMB-LCH.01\|EMB-LCH.01]] | Production firmware | EMB | 5 | INT-SYS.01 |
-| [ ] | [[01-Epics#ADM-USR.01\|ADM-USR.01]] | User administration | ADM | 5 | ADM-SET.01, BE-USR.01 |
+| [ ] | [[INT-integration#INT-REL.01\|INT-REL.01]] | Reliability testing | INT | 5 | INT-SYS.01 |
+| [ ] | [[INT-integration#INT-LCH.01\|INT-LCH.01]] | Launch readiness | INT | 5 | INT-SAF.01, INT-REL.01, EMB-LCH.01, EMB-OTA.01, BE-LCH.01 |
+| [ ] | [[EMB-embedded#EMB-LCH.01\|EMB-LCH.01]] | Production firmware | EMB | 5 | INT-SYS.01 |
+| [ ] | [[ADM-admin#ADM-USR.01\|ADM-USR.01]] | User administration | ADM | 5 | ADM-SET.01, BE-USR.01 |
 
 **Total Points:** 20
 
@@ -62,4 +62,4 @@ aliases: [Sprint 12]
 ## 5. References
 
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calendar]]
-- [[__Workspaces/Epicura/docs/13-ProjectManagement/01-Epics|Milestone M6: Launch Ready]]
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|Milestone M6: Launch Ready]]

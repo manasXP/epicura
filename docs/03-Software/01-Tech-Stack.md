@@ -486,8 +486,8 @@ The bridge service runs as a Python Docker container and handles all communicati
 ## 10. Related Documentation
 
 - [[../01-Overview/01-Project-Overview|Project Overview]]
-- [[04-Controller-Software-Architecture|Controller & Software Architecture]]
-- [[../04-UserInterface/03-UI-UX-Design|UI/UX Design]]
+- [[02-Controller-Software-Architecture|Controller & Software Architecture]]
+- [[../04-UserInterface/01-UI-UX-Design|UI/UX Design]]
 - [[../10-Backend/01-Backend-Architecture|Backend Architecture]]
 - [[../11-API/01-REST-API-Reference|REST API Reference]]
 - [[../12-MobileApps/01-Mobile-Architecture|Mobile Architecture]]

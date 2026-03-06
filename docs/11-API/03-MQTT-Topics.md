@@ -11,7 +11,7 @@ status: Draft
 
 MQTT is the primary telemetry protocol between Epicura devices (CM5) and the cloud backend. The CM5 publishes real-time cooking data, device status, and alerts; the backend publishes commands for remote cooking control, OTA triggers, and configuration updates.
 
-This document extends the MQTT telemetry format defined in [[../03-Software/04-Controller-Software-Architecture#6. Cloud Sync (CM5)|Controller Software Architecture - Cloud Sync]].
+This document extends the MQTT telemetry format defined in [[../03-Software/02-Controller-Software-Architecture#6. Cloud Sync (CM5)|Controller Software Architecture - Cloud Sync]].
 
 ---
 
@@ -86,7 +86,7 @@ Periodic sensor readings published every 10 seconds during cooking, every 60 sec
 }
 ```
 
-This extends the telemetry payload format from [[../03-Software/04-Controller-Software-Architecture#MQTT Telemetry|Controller Software Architecture]] with additional fields (`target_temperature`, `stir_pattern`, `stir_rpm`, `weight_g`, `cv_class`, `cv_confidence`, `power_pct`, `coil_temp`).
+This extends the telemetry payload format from [[../03-Software/02-Controller-Software-Architecture#MQTT Telemetry|Controller Software Architecture]] with additional fields (`target_temperature`, `stir_pattern`, `stir_rpm`, `weight_g`, `cv_class`, `cv_confidence`, `power_pct`, `coil_temp`).
 
 ---
 
@@ -407,8 +407,8 @@ The wildcard `+` in subscriptions matches any device ID, so the server handles a
 - [[01-REST-API-Reference|REST API Reference]] - HTTP endpoints
 - [[02-WebSocket-Events|WebSocket Events]] - Mobile app real-time events (bridged from MQTT)
 - [[04-BLE-Services|BLE Services]] - BLE pairing and WiFi provisioning
-- [[../10-Backend/01-Backend-Architecture|Backend Architecture]] - MQTT bridge architecture
-- [[../03-Software/04-Controller-Software-Architecture|Controller & Software Architecture]] - CM5 MQTT client and telemetry format
+- [[01-Backend-Architecture|Backend Architecture]] - MQTT bridge architecture
+- [[../03-Software/02-Controller-Software-Architecture|Controller & Software Architecture]] - CM5 MQTT client and telemetry format
 
 #epicura #mqtt #telemetry #iot #api #protocol
 

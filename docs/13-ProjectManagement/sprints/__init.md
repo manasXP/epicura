@@ -65,5 +65,5 @@ A 6-week pre-sprint PCB phase followed by 12 two-week sprints spanning ~30 weeks
 
 ## 5. References
 
-- [[__Workspaces/Epicura/docs/13-ProjectManagement/01-Epics|Epic Index]]
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|Epic Index]]
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/__init|Project Management Index]]

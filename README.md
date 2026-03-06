@@ -86,7 +86,7 @@ See [`docs/README.md`](__Workspaces/Epicura/docs/README.md) for the full documen
 | **[epicura-ios](https://github.com/manasXP/epicura-ios)**           | Swift (SwiftUI)                | iOS companion app — BLE pairing, recipes, live cooking                |
 | **[epicura-android](https://github.com/manasXP/epicura-android)**   | Kotlin (Jetpack Compose)       | Android companion app                                                 |
 
-See [Repository Plan](docs/07-Development/02-Repository-Plan.md) for directory structures, CI/CD, and cross-repo dependencies.
+See [Repository Plan](02-Repository-Plan.md) for directory structures, CI/CD, and cross-repo dependencies.
 
 ## Estimated BOM
 

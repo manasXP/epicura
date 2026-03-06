@@ -553,9 +553,9 @@ class Theme:
 
 Epicura uses native mobile development: **SwiftUI** (iOS) and **Jetpack Compose** (Android), following the MVVM pattern. For complete architecture details, project structure, and platform-specific implementation guides, see:
 
-- [[../12-MobileApps/01-Mobile-Architecture|Mobile Architecture]] - MVVM layers, networking, BLE manager, design system
-- [[../12-MobileApps/02-iOS-App|iOS App]] - Swift/SwiftUI project structure, Core Bluetooth, APNs
-- [[../12-MobileApps/03-Android-App|Android App]] - Kotlin/Compose project structure, CompanionDeviceManager, FCM
+- [[01-Mobile-Architecture|Mobile Architecture]] - MVVM layers, networking, BLE manager, design system
+- [[02-iOS-App|iOS App]] - Swift/SwiftUI project structure, Core Bluetooth, APNs
+- [[03-Android-App|Android App]] - Kotlin/Compose project structure, CompanionDeviceManager, FCM
 
 ### 7.2 Key Screens
 
@@ -635,9 +635,9 @@ Epicura uses native mobile development: **SwiftUI** (iOS) and **Jetpack Compose*
 
 ## 8. Related Documentation
 
-- [[../01-Overview/01-Project-Overview|Project Overview]]
-- [[../03-Software/04-Controller-Software-Architecture|Controller & Software Architecture]]
-- [[../03-Software/08-Tech-Stack|Tech Stack]]
+- [[__Workspaces/Epicura/docs/01-Overview/01-Project-Overview|Project Overview]]
+- [[../03-Software/02-Controller-Software-Architecture|Controller & Software Architecture]]
+- [[../03-Software/01-Tech-Stack|Tech Stack]]
 
 #epicura #ui-ux #user-interface #touchscreen #mobile-app #kivy #swift #kotlin #native-mobile #accessibility #multi-language
 

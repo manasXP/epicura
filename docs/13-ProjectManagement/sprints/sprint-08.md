@@ -18,11 +18,11 @@ aliases: [Sprint 8]
 
 | Status | ID | Title | Epic | Points | Blocked By |
 |:------:|-----|-------|------|:------:|------------|
-| [ ] | [[01-Epics#RCP-FMT.01\|RCP-FMT.01]] | YAML recipe format | RCP | 5 | EMB-SET.02, EMB-SET.03 |
-| [ ] | [[01-Epics#RCP-FSM.01\|RCP-FSM.01]] | Cooking state machine (start) | RCP | 10 | EMB-COM.01, THR-PID.01, ARM-SRV.01, CV-MDL.01, CV-DET.01, RCP-FMT.01 |
-| [ ] | [[01-Epics#BE-USR.01\|BE-USR.01]] | User management API | BE | 5 | BE-SET.01 |
-| [ ] | [[01-Epics#IOS-SET.01\|IOS-SET.01]] | Xcode project setup | IOS | 5 | BE-SET.01 |
-| [ ] | [[01-Epics#AND-SET.01\|AND-SET.01]] | Gradle project setup | AND | 5 | BE-SET.01 |
+| [ ] | [[RCP-recipe#RCP-FMT.01\|RCP-FMT.01]] | YAML recipe format | RCP | 5 | EMB-SET.02, EMB-SET.03 |
+| [ ] | [[RCP-recipe#RCP-FSM.01\|RCP-FSM.01]] | Cooking state machine (start) | RCP | 10 | EMB-COM.01, THR-PID.01, ARM-SRV.01, CV-MDL.01, CV-DET.01, RCP-FMT.01 |
+| [ ] | [[BE-backend#BE-USR.01\|BE-USR.01]] | User management API | BE | 5 | BE-SET.01 |
+| [ ] | [[IOS-ios#IOS-SET.01\|IOS-SET.01]] | Xcode project setup | IOS | 5 | BE-SET.01 |
+| [ ] | [[AND-android#AND-SET.01\|AND-SET.01]] | Gradle project setup | AND | 5 | BE-SET.01 |
 
 **Total Points:** 30
 
@@ -62,4 +62,4 @@ aliases: [Sprint 8]
 ## 5. References
 
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calendar]]
-- [[__Workspaces/Epicura/docs/13-ProjectManagement/01-Epics|Milestone M4: Vision + Recipe]]
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|Milestone M4: Vision + Recipe]]

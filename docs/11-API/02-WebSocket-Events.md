@@ -391,8 +391,8 @@ On reconnection, the client should re-send `subscribe` events for all previously
 - [[01-REST-API-Reference|REST API Reference]] - HTTP endpoints
 - [[03-MQTT-Topics|MQTT Topics]] - Device-side telemetry protocol
 - [[04-BLE-Services|BLE Services]] - BLE pairing and local connectivity
-- [[../10-Backend/01-Backend-Architecture|Backend Architecture]] - WebSocket server setup
-- [[../12-MobileApps/01-Mobile-Architecture|Mobile Architecture]] - Mobile WebSocket client
+- [[01-Backend-Architecture|Backend Architecture]] - WebSocket server setup
+- [[01-Mobile-Architecture|Mobile Architecture]] - Mobile WebSocket client
 
 #epicura #websocket #real-time #events #api
 

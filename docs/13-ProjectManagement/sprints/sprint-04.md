@@ -18,10 +18,10 @@ aliases: [Sprint 4]
 
 | Status | ID | Title | Epic | Points | Blocked By |
 |:------:|-----|-------|------|:------:|------------|
-| [ ] | [[02-Stories#THR-PID.01\|THR-PID.01]] | PID temperature controller (continued from Sprint 3) | THR-PID | - | (in progress) |
-| [ ] | [[02-Stories#THR-SAF.01\|THR-SAF.01]] | Thermal safety interlocks (cutoff, CAN coil temp) | THR-SAF | 5 | EMB-SAF.01, THR-PID.01 |
-| [ ] | [[02-Stories#THR-EXH.01\|THR-EXH.01]] | PWM exhaust fan control | THR-EXH | 5 | EMB-SET.01 |
-| [ ] | [[02-Stories#ARM-SRV.01\|ARM-SRV.01]] | Servo arm control (patterns, stall detection) | ARM-SRV | 8 | EMB-SET.01, EMB-COM.01 |
+| [ ] | [[THR-thermal#THR-PID.01\|THR-PID.01]] | PID temperature controller (continued from Sprint 3) | THR-PID | - | (in progress) |
+| [ ] | [[THR-thermal#THR-SAF.01\|THR-SAF.01]] | Thermal safety interlocks (cutoff, CAN coil temp) | THR-SAF | 5 | EMB-SAF.01, THR-PID.01 |
+| [ ] | [[THR-thermal#THR-EXH.01\|THR-EXH.01]] | PWM exhaust fan control | THR-EXH | 5 | EMB-SET.01 |
+| [ ] | [[ARM-actuation#ARM-SRV.01\|ARM-SRV.01]] | Servo arm control (patterns, stall detection) | ARM-SRV | 8 | EMB-SET.01, EMB-COM.01 |
 
 **Total Points:** 18
 
@@ -64,5 +64,5 @@ aliases: [Sprint 4]
 ## 5. References
 
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calendar]]
-- [[__Workspaces/Epicura/docs/13-ProjectManagement/02-Stories|User Stories]]
-- [[__Workspaces/Epicura/docs/13-ProjectManagement/01-Epics|Epic Index]]
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|User Stories]]
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|Epic Index]]

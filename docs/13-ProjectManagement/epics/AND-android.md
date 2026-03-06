@@ -30,7 +30,7 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 ## 2. Phase 3 — Mobile Foundation (Sprint 8)
 
 ### 2.1 AND-SET.01: Gradle project setup — Compose, Hilt, networking, auth
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-08|Sprint 8]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#73](https://github.com/manasXP/epicura/issues/73)
@@ -55,7 +55,7 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 ---
 
 ### 2.2 AND-BLE.01: BLE pairing — CompanionDeviceManager scanning, WiFi provisioning
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-08|Sprint 8]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#74](https://github.com/manasXP/epicura/issues/74)
@@ -76,7 +76,7 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 ---
 
 ### 2.3 AND-BLE.02: BLE device management — claim API, home screen status, permissions edge cases
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-08|Sprint 8]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#75](https://github.com/manasXP/epicura/issues/75)
@@ -98,7 +98,7 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 ## 3. Phase 3 — Recipe & Cooking (Sprints 9–10)
 
 ### 3.1 AND-RCP.01: Recipe browsing — list, detail, search, favorites
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-09|Sprint 9]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-09|Sprint 9]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#76](https://github.com/manasXP/epicura/issues/76)
@@ -127,7 +127,7 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 ---
 
 ### 3.2 AND-COK.01: Live cooking view — camera stream, status, temperature, timer
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-10|Sprint 10]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#77](https://github.com/manasXP/epicura/issues/77)
@@ -150,7 +150,7 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 ---
 
 ### 3.3 AND-COK.02: Cooking controls and notifications — pause/abort, FCM push, testing
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-10|Sprint 10]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#78](https://github.com/manasXP/epicura/issues/78)
@@ -172,7 +172,7 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 ## 4. Phase 4 — User Profile (Sprint 11)
 
 ### 4.1 AND-USR.01: User profile — settings, cooking history, preferences
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-11|Sprint 11]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-11|Sprint 11]]
 - **Priority:** P1
 - **Points:** 5
 - **GitHub:** [#79](https://github.com/manasXP/epicura/issues/79)
@@ -196,7 +196,7 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 ---
 
 ### 4.2 AND-USR.02: Food Preferences UI — diet, cuisines, seasoning, servings
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-11|Sprint 11]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-11|Sprint 11]]
 - **Priority:** P1
 - **Points:** 3
 - **GitHub:** [#56](https://github.com/manasXP/epicura/issues/56)
@@ -220,7 +220,7 @@ Native Android companion app mirroring iOS functionality: BLE device pairing, Wi
 ---
 
 ### 4.3 AND-LIVE.01: Glance Widget — Cooking Progress App Widget (Jetpack Glance)
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-11|Sprint 11]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-11|Sprint 11]]
 - **Priority:** P1
 - **Points:** 5
 - **GitHub:** [#51](https://github.com/manasXP/epicura/issues/51)
@@ -268,7 +268,7 @@ None — Android app is a leaf node.
 
 ## 6. References
 
-- [[__Workspaces/Epicura/docs/12-MobileApps/03-Android-App|Android App Details]]
-- [[__Workspaces/Epicura/docs/12-MobileApps/01-Mobile-Architecture|Mobile Architecture]]
-- [[__Workspaces/Epicura/docs/11-API/04-BLE-Services|BLE Services]]
+- [[03-Android-App|Android App Details]]
+- [[01-Mobile-Architecture|Mobile Architecture]]
+- [[04-BLE-Services|BLE Services]]
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|Epic Index]]

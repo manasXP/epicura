@@ -18,13 +18,13 @@ aliases: [Sprint 11]
 
 | Status | ID | Title | Epic | Points | Blocked By |
 |:------:|-----|-------|------|:------:|------------|
-| [ ] | [[01-Epics#INT-SYS.01\|INT-SYS.01]] | Full system integration test | INT | 8 | RCP-FSM.01, RCP-DSP.01, UI-COK.01, THR-PID.01, ARM-SRV.01 |
-| [ ] | [[01-Epics#INT-SAF.01\|INT-SAF.01]] | Safety certification testing | INT | 5 | EMB-SAF.01, THR-SAF.01 |
-| [ ] | [[01-Epics#IOS-COK.01\|IOS-COK.01]] | Live cooking view | IOS | 8 | IOS-BLE.01 |
-| [ ] | [[01-Epics#AND-COK.01\|AND-COK.01]] | Live cooking view | AND | 8 | AND-BLE.01 |
-| [ ] | [[01-Epics#IOS-USR.01\|IOS-USR.01]] | User profile | IOS | 5 | BE-USR.01 |
-| [ ] | [[01-Epics#AND-USR.01\|AND-USR.01]] | User profile | AND | 5 | BE-USR.01 |
-| [ ] | [[01-Epics#ADM-DEV.01\|ADM-DEV.01]] | Device monitoring | ADM | 5 | ADM-SET.01, BE-DEV.01, BE-MQT.01 |
+| [ ] | [[INT-integration#INT-SYS.01\|INT-SYS.01]] | Full system integration test | INT | 8 | RCP-FSM.01, RCP-DSP.01, UI-COK.01, THR-PID.01, ARM-SRV.01 |
+| [ ] | [[INT-integration#INT-SAF.01\|INT-SAF.01]] | Safety certification testing | INT | 5 | EMB-SAF.01, THR-SAF.01 |
+| [ ] | [[IOS-ios#IOS-COK.01\|IOS-COK.01]] | Live cooking view | IOS | 8 | IOS-BLE.01 |
+| [ ] | [[AND-android#AND-COK.01\|AND-COK.01]] | Live cooking view | AND | 8 | AND-BLE.01 |
+| [ ] | [[IOS-ios#IOS-USR.01\|IOS-USR.01]] | User profile | IOS | 5 | BE-USR.01 |
+| [ ] | [[AND-android#AND-USR.01\|AND-USR.01]] | User profile | AND | 5 | BE-USR.01 |
+| [ ] | [[ADM-admin#ADM-DEV.01\|ADM-DEV.01]] | Device monitoring | ADM | 5 | ADM-SET.01, BE-DEV.01, BE-MQT.01 |
 
 **Total Points:** 44
 

@@ -120,7 +120,7 @@ Per IEC 60335-1 and ISO 13482 requirements:
 
 ## 6. References
 
-- [[__Workspaces/Epicura/docs/07-Development/02-Repository-Plan|Repository Plan]]
-- [[__Workspaces/Epicura/docs/03-Software/02-Controller-Software-Architecture|Controller Software Architecture]]
-- [[__Workspaces/Epicura/docs/05-Subsystems/01-Induction-Heating|Induction Heating]]
-- [[__Workspaces/Epicura/docs/06-Compliance/01-Safety-Compliance|Safety & Compliance]]
+- [[02-Repository-Plan|Repository Plan]]
+- [[02-Controller-Software-Architecture|Controller Software Architecture]]
+- [[01-Induction-Heating|Induction Heating]]
+- [[01-Safety-Compliance|Safety & Compliance]]

@@ -136,8 +136,8 @@ steps:
 
 ## 5. References
 
-- [[__Workspaces/Epicura/docs/07-Development/02-Repository-Plan|Repository Plan]]
-- [[__Workspaces/Epicura/docs/10-Backend/01-Backend-Architecture|Backend Architecture]]
-- [[__Workspaces/Epicura/docs/10-Backend/02-Database-Schema|Database Schema]]
-- [[__Workspaces/Epicura/docs/11-API/01-REST-API-Reference|REST API Reference]]
-- [[__Workspaces/Epicura/docs/10-Backend/03-Admin-Portal|Admin Portal]]
+- [[02-Repository-Plan|Repository Plan]]
+- [[01-Backend-Architecture|Backend Architecture]]
+- [[02-Database-Schema|Database Schema]]
+- [[01-REST-API-Reference|REST API Reference]]
+- [[03-Admin-Portal|Admin Portal]]

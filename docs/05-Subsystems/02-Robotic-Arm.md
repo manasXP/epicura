@@ -306,13 +306,13 @@ TIM1->CCR1 = 0;                                   // Initial: stopped (0% duty)
 
 ## 12. Related Documentation
 
-- [[../01-Overview/01-Project-Overview|Project Overview]]
-- [[../02-Hardware/02-Technical-Specifications|Technical Specifications]]
-- [[../02-Hardware/Epicura-Architecture|Hardware Architecture]]
-- [[09-Induction-Heating|Induction Heating System]]
+- [[__Workspaces/Epicura/docs/01-Overview/01-Project-Overview|Project Overview]]
+- [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications|Technical Specifications]]
+- [[../02-Hardware/01-Epicura-Architecture|Hardware Architecture]]
+- [[01-Induction-Heating|Induction Heating System]]
 - [[03-Ingredient-Dispensing|Ingredient Dispensing System]]
-- [[12-Vision-System|Vision System]]
-- [[../06-Compliance/06-Safety-Compliance|Safety & Compliance]]
+- [[04-Vision-System|Vision System]]
+- [[../06-Compliance/01-Safety-Compliance|Safety & Compliance]]
 
 #epicura #robotic-arm #subsystem #bldc-motor
 

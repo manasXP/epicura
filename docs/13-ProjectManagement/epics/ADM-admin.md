@@ -29,7 +29,7 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 ## 2. Phase 4 — Admin Portal (Sprints 10–12)
 
 ### 2.1 ADM-SET.01: Next.js project setup — App Router, shadcn/ui, auth, layout
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-10|Sprint 10]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#87](https://github.com/manasXP/epicura/issues/87)
@@ -53,7 +53,7 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 ---
 
 ### 2.2 ADM-RCP.01: Recipe management — list, create/edit form, YAML editor
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-10|Sprint 10]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#88](https://github.com/manasXP/epicura/issues/88)
@@ -73,7 +73,7 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 ---
 
 ### 2.3 ADM-RCP.02: Recipe management — image upload, preview, delete
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-10|Sprint 10]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-10|Sprint 10]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#89](https://github.com/manasXP/epicura/issues/89)
@@ -93,7 +93,7 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 ---
 
 ### 2.4 ADM-DEV.01: Device monitoring — list, status, telemetry, commands
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-11|Sprint 11]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-11|Sprint 11]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#90](https://github.com/manasXP/epicura/issues/90)
@@ -117,7 +117,7 @@ Web-based admin dashboard for recipe management, device monitoring, and user adm
 ---
 
 ### 2.5 ADM-USR.01: User administration — list, detail, roles
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-12|Sprint 12]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-12|Sprint 12]]
 - **Priority:** P1
 - **Points:** 5
 - **GitHub:** [#91](https://github.com/manasXP/epicura/issues/91)
@@ -159,6 +159,6 @@ None — Admin portal is a leaf node.
 
 ## 4. References
 
-- [[__Workspaces/Epicura/docs/10-Backend/03-Admin-Portal|Admin Portal Design]]
-- [[__Workspaces/Epicura/docs/11-API/01-REST-API-Reference|REST API Reference]]
+- [[03-Admin-Portal|Admin Portal Design]]
+- [[01-REST-API-Reference|REST API Reference]]
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|Epic Index]]

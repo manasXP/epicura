@@ -315,10 +315,10 @@ status: Draft
 
 ## 12. Related Documentation
 
-- [[../01-Overview/01-Project-Overview|Project Overview]]
-- [[../02-Hardware/02-Technical-Specifications|Technical Specifications]]
-- [[../03-Software/03-Software-Architecture|Software Architecture]]
-- [[../07-Development/Prototype-Development-Plan|Prototype Development Plan]]
+- [[__Workspaces/Epicura/docs/01-Overview/01-Project-Overview|Project Overview]]
+- [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications|Technical Specifications]]
+- [[../03-Software/02-Controller-Software-Architecture|Software Architecture]]
+- [[../07-Development/01-Prototype-Development-Plan|Prototype Development Plan]]
 
 ---
 

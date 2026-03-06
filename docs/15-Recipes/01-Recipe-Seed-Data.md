@@ -273,9 +273,9 @@ Each recipe needs a hero image:
 
 ## 14. Related Documentation
 
-- [[../10-Backend/02-Database-Schema|Database Schema]] — `recipes` table definition
-- [[../11-API/01-REST-API-Reference|REST API Reference]] — Recipe CRUD endpoints
-- [[../12-MobileApps/01-Mobile-Architecture|Mobile Architecture]] — Recipe card layout
+- [[02-Database-Schema|Database Schema]] — `recipes` table definition
+- [[01-REST-API-Reference|REST API Reference]] — Recipe CRUD endpoints
+- [[01-Mobile-Architecture|Mobile Architecture]] — Recipe card layout
 
 #epicura #recipes #seed-data #database
 

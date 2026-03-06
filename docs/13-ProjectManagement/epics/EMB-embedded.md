@@ -30,7 +30,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 ## 2. Phase 0 — Foundation (Sprints 1–2)
 
 ### 2.1 EMB-SET.01: STM32 FreeRTOS project — HAL config, task scaffold
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-01|Sprint 1]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-01|Sprint 1]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#100](https://github.com/manasXP/epicura/issues/100)
@@ -50,7 +50,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 ---
 
 ### 2.2 EMB-SET.01b: STM32 debug and watchdog — IWDG, UART printf, heartbeat
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-01|Sprint 1]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-01|Sprint 1]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#102](https://github.com/manasXP/epicura/issues/102)
@@ -72,7 +72,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 ---
 
 ### 2.3 EMB-SET.02: CM5 Yocto image — BSP layer, Docker engine, Compose
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-01|Sprint 1]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-01|Sprint 1]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#103](https://github.com/manasXP/epicura/issues/103)
@@ -92,7 +92,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 ---
 
 ### 2.4 EMB-SET.02b: CM5 database and MQTT — PostgreSQL schema, Mosquitto config, boot validation
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-01|Sprint 1]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-01|Sprint 1]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#105](https://github.com/manasXP/epicura/issues/105)
@@ -112,7 +112,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 ---
 
 ### 2.5 EMB-COM.01: CM5-STM32 SPI bridge — protocol, drivers, command dispatch
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-01|Sprint 1]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-01|Sprint 1]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#106](https://github.com/manasXP/epicura/issues/106)
@@ -135,7 +135,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 ---
 
 ### 2.6 EMB-COM.02: CM5-STM32 health monitoring — heartbeat, timeout detection, UART fallback
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-01|Sprint 1]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-01|Sprint 1]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#108](https://github.com/manasXP/epicura/issues/108)
@@ -155,7 +155,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 ---
 
 ### 2.7 EMB-SET.03: Docker service containers — recipe engine, CV pipeline, Kivy UI scaffolds
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-02|Sprint 2]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-02|Sprint 2]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#110](https://github.com/manasXP/epicura/issues/110)
@@ -181,7 +181,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 ---
 
 ### 2.8 EMB-SAF.01: Safety systems — e-stop relay, thermal cutoffs, safety relay for AC disconnect
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-02|Sprint 2]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-02|Sprint 2]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#113](https://github.com/manasXP/epicura/issues/113)
@@ -207,7 +207,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 ---
 
 ### 2.9 EMB-OTA.01: OTA update system — swupdate, A/B partitions, rollback
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-02|Sprint 2]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-02|Sprint 2]]
 - **Priority:** P1
 - **Points:** 5
 - **GitHub:** [#114](https://github.com/manasXP/epicura/issues/114)
@@ -233,7 +233,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 ---
 
 ### 2.10 EMB-LCH.01: Production firmware — release build, configuration management, factory provisioning
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-12|Sprint 12]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-12|Sprint 12]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#117](https://github.com/manasXP/epicura/issues/117)
@@ -292,7 +292,7 @@ Set up the dual-processor platform: STM32G474 FreeRTOS firmware foundation and C
 
 ## 4. References
 
-- [[__Workspaces/Epicura/docs/02-Hardware/01-Epicura-Architecture|System Architecture]]
-- [[__Workspaces/Epicura/docs/03-Software/02-Controller-Software-Architecture|Controller Software Architecture]]
+- [[01-Epicura-Architecture|System Architecture]]
+- [[02-Controller-Software-Architecture|Controller Software Architecture]]
 - [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications|Technical Specifications]]
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|Epic Index]]

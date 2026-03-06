@@ -24,7 +24,7 @@ All endpoints except `/auth/register`, `/auth/login`, `/auth/otp/request`, and `
 Authorization: Bearer <access_token>
 ```
 
-Tokens are obtained via the login flow. See [[../10-Backend/01-Backend-Architecture#JWT Authentication Flow|JWT Authentication Flow]] for details.
+Tokens are obtained via the login flow. See [[01-Backend-Architecture#JWT Authentication Flow|JWT Authentication Flow]] for details.
 
 ---
 
@@ -808,12 +808,12 @@ All list endpoints support cursor or offset pagination:
 
 ## 9. Related Documentation
 
-- [[../10-Backend/01-Backend-Architecture|Backend Architecture]] - Server setup and deployment
-- [[../10-Backend/02-Database-Schema|Database Schema]] - Tables queried by these endpoints
+- [[01-Backend-Architecture|Backend Architecture]] - Server setup and deployment
+- [[02-Database-Schema|Database Schema]] - Tables queried by these endpoints
 - [[02-WebSocket-Events|WebSocket Events]] - Real-time cooking events
 - [[03-MQTT-Topics|MQTT Topics]] - Device telemetry protocol
 - [[04-BLE-Services|BLE Services]] - BLE pairing flow
-- [[../12-MobileApps/01-Mobile-Architecture|Mobile Architecture]] - Mobile app networking layer
+- [[01-Mobile-Architecture|Mobile Architecture]] - Mobile app networking layer
 
 #epicura #api #rest #endpoints #backend
 

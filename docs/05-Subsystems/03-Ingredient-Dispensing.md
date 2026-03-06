@@ -446,7 +446,7 @@ Accuracy: ±5% of target weight (significantly better than ASD due to dedicated 
 | **SLD** | HX711 #2 SCK (water) | PC9 (GPIO) | Clock out | SLD water reservoir load cell (2 kg) |
 | **SLD** | HX711 #2 DOUT (water) | PC10 (GPIO) | Data in | SLD water reservoir load cell (2 kg) |
 
-> **Note:** Pot load cells remain on PC0/PC1 (existing allocation). Pin assignments match [[../09-PCB/02-Driver-PCB-Design|Driver PCB Design]] document. P-ASD solenoid valves are driven by IRLML6344 MOSFETs on the Driver PCB, with gates controlled by a PCF8574 I2C GPIO expander (addr 0x20) instead of direct STM32 GPIO. I2C1 bus devices: MLX90614 (0x5A), INA219 (0x40), ADS1015 (0x48), PCF8574 (0x20).
+> **Note:** Pot load cells remain on PC0/PC1 (existing allocation). Pin assignments match [[02-Driver-PCB-Design|Driver PCB Design]] document. P-ASD solenoid valves are driven by IRLML6344 MOSFETs on the Driver PCB, with gates controlled by a PCF8574 I2C GPIO expander (addr 0x20) instead of direct STM32 GPIO. I2C1 bus devices: MLX90614 (0x5A), INA219 (0x40), ADS1015 (0x48), PCF8574 (0x20).
 
 ### 6.2 Dispensing Command Protocol (CM5 → STM32)
 
@@ -657,13 +657,13 @@ For quick cleaning of SLD channels between recipes:
 
 ## 13. Related Documentation
 
-- [[../01-Overview/01-Project-Overview|Project Overview]]
-- [[../02-Hardware/02-Technical-Specifications|Technical Specifications]]
-- [[../02-Hardware/01-Epicura-Architecture|Hardware Architecture]]
-- [[09-Induction-Heating|Induction Heating System]]
-- [[10-Robotic-Arm|Robotic Arm System]]
-- [[12-Vision-System|Vision System]]
-- [[../06-Compliance/06-Safety-Compliance|Safety & Compliance]]
+- [[__Workspaces/Epicura/docs/01-Overview/01-Project-Overview|Project Overview]]
+- [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications|Technical Specifications]]
+- [[01-Epicura-Architecture|Hardware Architecture]]
+- [[01-Induction-Heating|Induction Heating System]]
+- [[02-Robotic-Arm|Robotic Arm System]]
+- [[04-Vision-System|Vision System]]
+- [[../06-Compliance/01-Safety-Compliance|Safety & Compliance]]
 
 #epicura #ingredient-dispensing #subsystem #p-asd #pneumatic #cid #sld
 

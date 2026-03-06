@@ -346,11 +346,11 @@ The same Fastify codebase deploys to both the cloud and each CM5 device. This el
 
 - [[02-Database-Schema|Database Schema]] - Full table definitions and ER diagram
 - [[03-Admin-Portal|Admin Portal]] - Next.js admin interface
-- [[../11-API/01-REST-API-Reference|REST API Reference]] - Complete endpoint documentation
-- [[../11-API/02-WebSocket-Events|WebSocket Events]] - Real-time event protocol
-- [[../11-API/03-MQTT-Topics|MQTT Topics]] - Device telemetry topic hierarchy
-- [[../03-Software/04-Controller-Software-Architecture|Controller & Software Architecture]] - CM5 PostgreSQL schema and cloud sync
-- [[../03-Software/08-Tech-Stack|Tech Stack]] - Overall technology choices
+- [[01-REST-API-Reference|REST API Reference]] - Complete endpoint documentation
+- [[02-WebSocket-Events|WebSocket Events]] - Real-time event protocol
+- [[03-MQTT-Topics|MQTT Topics]] - Device telemetry topic hierarchy
+- [[../03-Software/02-Controller-Software-Architecture|Controller & Software Architecture]] - CM5 PostgreSQL schema and cloud sync
+- [[../03-Software/01-Tech-Stack|Tech Stack]] - Overall technology choices
 
 #epicura #backend #fastify #typescript #postgresql #redis #mqtt #architecture
 

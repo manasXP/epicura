@@ -18,11 +18,11 @@ aliases: [Sprint 6]
 
 | Status | ID | Title | Epic | Points | Blocked By |
 |:------:|-----|-------|------|:------:|------------|
-| [ ] | [[02-Stories#ARM-SLD.01\|ARM-SLD.01]] | SLD liquid dispenser (peristaltic pumps + load cells) | ARM-SLD | 8 | EMB-SET.01 |
-| [ ] | [[02-Stories#ARM-CAL.01\|ARM-CAL.01]] | Dispenser calibration routines | ARM-CAL | 5 | ARM-ASD.01, ARM-CID.01, ARM-SLD.01 |
-| [ ] | [[02-Stories#CV-CAM.01\|CV-CAM.01]] | Camera setup (IMX219, CSI-2, streaming) | CV-CAM | 5 | EMB-SET.02, EMB-SET.03 |
-| [ ] | [[02-Stories#CV-PRE.01\|CV-PRE.01]] | Image preprocessing pipeline | CV-PRE | 5 | CV-CAM.01 |
-| [ ] | [[02-Stories#BE-RCP.01\|BE-RCP.01]] | Recipe CRUD API | BE-RCP | 8 | BE-SET.01 |
+| [ ] | [[ARM-actuation#ARM-SLD.01\|ARM-SLD.01]] | SLD liquid dispenser (peristaltic pumps + load cells) | ARM-SLD | 8 | EMB-SET.01 |
+| [ ] | [[ARM-actuation#ARM-CAL.01\|ARM-CAL.01]] | Dispenser calibration routines | ARM-CAL | 5 | ARM-ASD.01, ARM-CID.01, ARM-SLD.01 |
+| [ ] | [[CV-vision#CV-CAM.01\|CV-CAM.01]] | Camera setup (IMX219, CSI-2, streaming) | CV-CAM | 5 | EMB-SET.02, EMB-SET.03 |
+| [ ] | [[CV-vision#CV-PRE.01\|CV-PRE.01]] | Image preprocessing pipeline | CV-PRE | 5 | CV-CAM.01 |
+| [ ] | [[BE-backend#BE-RCP.01\|BE-RCP.01]] | Recipe CRUD API | BE-RCP | 8 | BE-SET.01 |
 
 **Total Points:** 31
 
@@ -68,5 +68,5 @@ aliases: [Sprint 6]
 ## 5. References
 
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calendar]]
-- [[__Workspaces/Epicura/docs/13-ProjectManagement/02-Stories|User Stories]]
-- [[__Workspaces/Epicura/docs/13-ProjectManagement/01-Epics|Epic Index]]
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|User Stories]]
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|Epic Index]]

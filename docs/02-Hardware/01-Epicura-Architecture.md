@@ -37,40 +37,40 @@ This document provides the comprehensive hardware architecture, wiring diagrams,
           │                      │        │        │        │                  │
           │                      ▼        │        ▼        ▼                  │
           │  ┌───────────────────────┐    │   ┌────────────────────────────┐   │
-          │  │  Raspberry Pi CM5     │    │   │  STM32G474RE              │   │
-          │  │  (Yocto Linux)        │    │   │  (FreeRTOS)               │   │
+          │  │  Raspberry Pi CM5     │    │   │  STM32G474RE               │   │
+          │  │  (Yocto Linux)        │    │   │  (FreeRTOS)                │   │
           │  │                       │    │   │                            │   │
-          │  │  - Recipe Engine      │    │   │  - PID Heat Control       │   │
-          │  │  - CV Inference       │    │   │  - Servo Motor Control    │   │
-          │  │  - UI Rendering       │    │   │  - Sensor Acquisition     │   │
-          │  │  - Cloud/WiFi/BT     │    │   │  - Dispensing Logic       │   │
-          │  │  - OTA Updates        │    │   │  - Safety Monitoring     │   │
+          │  │  - Recipe Engine      │    │   │  - PID Heat Control        │   │
+          │  │  - CV Inference       │    │   │  - Servo Motor Control     │   │
+          │  │  - UI Rendering       │    │   │  - Sensor Acquisition      │   │
+          │  │  - Cloud/WiFi/BT      │    │   │  - Dispensing Logic        │   │
+          │  │  - OTA Updates        │    │   │  - Safety Monitoring       │   │
           │  │                       │    │   │                            │   │
-          │  │  ┌─────┐  ┌────────┐  │    │   │  ┌──────┐  ┌───────────┐  │   │
-          │  │  │CSI-2│  │DSI/HDMI│  │    │   │  │ PWM  │  │ ADC/GPIO  │  │   │
-          │  │  └──┬──┘  └───┬────┘  │    │   │  └──┬───┘  └─────┬─────┘  │   │
+          │  │  ┌─────┐  ┌────────┐  │    │   │  ┌──────┐  ┌───────────┐   │   │
+          │  │  │CSI-2│  │DSI/HDMI│  │    │   │  │ PWM  │  │ ADC/GPIO  │   │   │
+          │  │  └──┬──┘  └───┬────┘  │    │   │  └──┬───┘  └─────┬─────┘   │   │
           │  └─────┼─────────┼───────┘    │   └─────┼─────────────┼────────┘   │
-          │        │         │    ▲       │         │             │             │
-          │        │         │    │ SPI (2 MHz)      │             │             │
-          │        │         │    │ + IRQ line        │             │             │
-          │        │         │    └─────────────────►│             │             │
-          │        ▼         ▼                       ▼             ▼             │
+          │        │         │    ▲       │         │             │            │
+          │        │         │    │ SPI (2 MHz)     │             │            │
+          │        │         │    │ + IRQ line      │             │            │
+          │        │         │    └────────────────►│             │            │
+          │        ▼         ▼                      ▼             ▼            │
           │   ┌────────┐ ┌──────────┐      ┌──────────────┐ ┌──────────────┐   │
           │   │IMX219/ │ │10" Touch │      │Microwave     │ │  Sensors     │   │
           │   │IMX477  │ │Display   │      │Induction     │ │  MLX90614    │   │
-          │   │Camera  │ │(DSI+I2C) │      │Surface (CAN) │ │  HX711      │   │
-          │   └────────┘ └──────────┘      └──────────────┘ │             │   │
-          │                                                  └──────────────┘   │
+          │   │Camera  │ │(DSI+I2C) │      │Surface (CAN) │ │  HX711       │   │
+          │   └────────┘ └──────────┘      └──────────────┘ │              │   │
+          │                                                 └──────────────┘   │
           │   ┌────────┐ ┌──────────┐      ┌──────────────┐ ┌──────────────┐   │
-          │   │WiFi    │ │eMMC/SD   │      │24V BLDC      │ │ASD SG90 x3  │   │
-          │   │802.11ac│ │8-16GB    │      │Stirring Motor│ │CID LinAct x2│   │
-          │   │BLE 5.0 │ │Storage   │      │(integrated)  │ │SLD Pumps x2 │   │
+          │   │WiFi    │ │eMMC/SD   │      │24V BLDC      │ │ASD SG90 x3   │   │
+          │   │802.11ac│ │8-16GB    │      │Stirring Motor│ │CID LinAct x2 │   │
+          │   │BLE 5.0 │ │Storage   │      │(integrated)  │ │SLD Pumps x2  │   │
           │   └────────┘ └──────────┘      └──────────────┘ └──────────────┘   │
-          │                                                                     │
-          │   ┌────────────────────────────────────────────────────────────┐    │
-          │   │  LED Ring (WS2812B x 12-16) ── GPIO/SPI from CM5 or STM32│    │
-          │   └────────────────────────────────────────────────────────────┘    │
-          └─────────────────────────────────────────────────────────────────────┘
+          │                                                                    │
+          │   ┌────────────────────────────────────────────────────────────┐   │
+          │   │  LED Ring (WS2812B x 12-16) ── GPIO/SPI from CM5 or STM32. │   │
+          │   └────────────────────────────────────────────────────────────┘   │
+          └────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -127,33 +127,33 @@ This document provides the comprehensive hardware architecture, wiring diagrams,
 The CM5 mounts on the CM5IO (Raspberry Pi Compute Module IO Board) carrier that breaks out:
 
 ```
-┌────────────────────────────────────────────────────────────────┐
-│              CM5IO (CM5 Carrier Board)                          │
-│                                                                │
-│  ┌──────────────────┐                                          │
-│  │  Raspberry Pi CM5 │                                         │
-│  │  (mounted via      │                                        │
-│  │   board-to-board   │                                        │
-│  │   connectors)      │                                        │
-│  └────────┬───────────┘                                        │
-│           │                                                    │
-│  ┌────────▼────────────────────────────────────────────────┐   │
-│  │                  Interface Breakout                      │   │
-│  │                                                         │   │
-│  │  CSI-2 ──────► 15-pin FFC (Camera)                      │   │
+┌───────────────────────────────────────────────────────────────┐
+│              CM5IO (CM5 Carrier Board)                        │
+│                                                               │
+│  ┌───────────────────┐                                        │
+│  │  Raspberry Pi CM5 │                                        │
+│  │  (mounted via     │                                        │
+│  │   board-to-board  │                                        │
+│  │   connectors)     │                                        │
+│  └────────┬──────────┘                                        │
+│           │                                                   │
+│  ┌────────▼───────────────────────────────────────────────┐   │
+│  │                  Interface Breakout                    │   │
+│  │                                                        │   │
+│  │  CSI-2 ──────► 15-pin FFC (Camera)                     │   │
 │  │  DSI/HDMI ───► HDMI Type-A or 15-pin FFC (Display)     │   │
 │  │  I2C1 ───────► 4-pin header (Touch Panel)              │   │
 │  │  SPI0 ───────► 6-pin header (STM32 Bridge)             │   │
 │  │  UART ───────► STM32 communication (fallback)          │   │
-│  │  GPIO ───────► LED ring data, E-stop input              │   │
-│  │  USB-C ──────► Power input (5V/3A PD) + debug           │   │
-│  │  USB 2.0 ────► Expansion header                         │   │
-│  │  Ethernet ───► RJ45 (debug/wired network, optional)     │   │
+│  │  GPIO ───────► LED ring data, E-stop input             │   │
+│  │  USB-C ──────► Power input (5V/3A PD) + debug          │   │
+│  │  USB 2.0 ────► Expansion header                        │   │
+│  │  Ethernet ───► RJ45 (debug/wired network, optional)    │   │
 │  │  40-pin GPIO ► Breakout for all interfaces             │   │
-│  └─────────────────────────────────────────────────────────┘   │
-│                                                                │
+│  └────────────────────────────────────────────────────────┘   │
+│                                                               │
 │  Power Input: 5V / 3A from PSU 5V rail                        │
-└────────────────────────────────────────────────────────────────┘
+└───────────────────────────────────────────────────────────────┘
 ```
 
 ### 4.3 CM5 GPIO Allocation
@@ -198,91 +198,91 @@ The CM5 mounts on the CM5IO (Raspberry Pi Compute Module IO Board) carrier that 
 
 ```
 STM32G474RE (LQFP-64)
-┌────────────────────────────────────────────────────────────────┐
-│                                                                │
-│  ┌─── SPI2: CM5 Communication (Slave) ──────────────────┐     │
+┌──────────────────────────────────────────────────────────────┐
+│                                                              │
+│  ┌─── SPI2: CM5 Communication (Slave) ─────────────────┐     │
 │  │  PB12 (SPI2_NSS)  ◄── CM5 GPIO8  (CE0)              │     │
 │  │  PB13 (SPI2_SCK)  ◄── CM5 GPIO11 (SCLK)             │     │
 │  │  PB14 (SPI2_MISO) ──► CM5 GPIO9  (MISO)             │     │
 │  │  PB15 (SPI2_MOSI) ◄── CM5 GPIO10 (MOSI)             │     │
 │  │  PB3  (GPIO IRQ)  ──► CM5 GPIO4  (data-ready, low)  │     │
 │  │  Mode: SPI Mode 0, 2 MHz clock, 8-bit, DMA          │     │
-│  └──────────────────────────────────────────────────────┘     │
-│                                                                │
-│  ┌─── CAN: Microwave Surface ─────┐                           │
-│  │  PB8  (FDCAN1_RX) ◄── J_STACK Pin 19 → Driver PCB ISO1050│
-│  │  PB9  (FDCAN1_TX) ──► J_STACK Pin 20 → Driver PCB ISO1050│
-│  │  Bit rate: 500 kbps, isolation + termination on Driver PCB │
-│  └─────────────────────────────────┘                           │
-│                                                                │
-│  ┌─── PWM+GPIO: BLDC Stirring Motor ─┐                        │
-│  │  PA8  (TIM1_CH1)  ──► BLDC Motor PWM (10 kHz speed)        │
-│  │  PA4  (GPIO)      ──► BLDC Motor EN (enable)               │
-│  │  PA5  (GPIO)      ──► BLDC Motor DIR (CW/CCW)              │
-│  └─────────────────────────────────────┘                        │
-│                                                                │
-│  ┌─── P-ASD Subsystem (Pneumatic Seasoning Dispenser) ──┐     │
-│  │  PA0  (TIM2_CH1)  ──► P-ASD Diaphragm Pump PWM           │
-│  │  Solenoids V1-V6: PCF8574 I2C GPIO expander              │
-│  │    (I2C1 addr 0x20, on Driver PCB, outputs P0-P5)        │
-│  │  I2C1 (PB6/PB7)  ──► ADS1015 Pressure Sensor (0x48)     │
+│  └─────────────────────────────────────────────────────┘     │
+│                                                              │
+│  ┌─── CAN: Microwave Surface ─────┐                          │
+│  │  PB8  (FDCAN1_RX) ◄── J_STACK Pin 19 → Driver PCB ISO1050 │
+│  │  PB9  (FDCAN1_TX) ──► J_STACK Pin 20 → Driver PCB ISO1050 │
+│  │  Bit rate: 500 kbps, isolation + termination on Driver PCB│
+│  └─────────────────────────────────┘                         │
+│                                                              │
+│  ┌─── PWM+GPIO: BLDC Stirring Motor ─┐                       │
+│  │  PA8  (TIM1_CH1)  ──► BLDC Motor PWM (10 kHz speed)       │
+│  │  PA4  (GPIO)      ──► BLDC Motor EN (enable)              │
+│  │  PA5  (GPIO)      ──► BLDC Motor DIR (CW/CCW)             │
+│  └─────────────────────────────────────┘                     │
+│                                                              │
+│  ┌─── P-ASD Subsystem (Pneumatic Seasoning Dispenser) ──┐    │
+│  │  PA0  (TIM2_CH1)  ──► P-ASD Diaphragm Pump PWM            │
+│  │  Solenoids V1-V6: PCF8574 I2C GPIO expander               │
+│  │    (I2C1 addr 0x20, on Driver PCB, outputs P0-P5)         │
+│  │  I2C1 (PB6/PB7)  ──► ADS1015 Pressure Sensor (0x48)       │
 │  │                   ──► PCF8574 Solenoid Expander (0x20)    │
-│  └─────────────────────────────────┘                           │
-│                                                                │
-│  ┌─── CID Subsystem (Coarse Ingredients Dispenser) ──┐        │
-│  │  PA10 (TIM1_CH3)   ──► CID-1 Linear Actuator EN (DRV8876)│
-│  │  PB4  (GPIO)       ──► CID-1 Linear Actuator PH/DIR      │
-│  │  PB5  (GPIO)       ──► CID-2 Linear Actuator EN (DRV8876)│
-│  │  PC2  (GPIO)       ──► CID-2 Linear Actuator PH/DIR      │
-│  └─────────────────────────────────┘                           │
-│                                                                │
-│  ┌─── SLD Subsystem (Standard Liquid Dispenser) ──┐           │
-│  │  PC3  (GPIO)       ──► SLD-OIL Pump PWM (TB6612 PWMA)    │
-│  │  PC4  (GPIO)       ──► SLD-OIL Pump DIR (TB6612 AIN1)    │
-│  │  PC5  (GPIO)       ──► SLD-WATER Pump PWM (TB6612 PWMB)  │
-│  │  PC6  (GPIO)       ──► SLD-WATER Pump DIR (TB6612 BIN1)  │
-│  │  PA7  (GPIO)       ──► SLD-OIL Solenoid (via MOSFET)     │
-│  │  PA9  (GPIO)       ──► SLD-WATER Solenoid (via MOSFET)   │
-│  └─────────────────────────────────┘                           │
-│                                                                │
-│  ┌─── Exhaust Fans (2x 120mm) ────┐                            │
+│  └─────────────────────────────────┘                         │
+│                                                              │
+│  ┌─── CID Subsystem (Coarse Ingredients Dispenser) ──┐       │
+│  │  PA10 (TIM1_CH3)   ──► CID-1 Linear Actuator EN (DRV8876) │
+│  │  PB4  (GPIO)       ──► CID-1 Linear Actuator PH/DIR       │
+│  │  PB5  (GPIO)       ──► CID-2 Linear Actuator EN (DRV8876) │
+│  │  PC2  (GPIO)       ──► CID-2 Linear Actuator PH/DIR       │
+│  └─────────────────────────────────┘                         │
+│                                                              │
+│  ┌─── SLD Subsystem (Standard Liquid Dispenser) ──┐          │
+│  │  PC3  (GPIO)       ──► SLD-OIL Pump PWM (TB6612 PWMA)     │
+│  │  PC4  (GPIO)       ──► SLD-OIL Pump DIR (TB6612 AIN1)     │
+│  │  PC5  (GPIO)       ──► SLD-WATER Pump PWM (TB6612 PWMB)   │
+│  │  PC6  (GPIO)       ──► SLD-WATER Pump DIR (TB6612 BIN1)   │
+│  │  PA7  (GPIO)       ──► SLD-OIL Solenoid (via MOSFET)      │
+│  │  PA9  (GPIO)       ──► SLD-WATER Solenoid (via MOSFET)    │
+│  └─────────────────────────────────┘                         │
+│                                                              │
+│  ┌─── Exhaust Fans (2x 120mm) ────┐                          │
 │  │  PA6  (TIM3_CH1)  ──► Exhaust Fan 1 PWM (25 kHz, HW PWM)  │
 │  │  PB10 (GPIO)      ──► Exhaust Fan 2 PWM (25 kHz, SW PWM)  │
-│  │  Independent control for optimal airflow                   │
-│  │  Note: PB10 uses software PWM (TIM2_CH3 conflicts with PA2)│
-│  └─────────────────────────────────┘                           │
-│                                                                │
-│  ┌─── Audio ───────────────────────┐                           │
+│  │  Independent control for optimal airflow                  │
+│  │  Note: PB10 uses software PWM (TIM2_CH3 conflicts with PA2)
+│  └─────────────────────────────────┘                         │
+│                                                              │
+│  ┌─── Audio ───────────────────────┐                         │
 │  │  PA11 (TIM1_CH4)  ──► Piezo Buzzer PWM                    │
-│  └─────────────────────────────────┘                           │
-│                                                                │
-│  ┌─── I2C: IR Thermometer ────────┐                           │
+│  └─────────────────────────────────┘                         │
+│                                                              │
+│  ┌─── I2C: IR Thermometer ────────┐                          │
 │  │  PB6  (I2C1_SCL) ──► MLX90614 SCL                         │
 │  │  PB7  (I2C1_SDA) ◄─► MLX90614 SDA                         │
-│  │  100 kHz, pull-ups 4.7k to 3.3V                            │
-│  └─────────────────────────────────┘                           │
-│                                                                │
-│  ┌─── GPIO: Load Cells (HX711) ───┐                           │
+│  │  100 kHz, pull-ups 4.7k to 3.3V                           │
+│  └─────────────────────────────────┘                         │
+│                                                              │
+│  ┌─── GPIO: Load Cells (HX711) ───┐                          │
 │  │  PC0  (GPIO)      ──► HX711 SCK (clock out)               │
 │  │  PC1  (GPIO)      ◄── HX711 DOUT (data in)                │
-│  └─────────────────────────────────┘                           │
-│                                                                │
-│  ┌─── GPIO: Safety & Control ─────┐                           │
-│  │  PB0  (GPIO)      ──► Safety Relay (via MOSFET driver)     │
+│  └─────────────────────────────────┘                         │
+│                                                              │
+│  ┌─── GPIO: Safety & Control ─────┐                          │
+│  │  PB0  (GPIO)      ──► Safety Relay (via MOSFET driver)    │
 │  │  PB1  (GPIO)      ◄── Pot Detection (reed switch)         │
 │  │  PB2  (GPIO)      ◄── E-Stop Button (interrupt, act-low)  │
 │  │  PC13 (GPIO)      ──► Status LED (on-board)               │
-│  └─────────────────────────────────┘                           │
-│                                                                │
-│  Power: 3.3V / GND from PSU rail                              │
-│  Debug: SWD (PA13/PA14) via TagConnect or 10-pin header       │
-│                                                                │
-│  Note: All actuator signals route via J_STACK connector to     │
-│  Driver PCB where power electronics drive the actuators.       │
-│  J_STACK organized by subsystem: ASD (pin 15), CAN (pins 19-20),│
-│  CID (21-26), Exhaust (27-28), SLD (29-36), Main (37-40) for  │
-│  modular wiring harnesses.                                     │
-└────────────────────────────────────────────────────────────────┘
+│  └─────────────────────────────────┘                         │
+│                                                              │
+│  Power: 3.3V / GND from PSU rail                             │
+│  Debug: SWD (PA13/PA14) via TagConnect or 10-pin header      │
+│                                                              │
+│  Note: All actuator signals route via J_STACK connector to   │
+│  Driver PCB where power electronics drive the actuators.     │
+│  J_STACK organized by subsystem: ASD (pin 15), CAN (pins 19-20),
+│  CID (21-26), Exhaust (27-28), SLD (29-36), Main (37-40) for │
+│  modular wiring harnesses.                                   │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -294,19 +294,19 @@ STM32G474RE (LQFP-64)
 ```
 CM5 Carrier Board                    Camera Module (IMX219/IMX477)
 (15-pin FFC Connector)               (15-pin FFC Connector)
-┌──────────────────┐                 ┌──────────────────┐
-│                  │   15-pin FFC    │                  │
-│  CSI_D0_P ──────┼────────────────┼──── MIPI_D0_P    │
-│  CSI_D0_N ──────┼────────────────┼──── MIPI_D0_N    │
-│  CSI_D1_P ──────┼────────────────┼──── MIPI_D1_P    │
-│  CSI_D1_N ──────┼────────────────┼──── MIPI_D1_N    │
-│  CSI_CLK_P ─────┼────────────────┼──── MIPI_CLK_P   │
-│  CSI_CLK_N ─────┼────────────────┼──── MIPI_CLK_N   │
-│  SCL (I2C) ─────┼────────────────┼──── SCCB_SCL     │
-│  SDA (I2C) ─────┼────────────────┼──── SCCB_SDA     │
-│  3.3V ──────────┼────────────────┼──── VCC           │
-│  GND ───────────┼────────────────┼──── GND           │
-│  GPIO (CAM_EN) ─┼────────────────┼──── PWDN/EN      │
+┌──────────────────┐                ┌──────────────────┐
+│                  │   15-pin FFC   │                  │
+│  CSI_D0_P ───────┼────────────────┼──── MIPI_D0_P    │
+│  CSI_D0_N ───────┼────────────────┼──── MIPI_D0_N    │
+│  CSI_D1_P ───────┼────────────────┼──── MIPI_D1_P    │
+│  CSI_D1_N ───────┼────────────────┼──── MIPI_D1_N    │
+│  CSI_CLK_P ──────┼────────────────┼──── MIPI_CLK_P   │
+│  CSI_CLK_N ──────┼────────────────┼──── MIPI_CLK_N   │
+│  SCL (I2C) ──────┼────────────────┼──── SCCB_SCL     │
+│  SDA (I2C) ──────┼────────────────┼──── SCCB_SDA     │
+│  3.3V ───────────┼────────────────┼──── VCC          │
+│  GND ────────────┼────────────────┼──── GND          │
+│  GPIO (CAM_EN) ──┼────────────────┼──── PWDN/EN      │
 │                  │                │                  │
 └──────────────────┘                └──────────────────┘
 
@@ -325,9 +325,9 @@ CM5 GPIO18 (or STM32 SPI)
 │          WS2812B LED Ring             │
 │    (12-16 addressable RGB LEDs)       │
 │                                       │
-│  DIN ◄── Data from GPIO18            │
-│  VCC ◄── 5V from PSU rail            │
-│  GND ◄── Common ground               │
+│  DIN ◄── Data from GPIO18             │
+│  VCC ◄── 5V from PSU rail             │
+│  GND ◄── Common ground                │
 │                                       │
 │  Mounted: Ring around camera lens     │
 │  Color: Neutral white (5000-6000K)    │
@@ -348,11 +348,11 @@ Use SN74HCT125 or similar buffer if reliability issues arise.
 
 ```
 STM32G474RE                        MLX90614ESF-BAA
-┌──────────────────┐              ┌──────────────────┐
-│                  │              │                  │
-│  PB6 (I2C1_SCL) ┼──────┬──────┼── SCL (Pin 3)   │
+┌──────────────────┐             ┌──────────────────┐
+│                  │             │                  │
+│  PB6 (I2C1_SCL) ─┼──────┬──────┼── SCL (Pin 3)    │
 │                  │      │      │                  │
-│  PB7 (I2C1_SDA) ┼──────┼──┬───┼── SDA (Pin 1)   │
+│  PB7 (I2C1_SDA) ─┼──────┼──┬───┼── SDA (Pin 1)    │
 │                  │      │  │   │                  │
 │  3.3V ───────────┼──┬───┘  │   │                  │
 │                  │  │      │   │  VDD (Pin 2) ────┼─── 3.3V
@@ -361,8 +361,8 @@ STM32G474RE                        MLX90614ESF-BAA
 │                  │  4.7k   │   │                  │
 │                  │  │      │   │  I2C Addr: 0x5A  │
 │  GND ────────────┼──┴──────┴───┼── GND            │
-│                  │              │                  │
-└──────────────────┘              └──────────────────┘
+│                  │             │                  │
+└──────────────────┘             └──────────────────┘
 
 Decoupling: 100nF ceramic cap on VDD close to MLX90614
 Pull-ups: 4.7k ohm to 3.3V on both SCL and SDA
@@ -387,26 +387,26 @@ Cable length: <30cm (keep short for I2C reliability)
 ```
 CM5 Carrier Board                    10.1" IPS Touchscreen
 (DSI FFC Connector)                  (DSI + I2C Touch)
-┌──────────────────┐                ┌──────────────────────────┐
-│                  │  15-pin FFC    │                          │
-│  DSI_D0_P ──────┼───────────────┼──── MIPI DSI D0+         │
-│  DSI_D0_N ──────┼───────────────┼──── MIPI DSI D0-         │
-│  DSI_D1_P ──────┼───────────────┼──── MIPI DSI D1+         │
-│  DSI_D1_N ──────┼───────────────┼──── MIPI DSI D1-         │
-│  DSI_CLK_P ─────┼───────────────┼──── MIPI DSI CLK+        │
-│  DSI_CLK_N ─────┼───────────────┼──── MIPI DSI CLK-        │
-│  3.3V ──────────┼───────────────┼──── VCC_IO               │
-│  GND ───────────┼───────────────┼──── GND                  │
-│  BL_EN ─────────┼───────────────┼──── Backlight Enable     │
+┌──────────────────┐               ┌──────────────────────────┐
+│                  │  15-pin FFC   │                          │
+│  DSI_D0_P ───────┼───────────────┼──── MIPI DSI D0+         │
+│  DSI_D0_N ───────┼───────────────┼──── MIPI DSI D0-         │
+│  DSI_D1_P ───────┼───────────────┼──── MIPI DSI D1+         │
+│  DSI_D1_N ───────┼───────────────┼──── MIPI DSI D1-         │
+│  DSI_CLK_P ──────┼───────────────┼──── MIPI DSI CLK+        │
+│  DSI_CLK_N ──────┼───────────────┼──── MIPI DSI CLK-        │
+│  3.3V ───────────┼───────────────┼──── VCC_IO               │
+│  GND ────────────┼───────────────┼──── GND                  │
+│  BL_EN ──────────┼───────────────┼──── Backlight Enable     │
 │                  │               │                          │
 └──────────────────┘               │  Touch Controller:       │
                                    │  ┌────────────────────┐  │
 CM5 I2C1                           │  │  Capacitive Touch  │  │
 ┌──────────────────┐               │  │  Controller (I2C)  │  │
-│  GPIO2 (SDA) ────┼──────────────┼──┼── SDA              │  │
-│  GPIO3 (SCL) ────┼──────────────┼──┼── SCL              │  │
-│  GPIO_INT ───────┼──────────────┼──┼── INT (touch event) │  │
-│  GND ────────────┼──────────────┼──┼── GND              │  │
+│  GPIO2 (SDA) ────┼───────────────┼──┼── SDA              │  │
+│  GPIO3 (SCL) ────┼───────────────┼──┼── SCL              │  │
+│  GPIO_INT ───────┼───────────────┼──┼── INT (touch event)│  │
+│  GND ────────────┼───────────────┼──┼── GND              │  │
 └──────────────────┘               │  └────────────────────┘  │
                                    └──────────────────────────┘
 
@@ -438,11 +438,11 @@ to HDMI-input display panel (simpler, no FFC routing needed).
 Raspberry Pi CM5 (SPI0 Master)     STM32G474RE (SPI2 Slave)
 ┌──────────────────┐               ┌──────────────────┐
 │                  │               │                  │
-│  GPIO8  (CE0)  ──┼──────────────►┼── PB12 (NSS)    │
-│  GPIO9  (MISO) ◄─┼───────────────┼── PB14 (MISO)   │
-│  GPIO10 (MOSI) ──┼──────────────►┼── PB15 (MOSI)   │
-│  GPIO11 (SCLK) ──┼──────────────►┼── PB13 (SCK)    │
-│  GPIO4  (IRQ)  ◄─┼───────────────┼── PB3  (IRQ)    │
+│  GPIO8  (CE0)  ──┼──────────────►┼── PB12 (NSS)     │
+│  GPIO9  (MISO) ◄─┼───────────────┼── PB14 (MISO)    │
+│  GPIO10 (MOSI) ──┼──────────────►┼── PB15 (MOSI)    │
+│  GPIO11 (SCLK) ──┼──────────────►┼── PB13 (SCK)     │
+│  GPIO4  (IRQ)  ◄─┼───────────────┼── PB3  (IRQ)     │
 │  GND ────────────┼───────────────┼── GND            │
 │                  │               │                  │
 └──────────────────┘               └──────────────────┘
@@ -470,9 +470,9 @@ Microwave Surface              Driver PCB                    Controller PCB
 │  Onboard         │           │  ISO1050DUB          │      │  FDCAN1          │
 │  CAN controller  │           │  (5kV isolation)     │      │                  │
 │           │      │           │       │              │      │  PB8 (RX) ◄─────┼── J_STACK Pin 19
-│  CAN_H ──┼──────┼───────────┼── CANH│              │      │  PB9 (TX) ──────┼── J_STACK Pin 20
-│  CAN_L ──┼──────┼───────────┼── CANL│   R_TERM     │      │                  │
-│  GND ────┼──────┼───────────┼── GND_ISO  120Ω      │      │  3.3V logic      │
+│  CAN_H ───┼──────┼───────────┼── CANH│              │      │  PB9 (TX) ──────┼── J_STACK Pin 20
+│  CAN_L ───┼──────┼───────────┼── CANL│   R_TERM     │      │                  │
+│  GND ─────┼──────┼───────────┼── GND_ISO  120Ω      │      │  3.3V logic      │
 │           │      │           │                      │      │  (no isolation   │
 │       120 ohm    │           │  VCC1=3.3V VCC2=5V   │      │   needed here)   │
 │      termination │           │  (from J_STACK)      │      │                  │
@@ -530,12 +530,12 @@ AC Mains (220-240V 50Hz)
 │  + EMI Filter     │                    │  (self-contained AC      │
 │  (X2 cap + CMs)   │                    │   power + coil + driver) │
 └────────┬──────────┘                    │  1,800W max              │
-         │                               │  CAN bus ──► STM32      │
+         │                               │  CAN bus ──► STM32       │
          ▼                               └──────────────────────────┘
 ┌────────────────────────────────────┐
 │  Mean Well LRS-75-24               │
-│  24V / 3.2A / 76.8W               │
-│  Universal input: 85-264VAC       │
+│  24V / 3.2A / 76.8W                │
+│  Universal input: 85-264VAC        │
 │  Efficiency: >87%                  │
 │  PFC built-in                      │
 └────────────────┬───────────────────┘
@@ -546,7 +546,7 @@ AC Mains (220-240V 50Hz)
      │           │           │
      ▼           ▼           ▼
 ┌─────────┐ ┌─────────┐ ┌─────────┐
-│ CM5IO    │ │ Buck    │ │ Direct  │
+│ CM5IO   │ │ Buck    │ │ Direct  │
 │ Board   │ │ 24V→5V  │ │ 24V     │
 │ (24V in)│ │ (servo  │ │ safety  │
 │ Onboard │ │  rail,  │ │ relay,  │
@@ -562,7 +562,7 @@ AC Mains (220-240V 50Hz)
 │ Controller │
 │ PCB        │
 │ 5V ──► LDO │
-│ LDO→3.3V  │
+│ LDO→3.3V   │
 │ ──► STM32  │
 │     sensors│
 └────────────┘
@@ -635,14 +635,14 @@ The microwave induction surface is a self-contained commercial module with its o
                     │  Driver PCB     │
                     │  ISO1050DUB     │
                     │  (5kV isolation)│
-                    │  + 120Ω term   │
-                    │  + J_CAN conn  │
+                    │  + 120Ω term    │
+                    │  + J_CAN conn   │
                     └────────┬────────┘
                              │ J_STACK Pins 19-20
                     ┌────────▼────────┐
                     │  STM32 FDCAN1   │
-                    │  PB8 (CAN_RX)  │
-                    │  PB9 (CAN_TX)  │
+                    │  PB8 (CAN_RX)   │
+                    │  PB9 (CAN_TX)   │
                     └─────────────────┘
 
 System Safety:
@@ -655,7 +655,7 @@ System Safety:
 
 ## 12. Ingredient Dispensing System (ASD / CID / SLD)
 
-The dispensing system comprises three subsystems. See [[../05-Subsystems/03-Ingredient-Dispensing|Ingredient Dispensing System]] for full details.
+The dispensing system comprises three subsystems. See [[03-Ingredient-Dispensing|Ingredient Dispensing System]] for full details.
 
 ### 12.1 P-ASD — Pneumatic Seasoning Dispenser Wiring
 
@@ -785,20 +785,20 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 │  └────────┬─────────┘    └────────┬─────────┘          │
 │           │                       │                    │
 │  ┌────────▼─────────┐    ┌────────▼─────────┐          │
-│  │  Partition Map:   │    │  Optional Use:   │          │
-│  │                   │    │                   │          │
-│  │  /boot   256MB    │    │  Recipe backup   │          │
-│  │  /rootfs 4-8GB    │    │  Cooking logs    │          │
-│  │  /data   4-8GB    │    │  User media      │          │
-│  │  (recipes, logs,  │    │  Debug dumps     │          │
-│  │   user prefs)     │    │                   │          │
-│  └───────────────────┘    └───────────────────┘          │
+│  │  Partition Map:  │    │  Optional Use:   │          │
+│  │                  │    │                  │          │
+│  │  /boot   256MB   │    │  Recipe backup   │          │
+│  │  /rootfs 4-8GB   │    │  Cooking logs    │          │
+│  │  /data   4-8GB   │    │  User media      │          │
+│  │  (recipes, logs, │    │  Debug dumps     │          │
+│  │   user prefs)    │    │                  │          │
+│  └──────────────────┘    └──────────────────┘          │
 │                                                        │
 │  File Systems:                                         │
 │  - /boot: FAT32 (CM5 bootloader requirement)           │
 │  - /rootfs: ext4 (Yocto Linux root)                    │
 │  - /data: ext4 (application data, wear-leveled)        │
-│  - SD: FAT32 or ext4 (removable, user-accessible)     │
+│  - SD: FAT32 or ext4 (removable, user-accessible)      │
 └────────────────────────────────────────────────────────┘
 ```
 
@@ -993,12 +993,12 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 ## 19. Related Documentation
 
 - [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications|Technical Specifications]]
-- [[05-Sensors-Acquisition|Sensors & Data Acquisition]]
-- [[07-Mechanical-Design|Mechanical Design]]
-- [[../09-PCB/Controller-PCB-Design|Controller PCB Design]]
-- [[../01-Overview/01-Project-Overview|Project Overview]]
-- [[../03-Software/08-Tech-Stack|Tech Stack]]
-- [[../07-Development/Prototype-Development-Plan|Prototype Development Plan]]
+- [[03-Sensors-Acquisition|Sensors & Data Acquisition]]
+- [[04-Mechanical-Design|Mechanical Design]]
+- [[../09-PCB/01-Controller-PCB-Design|Controller PCB Design]]
+- [[__Workspaces/Epicura/docs/01-Overview/01-Project-Overview|Project Overview]]
+- [[../03-Software/01-Tech-Stack|Tech Stack]]
+- [[../07-Development/01-Prototype-Development-Plan|Prototype Development Plan]]
 
 ---
 

@@ -233,6 +233,6 @@ None — UX is independent; can be built in parallel with other epics.
 
 ## 12. References
 
-- [[__Workspaces/Epicura/docs/12-MobileApps/01-Mobile-Architecture|Mobile Architecture]]
-- [[__Workspaces/Epicura/docs/04-UserInterface/03-UI-UX-Design|UI/UX Design]]
+- [[01-Mobile-Architecture|Mobile Architecture]]
+- [[__Workspaces/Epicura/docs/04-UserInterface/01-UI-UX-Design|UI/UX Design]]
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|Epic Index]]

@@ -17,10 +17,10 @@ This document outlines the comprehensive plan for building a functional Epicura 
 
 ## 2. Project Links
 
-- [[../01-Overview/01-Project-Overview|Project Overview]]
-- [[../02-Hardware/02-Technical-Specifications|Technical Specifications]]
-- [[../03-Software/03-Software-Architecture|Software Architecture]]
-- [[../08-Components/04-Total-Component-Cost|Total Component Cost]]
+- [[__Workspaces/Epicura/docs/01-Overview/01-Project-Overview|Project Overview]]
+- [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications|Technical Specifications]]
+- [[../03-Software/02-Controller-Software-Architecture|Software Architecture]]
+- [[__Workspaces/Epicura/docs/08-Components/04-Total-Component-Cost|Total Component Cost]]
 
 ---
 
@@ -599,14 +599,14 @@ This document outlines the comprehensive plan for building a functional Epicura 
 
 ## 9. Related Documentation
 
-- [[../01-Overview/01-Project-Overview|Project Overview]]
-- [[../02-Hardware/02-Technical-Specifications|Technical Specifications]]
-- [[../03-Software/03-Software-Architecture|Software Architecture]]
-- [[../06-Compliance/06-Safety-Compliance|Safety & Compliance]]
-- [[../08-Components/01-Compute-Module-Components|Compute Module Components]]
-- [[../08-Components/02-Actuation-Components|Actuation Components]]
-- [[../08-Components/03-Sensor-Components|Sensor Components]]
-- [[../08-Components/04-Total-Component-Cost|Total Component Cost]]
+- [[__Workspaces/Epicura/docs/01-Overview/01-Project-Overview|Project Overview]]
+- [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications|Technical Specifications]]
+- [[../03-Software/02-Controller-Software-Architecture|Software Architecture]]
+- [[../06-Compliance/01-Safety-Compliance|Safety & Compliance]]
+- [[01-Compute-Module-Components|Compute Module Components]]
+- [[02-Actuation-Components|Actuation Components]]
+- [[03-Sensor-Components|Sensor Components]]
+- [[__Workspaces/Epicura/docs/08-Components/04-Total-Component-Cost|Total Component Cost]]
 
 ---
 

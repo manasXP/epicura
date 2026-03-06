@@ -488,7 +488,7 @@ Repositories should be created in this order, matching the epic dependency chain
 
 ## 7. References
 
-- [[__Workspaces/Epicura/docs/03-Software/01-Tech-Stack|Tech Stack]]
-- [[__Workspaces/Epicura/docs/02-Hardware/01-Epicura-Architecture|System Architecture]]
+- [[01-Tech-Stack|Tech Stack]]
+- [[01-Epicura-Architecture|System Architecture]]
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|Epic Index]]
-- [[__Workspaces/Epicura/docs/07-Development/01-Prototype-Development-Plan|Prototype Development Plan]]
+- [[01-Prototype-Development-Plan|Prototype Development Plan]]

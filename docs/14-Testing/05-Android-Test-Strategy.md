@@ -116,7 +116,7 @@ steps:
 
 ## 5. References
 
-- [[__Workspaces/Epicura/docs/07-Development/02-Repository-Plan|Repository Plan]]
-- [[__Workspaces/Epicura/docs/12-MobileApps/03-Android-App|Android App]]
-- [[__Workspaces/Epicura/docs/12-MobileApps/01-Mobile-Architecture|Mobile Architecture]]
-- [[__Workspaces/Epicura/docs/11-API/04-BLE-Services|BLE Services]]
+- [[02-Repository-Plan|Repository Plan]]
+- [[03-Android-App|Android App]]
+- [[01-Mobile-Architecture|Mobile Architecture]]
+- [[04-BLE-Services|BLE Services]]

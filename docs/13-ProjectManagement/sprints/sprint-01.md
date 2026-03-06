@@ -18,9 +18,9 @@ aliases: [Sprint 1]
 
 | Status | ID | Title | Epic | Points | Blocked By |
 |:------:|-----|-------|------|:------:|------------|
-| [ ] | [[02-Stories#EMB-SET.01\|EMB-SET.01]] | STM32 FreeRTOS project setup | EMB-SET | 8 | PCB-FAB.02 |
-| [ ] | [[02-Stories#EMB-SET.02\|EMB-SET.02]] | CM5 Yocto image + Docker Compose | EMB-SET | 8 | PCB-FAB.02 |
-| [ ] | [[02-Stories#EMB-COM.01\|EMB-COM.01]] | CM5-STM32 SPI bridge service | EMB-COM | 8 | EMB-SET.01, EMB-SET.02 |
+| [ ] | [[EMB-embedded#EMB-SET.01\|EMB-SET.01]] | STM32 FreeRTOS project setup | EMB-SET | 8 | PCB-FAB.02 |
+| [ ] | [[EMB-embedded#EMB-SET.02\|EMB-SET.02]] | CM5 Yocto image + Docker Compose | EMB-SET | 8 | PCB-FAB.02 |
+| [ ] | [[EMB-embedded#EMB-COM.01\|EMB-COM.01]] | CM5-STM32 SPI bridge service | EMB-COM | 8 | EMB-SET.01, EMB-SET.02 |
 
 **Total Points:** 24
 
@@ -60,5 +60,5 @@ aliases: [Sprint 1]
 ## 5. References
 
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Calendar]]
-- [[__Workspaces/Epicura/docs/13-ProjectManagement/02-Stories|User Stories]]
-- [[__Workspaces/Epicura/docs/13-ProjectManagement/01-Epics|Epic Index]]
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|User Stories]]
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|Epic Index]]

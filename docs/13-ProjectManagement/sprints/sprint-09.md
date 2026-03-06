@@ -18,13 +18,13 @@ aliases: [Sprint 9]
 
 | Status | ID | Title | Epic | Points | Blocked By |
 |:------:|-----|-------|------|:------:|------------|
-| [ ] | [[01-Epics#RCP-FSM.01\|RCP-FSM.01]] | Cooking state machine (continued) | RCP | 10 | (from Sprint 8) |
-| [ ] | [[01-Epics#RCP-DSP.01\|RCP-DSP.01]] | Dispensing orchestration | RCP | 8 | ARM-ASD.01, ARM-CID.01, ARM-SLD.01, ARM-CAL.01 |
-| [ ] | [[01-Epics#RCP-SYN.01\|RCP-SYN.01]] | Cloud recipe sync | RCP | 5 | BE-RCP.01 |
-| [ ] | [[01-Epics#UI-SET.01\|UI-SET.01]] | Kivy app scaffold | UI | 5 | EMB-SET.02, EMB-SET.03 |
-| [ ] | [[01-Epics#UI-RCP.01\|UI-RCP.01]] | Recipe browser | UI | 5 | UI-SET.01, RCP-FMT.01 |
-| [ ] | [[01-Epics#IOS-BLE.01\|IOS-BLE.01]] | BLE pairing | IOS | 8 | IOS-SET.01, BE-DEV.01 |
-| [ ] | [[01-Epics#AND-BLE.01\|AND-BLE.01]] | BLE pairing | AND | 8 | AND-SET.01, BE-DEV.01 |
+| [ ] | [[RCP-recipe#RCP-FSM.01\|RCP-FSM.01]] | Cooking state machine (continued) | RCP | 10 | (from Sprint 8) |
+| [ ] | [[RCP-recipe#RCP-DSP.01\|RCP-DSP.01]] | Dispensing orchestration | RCP | 8 | ARM-ASD.01, ARM-CID.01, ARM-SLD.01, ARM-CAL.01 |
+| [ ] | [[RCP-recipe#RCP-SYN.01\|RCP-SYN.01]] | Cloud recipe sync | RCP | 5 | BE-RCP.01 |
+| [ ] | [[UI-touchscreen#UI-SET.01\|UI-SET.01]] | Kivy app scaffold | UI | 5 | EMB-SET.02, EMB-SET.03 |
+| [ ] | [[UI-touchscreen#UI-RCP.01\|UI-RCP.01]] | Recipe browser | UI | 5 | UI-SET.01, RCP-FMT.01 |
+| [ ] | [[IOS-ios#IOS-BLE.01\|IOS-BLE.01]] | BLE pairing | IOS | 8 | IOS-SET.01, BE-DEV.01 |
+| [ ] | [[AND-android#AND-BLE.01\|AND-BLE.01]] | BLE pairing | AND | 8 | AND-SET.01, BE-DEV.01 |
 
 **Total Points:** 49
 

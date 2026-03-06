@@ -16,9 +16,9 @@ This document covers the design of the custom controller PCB for Epicura. This b
 | Item | Status | Notes |
 |------|--------|-------|
 | **Controller PCB** (this document) | Custom design required | STM32G474RE + peripherals, 160x90mm |
-| **Driver PCB** | Custom design required | Power conversion + actuator drivers (see [[Driver-PCB-Design]]) |
+| **Driver PCB** | Custom design required | Power conversion + actuator drivers (see [[02-Driver-PCB-Design]]) |
 | **CM5 IO Board (CM5IO)** | Off-the-shelf (Raspberry Pi official) | Commercial carrier board; no custom PCB needed |
-| **Microwave induction surface** | Commercial module with CAN port (see [[../05-Subsystems/09-Induction-Heating\|Induction Heating]]) | Self-contained coil + driver; controlled via CAN bus |
+| **Microwave induction surface** | Commercial module with CAN port (see [[../05-Subsystems/01-Induction-Heating\|Induction Heating]]) | Self-contained coil + driver; controlled via CAN bus |
 
 The CM5IO board is an off-the-shelf Raspberry Pi carrier board that sits on top of the stack. The two custom boards (Controller, Driver) form a stackable pair connected via 2x20-pin 2.54mm board-to-board headers, sharing a uniform 160x90mm footprint. The Controller PCB connects upward to the CM5IO board via **J_CM5** (2x20 pin socket that mates directly with the CM5IO's 40-pin GPIO header — SPI, IRQ, LED data, 5V power, and GND all route through this single connector) and downward to the Driver PCB via **J_STACK**. All real-time control, sensor acquisition, and safety monitoring runs on this controller board. Servo PWM and actuator GPIO signals pass through J_STACK to the Driver PCB where power electronics drive the actual actuators. The UPS-backed 5V rail from J_STACK is fed upward through J_CM5 to power the CM5IO and CM5 module.
 
@@ -445,7 +445,7 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 
 ### 6.6 J_STACK — Stacking Connector to Driver PCB (2x20 pin header, 2.54mm, 11mm stacking height)
 
-The stacking connector passes 24V power, ground, 5V/3.3V references, all servo PWM signals, actuator GPIO signals, and I2C (for INA219 current monitor) down to the Driver PCB. Pins are organized by subsystem for cleaner wiring harnesses. See [[Driver-PCB-Design#Stacking Connector — J_STACK]] for the full 40-pin pinout.
+The stacking connector passes 24V power, ground, 5V/3.3V references, all servo PWM signals, actuator GPIO signals, and I2C (for INA219 current monitor) down to the Driver PCB. Pins are organized by subsystem for cleaner wiring harnesses. See [[02-Driver-PCB-Design#Stacking Connector — J_STACK]] for the full 40-pin pinout.
 
 #### 6.6.1 J_STACK Pinout (Top View — Controller PCB Side)
 
@@ -785,12 +785,12 @@ Material: FR4 (Tg 150°C minimum)
 
 ## 12. Related Documentation
 
-- [[Driver-PCB-Design]] — Driver PCB: power conversion, actuator drivers, stacking connector details
-- [[../02-Hardware/Epicura-Architecture|Epicura Architecture]] — System-level wiring and block diagrams
-- [[../02-Hardware/02-Technical-Specifications|Technical Specifications]] — Induction, sensors, power specs
-- [[../02-Hardware/05-Sensors-Acquisition|Sensors & Acquisition]] — Sensor interface details
-- [[../05-Subsystems/09-Induction-Heating|Induction Heating]] — Microwave surface module with CAN bus interface
-- [[../08-Components/01-Compute-Module-Components|Compute Module Components]] — CM5 and STM32 BOM
+- [[02-Driver-PCB-Design]] — Driver PCB: power conversion, actuator drivers, stacking connector details
+- [[../02-Hardware/01-Epicura-Architecture|Epicura Architecture]] — System-level wiring and block diagrams
+- [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications|Technical Specifications]] — Induction, sensors, power specs
+- [[../02-Hardware/03-Sensors-Acquisition|Sensors & Acquisition]] — Sensor interface details
+- [[../05-Subsystems/01-Induction-Heating|Induction Heating]] — Microwave surface module with CAN bus interface
+- [[01-Compute-Module-Components|Compute Module Components]] — CM5 and STM32 BOM
 
 ---
 

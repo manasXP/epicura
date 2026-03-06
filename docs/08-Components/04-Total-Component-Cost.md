@@ -214,9 +214,9 @@ This document provides a consolidated view of all component costs for the Epicur
 - [[01-Compute-Module-Components|Compute Module Components]]
 - [[02-Actuation-Components|Actuation Components]]
 - [[03-Sensor-Components|Sensor Components]]
-- [[../01-Overview/01-Project-Overview|Project Overview]]
-- [[../02-Hardware/02-Technical-Specifications|Technical Specifications]]
-- [[../07-Development/Prototype-Development-Plan|Prototype Development Plan]]
+- [[__Workspaces/Epicura/docs/01-Overview/01-Project-Overview|Project Overview]]
+- [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications|Technical Specifications]]
+- [[../07-Development/01-Prototype-Development-Plan|Prototype Development Plan]]
 
 ---
 

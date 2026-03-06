@@ -520,12 +520,12 @@ Week 0: Sprint 1 starts with tested PCBs ready
 
 ## 20. Related Documentation
 
-- [[03-Sprints|Sprint Planning]]
-- [[02-Stories|User Stories]]
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Planning]]
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|User Stories]]
 - [[05-Resource-Allocation|Resource Allocation]]
-- [[../08-Components/04-Total-Component-Cost|Total Component Cost]]
-- [[../09-PCB/01-Controller-PCB-Design|Controller PCB Design]]
-- [[../09-PCB/02-Driver-PCB-Design|Driver PCB Design]]
+- [[__Workspaces/Epicura/docs/08-Components/04-Total-Component-Cost|Total Component Cost]]
+- [[01-Controller-PCB-Design|Controller PCB Design]]
+- [[02-Driver-PCB-Design|Driver PCB Design]]
 
 ---
 

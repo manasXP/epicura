@@ -29,7 +29,7 @@ Full system integration testing, safety certification testing, reliability endur
 ## 2. Phase 4 — Integration (Sprints 11–12)
 
 ### 2.1 INT-SYS.01: System integration test — end-to-end autonomous cooking of 3 recipes
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-11|Sprint 11]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-11|Sprint 11]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#92](https://github.com/manasXP/epicura/issues/92)
@@ -52,7 +52,7 @@ Full system integration testing, safety certification testing, reliability endur
 ---
 
 ### 2.2 INT-SYS.02: Integration test analysis — telemetry review, UI validation, defect documentation
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-11|Sprint 11]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-11|Sprint 11]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#93](https://github.com/manasXP/epicura/issues/93)
@@ -73,7 +73,7 @@ Full system integration testing, safety certification testing, reliability endur
 ---
 
 ### 2.3 INT-SAF.01: Safety certification testing — IEC 60335, food safety, BIS
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-11|Sprint 11]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-11|Sprint 11]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#94](https://github.com/manasXP/epicura/issues/94)
@@ -100,7 +100,7 @@ Full system integration testing, safety certification testing, reliability endur
 ---
 
 ### 2.4 INT-REL.01: Reliability testing — 100-hour endurance, MTBF estimation
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-12|Sprint 12]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-12|Sprint 12]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#95](https://github.com/manasXP/epicura/issues/95)
@@ -126,7 +126,7 @@ Full system integration testing, safety certification testing, reliability endur
 ---
 
 ### 2.5 INT-LCH.01: Production readiness — documentation, packaging, launch checklist
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-12|Sprint 12]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-12|Sprint 12]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#96](https://github.com/manasXP/epicura/issues/96)
@@ -177,6 +177,6 @@ Full system integration testing, safety certification testing, reliability endur
 
 ## 4. References
 
-- [[__Workspaces/Epicura/docs/06-Compliance/01-Safety-Compliance|Safety & Compliance]]
-- [[__Workspaces/Epicura/docs/07-Development/01-Prototype-Development-Plan|Prototype Development Plan]]
+- [[01-Safety-Compliance|Safety & Compliance]]
+- [[01-Prototype-Development-Plan|Prototype Development Plan]]
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|Epic Index]]

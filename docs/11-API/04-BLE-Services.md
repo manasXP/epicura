@@ -233,7 +233,7 @@ The CM5 stops BLE advertising once WiFi is configured and the device is paired. 
 - Filter scan results by service UUID `E002WIFI-...`
 - Handle state restoration for background BLE operations
 - Request `NSBluetoothAlwaysUsageDescription` permission
-- See [[../12-MobileApps/02-iOS-App|iOS App]] for implementation details
+- See [[02-iOS-App|iOS App]] for implementation details
 
 ### 7.2 Android (CompanionDeviceManager)
 
@@ -241,7 +241,7 @@ The CM5 stops BLE advertising once WiFi is configured and the device is paired. 
 - Avoids `ACCESS_FINE_LOCATION` permission requirement
 - Fall back to `BluetoothLeScanner` for devices < API 26
 - Request `BLUETOOTH_CONNECT` and `BLUETOOTH_SCAN` (Android 12+)
-- See [[../12-MobileApps/03-Android-App|Android App]] for implementation details
+- See [[03-Android-App|Android App]] for implementation details
 
 ---
 
@@ -250,9 +250,9 @@ The CM5 stops BLE advertising once WiFi is configured and the device is paired. 
 - [[01-REST-API-Reference|REST API Reference]] - `POST /appliances/pair` endpoint
 - [[02-WebSocket-Events|WebSocket Events]] - WiFi-based real-time communication
 - [[03-MQTT-Topics|MQTT Topics]] - Device telemetry after WiFi connected
-- [[../12-MobileApps/01-Mobile-Architecture|Mobile Architecture]] - BLE manager architecture
-- [[../12-MobileApps/02-iOS-App|iOS App]] - Core Bluetooth implementation
-- [[../12-MobileApps/03-Android-App|Android App]] - CompanionDeviceManager implementation
+- [[01-Mobile-Architecture|Mobile Architecture]] - BLE manager architecture
+- [[02-iOS-App|iOS App]] - Core Bluetooth implementation
+- [[03-Android-App|Android App]] - CompanionDeviceManager implementation
 
 #epicura #ble #bluetooth #pairing #wifi-provisioning #api
 

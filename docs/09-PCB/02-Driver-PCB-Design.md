@@ -35,7 +35,7 @@ The CM5IO board is an off-the-shelf Raspberry Pi carrier board that sits on top.
 | Item | Status | Notes |
 |------|--------|-------|
 | **Driver PCB** (this document) | Custom design required | Power conversion + actuator drivers |
-| **Controller PCB** | Custom design required | STM32G474RE + sensors (see [[Controller-PCB-Design]]) |
+| **Controller PCB** | Custom design required | STM32G474RE + sensors (see [[01-Controller-PCB-Design]]) |
 | **CM5 IO Board (CM5IO)** | Off-the-shelf (Raspberry Pi official) | Commercial carrier board; no custom PCB needed |
 | **Mean Well PSU** | Commercial (LRS-75-24) | 24V 3.2A input to Driver PCB |
 
@@ -1250,15 +1250,15 @@ At 40°C ambient (inside Epicura enclosure near induction surface):
 
 ## 17. Related Documentation
 
-- [[Controller-PCB-Design]] — STM32G474RE controller board with sensor interfaces
-- [[../02-Hardware/Epicura-Architecture|Epicura Architecture]] — System-level wiring and block diagrams
-- [[../02-Hardware/02-Technical-Specifications|Technical Specifications]] — Induction, sensors, power specs
-- [[../05-Subsystems/09-Induction-Heating|Induction Heating]] — Microwave surface module (CAN bus, separate from Driver PCB)
-- [[../05-Subsystems/10-Robotic-Arm|Robotic Arm]] — BLDC motor arm patterns and control
-- [[../05-Subsystems/03-Ingredient-Dispensing|Ingredient Dispensing]] — ASD/CID/SLD dispensing subsystems
-- [[../05-Subsystems/13-Exhaust-Fume-Management|Exhaust & Fume Management]] — Exhaust fan control
-- [[../08-Components/02-Actuation-Components|Actuation Components]] — Servo and actuator BOM
-- [[../08-Components/04-Total-Component-Cost|Total Component Cost]] — Full system cost analysis
+- [[01-Controller-PCB-Design]] — STM32G474RE controller board with sensor interfaces
+- [[../02-Hardware/01-Epicura-Architecture|Epicura Architecture]] — System-level wiring and block diagrams
+- [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications|Technical Specifications]] — Induction, sensors, power specs
+- [[../05-Subsystems/01-Induction-Heating|Induction Heating]] — Microwave surface module (CAN bus, separate from Driver PCB)
+- [[../05-Subsystems/02-Robotic-Arm|Robotic Arm]] — BLDC motor arm patterns and control
+- [[03-Ingredient-Dispensing|Ingredient Dispensing]] — ASD/CID/SLD dispensing subsystems
+- [[../05-Subsystems/05-Exhaust-Fume-Management|Exhaust & Fume Management]] — Exhaust fan control
+- [[02-Actuation-Components|Actuation Components]] — Servo and actuator BOM
+- [[__Workspaces/Epicura/docs/08-Components/04-Total-Component-Cost|Total Component Cost]] — Full system cost analysis
 
 ---
 

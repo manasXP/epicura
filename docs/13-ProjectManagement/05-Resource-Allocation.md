@@ -626,11 +626,11 @@ Week 24: Sprint 12 (Validation) ← Integration complete
 
 ## 18. Related Documentation
 
-- [[03-Sprints|Sprint Planning]]
-- [[02-Stories|User Stories]]
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/__init|Sprint Planning]]
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|User Stories]]
 - [[04-Procurement-Schedule|Procurement Schedule]]
-- [[01-Epics|Project Epics]]
-- [[../07-Development/01-Prototype-Development-Plan|Prototype Development Plan]]
+- [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|Project Epics]]
+- [[01-Prototype-Development-Plan|Prototype Development Plan]]
 
 ---
 

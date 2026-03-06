@@ -235,8 +235,8 @@ Admin can send push notifications to:
 
 - [[01-Backend-Architecture|Backend Architecture]] - Monorepo structure, API server
 - [[02-Database-Schema|Database Schema]] - Tables and indexes
-- [[../11-API/01-REST-API-Reference|REST API Reference]] - API endpoints consumed by admin portal
-- [[../04-UserInterface/03-UI-UX-Design|UI/UX Design]] - Device touchscreen design reference
+- [[01-REST-API-Reference|REST API Reference]] - API endpoints consumed by admin portal
+- [[../04-UserInterface/01-UI-UX-Design|UI/UX Design]] - Device touchscreen design reference
 
 #epicura #admin #nextjs #dashboard #recipe-editor #backend
 

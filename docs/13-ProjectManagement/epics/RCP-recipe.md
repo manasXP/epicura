@@ -29,7 +29,7 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 ## 2. Phase 3 — Recipe Engine (Sprints 8–9)
 
 ### 2.1 RCP-FMT.01: YAML recipe format — schema definition, parser, validation
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-08|Sprint 8]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#131](https://github.com/manasXP/epicura/issues/131)
@@ -54,7 +54,7 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 ---
 
 ### 2.2 RCP-FSM.01: Cooking state machine — design, engine, step executor, transitions
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-08|Sprint 8]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-08|Sprint 8]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#133](https://github.com/manasXP/epicura/issues/133)
@@ -76,7 +76,7 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 ---
 
 ### 2.3 RCP-FSM.02: State machine controls and telemetry — pause/resume, abort, logging, MQTT status
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-08|Sprint 8]] → [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-09|Sprint 9]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-08|Sprint 8]] → [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-09|Sprint 9]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#134](https://github.com/manasXP/epicura/issues/134)
@@ -99,7 +99,7 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 ---
 
 ### 2.4 RCP-DSP.01: Dispensing orchestration — sequence generation, coordination, weight verification
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-09|Sprint 9]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-09|Sprint 9]]
 - **Priority:** P0
 - **Points:** 5
 - **GitHub:** [#136](https://github.com/manasXP/epicura/issues/136)
@@ -119,7 +119,7 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 ---
 
 ### 2.5 RCP-DSP.02: Dispensing integration — retry logic, state machine integration, recipe testing
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-09|Sprint 9]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-09|Sprint 9]]
 - **Priority:** P0
 - **Points:** 3
 - **GitHub:** [#137](https://github.com/manasXP/epicura/issues/137)
@@ -140,7 +140,7 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 ---
 
 ### 2.6 RCP-SYN.01: Cloud recipe sync — download, cache, versioning
-- **Sprint:** [[__Workspaces/SaaS/Urban.ai/docs/project-management/sprints/sprint-09|Sprint 9]]
+- **Sprint:** [[__Workspaces/Epicura/docs/13-ProjectManagement/sprints/sprint-09|Sprint 9]]
 - **Priority:** P1
 - **Points:** 5
 - **GitHub:** [#140](https://github.com/manasXP/epicura/issues/140)
@@ -191,7 +191,7 @@ YAML recipe format, cooking state machine, dispensing orchestration, and cloud r
 
 ## 4. References
 
-- [[__Workspaces/Epicura/docs/03-Software/02-Controller-Software-Architecture|Controller Software Architecture]]
-- [[__Workspaces/Epicura/docs/03-Software/03-Main-Loop-State-Machine|Main Loop State Machine]]
-- [[__Workspaces/Epicura/docs/05-Subsystems/03-Ingredient-Dispensing|Ingredient Dispensing Subsystem]]
+- [[02-Controller-Software-Architecture|Controller Software Architecture]]
+- [[03-Main-Loop-State-Machine|Main Loop State Machine]]
+- [[03-Ingredient-Dispensing|Ingredient Dispensing Subsystem]]
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|Epic Index]]

@@ -190,7 +190,7 @@ The recipe engine sends `EXHAUST_AUTO` at each cooking stage transition. Manual 
 | Steam (water vapor) | Boiling, simmering | <5% | <5% | <5% (passes through) |
 
 > [!note]
-> Steam (water vapor) is not filtered — it passes through and exits as moisture. A condensation approach (cold surface or lid drip channel) can reduce steam volume before it reaches the filter. See [[../02-Hardware/07-Mechanical-Design|Mechanical Design]] for pot lid condensation channel design.
+> Steam (water vapor) is not filtered — it passes through and exits as moisture. A condensation approach (cold surface or lid drip channel) can reduce steam volume before it reaches the filter. See [[../02-Hardware/04-Mechanical-Design|Mechanical Design]] for pot lid condensation channel design.
 
 ---
 
@@ -222,7 +222,7 @@ The fume collection hood sits above the pot opening, integrated into the overhea
 ### 5.2 Key Design Points
 
 - **Hood material:** Stainless steel or heat-resistant PP (same as enclosure interior)
-- **Camera protection:** The hood directs fumes laterally toward the exhaust duct, away from the camera lens. Combined with the camera's anti-fog glass cover (see [[12-Vision-System|Vision System]]), this minimizes lens fogging
+- **Camera protection:** The hood directs fumes laterally toward the exhaust duct, away from the camera lens. Combined with the camera's anti-fog glass cover (see [[04-Vision-System|Vision System]]), this minimizes lens fogging
 - **Baffle angle:** 15-30° inward slope channels rising fumes toward the exhaust duct
 - **Hood clearance:** 30-50mm above pot rim to allow paddle/arm movement
 - **Duct cross-section:** 60x60mm (matches fan) with smooth interior to reduce resistance
@@ -362,13 +362,13 @@ The companion app tracks filter usage hours and sends maintenance reminders.
 
 ## 11. Related Documentation
 
-- [[09-Induction-Heating|Induction Heating]] - Heat source and PID control (fan speed tracks cooking stage)
-- [[12-Vision-System|Vision System]] - Camera anti-fog measures and steam protection
-- [[../02-Hardware/07-Mechanical-Design|Mechanical Design]] - Enclosure airflow, pot lid design, vent placement
-- [[../02-Hardware/02-Technical-Specifications|Technical Specifications]] - Power budget and communication interfaces
-- [[../02-Hardware/Epicura-Architecture|Epicura Architecture]] - STM32 GPIO allocation for exhaust fan PWM
-- [[../06-Compliance/06-Safety-Compliance|Safety & Compliance]] - IEC 60335 ventilation requirements
-- [[../08-Components/02-Actuation-Components|Actuation Components]] - Exhaust fan BOM entry
+- [[01-Induction-Heating|Induction Heating]] - Heat source and PID control (fan speed tracks cooking stage)
+- [[04-Vision-System|Vision System]] - Camera anti-fog measures and steam protection
+- [[../02-Hardware/04-Mechanical-Design|Mechanical Design]] - Enclosure airflow, pot lid design, vent placement
+- [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications|Technical Specifications]] - Power budget and communication interfaces
+- [[../02-Hardware/01-Epicura-Architecture|Epicura Architecture]] - STM32 GPIO allocation for exhaust fan PWM
+- [[../06-Compliance/01-Safety-Compliance|Safety & Compliance]] - IEC 60335 ventilation requirements
+- [[02-Actuation-Components|Actuation Components]] - Exhaust fan BOM entry
 
 ---
 

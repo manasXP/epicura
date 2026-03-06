@@ -19,9 +19,9 @@
 - [x] [[docs/05-Subsystems/13-Exhaust-Fume-Management|Exhaust & Fume Management]]
 - [x] [[06-Safety-Compliance|Safety & Compliance]]
 - [x] [[__Workspaces/Medical/ECG/docs/07-Development/Prototype-Development-Plan|Prototype Development Plan]]
-- [x] [[docs/08-Components/01-Compute-Module-Components|Compute Module Components]]
-- [x] [[docs/08-Components/02-Actuation-Components|Actuation Components]]
-- [x] [[docs/08-Components/03-Sensor-Components|Sensor Components]]
+- [x] [[01-Compute-Module-Components|Compute Module Components]]
+- [x] [[02-Actuation-Components|Actuation Components]]
+- [x] [[03-Sensor-Components|Sensor Components]]
 - [x] [[__Workspaces/Epicura/docs/08-Components/04-Total-Component-Cost|Total Component Cost]]
 - [x] Update `__init.md` with documentation links
 - [x] Expand `CLAUDE.md` with technical context

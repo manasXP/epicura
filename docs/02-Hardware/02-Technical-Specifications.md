@@ -206,11 +206,11 @@ An off-the-shelf 12V UPS powers the 5V rail (CM5 + STM32) independently of the 2
 
 ## 7. Related Documentation
 
-- [[Epicura-Architecture|Hardware Architecture & Wiring Diagrams]]
-- [[05-Sensors-Acquisition|Sensors & Data Acquisition]]
-- [[07-Mechanical-Design|Mechanical Design]]
-- [[../05-Subsystems/13-Exhaust-Fume-Management|Exhaust & Fume Management]]
-- [[../01-Overview/01-Project-Overview|Project Overview]]
+- [[01-Epicura-Architecture|Hardware Architecture & Wiring Diagrams]]
+- [[03-Sensors-Acquisition|Sensors & Data Acquisition]]
+- [[04-Mechanical-Design|Mechanical Design]]
+- [[../05-Subsystems/05-Exhaust-Fume-Management|Exhaust & Fume Management]]
+- [[__Workspaces/Epicura/docs/01-Overview/01-Project-Overview|Project Overview]]
 
 #epicura #technical-specifications #hardware
 
