@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
-modified: 2026-02-20
-version: 3.0
+modified: 2026-03-06
+version: 5.0
 status: Draft
 ---
 
@@ -27,33 +27,38 @@ This document provides the comprehensive hardware architecture, wiring diagrams,
                                         └──────┬──────┘
                                                │
                               ┌────────────────▼────────────────┐
-                              │       Switch-Mode PSU           │
-                              │  AC-DC Multi-Output + PFC       │
-                              └──┬────────┬────────┬────────┬───┘
-                                 │        │        │        │
-                              5V/3A   3.3V/500mA 12V/2A  24V/1A
-                                 │        │        │        │
-          ┌──────────────────────┼────────┼────────┼────────┼──────────────────┐
-          │                      │        │        │        │                  │
-          │                      ▼        │        ▼        ▼                  │
-          │  ┌───────────────────────┐    │   ┌────────────────────────────┐   │
-          │  │  Raspberry Pi CM5     │    │   │  STM32G474RE               │   │
-          │  │  (Yocto Linux)        │    │   │  (FreeRTOS)                │   │
-          │  │                       │    │   │                            │   │
-          │  │  - Recipe Engine      │    │   │  - PID Heat Control        │   │
-          │  │  - CV Inference       │    │   │  - Servo Motor Control     │   │
-          │  │  - UI Rendering       │    │   │  - Sensor Acquisition      │   │
-          │  │  - Cloud/WiFi/BT      │    │   │  - Dispensing Logic        │   │
-          │  │  - OTA Updates        │    │   │  - Safety Monitoring       │   │
-          │  │                       │    │   │                            │   │
-          │  │  ┌─────┐  ┌────────┐  │    │   │  ┌──────┐  ┌───────────┐   │   │
-          │  │  │CSI-2│  │DSI/HDMI│  │    │   │  │ PWM  │  │ ADC/GPIO  │   │   │
-          │  │  └──┬──┘  └───┬────┘  │    │   │  └──┬───┘  └─────┬─────┘   │   │
-          │  └─────┼─────────┼───────┘    │   └─────┼─────────────┼────────┘   │
-          │        │         │    ▲       │         │             │            │
-          │        │         │    │ SPI (2 MHz)     │             │            │
-          │        │         │    │ + IRQ line      │             │            │
-          │        │         │    └────────────────►│             │            │
+                              │       Mean Well LRS-75-24       │
+                              │  AC-DC Single Output + PFC      │
+                              └────────────────┬────────────────┘
+                                               │
+                                            24V/3.2A
+                                               │
+          ┌────────────────────────────────────┼──────────────────────────────┐
+          │          Unified PCB               │                              │
+          │   24V→12V (MP1584EN), 12V→5V (TPS54531)                           │
+          │   USB-C VBUS→5V, Li-Ion→MT3608→5V (3-way OR→AMS1117→3.3V)       │
+          │                                    │                              │
+          │        5V (via 40-pin header)       │    3.3V                      │
+          │              │                      │      │                       │
+          │              ▼                      ▼      ▼                       │
+          │  ┌───────────────────────┐      ┌────────────────────────────┐  │
+          │  │  CM5IO + CM5          │      │  STM32G474RE               │  │
+          │  │  (Yocto Linux)        │      │  (FreeRTOS)                │  │
+          │  │                       │      │                            │  │
+          │  │  - Recipe Engine      │      │  - PID Heat Control        │  │
+          │  │  - CV Inference       │      │  - Servo Motor Control     │  │
+          │  │  - UI Rendering       │      │  - Sensor Acquisition      │  │
+          │  │  - Cloud/WiFi/BT      │      │  - Dispensing Logic        │  │
+          │  │  - OTA Updates        │      │  - Safety Monitoring       │  │
+          │  │                       │      │                            │  │
+          │  │  ┌─────┐  ┌────────┐  │      │  ┌──────┐  ┌───────────┐  │  │
+          │  │  │CSI-2│  │DSI/HDMI│  │      │  │ PWM  │  │ ADC/GPIO  │  │  │
+          │  │  └──┬──┘  └───┬────┘  │      │  └──┬───┘  └─────┬─────┘  │  │
+          │  └─────┼─────────┼───────┘      └─────┼─────────────┼───────┘  │
+          │        │         │    ▲                │             │          │
+          │        │         │    │ SPI (2 MHz)    │             │          │
+          │        │         │    │ + IRQ line     │             │          │
+          │        │         │    └───────────────►│             │          │
           │        ▼         ▼                      ▼             ▼            │
           │   ┌────────┐ ┌──────────┐      ┌──────────────┐ ┌──────────────┐   │
           │   │IMX219/ │ │10" Touch │      │Microwave     │ │  Sensors     │   │
@@ -81,7 +86,7 @@ This document provides the comprehensive hardware architecture, wiring diagrams,
 |-----------|-------------|-----------|--------------|---------|
 | Compute Module | Raspberry Pi CM5 | - | Carrier board | AI/vision, recipe engine, UI, networking |
 | CM5 Carrier Board | Custom or IO Board | GPIO/CSI/DSI/USB | CM5 module | Breakout for all CM5 interfaces |
-| Motor Controller | STM32G474RE (LQFP-64) | - | Custom PCB | Real-time control: PID, servos, sensors, safety |
+| Motor Controller | STM32G474RE (LQFP-64) | - | Unified PCB | Real-time control: PID, servos, sensors, safety |
 | Camera Module | IMX219 or IMX477 | MIPI CSI-2 | CM5 CSI port | Overhead food monitoring, CV inference |
 | IR Thermometer | MLX90614ESF-BAA | I2C | STM32 I2C1 | Non-contact food surface temperature |
 | Load Cell ADC | HX711 | SPI-like GPIO | STM32 GPIO | 24-bit weight measurement from strain gauges |
@@ -93,10 +98,12 @@ This document provides the comprehensive hardware architecture, wiring diagrams,
 | SLD Peristaltic Pumps | 12V DC (x2) via TB6612 | GPIO (PWM/DIR) | STM32 PC3-PC6 | Oil and water dispensing |
 | SLD Solenoid Valves | 12V NC (x2) | GPIO | STM32 PA7, PA9 via MOSFET | Liquid drip prevention |
 | Exhaust Fans | 2× 120mm 12V DC brushless | PWM (25kHz) | STM32 PA6, PB10 via MOSFET | Fume extraction, independent control |
-| Piezo Buzzer | 5V active | PWM | STM32 PA11 via MOSFET | Audio alerts |
+| Piezo Buzzer | 5V active | PWM | STM32 PB11 via MOSFET | Audio alerts |
+| USB-C Receptacle | Mid-mount 16-pin | USB 2.0 FS | STM32 PA11/PA12 (native USB) | DFU programming, CDC serial debug |
+| Li-Ion Battery | Single cell 3.7V (JST-PH) | Analog | TP4056 charger on Unified PCB | Micro-UPS for STM32 state retention |
 | Microwave Induction Surface | Commercial module w/ CAN | CAN 2.0B (500kbps) | STM32 FDCAN1 (PB8/PB9) | Self-contained induction heating with internal coil, driver, and safety |
 | 10" Touchscreen | Generic DSI/HDMI 10.1" IPS | DSI or HDMI + I2C | CM5 DSI/HDMI + I2C | User interface display |
-| PSU Module | Mean Well LRS-75-24 | AC-DC 24V | AC mains input | 24V DC for CM5IO, controller, servos |
+| PSU Module | Mean Well LRS-75-24 | AC-DC 24V | AC mains input | 24V DC to Unified PCB (derives 12V, 5V, 3.3V for all subsystems) |
 | Safety Relay | Omron G5V-2 or equiv. | GPIO (via MOSFET) | STM32 GPIO | Induction mains disconnect |
 | LED Ring | WS2812B strip (12-16 LEDs) | SPI/GPIO data line | CM5 or STM32 GPIO | Pot illumination for camera |
 | E-Stop Button | Normally-closed mushroom | GPIO (interrupt) | STM32 GPIO + relay | Emergency power cutoff |
@@ -152,7 +159,7 @@ The CM5 mounts on the CM5IO (Raspberry Pi Compute Module IO Board) carrier that 
 │  │  40-pin GPIO ► Breakout for all interfaces             │   │
 │  └────────────────────────────────────────────────────────┘   │
 │                                                               │
-│  Power Input: 5V / 3A from PSU 5V rail                        │
+│  Power Input: 5V / 3A from Unified PCB (via 40-pin pins 2, 4) │
 └───────────────────────────────────────────────────────────────┘
 ```
 
@@ -210,9 +217,9 @@ STM32G474RE (LQFP-64)
 │  └─────────────────────────────────────────────────────┘     │
 │                                                              │
 │  ┌─── CAN: Microwave Surface ─────┐                          │
-│  │  PB8  (FDCAN1_RX) ◄── J_STACK Pin 19 → Driver PCB ISO1050 │
-│  │  PB9  (FDCAN1_TX) ──► J_STACK Pin 20 → Driver PCB ISO1050 │
-│  │  Bit rate: 500 kbps, isolation + termination on Driver PCB│
+│  │  PB8  (FDCAN1_RX) ◄── ISO1050DUB on-board (CAN_RX)        │
+│  │  PB9  (FDCAN1_TX) ──► ISO1050DUB on-board (CAN_TX)        │
+│  │  Bit rate: 500 kbps, isolation + termination on Unified PCB│
 │  └─────────────────────────────────┘                         │
 │                                                              │
 │  ┌─── PWM+GPIO: BLDC Stirring Motor ─┐                       │
@@ -224,7 +231,7 @@ STM32G474RE (LQFP-64)
 │  ┌─── P-ASD Subsystem (Pneumatic Seasoning Dispenser) ──┐    │
 │  │  PA0  (TIM2_CH1)  ──► P-ASD Diaphragm Pump PWM            │
 │  │  Solenoids V1-V6: PCF8574 I2C GPIO expander               │
-│  │    (I2C1 addr 0x20, on Driver PCB, outputs P0-P5)         │
+│  │    (I2C1 addr 0x20, on Unified PCB, outputs P0-P5)        │
 │  │  I2C1 (PB6/PB7)  ──► ADS1015 Pressure Sensor (0x48)       │
 │  │                   ──► PCF8574 Solenoid Expander (0x20)    │
 │  └─────────────────────────────────┘                         │
@@ -253,8 +260,17 @@ STM32G474RE (LQFP-64)
 │  └─────────────────────────────────┘                         │
 │                                                              │
 │  ┌─── Audio ───────────────────────┐                         │
-│  │  PA11 (TIM1_CH4)  ──► Piezo Buzzer PWM                    │
+│  │  PB11 (TIM2_CH4)  ──► Piezo Buzzer PWM                    │
 │  └─────────────────────────────────┘                         │
+│                                                              │
+│  ┌─── USB: Programming & Debug (Native USB 2.0 FS) ───┐     │
+│  │  PA11 (USB_DM)    ◄─► USB-C D- (22R + USBLC6 ESD)        │
+│  │  PA12 (USB_DP)    ◄─► USB-C D+ (22R + USBLC6 ESD)        │
+│  │  PA3  (ADC)       ◄── VBUS detect (100k/100k divider)    │
+│  │  Modes: DFU bootloader (BOOT0 HIGH), USB CDC serial       │
+│  │  5.1kR CC pulldowns for UFP/device identification         │
+│  │  500mA polyfuse on VBUS                                   │
+│  └─────────────────────────────────────────────────────┘     │
 │                                                              │
 │  ┌─── I2C: IR Thermometer ────────┐                          │
 │  │  PB6  (I2C1_SCL) ──► MLX90614 SCL                         │
@@ -277,11 +293,9 @@ STM32G474RE (LQFP-64)
 │  Power: 3.3V / GND from PSU rail                             │
 │  Debug: SWD (PA13/PA14) via TagConnect or 10-pin header      │
 │                                                              │
-│  Note: All actuator signals route via J_STACK connector to   │
-│  Driver PCB where power electronics drive the actuators.     │
-│  J_STACK organized by subsystem: ASD (pin 15), CAN (pins 19-20),
-│  CID (21-26), Exhaust (27-28), SLD (29-36), Main (37-40) for │
-│  modular wiring harnesses.                                   │
+│  Note: All actuator signals route directly on-board to       │
+│  power driver ICs on the Unified PCB. No stacking connector  │
+│  is needed — STM32 and driver electronics share one board.   │
 └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -461,28 +475,28 @@ SPI Configuration:
 
 ### 9.2 CAN Bus Wiring (Microwave Surface)
 
-CAN bus is used for controlling the microwave induction surface module. The STM32's FDCAN1 logic signals (PB8/PB9) route via J_STACK pins 19-20 to the **Driver PCB**, where an ISO1050DUB isolated CAN transceiver (5 kV RMS) converts them to differential CAN_H/CAN_L signals on J_CAN.
+CAN bus is used for controlling the microwave induction surface module. The STM32's FDCAN1 logic signals (PB8/PB9) connect directly to an on-board ISO1050DUB isolated CAN transceiver (5 kV RMS) on the **Unified PCB**, which converts them to differential CAN_H/CAN_L signals on J_CAN.
 
 ```
-Microwave Surface              Driver PCB                    Controller PCB
-(built-in CAN port)            (ISO1050DUB + J_CAN)          (STM32 FDCAN1)
-┌──────────────────┐           ┌──────────────────────┐      ┌──────────────────┐
-│  Onboard         │           │  ISO1050DUB          │      │  FDCAN1          │
-│  CAN controller  │           │  (5kV isolation)     │      │                  │
-│           │      │           │       │              │      │  PB8 (RX) ◄─────┼── J_STACK Pin 19
-│  CAN_H ───┼──────┼───────────┼── CANH│              │      │  PB9 (TX) ──────┼── J_STACK Pin 20
-│  CAN_L ───┼──────┼───────────┼── CANL│   R_TERM     │      │                  │
-│  GND ─────┼──────┼───────────┼── GND_ISO  120Ω      │      │  3.3V logic      │
-│           │      │           │                      │      │  (no isolation   │
-│       120 ohm    │           │  VCC1=3.3V VCC2=5V   │      │   needed here)   │
-│      termination │           │  (from J_STACK)      │      │                  │
-└──────────────────┘           └──────────────────────┘      └──────────────────┘
+Microwave Surface              Unified PCB
+(built-in CAN port)            (STM32 FDCAN1 + ISO1050DUB + J_CAN)
+┌──────────────────┐           ┌──────────────────────────────────┐
+│  Onboard         │           │  STM32 FDCAN1    ISO1050DUB      │
+│  CAN controller  │           │  PB8 (RX) ◄──── RXD  │           │
+│           │      │           │  PB9 (TX) ────► TXD  │           │
+│  CAN_H ───┼──────┼───────────┼──────────────── CANH │  R_TERM   │
+│  CAN_L ───┼──────┼───────────┼──────────────── CANL │  120Ω     │
+│  GND ─────┼──────┼───────────┼──────────────── GND_ISO          │
+│           │      │           │                                  │
+│       120 ohm    │           │  VCC1=3.3V  VCC2=5V              │
+│      termination │           │  (5kV isolation)                 │
+└──────────────────┘           └──────────────────────────────────┘
 
 CAN Configuration:
   Bit Rate:    500 kbps (standard CAN 2.0B)
-  Termination: 120 ohm at each end (module + Driver PCB)
-  Isolation:   ISO1050DUB on Driver PCB (5 kV RMS, ≥6.4mm creepage)
-  Nodes:       Microwave surface (required), STM32 via Driver PCB (required)
+  Termination: 120 ohm at each end (module + Unified PCB)
+  Isolation:   ISO1050DUB on Unified PCB (5 kV RMS, ≥6.4mm creepage)
+  Nodes:       Microwave surface (required), STM32 on Unified PCB (required)
 ```
 
 ### 9.3 Message Protocol (SPI or CAN)
@@ -542,35 +556,36 @@ AC Mains (220-240V 50Hz)
                  │
                  │ 24V DC Bus
                  │
-     ┌───────────┼───────────┐
-     │           │           │
-     ▼           ▼           ▼
-┌─────────┐ ┌─────────┐ ┌─────────┐
-│ CM5IO   │ │ Buck    │ │ Direct  │
-│ Board   │ │ 24V→5V  │ │ 24V     │
-│ (24V in)│ │ (servo  │ │ safety  │
-│ Onboard │ │  rail,  │ │ relay,  │
-│ reg→5V  │ │  LEDs)  │ │ fan     │
-│ ──► CM5 │ │         │ │         │
-│  +displ │ │         │ │         │
-└────┬────┘ └─────────┘ └─────────┘
-     │
-     │ 40-pin GPIO connector
-     │ (5V on pins 2,4; GND on pins 6,9,etc.)
-     ▼
-┌────────────┐
-│ Controller │
-│ PCB        │
-│ 5V ──► LDO │
-│ LDO→3.3V   │
-│ ──► STM32  │
-│     sensors│
-└────────────┘
+                 ▼
+┌──────────────────────────────────────────────────┐
+│             Unified PCB (J_24V_IN)               │
+│                                                  │
+│  24V ──► MP1584EN #1 ──► 12V (actuators)         │
+│  24V ──► Direct 24V (BLDC motor, safety relay)   │
+│                                                  │
+│  12V ──► UPS battery ──► TPS54531 ──► 5V/5A      │
+│  5V  ──► AMS1117 LDO ──► 3.3V (STM32, sensors)  │
+│                                                  │
+└────────┬─────────────────────────────────────────┘
+         │
+         │ 40-pin GPIO connector (J_CM5)
+         │ (5V on pins 2,4; GND on pins 6,9,etc.)
+         │ Direction: Unified PCB → CM5IO
+         ▼
+┌──────────────────┐
+│ CM5IO Board      │
+│ (receives 5V)    │
+│ ──► CM5 module   │
+│ ──► Display      │
+│ USB-C for debug  │
+└──────────────────┘
 
 Note: Microwave induction surface has its own AC power
 inlet (not through the 24V PSU). The PSU only feeds
-logic, sensors, servos, and display. Controller PCB is
-powered via the CM5IO board's 40-pin connector (5V rail).
+logic, sensors, actuators, and display. The CM5IO is
+powered via the Unified PCB's 5V rail through the
+40-pin header (pins 2, 4). The CM5IO does not regulate
+24V — it receives 5V directly.
 STM32 controls the module via CAN bus (FDCAN1).
 ```
 
@@ -592,8 +607,8 @@ STM32 controls the module via CAN bus (FDCAN1).
 | Rail | Subsystem | Typical (W) | Peak (W) | Notes |
 |------|-----------|-------------|----------|-------|
 | AC direct | Microwave induction surface | 600 | 1,800 | Self-contained module, own AC inlet |
-| 24V (via CM5IO reg) | CM5 compute module | 8 | 15 | CM5IO onboard buck to 5V, includes eMMC, WiFi, camera |
-| 24V (via CM5IO reg) | Display backlight | 3 | 5 | Fed from CM5IO board 5V/12V rail |
+| 5V (from Unified PCB) | CM5 compute module | 8 | 15 | 5V via 40-pin header to CM5IO, includes eMMC, WiFi, camera |
+| 5V (from Unified PCB) | Display backlight | 3 | 5 | Fed from CM5IO 5V rail (sourced from Unified PCB) |
 | 24V direct | BLDC stirring motor | 12 | 48 | 24V direct to integrated ESC, ~0.5A typical, ~2A peak |
 | 24V → 5V buck | ASD SG90 servos (x3) | 0.5 | 3 | 4.8-6V via same buck |
 | 24V → 12V | CID linear actuators (x2) | 0 | 5 | 12V, only during dispense |
@@ -602,8 +617,8 @@ STM32 controls the module via CAN bus (FDCAN1).
 | 24V → 5V buck | LED ring (WS2812B) | 2 | 5 | 16 LEDs at partial brightness |
 | 24V direct | Safety relay coil | 0.5 | 1 | Mains disconnect for microwave surface |
 | 24V → 12V | Exhaust fans (x2) | 1 | 6 | 12V DC, 120mm, 0.3-0.5A each |
-| CM5IO 5V → 3.3V | STM32G474RE | 0.3 | 0.5 | Controller PCB via CM5IO 40-pin, LDO to 3.3V |
-| CM5IO 5V → 3.3V | MLX90614 + HX711 | 0.05 | 0.1 | Low-power I2C/SPI devices |
+| 5V → 3.3V (on Unified PCB) | STM32G474RE | 0.3 | 0.5 | AMS1117 LDO on Unified PCB |
+| 5V → 3.3V (on Unified PCB) | MLX90614 + HX711 | 0.05 | 0.1 | Low-power I2C/SPI devices |
 | - | Regulator losses | 5 | 10 | Buck + LDO inefficiency |
 | **24V PSU Total** | | **~25W** | **~62W** | **Within 76.8W PSU capacity** |
 | **System Total (incl. induction)** | | **~625W** | **~1,862W** | **Within 2kW limit** |
@@ -614,7 +629,7 @@ STM32 controls the module via CAN bus (FDCAN1).
 
 ### 11.1 Module Integration
 
-The microwave induction surface is a self-contained commercial module with its own AC power inlet, power electronics, induction coil, and onboard safety circuits. Epicura interfaces with the module exclusively via CAN bus — no high-voltage wiring touches the controller PCB.
+The microwave induction surface is a self-contained commercial module with its own AC power inlet, power electronics, induction coil, and onboard safety circuits. Epicura interfaces with the module exclusively via CAN bus — no high-voltage wiring touches the Unified PCB.
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -631,19 +646,17 @@ The microwave induction surface is a self-contained commercial module with its o
 │    GND ────────────────────┤                               │
 └────────────────────────────┼───────────────────────────────┘
                              │
-                    ┌────────▼────────┐
-                    │  Driver PCB     │
-                    │  ISO1050DUB     │
-                    │  (5kV isolation)│
-                    │  + 120Ω term    │
-                    │  + J_CAN conn   │
-                    └────────┬────────┘
-                             │ J_STACK Pins 19-20
-                    ┌────────▼────────┐
-                    │  STM32 FDCAN1   │
-                    │  PB8 (CAN_RX)   │
-                    │  PB9 (CAN_TX)   │
-                    └─────────────────┘
+                    ┌─────────────────────┐
+                    │  Unified PCB        │
+                    │  ISO1050DUB         │
+                    │  (5kV isolation)    │
+                    │  + 120Ω term        │
+                    │  + J_CAN conn       │
+                    │        │            │
+                    │  STM32 FDCAN1       │
+                    │  PB8 (CAN_RX)       │
+                    │  PB9 (CAN_TX)       │
+                    └─────────────────────┘
 
 System Safety:
   - Module-internal: pot detection, thermal fuse, overcurrent (cannot be overridden)
@@ -660,14 +673,14 @@ The dispensing system comprises three subsystems. See [[03-Ingredient-Dispensing
 ### 12.1 P-ASD — Pneumatic Seasoning Dispenser Wiring
 
 ```
-  12V Rail (from Driver PCB MP1584EN #1)
+  12V Rail (from on-board MP1584EN #1)
   │
-  ├──► Diaphragm Pump ◄── PA0 (TIM2_CH1) via J_STACK Pin 15, IRLML6344 MOSFET
+  ├──► Diaphragm Pump ◄── PA0 (TIM2_CH1), IRLML6344 MOSFET
   │
   ├──► Solenoid V1-V6 (6×) ◄── PCF8574 P0-P5 (I2C1, addr 0x20)
-  │      PCF8574 on Driver PCB, gates drive IRLML6344 MOSFETs
+  │      PCF8574 on Unified PCB, gates drive IRLML6344 MOSFETs
   │
-  I2C1 (PB6/PB7 via J_STACK Pins 35-36):
+  I2C1 (PB6/PB7):
     ├── ADS1015 (0x48) — Accumulator pressure sensor
     └── PCF8574 (0x20) — Solenoid GPIO expander
 
@@ -677,40 +690,38 @@ The dispensing system comprises three subsystems. See [[03-Ingredient-Dispensing
 ### 12.2 CID — Linear Actuator Wiring
 
 ```
-  12V Rail (from Driver PCB MP1584EN #1)
+  12V Rail (from on-board MP1584EN #1)
   │
-  ├──► CID-1 Linear Actuator (via DRV8876 #1 on Driver PCB)
-  │      EN/PWM ◄── PA10 (TIM1_CH3) via J_STACK Pin 21
-  │      PH/DIR ◄── PB4  (GPIO)     via J_STACK Pin 22
+  ├──► CID-1 Linear Actuator (via DRV8876 #1 on Unified PCB)
+  │      EN/PWM ◄── PA10 (TIM1_CH3)
+  │      PH/DIR ◄── PB4  (GPIO)
   │
-  └──► CID-2 Linear Actuator (via DRV8876 #2 on Driver PCB)
-         EN/PWM ◄── PB5  (GPIO)     via J_STACK Pin 23
-         PH/DIR ◄── PC2  (GPIO)     via J_STACK Pin 24
+  └──► CID-2 Linear Actuator (via DRV8876 #2 on Unified PCB)
+         EN/PWM ◄── PB5  (GPIO)
+         PH/DIR ◄── PC2  (GPIO)
 
-  GND ──► Dedicated GND on J_STACK Pins 25-26 for CID subsystem
-
-  Note: Limit switches not currently implemented (reserved J_STACK Pins 27-28)
+  Note: Limit switches not currently implemented (reserved for future use)
 ```
 
 ### 12.3 SLD — Liquid Dispensing Wiring
 
 ```
-  12V Rail (from Driver PCB MP1584EN #1)
+  12V Rail (from on-board MP1584EN #1)
   │
-  ├──► Peristaltic Pump (Oil) — TB6612 Channel A on Driver PCB
-  │      PWMA ◄── PC3 (GPIO) via J_STACK Pin 29
-  │      AIN1 ◄── PC4 (GPIO) via J_STACK Pin 30
+  ├──► Peristaltic Pump (Oil) — TB6612 Channel A on Unified PCB
+  │      PWMA ◄── PC3 (GPIO)
+  │      AIN1 ◄── PC4 (GPIO)
   │
-  ├──► Peristaltic Pump (Water) — TB6612 Channel B on Driver PCB
-  │      PWMB ◄── PC5 (GPIO) via J_STACK Pin 31
-  │      BIN1 ◄── PC6 (GPIO) via J_STACK Pin 32
+  ├──► Peristaltic Pump (Water) — TB6612 Channel B on Unified PCB
+  │      PWMB ◄── PC5 (GPIO)
+  │      BIN1 ◄── PC6 (GPIO)
   │
-  ├──► Solenoid Valve (Oil)   ◄── PA7 (GPIO) via J_STACK Pin 33, MOSFET + flyback
-  └──► Solenoid Valve (Water) ◄── PA9 (GPIO) via J_STACK Pin 34, MOSFET + flyback
+  ├──► Solenoid Valve (Oil)   ◄── PA7 (GPIO), MOSFET + flyback
+  └──► Solenoid Valve (Water) ◄── PA9 (GPIO), MOSFET + flyback
 
-  I2C for INA219 current monitor (on Driver PCB):
-    SCL ◄── PB6 (I2C1_SCL) via J_STACK Pin 35
-    SDA ◄── PB7 (I2C1_SDA) via J_STACK Pin 36
+  I2C for INA219 current monitor (on Unified PCB):
+    SCL ◄── PB6 (I2C1_SCL)
+    SDA ◄── PB7 (I2C1_SDA)
 
   SLD Load Cells (2× 2 kg, one per reservoir):
     HX711 #1 (oil):   SCK ◄── PC11 (GPIO), DOUT ──► PC12 (GPIO)
@@ -727,13 +738,7 @@ The dispensing system comprises three subsystems. See [[03-Ingredient-Dispensing
 | SLD (liquids) | 2× peristaltic pump (TB6612) + 2× solenoid + 2× 2 kg load cell | Closed-loop via dedicated per-reservoir load cells + low-level alerts | ~5 g |
 | Exhaust | 2× 120mm fans (independent PWM control) | Temperature/fume-based control | — |
 
-**J_STACK Connector Organization:**
-- **P-ASD**: Pin 15 (pump PWM); solenoids V1-V6 via PCF8574 on Driver PCB (I2C1, no J_STACK pins needed)
-- **CAN**: Pins 19-20 (FDCAN1_RX/TX → Driver PCB ISO1050DUB → J_CAN)
-- **CID**: Pins 21-26 (2× actuator EN/PH, 2× GND)
-- **Exhaust Fans**: Pins 27-28 (FAN1 PWM, FAN2 PWM)
-- **SLD**: Pins 29-36 (2× pump PWM/DIR, 2× solenoid, I2C for INA219)
-- **Main**: Pins 37-40 (BLDC motor PWM+EN+DIR, buzzer)
+**Unified PCB On-Board Routing:** All STM32 control signals connect directly to their corresponding driver ICs (DRV8876, TB6612, ISO1050DUB, PCF8574, MOSFETs) on the same board. No inter-board stacking connector is required. The Unified PCB connects to the CM5IO board via the 40-pin GPIO header for SPI communication and 5V power.
 
 ---
 
@@ -812,7 +817,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 - **Shielding:** Ferrite sheet between coil and electronics compartment
 - **Distance:** Maintain minimum 50mm between coil and sensitive PCBs
 - **Orientation:** Route I2C/SPI traces perpendicular to coil field lines
-- **Grounding:** Copper ground pour on STM32 PCB, connected to chassis ground
+- **Grounding:** Copper ground pour on Unified PCB, connected to chassis ground
 
 ### 15.2 Sensor Signal Routing
 
@@ -887,7 +892,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 | | E-Stop mushroom button | 1 | $4 | $4 |
 | | CAN transceiver (for FDCAN1) | 1 | $3 | $3 |
 | | Passive components (R, C, etc.) | Lot | - | $20 |
-| | Custom PCBs (4-layer, 2 boards) | 1 set | $40 | $40 |
+| | Unified PCB (4-layer, 1 board) | 1 | $40 | $40 |
 | | Wiring, connectors, FFC cables | Lot | - | $25 |
 | **Enclosure** | 3D-printed enclosure (prototype) | 1 | $80 | $80 |
 | | Pot (off-shelf induction-compatible) | 1 | $25 | $25 |
@@ -895,7 +900,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 
 **Estimated Prototype BOM Total: $700 - $800 USD**
 
-*Note: Production BOM would be lower per unit at volume. Prototype uses Nucleo dev board that would be replaced with bare STM32G474RE on the controller PCB. The CM5 IO Board is used as-is (off-the-shelf) in both prototype and production.*
+*Note: Production BOM would be lower per unit at volume. Prototype uses Nucleo dev board that would be replaced with bare STM32G474RE on the Unified PCB. The CM5 IO Board is used as-is (off-the-shelf) in both prototype and production.*
 
 ---
 
@@ -957,7 +962,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 - [ ] Both exhaust fans: Independent control verified (each can run separately)
 - [ ] Buzzer: All alert patterns audible and distinct
 - [ ] No cross-contamination between subsystems
-- [ ] J_STACK connector: All subsystem pins connected correctly
+- [ ] Unified PCB: All subsystem signal routes verified on-board
 
 ---
 
@@ -965,7 +970,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 
 ### 18.1 Electrical Safety
 
-- **Galvanic Isolation:** The microwave induction surface is a self-contained AC module — no mains voltage reaches the controller or driver PCBs. The ISO1050DUB isolated CAN transceiver on the Driver PCB provides 5 kV RMS galvanic isolation between the CAN bus and STM32 logic. PSU provides transformer-isolated DC outputs.
+- **Galvanic Isolation:** The microwave induction surface is a self-contained AC module — no mains voltage reaches the Unified PCB. The ISO1050DUB isolated CAN transceiver on the Unified PCB provides 5 kV RMS galvanic isolation between the CAN bus and STM32 logic. PSU provides transformer-isolated DC outputs.
 - **Earth Bonding:** Metal enclosure parts connected to AC earth via IEC C14 inlet. Chassis ground bonded to PSU earth.
 - **Fuse Protection:** 10A ceramic fuse in IEC C14 inlet. Self-resetting PTC fuse on 5V rail (3A).
 
@@ -995,7 +1000,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 - [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications|Technical Specifications]]
 - [[03-Sensors-Acquisition|Sensors & Data Acquisition]]
 - [[04-Mechanical-Design|Mechanical Design]]
-- [[../09-PCB/01-Controller-PCB-Design|Controller PCB Design]]
+- [[../09-PCB/01-Unified-PCB-Design|Unified PCB Design]]
 - [[__Workspaces/Epicura/docs/01-Overview/01-Project-Overview|Project Overview]]
 - [[../03-Software/01-Tech-Stack|Tech Stack]]
 - [[../07-Development/01-Prototype-Development-Plan|Prototype Development Plan]]
@@ -1013,3 +1018,5 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
 | 2.0 | 2026-02-20 | Manas Pradhan | Updated CAN bus architecture: ISO1050DUB transceiver and J_CAN connector moved from Controller PCB to Driver PCB; FDCAN1 logic signals route via J_STACK pins 19-20; updated block diagrams, wiring, safety notes, and J_STACK organization |
 | 3.0 | 2026-02-20 | Manas Pradhan | Replaced DS3225 servo with 24V BLDC motor (integrated ESC); updated component list, STM32 pin allocation (PA4→BLDC_EN, PA5→BLDC_DIR, PA8→10kHz PWM), power budget, J_STACK pinout, and BOM |
+| 5.0 | 2026-03-09 | Manas Pradhan | Added USB-C programming port (native USB on PA11/PA12) and Li-Ion battery charger (TP4056+MT3608) to block diagram, component list, and STM32 pin allocation; buzzer moved from PA11 to PB11; 3-source 5V Schottky-OR power architecture |
+| 4.0 | 2026-03-06 | Manas Pradhan | Merged Controller PCB and Driver PCB into single Unified PCB; removed J_STACK inter-board connector references — all signals now route directly on-board; updated CAN, dispensing, power, safety, and BOM sections; 2-board stack (CM5IO + Unified PCB) replaces prior 3-board stack |

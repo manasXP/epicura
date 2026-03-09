@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
 modified: 2026-02-20
-version: 4.0
+version: 5.0
 status: Draft
 ---
 
@@ -129,8 +129,10 @@ The primary cooking element is a commercial microwave induction surface — a se
 | **PSU** | Mean Well LRS-75-24 (24V / 3.2A / 76.8W) |
 | **24V Rail** | 24V / 3.2A — main bus from PSU; feeds actuators (12V, 6.5V rails), induction CAN control, safety relay |
 | **12V UPS Input** | 12V DC from off-the-shelf UPS — feeds TPS54531 12V→5V 5A buck on Driver PCB |
-| **5V Rail** | 5V / 5A (UPS-backed, from TPS54531) — CM5, STM32 controller (via 3.3V LDO), LED ring, buzzer |
-| **3.3V Rail** | 3.3V / 500mA (LDO from 5V on Controller PCB) — STM32, sensors, I2C devices |
+| **5V Rail** | 5V — three-source Schottky-OR: 5V_MAIN (TPS54531, UPS-backed), 5V_USB (USB-C VBUS), 5V_BATT (MT3608 boost from Li-Ion) → 5V_MERGED → AMS1117 → 3.3V |
+| **USB-C Power** | 5V from USB-C VBUS via 500mA polyfuse — enables standalone programming/debug without 24V PSU |
+| **Li-Ion Battery** | Single-cell 3.7V Li-Ion (JST-PH 2-pin) — TP4056 CC/CV charger (500mA) + DW01A/FS8205A protection + MT3608 boost to 5V — micro-UPS for STM32 RTC/state retention |
+| **3.3V Rail** | 3.3V / 500mA (LDO from 5V_MERGED on Unified PCB) — STM32, sensors, I2C devices |
 | **Standby Power** | <5W (CM5 idle, display off, induction off) |
 | **PSU Type** | Mean Well enclosed AC-DC, single 24V output |
 | **Efficiency** | >87% at full load (Mean Well LRS-75 series) |
@@ -223,4 +225,5 @@ An off-the-shelf 12V UPS powers the 5V rail (CM5 + STM32) independently of the 2
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
 | 2.0 | 2026-02-16 | Manas Pradhan | Update power budget and dispensing accuracy for P-ASD pneumatic redesign |
 | 3.0 | 2026-02-20 | Manas Pradhan | Updated CAN interface row: transceiver (ISO1050DUB) now on Driver PCB, FDCAN1 signals route via J_STACK pins 19-20 |
+| 5.0 | 2026-03-09 | Manas Pradhan | Updated power specifications for 3-source 5V architecture (USB-C + Li-Ion battery + UPS), added USB-C and battery power entries |
 | 4.0 | 2026-02-20 | Manas Pradhan | Replaced DS3225 servo with 24V BLDC motor in communication interfaces and power budget; servo PWM row → BLDC PWM+EN+DIR row |

@@ -58,8 +58,7 @@ Welcome to the comprehensive documentation for the Epicura autonomous kitchen ro
 21. **[[__Workspaces/Epicura/docs/08-Components/04-Total-Component-Cost|Total Component Cost]]** - Full BOM and cost analysis ($614 prototype)
 
 #### 1.1.10 PCB Design
-22. **[[01-Controller-PCB-Design|Controller PCB Design]]** - STM32G474RE controller board (160x90mm)
-23. **[[02-Driver-PCB-Design|Driver PCB Design]]** - Power electronics and actuator driver board (160x90mm)
+22. **[[01-Unified-PCB-Design|Unified PCB Design]]** - STM32 controller + power/driver electronics on single 4-layer board (160x90mm)
 
 #### 1.1.11 Backend
 24. **[[01-Backend-Architecture|Backend Architecture]]** - Cloud backend (Fastify, PostgreSQL, Redis, MQTT bridge)
@@ -121,8 +120,7 @@ docs/
 │   ├── 03-Sensor-Components.md                  Sensors & cameras BOM
 │   └── 04-Total-Component-Cost.md               Full cost analysis ($614)
 ├── 09-PCB/
-│   ├── 01-Controller-PCB-Design.md              STM32G474RE controller board
-│   └── 02-Driver-PCB-Design.md                  Power electronics & actuator drivers
+│   ├── 01-Unified-PCB-Design.md              STM32 + power + drivers unified board
 ├── 10-Backend/
 │   ├── 01-Backend-Architecture.md               Cloud backend architecture
 │   ├── 02-Database-Schema.md                    PostgreSQL schema & sync

@@ -82,9 +82,9 @@ The CM5IO board is an off-the-shelf Raspberry Pi carrier board that sits on top.
                    │  (6-pin)     │     PWM+EN+DIR from J_STACK pins 37,39,40
                    └──────────────┘
                                                ┌───────────────┐
-                                               │P-ASD: 6x Sol │
-                                               │+ 1x Pump     │
-                                               │IRLML6344     │
+                                               │P-ASD: 6x Sol  │
+                                               │+ 1x Pump      │
+                                               │IRLML6344      │
                                                │(via PCF8574)  │
                                                └───────────────┘
                                                         │
@@ -361,9 +361,9 @@ Two linear actuators for CID (Coarse Ingredients Dispenser) push-plate sliders, 
 ```
 12V Rail ──── VM (DRV8876) ──── OUT1 ──┐
                                        │  Linear Actuator
-              VREF ◄── 3.3V           │  (12V, 1.5A nominal)
+              VREF ◄── 3.3V            │  (12V, 1.5A nominal)
                                        │
-              GND ─── GND      OUT2 ──┘
+              GND ─── GND      OUT2 ───┘
                 │
                 ├── EN/PWM ◄── PA10 or PB5 (via J_STACK, 100R gate)
                 ├── PH/DIR ◄── PB4 or PC2 (via J_STACK, 100R)

@@ -30,12 +30,12 @@
 
 - [ ] Order Raspberry Pi CM5 + carrier board
 - [ ] Order STM32G474 Nucleo dev board
-- [ ] Source commercial induction hob for teardown
+- [ ] Source a ommercial induction hob for teardown
 - [ ] Order 24V BLDC motor (30-50 kg-cm, integrated ESC)
 - [ ] Order IMX219 camera module
 - [ ] Order MLX90614 IR thermometer
 - [ ] Order HX711 + load cells
-- [ ] Order 10" touchscreen display
+- [ ] Order a 10" touchscreen display
 - [ ] 3D print enclosure prototype
 
 ## Firmware Development

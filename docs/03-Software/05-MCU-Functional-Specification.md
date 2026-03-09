@@ -10,7 +10,7 @@ aliases: [STM32 Spec, MCU Spec]
 > **Processor:** STM32G474RE, Cortex-M4F @ 170 MHz
 > **Flash / SRAM:** 512 KB / 128 KB
 > **Package:** LQFP-64
-> **Related:** [[04-MPU-Functional-Specification]], [[02-Controller-Software-Architecture]], [[01-Controller-PCB-Design]]
+> **Related:** [[04-MPU-Functional-Specification]], [[02-Controller-Software-Architecture]], [[01-Unified-PCB-Design]]
 
 ---
 
@@ -410,8 +410,7 @@ See [[04-MPU-Functional-Specification#5.1 SPI Protocol]] for full frame definiti
 | CM5 MPU spec | [[04-MPU-Functional-Specification]] |
 | State machine details | [[03-Main-Loop-State-Machine]] |
 | Software architecture | [[02-Controller-Software-Architecture]] |
-| Controller PCB design | [[01-Controller-PCB-Design]] |
-| Driver PCB design | [[02-Driver-PCB-Design]] |
+| Unified PCB design | [[01-Unified-PCB-Design]] |
 | Dispensing subsystems | [[03-Ingredient-Dispensing]] |
 | Hardware architecture | [[01-Epicura-Architecture]] |
 | Technical specifications | [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications]] |

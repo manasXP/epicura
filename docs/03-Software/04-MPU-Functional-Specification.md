@@ -345,6 +345,5 @@ The CM5 is **not** the primary safety controller — the STM32 owns all safety-c
 | Software architecture | [[02-Controller-Software-Architecture]] |
 | Tech stack decisions | [[01-Tech-Stack]] |
 | Hardware architecture | [[01-Epicura-Architecture]] |
-| Controller PCB | [[01-Controller-PCB-Design]] |
-| Driver PCB | [[02-Driver-PCB-Design]] |
+| Unified PCB | [[01-Unified-PCB-Design]] |
 | Dispensing subsystems | [[03-Ingredient-Dispensing]] |

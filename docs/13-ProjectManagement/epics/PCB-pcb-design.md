@@ -239,7 +239,6 @@ None — PCB is the first epic in the critical path.
 
 ## 6. References
 
-- [[01-Controller-PCB-Design|Controller PCB Design]]
-- [[02-Driver-PCB-Design|Driver PCB Design]]
+- [[01-Unified-PCB-Design|Unified PCB Design]]
 - [[01-Compute-Module-Components|Compute Module BOM]]
 - [[__Workspaces/Epicura/docs/13-ProjectManagement/epics/__init|Epic Index]]

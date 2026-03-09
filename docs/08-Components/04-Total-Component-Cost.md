@@ -76,7 +76,7 @@ This document provides a consolidated view of all component costs for the Epicur
 |------|------|-------|
 | Enclosure (3D printed) | $80.00 | PLA/PETG filament, prototype enclosure + internal brackets |
 | Mechanical Parts (shaft, brackets, fasteners) | $50.00 | Stainless steel shaft (8mm), aluminum brackets, M3/M4 fasteners |
-| Custom PCB (carrier/interface boards) | $40.00 | 2-4 layer prototype boards, 5 pcs ea (JLCPCB) |
+| Custom PCB (Unified PCB) | $25.50 | Single 4-layer board, 5 pcs (JLCPCB) |
 | Power Supply Module | $30.00 | Mean Well LRS-75-24 (24V/3.2A/76.8W) + buck converters (24V→5V) |
 | Wiring / Connectors / Misc | $30.00 | JST, Dupont, ring terminals, heat shrink, cable ties |
 | Pot (induction-compatible) | $20.00 | Stainless steel 304, 3-4L capacity, flat base |
@@ -110,7 +110,7 @@ This document provides a consolidated view of all component costs for the Epicur
 | 24V BLDC Stirring Motor | $25.00 | $15.00 | Bulk pricing |
 | Sensors (all) | $62.70 | $35.00 | Direct from manufacturer, MOQ pricing |
 | Enclosure | $80.00 (3D print) | $15.00 (injection mold) | Mold cost amortized over production run |
-| PCBs | $40.00 (prototype) | $8.00 (panel production) | Integrated carrier + interface board |
+| PCBs | $25.50 (prototype) | $8.00 (panel production) | Single unified PCB (controller + driver merged) |
 | Power Supply | $30.00 | $12.00 | Integrated SMPS on main PCB |
 | Mechanical | $50.00 | $15.00 | Stamped brackets, bulk fasteners |
 | Pot + Accessories | $20.00 | $10.00 | OEM sourcing |
@@ -184,14 +184,14 @@ This document provides a consolidated view of all component costs for the Epicur
 | 4 | Microwave Induction Surface | $60.00 | 8% | Self-contained CAN module; bulk: $40 |
 | 5 | Mechanical Parts | $50.00 | 6% | Shaft, brackets, fasteners |
 | 6 | Raspberry Pi CM5 | $45.00 | 6% | Volume pricing: $35 |
-| 7 | Custom PCBs | $40.00 | 5% | Panel production: $8/unit |
+| 7 | Unified PCB | $25.50 | 3% | Single board; panel production: $8/unit |
 
 ### 9.2 Cost Reduction Opportunities
 
 | Opportunity | Potential Savings | Effort | Risk |
 |-------------|-------------------|--------|------|
 | Volume pricing (1000 qty) | 40-50% overall | Low | Low |
-| Custom carrier PCB (integrate CM5+STM32) | $30-40/unit | High | Medium |
+| Unified PCB volume production | $15-20/unit | Low | Low |
 | OEM display panel (DSI, no HDMI) | $35/unit | Medium | Low |
 | Custom induction driver | $20/unit | High | Medium |
 | Injection-molded enclosure | $65/unit | High (tooling) | Low |

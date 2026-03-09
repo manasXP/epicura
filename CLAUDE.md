@@ -132,8 +132,9 @@ docs/
 │   ├── 03-Sensor-Components           Sensors BOM ($65)
 │   └── 04-Total-Component-Cost        Full BOM ($700 prototype)
 ├── 09-PCB/
-│   ├── 01-Controller-PCB-Design       STM32G474RE controller board (160x90mm)
-│   └── 02-Driver-PCB-Design           Power electronics &  drivers (160x90mm)
+│   ├── 01-Unified-PCB-Design          STM32 + power + drivers on single 4-layer board (160x90mm)
+│   ├── 03-PCB-Design-Rules            DRC rules, net classes, stackup
+│   └── _archive/                      Superseded Controller + Driver PCB docs
 ├── 10-Backend/
 │   ├── 01-Backend-Architecture        Fastify API, cloud services, MQTT
 │   ├── 02-Database-Schema             PostgreSQL schema for cloud and device

@@ -1,8 +1,8 @@
 # PCB Design Rules
 
-Design rules reference for the Epicura controller and driver boards. Rules are enforced via KiCad DRC in each `.kicad_pro` file.
+Design rules reference for the Epicura unified PCB (STM32 controller + power/driver electronics on a single 4-layer board). Rules are enforced via KiCad DRC in the `.kicad_pro` file.
 
-**Related:** [[01-Controller-PCB-Design]] · [[02-Driver-PCB-Design]]
+**Related:** [[01-Unified-PCB-Design]]
 
 ---
 
@@ -21,14 +21,19 @@ Design rules reference for the Epicura controller and driver boards. Rules are e
 
 | Parameter | Value |
 |-----------|-------|
-| Layer count | 2 (F.Cu + B.Cu) |
+| Layer count | 4 (F.Cu, GND plane, split power plane, B.Cu) |
 | Board thickness | 1.6 mm |
-| Substrate | FR-4 (Tg ≥ 130°C) |
-| Copper weight | 1 oz (35 µm) per layer |
-| Surface finish | HASL (lead-free) |
+| Substrate | FR-4 (Tg ≥ 150°C) |
+| Copper weight (outer) | 2 oz (70 µm) — required for power traces |
+| Copper weight (inner) | 1 oz (35 µm) — planes |
+| Surface finish | ENIG (lead-free) |
 | Solder mask | Green LPI, both sides |
 | Silkscreen | White, both sides |
-| Board dimensions | 160 × 90 mm (both boards) |
+| Board dimensions | 160 × 90 mm |
+| Layer 1 (Top) | Signal + Components (2 oz) |
+| Layer 2 (Inner1) | GND Plane — continuous (1 oz) |
+| Layer 3 (Inner2) | Split Power Plane: 5V/3.3V, 12V, 24V (1 oz) |
+| Layer 4 (Bottom) | Signal + Power Traces (2 oz) |
 
 ---
 
@@ -90,7 +95,7 @@ Based on IPC-2221B external layer, 10°C temperature rise, 1 oz copper.
 
 ## 7. Creepage & Clearance (IEC 60335-1)
 
-These rules apply to the **driver board** where mains-referenced signals exist (relay AC switching, induction module interface).
+These rules apply to the **unified board** where mains-referenced signals exist (relay AC switching, induction module CAN interface).
 
 | Insulation Type | Min Distance (mm) | Application |
 |----------------|-------------------|-------------|
@@ -132,28 +137,21 @@ Absolute manufacturing minimums — our design rules are set above these for mar
 
 ---
 
-## 10. Net Class Definitions
-
-### 10.1 Controller Board
+## 10. Net Class Definitions (Unified Board)
 
 | Net Class | Track (mm) | Clearance (mm) | Via Pad/Drill (mm) | Nets |
 |-----------|-----------|----------------|--------------------:|------|
-| Default | 0.20 | 0.20 | 0.6 / 0.3 | All unassigned signals |
-| Power | 0.50 | 0.30 | 0.8 / 0.4 | `+5V`, `+3V3`, `+24V`, `GND` |
+| Default | 0.20 | 0.20 | 0.6 / 0.3 | All unassigned signals, GPIO |
 | SPI | 0.25 | 0.20 | 0.6 / 0.3 | `SPI2_*` |
 | I2C | 0.25 | 0.20 | 0.6 / 0.3 | `I2C1_SCL`, `I2C1_SDA` |
-
-### 10.2 Driver Board
-
-| Net Class | Track (mm) | Clearance (mm) | Via Pad/Drill (mm) | Nets |
-|-----------|-----------|----------------|--------------------:|------|
-| Default | 0.20 | 0.20 | 0.6 / 0.3 | Control signals (unassigned) |
-| Power_24V | 1.00 | 0.30 | 1.0 / 0.5 | `24V_INT`, 24V nets |
-| Power_12V | 0.80 | 0.30 | 0.8 / 0.4 | `12V_OUT` |
-| Power_5V | 0.50 | 0.30 | 0.8 / 0.4 | `+5V` |
-| HighCurrent | 1.50 | 0.50 | 1.0 / 0.5 | `LACT_O*`, `PUMP_O*`, `SOL*_D`, `FAN*_D` |
 | CAN | 0.25 | 0.20 | 0.6 / 0.3 | `CAN_H`, `CAN_L`, `FDCAN1_*` |
-| I2C | 0.25 | 0.20 | 0.6 / 0.3 | `I2C1_SCL`, `I2C1_SDA` |
+| Power_3V3 | 0.50 | 0.30 | 0.8 / 0.4 | `+3V3`, `VDDA` |
+| Power_5V | 0.50 | 0.30 | 0.8 / 0.4 | `+5V` |
+| Power_12V | 0.80 | 0.30 | 0.8 / 0.4 | `12V_OUT`, `12V_UPS` |
+| Power_24V | 1.00 | 0.30 | 1.0 / 0.5 | `24V_INT`, 24V nets |
+| Power_GND | 0.50 | 0.30 | 0.8 / 0.4 | `GND` (uses L2 plane primarily) |
+| USB | 0.20 | 0.20 | 0.6 / 0.3 | `USB_DP`, `USB_DM` — 90R differential impedance, length-matched within 0.5mm |
+| HighCurrent | 1.50 | 0.50 | 1.0 / 0.5 | `LACT_O*`, `PUMP_O*`, `SOL*_D`, `FAN*_D` |
 
 ---
 
@@ -177,7 +175,7 @@ Rules configured in each `.kicad_pro` — key severity overrides from KiCad defa
 
 ## 12. Design Settings Summary (`.kicad_pro`)
 
-Both boards share these global DRC minimums:
+Global DRC minimums for the unified board:
 
 ```
 min_clearance:             0.20 mm
@@ -192,3 +190,12 @@ min_silk_clearance:        0.15 mm
 min_text_height:           0.80 mm
 min_text_thickness:        0.08 mm
 ```
+
+---
+
+## 13. Revision History
+
+| Version | Date | Author | Changes |
+|---------|------|--------|---------|
+| 1.1 | 2026-03-09 | Manas Pradhan | Added USB differential pair net class (90R impedance, length-matched) for USB-C programming port |
+| 1.0 | 2026-03-06 | Manas Pradhan | Initial design rules document for unified PCB — stackup, track widths, clearances, via specs, net classes, DRC policy, JLCPCB limits |

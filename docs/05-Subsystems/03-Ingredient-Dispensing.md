@@ -446,7 +446,7 @@ Accuracy: ±5% of target weight (significantly better than ASD due to dedicated 
 | **SLD** | HX711 #2 SCK (water) | PC9 (GPIO) | Clock out | SLD water reservoir load cell (2 kg) |
 | **SLD** | HX711 #2 DOUT (water) | PC10 (GPIO) | Data in | SLD water reservoir load cell (2 kg) |
 
-> **Note:** Pot load cells remain on PC0/PC1 (existing allocation). Pin assignments match [[02-Driver-PCB-Design|Driver PCB Design]] document. P-ASD solenoid valves are driven by IRLML6344 MOSFETs on the Driver PCB, with gates controlled by a PCF8574 I2C GPIO expander (addr 0x20) instead of direct STM32 GPIO. I2C1 bus devices: MLX90614 (0x5A), INA219 (0x40), ADS1015 (0x48), PCF8574 (0x20).
+> **Note:** Pot load cells remain on PC0/PC1 (existing allocation). Pin assignments match [[01-Unified-PCB-Design|Unified PCB Design]] document. P-ASD solenoid valves are driven by IRLML6344 MOSFETs on the Unified PCB, with gates controlled by a PCF8574 I2C GPIO expander (addr 0x20) instead of direct STM32 GPIO. I2C1 bus devices: MLX90614 (0x5A), INA219 (0x40), ADS1015 (0x48), PCF8574 (0x20).
 
 ### 6.2 Dispensing Command Protocol (CM5 → STM32)
 
