@@ -73,7 +73,7 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 |----|-------------|----------|---------------------|
 | FR-MCU-020 | Read pot load cells (4× strain gauge + HX711) at 10 Hz | Must | Resolution ~1 g, total capacity 20 kg |
 | FR-MCU-021 | Read 2× SLD reservoir load cells (oil + water) at 10 Hz during dispensing | Must | Accuracy ±5% for closed-loop liquid dispensing; individual level monitoring with low-level alerts |
-| FR-MCU-022 | Read IR thermometer at 10 Hz | Must | MLX90614 via I2C1 (PB6/PB7) |
+| FR-MCU-022 | Read IR thermometer at 10 Hz | Must | MLX90614 via I2C1 (PA15/PB7) |
 | FR-MCU-023 | Parse coil temperature from CAN HEAT_STATUS | Must | Received at 10 Hz from induction module |
 | FR-MCU-024 | Read INA219 bus current monitor | Should | I2C1 @ address 0x40, 24 V rail monitoring |
 | FR-MCU-025 | Sensor polling task at 10 Hz (100 ms period) | Must | All sensor data available within each cycle |
@@ -162,7 +162,7 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 | **PB3** | GPIO output | Digital | IRQ to CM5 (active-low, 10 µs pulse) |
 | **PB4** | GPIO output | Digital | CID linear actuator 1 PH (DRV8876) |
 | **PB5** | GPIO output | Digital | CID linear actuator 2 EN (DRV8876) |
-| **PB6** | I2C1_SCL | I2C @ 100 kHz | MLX90614 + INA219 (shared bus) |
+| **PA15** | I2C1_SCL | I2C @ 100 kHz | MLX90614 + INA219 (shared bus) |
 | **PB7** | I2C1_SDA | I2C @ 100 kHz | MLX90614 + INA219 (shared bus) |
 | **PB8** | FDCAN1_RX | CAN | Induction module RX (via SN65HVD230) |
 | **PB9** | FDCAN1_TX | CAN | Induction module TX (via SN65HVD230) |
@@ -182,7 +182,7 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 | **PD2** | — | Available | Freed (was P-ASD solenoid V4, now via PCF8574) |
 | **PB11** | — | Available | Freed (was P-ASD solenoid V6, now via PCF8574) |
 
-### 3.2 I2C1 Bus (PB6/PB7)
+### 3.2 I2C1 Bus (PA15/PB7)
 
 | Address | Device | Data |
 |---------|--------|------|

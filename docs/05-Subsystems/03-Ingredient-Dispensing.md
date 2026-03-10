@@ -430,7 +430,7 @@ Accuracy: ±5% of target weight (significantly better than ASD due to dedicated 
 |-----------|----------|-----------|-----------|-------|
 | **P-ASD** | Diaphragm Pump Motor | PA0 (TIM2_CH1) | PWM | 12V pump speed control via MOSFET |
 | **P-ASD** | Solenoid Valves V1-V6 | PCF8574 P0-P5 (I2C1, addr 0x20) | Digital output via MOSFET | 12V NC solenoids, cartridges 1-6; PCF8574 on Driver PCB |
-| **P-ASD** | Pressure Sensor | I2C1 (PB6/PB7) | I2C via ADS1015 | Accumulator pressure, addr 0x48 |
+| **P-ASD** | Pressure Sensor | I2C1 (PA15/PB7) | I2C via ADS1015 | Accumulator pressure, addr 0x48 |
 | **CID** | Linear Actuator CID-1 EN | PA10 (TIM1_CH3/GPIO) | PWM/GPIO | DRV8876 #1 enable/speed |
 | **CID** | Linear Actuator CID-1 PH | PB4 (GPIO) | Digital output | DRV8876 #1 phase/direction |
 | **CID** | Linear Actuator CID-2 EN | PB5 (GPIO) | PWM/GPIO | DRV8876 #2 enable/speed |

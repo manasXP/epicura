@@ -1,7 +1,7 @@
 ---
 created: 2026-03-06
 modified: 2026-03-07
-version: 1.2
+version: 1.3
 status: Draft
 ---
 
@@ -170,7 +170,7 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 │  │  PA0  (TIM2_CH1)  ──► P-ASD Pump PWM (12V diaphragm)        │
 │  │  Solenoids V1-V6: driven by PCF8574 I2C GPIO expander       │
 │  │    (I2C1, addr 0x20, outputs P0-P5, on-board)               │
-│  │  I2C1 (PB6/PB7)  ──► ADS1015 Pressure Sensor (0x48)         │
+│  │  I2C1 (PA15/PB7)  ──► ADS1015 Pressure Sensor (0x48)         │
 │  │                   ──► PCF8574 Solenoid Expander (0x20)      │
 │  └──────────────────────────────────────────┘                  │
 │                                                                │
@@ -209,7 +209,7 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 │  └────────────────────────────────────────────────────────────┘  │
 │                                                                │
 │  ┌─── I2C1: Sensors & Peripherals ──┐                          │
-│  │  PB6  (I2C1_SCL)  ──► MLX90614 (0x5A) — J_IR                │
+│  │  PA15 (I2C1_SCL)  ──► MLX90614 (0x5A) — J_IR                │
 │  │  PB7  (I2C1_SDA)  ◄─► INA219 (0x40) — on-board              │
 │  │                    ◄─► PCF8574 (0x20) — on-board            │
 │  │                    ◄─► ADS1015 (0x48) — external            │
@@ -268,13 +268,14 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 | PA12 | USB_DP | USB D+ | Bidir | USBLC6-2SC6 ESD → 22R → J_USB | USB |
 | PA13 | SWDIO | SWD Debug | Bidir | J_SWD | Debug |
 | PA14 | SWCLK | SWD Debug | Input | J_SWD | Debug |
+| PA15 | I2C1_SCL | MLX90614/INA219/PCF8574/ADS1015 | Output | J_IR, on-board ICs | Sensors |
 | PB0 | GPIO | Safety Relay | Output | Q_RLY (2N7002) | Safety |
 | PB1 | GPIO | Pot Detection | Input | Reed switch (10k pull-up) | Safety |
 | PB2 | GPIO (EXTI) | E-Stop | Input | NC button (10k pull-up, RC debounce) | Safety |
 | PB3 | GPIO | IRQ to CM5 | Output | J_CM5 pin 7 | Comms |
 | PB4 | GPIO | CID Linear Actuator 1 PH | Output | DRV8876 #1 PH | CID |
 | PB5 | GPIO | CID Linear Actuator 2 EN | Output | DRV8876 #2 EN | CID |
-| PB6 | I2C1_SCL | MLX90614/INA219/PCF8574/ADS1015 | Output | J_IR, on-board ICs | Sensors |
+| PB6 | — | Available (freed from I2C1_SCL) | — | — | — |
 | PB7 | I2C1_SDA | MLX90614/INA219/PCF8574/ADS1015 | Bidir | J_IR, on-board ICs | Sensors |
 | PB8 | FDCAN1_RX | CAN RX | Input | ISO1050 RXD (on-board) | CAN |
 | PB9 | FDCAN1_TX | CAN TX | Output | ISO1050 TXD (on-board) | CAN |
@@ -297,8 +298,8 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 
 | Port | Used Pins | Total Used | Available |
 |------|-----------|------------|-----------|
-| PA | PA0-PA14 | 15 | PA15 |
-| PB | PB0-PB15 | 16 | — |
+| PA | PA0-PA15 | 16 | — |
+| PB | PB0-PB5, PB7-PB15 | 15 | PB6 |
 | PC | PC0-PC6, PC13-PC15 | 10 | PC7, PC8 |
 | PD | — | 0 | PD2 |
 
@@ -659,7 +660,7 @@ PCF8574 P0-P5 (I2C1, 0x20) ── 100R Gate Resistor ── Gate
 |-----------|-------|
 | IC | PCF8574 (SOIC-16) |
 | I2C Address | 0x20 (A0=A1=A2=GND) |
-| I2C Bus | I2C1 (PB6/PB7), shared with MLX90614 (0x5A), INA219 (0x40), ADS1015 (0x48) |
+| I2C Bus | I2C1 (PA15 SCL / PB7 SDA), shared with MLX90614 (0x5A), INA219 (0x40), ADS1015 (0x48) |
 | Output Current | 25 mA sink per pin (sufficient for IRLML6344 gate charge) |
 | Decoupling | 100nF MLCC on VDD |
 
@@ -990,7 +991,7 @@ An INA219 bidirectional current/power monitor on the 24V input rail provides rea
               │  VS+    VS-    SDA    SCL  │
               └───┼──────┼──────┼──────┼───┘
                   │      │      │      │
-                 3.3V   GND    PB7    PB6
+                 3.3V   GND    PB7    PA15
                                (I2C1)
 ```
 
@@ -1214,7 +1215,7 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 
 | Pin | Signal | STM32 Pin | Notes |
 |-----|--------|-----------|-------|
-| 1 | SCL | PB6 (I2C1_SCL) | 4.7k pull-up on board |
+| 1 | SCL | PA15 (I2C1_SCL) | 4.7k pull-up on board |
 | 2 | SDA | PB7 (I2C1_SDA) | 4.7k pull-up on board |
 | 3 | VCC | 3.3V | — |
 | 4 | GND | GND | — |
@@ -1757,6 +1758,7 @@ The following documents were merged into this unified design and are retained fo
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
+| 1.3 | 2026-03-10 | Manas Pradhan | Fixed I2C1_SCL pin error: PB6 → PA15 (AF4) — PB6 has no I2C1_SCL on LQFP-64 per datasheet DS12288; PA15 (pin 51) confirmed as I2C1_SCL AF4; PB6 now available |
 | 1.2 | 2026-03-09 | Manas Pradhan | Added USB-C programming port (native USB on PA11/PA12 with USBLC6 ESD, DFU+CDC) and Li-Ion battery charger (TP4056+DW01A+FS8205A+MT3608 boost); buzzer PWM moved PA11→PB11 (TIM2_CH4); PA3 repurposed for VBUS detect; 3-way Schottky-OR 5V power architecture; +2 connectors (J_USB, J_BAT); updated BOM, zone layout, verification checklists |
 | 1.1 | 2026-03-07 | Manas Pradhan | Swapped board stacking order — Unified PCB now on top (Board 2), CM5IO on bottom (Board 1); J_CM5 socket moved to bottom side of Unified PCB, pointing downward to mate with CM5IO GPIO header below |
 | 1.0 | 2026-03-06 | Manas Pradhan | Initial unified document — merged Controller PCB (v11.0) and Driver PCB (v8.0) into single board design; eliminated J_STACK inter-board connector; 2-board stack (CM5IO + Unified PCB) replaces 3-board stack; all components, connectors, pin allocations, and circuits preserved from both source documents |

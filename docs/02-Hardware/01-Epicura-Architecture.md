@@ -232,7 +232,7 @@ STM32G474RE (LQFP-64)
 │  │  PA0  (TIM2_CH1)  ──► P-ASD Diaphragm Pump PWM            │
 │  │  Solenoids V1-V6: PCF8574 I2C GPIO expander               │
 │  │    (I2C1 addr 0x20, on Unified PCB, outputs P0-P5)        │
-│  │  I2C1 (PB6/PB7)  ──► ADS1015 Pressure Sensor (0x48)       │
+│  │  I2C1 (PA15/PB7)  ──► ADS1015 Pressure Sensor (0x48)       │
 │  │                   ──► PCF8574 Solenoid Expander (0x20)    │
 │  └─────────────────────────────────┘                         │
 │                                                              │
@@ -273,7 +273,7 @@ STM32G474RE (LQFP-64)
 │  └─────────────────────────────────────────────────────┘     │
 │                                                              │
 │  ┌─── I2C: IR Thermometer ────────┐                          │
-│  │  PB6  (I2C1_SCL) ──► MLX90614 SCL                         │
+│  │  PA15 (I2C1_SCL) ──► MLX90614 SCL                         │
 │  │  PB7  (I2C1_SDA) ◄─► MLX90614 SDA                         │
 │  │  100 kHz, pull-ups 4.7k to 3.3V                           │
 │  └─────────────────────────────────┘                         │
@@ -364,7 +364,7 @@ Use SN74HCT125 or similar buffer if reliability issues arise.
 STM32G474RE                        MLX90614ESF-BAA
 ┌──────────────────┐             ┌──────────────────┐
 │                  │             │                  │
-│  PB6 (I2C1_SCL) ─┼──────┬──────┼── SCL (Pin 3)    │
+│  PA15 (I2C1_SCL) ─┼──────┬──────┼── SCL (Pin 3)    │
 │                  │      │      │                  │
 │  PB7 (I2C1_SDA) ─┼──────┼──┬───┼── SDA (Pin 1)    │
 │                  │      │  │   │                  │
@@ -680,7 +680,7 @@ The dispensing system comprises three subsystems. See [[03-Ingredient-Dispensing
   ├──► Solenoid V1-V6 (6×) ◄── PCF8574 P0-P5 (I2C1, addr 0x20)
   │      PCF8574 on Unified PCB, gates drive IRLML6344 MOSFETs
   │
-  I2C1 (PB6/PB7):
+  I2C1 (PA15/PB7):
     ├── ADS1015 (0x48) — Accumulator pressure sensor
     └── PCF8574 (0x20) — Solenoid GPIO expander
 
@@ -720,7 +720,7 @@ The dispensing system comprises three subsystems. See [[03-Ingredient-Dispensing
   └──► Solenoid Valve (Water) ◄── PA9 (GPIO), MOSFET + flyback
 
   I2C for INA219 current monitor (on Unified PCB):
-    SCL ◄── PB6 (I2C1_SCL)
+    SCL ◄── PA15 (I2C1_SCL)
     SDA ◄── PB7 (I2C1_SDA)
 
   SLD Load Cells (2× 2 kg, one per reservoir):
@@ -1018,5 +1018,6 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
 | 2.0 | 2026-02-20 | Manas Pradhan | Updated CAN bus architecture: ISO1050DUB transceiver and J_CAN connector moved from Controller PCB to Driver PCB; FDCAN1 logic signals route via J_STACK pins 19-20; updated block diagrams, wiring, safety notes, and J_STACK organization |
 | 3.0 | 2026-02-20 | Manas Pradhan | Replaced DS3225 servo with 24V BLDC motor (integrated ESC); updated component list, STM32 pin allocation (PA4→BLDC_EN, PA5→BLDC_DIR, PA8→10kHz PWM), power budget, J_STACK pinout, and BOM |
+| 5.1 | 2026-03-10 | Manas Pradhan | Fixed I2C1_SCL pin: PB6 → PA15 (AF4) — PB6 lacks I2C1_SCL on LQFP-64 per DS12288 |
 | 5.0 | 2026-03-09 | Manas Pradhan | Added USB-C programming port (native USB on PA11/PA12) and Li-Ion battery charger (TP4056+MT3608) to block diagram, component list, and STM32 pin allocation; buzzer moved from PA11 to PB11; 3-source 5V Schottky-OR power architecture |
 | 4.0 | 2026-03-06 | Manas Pradhan | Merged Controller PCB and Driver PCB into single Unified PCB; removed J_STACK inter-board connector references — all signals now route directly on-board; updated CAN, dispensing, power, safety, and BOM sections; 2-board stack (CM5IO + Unified PCB) replaces prior 3-board stack |

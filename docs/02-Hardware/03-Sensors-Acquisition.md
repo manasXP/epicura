@@ -179,7 +179,7 @@ Different food surfaces have different IR emissivity values, affecting temperatu
 STM32G474RE                        MLX90614ESF-BAA
 ┌──────────────────┐              ┌──────────────────┐
 │                  │              │                  │
-│  PB6 (SCL) ─────┼──────┬──────┼──── Pin 3 (SCL) │
+│  PA15 (SCL) ────┼──────┬──────┼──── Pin 3 (SCL) │
 │                  │      │      │                  │
 │  PB7 (SDA) ─────┼──────┼──┬───┼──── Pin 1 (SDA) │
 │                  │      │  │   │                  │
