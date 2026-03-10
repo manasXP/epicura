@@ -1,7 +1,7 @@
 ---
 created: 2026-03-06
 modified: 2026-03-07
-version: 1.3
+version: 1.4
 status: Draft
 ---
 
@@ -62,7 +62,7 @@ Combined components (~112 ICs/discretes + 16 connectors) occupy ~3,739 mm² of t
                             │  MP1584EN #1 │          │  MP1584EN #2 │  100k/10k
                             │  24V → 12V   │          │  24V → 6.5V  │     │
                             │  3A max      │          │  3A (future) │     ▼
-                            └──────┬───────┘          └──────┬───────┘  PA1 (COMP2)
+                            └──────┬───────┘          └──────┬───────┘  PA1 (COMP1)
                                    │                         │        Power Fail
                               12V Rail                   6.5V Rail
                                    │
@@ -196,7 +196,7 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 │  └─────────────────────────────────┘                           │
 │                                                                │
 │  ┌─── Audio ──────────────────────┐                            │
-│  │  PB11 (TIM2_CH4)  ──► Piezo Buzzer PWM (via MOSFET)         │
+│  │  PC7  (TIM8_CH2)  ──► Piezo Buzzer PWM (via MOSFET)         │
 │  └─────────────────────────────────┘                           │
 │                                                                │
 │  ┌─── USB: Native USB 2.0 Full-Speed ───────────────────────┐  │
@@ -222,8 +222,8 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 │  └─────────────────────────────────┘                           │
 │                                                                │
 │  ┌─── Power Fail Detection ───────┐                            │
-│  │  PA1  (COMP2_INP) ◄── 24V voltage divider (100k/10k)        │
-│  │       COMP2 threshold ~1.5V → trips at 24V < 16.5V          │
+│  │  PA1  (COMP1_INP) ◄── 24V voltage divider (100k/10k)        │
+│  │       COMP1 threshold ~1.5V → trips at 24V < 16.5V          │
 │  └─────────────────────────────────┘                           │
 │                                                                │
 │  ┌─── LED Ring Power Control ────┐                             │
@@ -237,7 +237,7 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 │  │  PB0  (GPIO)      ──► Safety Relay (via MOSFET Q_RLY)       │
 │  │  PB1  (GPIO)      ◄── Pot Detection (reed switch)           │
 │  │  PB2  (GPIO/EXTI) ◄── E-Stop Button (active-low)            │
-│  │  PC13 (GPIO)      ──► Status LED (green, active-low)        │
+│  │  PC8  (GPIO)      ──► Status LED (green, active-low)        │
 │  └─────────────────────────────────┘                           │
 │                                                                │
 │  Debug: SWD via PA13 (SWDIO) / PA14 (SWCLK)                    │
@@ -254,7 +254,7 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 | Pin | Function | Peripheral | Direction | Destination | Subsystem |
 |-----|----------|------------|-----------|-------------|-----------|
 | PA0 | TIM2_CH1 | P-ASD Pump PWM | Output | IRLML6344 gate | P-ASD |
-| PA1 | COMP2_INP | 24V Power Fail Detection | Input | Voltage divider | Power |
+| PA1 | COMP1_INP | 24V Power Fail Detection | Input | Voltage divider | Power |
 | PA2 | GPIO | LED Ring Power Enable | Output | Q_LED_N/Q_LED_P MOSFET → J_LED | Illumination |
 | PA3 | ADC | USB VBUS Detect | Input | 100k/100k divider from 5V_USB | USB |
 | PA4 | GPIO | BLDC Motor EN | Output | J_BLDC pin 4 (100R series) | Main |
@@ -280,7 +280,7 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 | PB8 | FDCAN1_RX | CAN RX | Input | ISO1050 RXD (on-board) | CAN |
 | PB9 | FDCAN1_TX | CAN TX | Output | ISO1050 TXD (on-board) | CAN |
 | PB10 | TIM2_CH3 | Exhaust Fan 2 PWM | Output | IRLML6344 gate → J_FAN | Exhaust |
-| PB11 | TIM2_CH4 | Buzzer PWM | Output | 2N7002 gate → J_BUZZER | Audio |
+| PB11 | — | Available (freed from Buzzer) | — | — | — |
 | PB12 | SPI2_NSS | CM5 CE0 | Input | J_CM5 pin 24 | Comms |
 | PB13 | SPI2_SCK | CM5 SCLK | Input | J_CM5 pin 23 | Comms |
 | PB14 | SPI2_MISO | CM5 MISO | Output | J_CM5 pin 21 | Comms |
@@ -292,15 +292,16 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 | PC4 | GPIO | SLD Pump 1 DIR | Output | TB6612 AIN1 | SLD |
 | PC5 | GPIO | SLD Pump 2 PWM | Output | TB6612 PWMB | SLD |
 | PC6 | GPIO | SLD Pump 2 DIR | Output | TB6612 BIN1 | SLD |
-| PC13 | GPIO | Status LED | Output | Green LED (330R) | Status |
+| PC7 | TIM8_CH2 | Buzzer PWM | Output | 2N7002 gate → J_BUZZER | Audio |
+| PC8 | GPIO | Status LED | Output | Green LED (330R) | Status |
 
 ### 3.3 Complete Pin Usage Summary
 
 | Port | Used Pins | Total Used | Available |
 |------|-----------|------------|-----------|
 | PA | PA0-PA15 | 16 | — |
-| PB | PB0-PB5, PB7-PB15 | 15 | PB6 |
-| PC | PC0-PC6, PC13-PC15 | 10 | PC7, PC8 |
+| PB | PB0-PB5, PB7-PB10, PB12-PB15 | 14 | PB6, PB11 |
+| PC | PC0-PC8, PC14-PC15 | 11 | PC9-PC12 |
 | PD | — | 0 | PD2 |
 
 ---
@@ -425,14 +426,14 @@ Three independent 5V sources are OR'd via SS14 Schottky diodes to create `5V_MER
                                   │
                                   ├── C_DIV (100nF) ─── GND
                                   │
-                                  └── PA1 (COMP2_INP)
+                                  └── PA1 (COMP1_INP)
 ```
 
 | Parameter | Value |
 |-----------|-------|
 | Divider Ratio | 10k / (100k + 10k) = 1/11 |
 | Nominal Voltage at PA1 | 24V x 1/11 = 2.18V |
-| Threshold (COMP2 ref) | ~1.5V (internal DAC reference) |
+| Threshold (COMP1 ref) | ~1.5V (internal DAC reference) |
 | Trip Voltage (24V rail) | 1.5V x 11 = 16.5V |
 | Recovery Threshold | ~20V (with 2s debounce in firmware) |
 | Filter Cap | 100nF on divider midpoint (noise filtering) |
@@ -795,7 +796,7 @@ Active piezo buzzer (5V, PWM-capable) driven by a 2N7002 N-MOSFET.
                                           │
                                      10k Pull-down
                                           │
-PB11 (TIM2_CH4) ── 100R ── Gate
+PC7 (TIM8_CH2) ── 100R ── Gate
                                           │
                                          GND ── Source
 ```
@@ -1618,7 +1619,7 @@ At 40C ambient (inside Epicura enclosure near induction surface):
 |-------|---------|-----|----------|-----------|
 | TIM1 | CH1 | PA8 | BLDC Motor PWM | 10 kHz |
 | TIM1 | CH3 | PA10 | CID Linear Actuator 1 EN | Up to 100 kHz |
-| TIM2 | CH4 | PB11 | Buzzer PWM | Variable (1-4 kHz) |
+| TIM8 | CH2 | PC7 | Buzzer PWM | Variable (1-4 kHz) |
 | TIM2 | CH1 | PA0 | P-ASD Pump PWM | 25 kHz |
 | TIM2 | CH3 | PB10 | Exhaust Fan 2 PWM | 25 kHz |
 | TIM3 | CH1 | PA6 | Exhaust Fan 1 PWM | 25 kHz |
@@ -1635,7 +1636,7 @@ At 40C ambient (inside Epicura enclosure near induction surface):
 ### 15.4 Power Failure State Machine
 
 **STM32 behavior:**
-1. COMP2 interrupt fires (24V drops below ~16.5V) → set `power_fail = true`
+1. COMP1 interrupt fires (24V drops below ~16.5V) → set `power_fail = true`
 2. Immediately disable all actuators (CAN power OFF, all MOSFET gates LOW, PCF8574 all LOW)
 3. Send `POWER_FAIL(state=1, voltage_mV)` to CM5 via SPI
 4. Enter low-power monitoring loop
@@ -1676,7 +1677,7 @@ At 40C ambient (inside Epicura enclosure near induction surface):
 - [ ] TP4056 R_PROG = 2kR (500mA charge current)
 - [ ] DW01A/FS8205A protection circuit correct
 - [ ] MT3608 feedback divider (732kR/100kR) gives 5.0V output
-- [ ] Buzzer PWM moved from PA11 (TIM1_CH4) to PB11 (TIM2_CH4)
+- [ ] Buzzer PWM moved from PA11 (TIM1_CH4) to PC7 (TIM8_CH2) — independent timer
 - [ ] All 16 external connectors have correct pinouts
 
 ### 16.2 PCB Layout
@@ -1758,6 +1759,7 @@ The following documents were merged into this unified design and are retained fo
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
+| 1.4 | 2026-03-10 | Manas Pradhan | Datasheet review fixes: PA1 COMP2→COMP1 (PA1 has COMP1_INP per DS12288 Table 12); buzzer moved PB11/TIM2_CH4→PC7/TIM8_CH2 (TIM2 frequency conflict: fan 25kHz vs buzzer variable tone); status LED moved PC13→PC8 (PC13 limited to 3mA sink per DS12288 Note 2); updated pin summary, timer allocation, verification checklist |
 | 1.3 | 2026-03-10 | Manas Pradhan | Fixed I2C1_SCL pin error: PB6 → PA15 (AF4) — PB6 has no I2C1_SCL on LQFP-64 per datasheet DS12288; PA15 (pin 51) confirmed as I2C1_SCL AF4; PB6 now available |
 | 1.2 | 2026-03-09 | Manas Pradhan | Added USB-C programming port (native USB on PA11/PA12 with USBLC6 ESD, DFU+CDC) and Li-Ion battery charger (TP4056+DW01A+FS8205A+MT3608 boost); buzzer PWM moved PA11→PB11 (TIM2_CH4); PA3 repurposed for VBUS detect; 3-way Schottky-OR 5V power architecture; +2 connectors (J_USB, J_BAT); updated BOM, zone layout, verification checklists |
 | 1.1 | 2026-03-07 | Manas Pradhan | Swapped board stacking order — Unified PCB now on top (Board 2), CM5IO on bottom (Board 1); J_CM5 socket moved to bottom side of Unified PCB, pointing downward to mate with CM5IO GPIO header below |

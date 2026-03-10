@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
-modified: 2026-03-06
-version: 5.0
+modified: 2026-03-10
+version: 5.2
 status: Draft
 ---
 
@@ -98,7 +98,7 @@ This document provides the comprehensive hardware architecture, wiring diagrams,
 | SLD Peristaltic Pumps | 12V DC (x2) via TB6612 | GPIO (PWM/DIR) | STM32 PC3-PC6 | Oil and water dispensing |
 | SLD Solenoid Valves | 12V NC (x2) | GPIO | STM32 PA7, PA9 via MOSFET | Liquid drip prevention |
 | Exhaust Fans | 2× 120mm 12V DC brushless | PWM (25kHz) | STM32 PA6, PB10 via MOSFET | Fume extraction, independent control |
-| Piezo Buzzer | 5V active | PWM | STM32 PB11 via MOSFET | Audio alerts |
+| Piezo Buzzer | 5V active | PWM | STM32 PC7 via MOSFET | Audio alerts |
 | USB-C Receptacle | Mid-mount 16-pin | USB 2.0 FS | STM32 PA11/PA12 (native USB) | DFU programming, CDC serial debug |
 | Li-Ion Battery | Single cell 3.7V (JST-PH) | Analog | TP4056 charger on Unified PCB | Micro-UPS for STM32 state retention |
 | Microwave Induction Surface | Commercial module w/ CAN | CAN 2.0B (500kbps) | STM32 FDCAN1 (PB8/PB9) | Self-contained induction heating with internal coil, driver, and safety |
@@ -260,7 +260,7 @@ STM32G474RE (LQFP-64)
 │  └─────────────────────────────────┘                         │
 │                                                              │
 │  ┌─── Audio ───────────────────────┐                         │
-│  │  PB11 (TIM2_CH4)  ──► Piezo Buzzer PWM                    │
+│  │  PC7  (TIM8_CH2)  ──► Piezo Buzzer PWM                    │
 │  └─────────────────────────────────┘                         │
 │                                                              │
 │  ┌─── USB: Programming & Debug (Native USB 2.0 FS) ───┐     │
@@ -287,7 +287,7 @@ STM32G474RE (LQFP-64)
 │  │  PB0  (GPIO)      ──► Safety Relay (via MOSFET driver)    │
 │  │  PB1  (GPIO)      ◄── Pot Detection (reed switch)         │
 │  │  PB2  (GPIO)      ◄── E-Stop Button (interrupt, act-low)  │
-│  │  PC13 (GPIO)      ──► Status LED (on-board)               │
+│  │  PC8  (GPIO)      ──► Status LED (on-board)               │
 │  └─────────────────────────────────┘                         │
 │                                                              │
 │  Power: 3.3V / GND from PSU rail                             │
@@ -1018,6 +1018,7 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 | 1.0 | 2026-02-15 | Manas Pradhan | Initial document creation |
 | 2.0 | 2026-02-20 | Manas Pradhan | Updated CAN bus architecture: ISO1050DUB transceiver and J_CAN connector moved from Controller PCB to Driver PCB; FDCAN1 logic signals route via J_STACK pins 19-20; updated block diagrams, wiring, safety notes, and J_STACK organization |
 | 3.0 | 2026-02-20 | Manas Pradhan | Replaced DS3225 servo with 24V BLDC motor (integrated ESC); updated component list, STM32 pin allocation (PA4→BLDC_EN, PA5→BLDC_DIR, PA8→10kHz PWM), power budget, J_STACK pinout, and BOM |
+| 5.2 | 2026-03-10 | Manas Pradhan | Datasheet review: PA1 COMP2→COMP1; buzzer PB11/TIM2_CH4→PC7/TIM8_CH2 (timer conflict fix); status LED PC13→PC8 (3mA limit) |
 | 5.1 | 2026-03-10 | Manas Pradhan | Fixed I2C1_SCL pin: PB6 → PA15 (AF4) — PB6 lacks I2C1_SCL on LQFP-64 per DS12288 |
 | 5.0 | 2026-03-09 | Manas Pradhan | Added USB-C programming port (native USB on PA11/PA12) and Li-Ion battery charger (TP4056+MT3608) to block diagram, component list, and STM32 pin allocation; buzzer moved from PA11 to PB11; 3-source 5V Schottky-OR power architecture |
 | 4.0 | 2026-03-06 | Manas Pradhan | Merged Controller PCB and Driver PCB into single Unified PCB; removed J_STACK inter-board connector references — all signals now route directly on-board; updated CAN, dispensing, power, safety, and BOM sections; 2-board stack (CM5IO + Unified PCB) replaces prior 3-board stack |

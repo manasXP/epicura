@@ -155,7 +155,7 @@ An off-the-shelf 12V UPS powers the 5V rail (CM5 + STM32) independently of the 2
 **Example products:** Mini DC UPS modules (e.g., "12V 5A UPS module" on AliExpress/Amazon, ~$15-30) that accept 12V AC adapter input, contain a LiFePO4 or Li-ion battery pack, and provide uninterrupted 12V output with automatic switchover.
 
 > [!tip]
-> During AC power failure, only the 5V rail (CM5 + STM32 + display) remains powered. The 24V rail (actuators, induction) goes down immediately. The STM32 detects 24V loss via COMP2 comparator (<100µs), disables all actuators, and notifies the CM5 to save state. At ~20W idle draw, a 7Ah 12V battery provides approximately 25 minutes — enough time to save state and wait for power restoration. If power returns within 5 minutes, cooking auto-resumes; otherwise the user is prompted.
+> During AC power failure, only the 5V rail (CM5 + STM32 + display) remains powered. The 24V rail (actuators, induction) goes down immediately. The STM32 detects 24V loss via COMP1 comparator (<100µs), disables all actuators, and notifies the CM5 to save state. At ~20W idle draw, a 7Ah 12V battery provides approximately 25 minutes — enough time to save state and wait for power restoration. If power returns within 5 minutes, cooking auto-resumes; otherwise the user is prompted.
 
 ### 4.2 Power Budget Breakdown
 

@@ -153,7 +153,7 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 | **PA8** | TIM1_CH1 | PWM 10 kHz | BLDC stirring motor (speed) |
 | **PA9** | GPIO output | Digital | Solenoid 2 enable (SLD, via IRLML6344) |
 | **PA10** | GPIO output | Digital | CID linear actuator 1 EN (DRV8876) |
-| **PA11** | TIM1_CH4 | PWM | Piezo buzzer |
+| **PA11** | USB_DM | USB 2.0 FS | USB D- (native USB, DFU+CDC) |
 | **PA13** | SWDIO | Debug | SWD programming |
 | **PA14** | SWCLK | Debug | SWD programming |
 | **PB0** | GPIO output | Digital | Safety relay (via N-MOSFET) |
@@ -180,7 +180,9 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 | **PC6** | GPIO output | Digital | SLD pump 2 DIR (TB6612) |
 | **PC7** | — | Available | Freed (was P-ASD solenoid V3, now via PCF8574) |
 | **PD2** | — | Available | Freed (was P-ASD solenoid V4, now via PCF8574) |
-| **PB11** | — | Available | Freed (was P-ASD solenoid V6, now via PCF8574) |
+| **PB11** | — | Available | Freed (was buzzer, moved to PC7) |
+| **PC7** | TIM8_CH2 | PWM | Piezo buzzer (via MOSFET) |
+| **PC8** | GPIO | Digital | Status LED (green, 330R) |
 
 ### 3.2 I2C1 Bus (PA15/PB7)
 
@@ -352,7 +354,7 @@ See [[04-MPU-Functional-Specification#5.1 SPI Protocol]] for full frame definiti
 2. Safety relay opened (PB0 LOW → relay de-energizes → AC cut)
 3. All PWM outputs set to 0% (TIM1, TIM2, TIM3)
 4. CAN: send power=0 to module (belt-and-suspenders with relay)
-5. Buzzer activated (PA11 PWM)
+5. Buzzer activated (PC7 PWM)
 6. Status packet (0x12) sent to CM5: `safety_state = E_STOP`
 7. **Hold state** — only IWDG kick continues; no commands accepted
 8. **Reset** — PB2 debounce clears → re-init → wait for CM5 heartbeat → NORMAL
