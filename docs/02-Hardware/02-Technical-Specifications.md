@@ -166,7 +166,8 @@ An off-the-shelf 12V UPS powers the 5V rail (CM5 + STM32) independently of the 2
 | STM32 + sensors | 2 | 3 |
 | BLDC stirring motor | 12 | 48 |
 | P-ASD pump + solenoids | 1 | 10 |
-| CID linear actuators (x2) | 0 | 5 |
+| CID-1 stepper driver (24V) | 0 | 72 |
+| CID-2 linear actuator (12V) | 0 | 2.5 |
 | SLD pumps (x2) + solenoids (x2) | 0 | 16 |
 | LED ring | 2 | 5 |
 | Exhaust fan | 1 | 3 |

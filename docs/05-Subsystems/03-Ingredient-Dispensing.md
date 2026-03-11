@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
-modified: 2026-02-15
-version: 4.0
+modified: 2026-03-11
+version: 6.0
 status: Draft
 ---
 
@@ -14,7 +14,7 @@ The ingredient dispensing system is divided into three purpose-built subsystems,
 | Subsystem | Full Name | Purpose | Actuators | Metering |
 |-----------|-----------|---------|-----------|----------|
 | **P-ASD** | Pneumatic Advanced Seasoning Dispenser | Ground/powdered spices (turmeric, chili, cumin, salt, garam masala, coriander) | 6 Solenoid Valves + Micro Diaphragm Pump | Weight-verified via pot load cells |
-| **CID** | Coarse Ingredients Dispenser | Pre-cut vegetables, meat, paneer, dal, rice | 2 Linear Actuators (slider mechanism) | Timed/position-based |
+| **CID** | Coarse Ingredients Dispenser | Pre-cut vegetables, meat, paneer, dal, rice | CID-1: NEMA 23 stepper + ext. driver; CID-2: DC linear actuator (slider mechanism) | Timed/position-based |
 | **SLD** | Standard Liquid Dispenser | Oil and water | 2 Peristaltic Pumps + 2 Solenoid Valves + 2 Load Cells (one per reservoir) | Closed-loop weight feedback + low-level alerts |
 
 ## 2. Layout
@@ -97,7 +97,7 @@ The ingredient dispensing system is divided into three purpose-built subsystems,
        └────────────────────┘
 ```
 
-**CID (Linear Actuator Slider):**
+**CID (Stepper/Linear Actuator Slider):**
 
 ```
        ┌──────────────────────────────────────┐
@@ -297,27 +297,40 @@ Accuracy: ±10% of target weight (with weight feedback).
 | Removable | Yes (slide-out tray) |
 | Ingredient Types | Pre-cut vegetables, meat, paneer, dal, rice |
 
-### 4.2 Actuator: Linear Actuator (Push-Plate Slider)
+### 4.2 Actuators
+
+**CID-1: NEMA 23 Stepper Motor + External Driver**
+
+| Parameter | Value |
+|-----------|-------|
+| Motor | NEMA 23, 1.8°/step (200 steps/rev), ~2A/phase |
+| Driver | External DM542/TB6600-class (pulse/dir/enable, 24V input) |
+| Control | TIM1_CH3 (PA10) PUL+, GPIO (PB4) DIR+, PCF8574 P7 ENA+ — all via 100R series resistors |
+| Position Feedback | Home limit switch only (PB6); step counting for travel distance |
+| Supply | 24V from input rail via J_CID (2–3A to external driver) |
+| Cost | ~$15 (motor) + ~$10 (driver) |
+
+**CID-2: 12V DC Linear Actuator (unchanged)**
 
 | Parameter | Value |
 |-----------|-------|
 | Type | 12V DC linear actuator, 50 mm stroke |
 | Force | 20–50 N (sufficient to push 500g of chopped vegetables) |
 | Speed | ~10 mm/s |
-| Control | H-bridge motor driver (DRV8876RGTR), EN/PH direction + PWM |
+| Control | H-bridge motor driver (DRV8876RGTR #2), EN/PH direction + PWM |
 | Position Feedback | Limit switches at home and full-extend positions |
 | Supply | 12V from PSU rail |
-| Cost | ~$8 each |
+| Cost | ~$8 |
 
 ### 4.3 Dispensing Mechanism
 
 The push-plate slides along the tray, sweeping ingredients off the drop-off edge into the pot:
 
 1. CM5 sends CID dispense command with tray ID
-2. STM32 drives linear actuator forward at controlled speed
+2. STM32 drives actuator forward: CID-1 via stepper pulses (TIM1_CH3), CID-2 via DRV8876 PWM
 3. Ingredients fall off tray edge into pot
-4. Actuator reaches full-extend limit switch → retract to home
-5. Dispense confirmed by limit switch + optional pot weight check
+4. CID-1: step count reaches travel target → reverse to home; CID-2: full-extend limit switch → retract to home
+5. Dispense confirmed by home switch + optional pot weight check
 
 ### 4.4 Metering Strategy
 
@@ -431,22 +444,23 @@ Accuracy: ±5% of target weight (significantly better than ASD due to dedicated 
 | **P-ASD** | Diaphragm Pump Motor | PA0 (TIM2_CH1) | PWM | 12V pump speed control via MOSFET |
 | **P-ASD** | Solenoid Valves V1-V6 | PCF8574 P0-P5 (I2C1, addr 0x20) | Digital output via MOSFET | 12V NC solenoids, cartridges 1-6; PCF8574 on Driver PCB |
 | **P-ASD** | Pressure Sensor | I2C1 (PA15/PB7) | I2C via ADS1015 | Accumulator pressure, addr 0x48 |
-| **CID** | Linear Actuator CID-1 EN | PA10 (TIM1_CH3/GPIO) | PWM/GPIO | DRV8876 #1 enable/speed |
-| **CID** | Linear Actuator CID-1 PH | PB4 (GPIO) | Digital output | DRV8876 #1 phase/direction |
+| **CID** | CID-1 Stepper PUL+ | PA10 (TIM1_CH3) | PWM (200 Hz–10 kHz) | Step pulse to external driver via 100R |
+| **CID** | CID-1 Stepper DIR+ | PB4 (GPIO) | Digital output | Direction to external driver via 100R |
+| **CID** | CID-1 Stepper ENA+ | PCF8574 P7 (I2C1, addr 0x20) | Digital output via I2C | Enable to external driver via 100R |
 | **CID** | Linear Actuator CID-2 EN | PB5 (GPIO) | PWM/GPIO | DRV8876 #2 enable/speed |
 | **CID** | Linear Actuator CID-2 PH | PC2 (GPIO) | Digital output | DRV8876 #2 phase/direction |
 | **SLD** | Pump Motor SLD-OIL (PWM) | PC3 (GPIO) | PWM (motor speed) | TB6612 PWMA via MOSFET |
 | **SLD** | Pump Motor SLD-OIL (DIR) | PC4 (GPIO) | Digital output | TB6612 AIN1 direction |
 | **SLD** | Pump Motor SLD-WATER (PWM) | PC5 (GPIO) | PWM (motor speed) | TB6612 PWMB via MOSFET |
 | **SLD** | Pump Motor SLD-WATER (DIR) | PC6 (GPIO) | Digital output | TB6612 BIN1 direction |
-| **SLD** | Solenoid SLD-OIL | PA7 (GPIO) | Digital output via MOSFET | 12V NC solenoid, flyback diode |
-| **SLD** | Solenoid SLD-WATER | PA9 (GPIO) | Digital output via MOSFET | 12V NC solenoid, flyback diode |
+| **SLD** | Solenoid SLD-OIL | PCF8574 #2 P0 (I2C1, addr 0x21) | Digital output via MOSFET | 12V NC solenoid, flyback diode; moved from PA7 |
+| **SLD** | Solenoid SLD-WATER | PCF8574 #2 P1 (I2C1, addr 0x21) | Digital output via MOSFET | 12V NC solenoid, flyback diode; moved from PA9 |
 | **SLD** | HX711 #1 SCK (oil) | PC11 (GPIO) | Clock out | SLD oil reservoir load cell (2 kg) |
 | **SLD** | HX711 #1 DOUT (oil) | PC12 (GPIO) | Data in | SLD oil reservoir load cell (2 kg) |
 | **SLD** | HX711 #2 SCK (water) | PC9 (GPIO) | Clock out | SLD water reservoir load cell (2 kg) |
 | **SLD** | HX711 #2 DOUT (water) | PC10 (GPIO) | Data in | SLD water reservoir load cell (2 kg) |
 
-> **Note:** Pot load cells remain on PC0/PC1 (existing allocation). Pin assignments match [[01-Unified-PCB-Design|Unified PCB Design]] document. P-ASD solenoid valves are driven by IRLML6344 MOSFETs on the Unified PCB, with gates controlled by a PCF8574 I2C GPIO expander (addr 0x20) instead of direct STM32 GPIO. I2C1 bus devices: MLX90614 (0x5A), INA219 (0x40), ADS1015 (0x48), PCF8574 (0x20).
+> **Note:** Pot load cells remain on PC0/PC1 (existing allocation). Pin assignments match [[01-Unified-PCB-Design|Unified PCB Design]] document. P-ASD solenoid valves are driven by IRLML6344 MOSFETs on the Unified PCB, with gates controlled by a PCF8574 I2C GPIO expander (addr 0x20) instead of direct STM32 GPIO. PCF8574 #1 P7 is allocated to CID-1 stepper ENA+ (all 8 pins in use: P0-P5 solenoids, P6 CID-2 extend limit, P7 CID-1 stepper enable). A second PCF8574 #2 (addr 0x21) drives SLD solenoids (P0-P1), status LED (P2), and LED ring power (P3), with P4-P7 reserved. I2C1 bus devices: PCF8574 #1 (0x20), PCF8574 #2 (0x21), INA219 (0x40), ADS1015 (0x48), MLX90614 (0x5A).
 
 ### 6.2 Dispensing Command Protocol (CM5 → STM32)
 
@@ -677,3 +691,5 @@ For quick cleaning of SLD channels between recipes:
 | 2.0 | 2026-02-15 | Manas Pradhan | Rewrite: replaced 6-compartment C1-C6 system with 3 subsystems (ASD, CID, SLD) |
 | 3.0 | 2026-02-16 | Manas Pradhan | Replaced ASD (servo-gated gravity-fed, 3 hoppers) with P-ASD (pneumatic puff-dosing, 6 cartridges) |
 | 4.0 | 2026-02-16 | Manas Pradhan | P-ASD solenoids now controlled via PCF8574 I2C GPIO expander (addr 0x20) on Driver PCB instead of 6× direct STM32 GPIO |
+| 5.0 | 2026-03-11 | Manas Pradhan | CID-1: replaced DC linear actuator + DRV8876 #1 with NEMA 23 stepper motor + external driver (PUL/DIR/ENA via PA10, PB4, PCF8574 P7); CID-2 unchanged; updated GPIO table, dispensing mechanism, actuator specs |
+| 6.0 | 2026-03-11 | Manas Pradhan | SLD solenoids moved from PA7/PA9 to PCF8574 #2 (0x21) P0/P1 for GPIO headroom; I2C1 bus now 5 devices |

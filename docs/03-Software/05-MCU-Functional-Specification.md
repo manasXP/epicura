@@ -83,7 +83,8 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 | ID | Requirement | Priority | Acceptance Criteria |
 |----|-------------|----------|---------------------|
 | FR-MCU-030 | P-ASD: Pressurize accumulator, open solenoid valve, puff-dose spice, monitor pot weight | Must | Accuracy ±10%, clog retry (3 attempts), post-dispense purge |
-| FR-MCU-031 | CID: Drive linear actuators via DRV8876 (PH/EN) | Must | Home + full-extend limit switch detection |
+| FR-MCU-031a | CID-1: Drive NEMA 23 stepper via TIM1_CH3 (PA10 PUL+), PB4 (DIR+), PCF8574 P7 (ENA+) | Must | Step counting for travel, home limit switch (PB6) detection |
+| FR-MCU-031b | CID-2: Drive linear actuator via DRV8876 #2 (PB5 EN, PC2 PH) | Must | Home + full-extend limit switch detection |
 | FR-MCU-032 | SLD: Drive peristaltic pumps + solenoids, closed-loop weight | Must | Accuracy ±5%, stop at target×0.95 |
 | FR-MCU-033 | Tare load cells on command (0x37) | Must | Zero offset stored in SRAM |
 | FR-MCU-034 | Report weight on query (0x35) | Must | Response within 100 ms |
@@ -149,10 +150,10 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 | **PA4** | GPIO output | Digital | BLDC motor EN (enable, via J_STACK Pin 39) |
 | **PA5** | GPIO output | Digital | BLDC motor DIR (direction, via J_STACK Pin 40) |
 | **PA6** | TIM3_CH1 | PWM 25 kHz | Exhaust fan 1 |
-| **PA7** | GPIO output | Digital | Solenoid 1 enable (SLD, via IRLML6344) |
+| **PA7** | — | Available | Freed (SLD solenoid 1 moved to PCF8574 #2 P0) |
 | **PA8** | TIM1_CH1 | PWM 10 kHz | BLDC stirring motor (speed) |
-| **PA9** | GPIO output | Digital | Solenoid 2 enable (SLD, via IRLML6344) |
-| **PA10** | GPIO output | Digital | CID linear actuator 1 EN (DRV8876) |
+| **PA9** | — | Available | Freed (SLD solenoid 2 moved to PCF8574 #2 P1) |
+| **PA10** | TIM1_CH3 | PWM 200 Hz–10 kHz | CID-1 stepper PUL+ (via 100R to J_CID) |
 | **PA11** | USB_DM | USB 2.0 FS | USB D- (native USB, DFU+CDC) |
 | **PA13** | SWDIO | Debug | SWD programming |
 | **PA14** | SWCLK | Debug | SWD programming |
@@ -160,7 +161,7 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 | **PB1** | GPIO input | Digital | Pot detection (from CAN module status, optional hardwire) |
 | **PB2** | EXTI | Interrupt | E-stop button (NC, active-low) |
 | **PB3** | GPIO output | Digital | IRQ to CM5 (active-low, 10 µs pulse) |
-| **PB4** | GPIO output | Digital | CID linear actuator 1 PH (DRV8876) |
+| **PB4** | GPIO output | Digital | CID-1 stepper DIR+ (via 100R to J_CID) |
 | **PB5** | GPIO output | Digital | CID linear actuator 2 EN (DRV8876) |
 | **PA15** | I2C1_SCL | I2C @ 100 kHz | MLX90614 + INA219 (shared bus) |
 | **PB7** | I2C1_SDA | I2C @ 100 kHz | MLX90614 + INA219 (shared bus) |
@@ -180,15 +181,16 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 | **PC6** | GPIO output | Digital | SLD pump 2 DIR (TB6612) |
 | **PC7** | — | Available | Freed (was P-ASD solenoid V3, now via PCF8574) |
 | **PD2** | — | Available | Freed (was P-ASD solenoid V4, now via PCF8574) |
-| **PB11** | — | Available | Freed (was buzzer, moved to PC7) |
+| **PB11** | — | Reserved | Freed (was CID-1 full-extend limit, now step counting) |
 | **PC7** | TIM8_CH2 | PWM | Piezo buzzer (via MOSFET) |
-| **PC8** | GPIO | Digital | Status LED (green, 330R) |
+| **PC8** | — | Available | Freed (status LED moved to PCF8574 #2 P2) |
 
 ### 3.2 I2C1 Bus (PA15/PB7)
 
 | Address | Device | Data |
 |---------|--------|------|
-| 0x20 | PCF8574 | P-ASD solenoid V1-V6 GPIO expander (on Driver PCB) |
+| 0x20 | PCF8574 #1 | P-ASD solenoid V1-V6 (P0-P5), CID-2 extend limit (P6), CID-1 stepper ENA+ (P7) |
+| 0x21 | PCF8574 #2 | SLD solenoid 1 (P0), SLD solenoid 2 (P1), status LED (P2), LED ring enable (P3), P4-P7 reserved |
 | 0x40 | INA219 | 24 V rail voltage + current |
 | 0x48 | ADS1015 | P-ASD accumulator pressure (via MPXV5100GP) |
 | 0x5A | MLX90614 | Object + ambient temperature |
@@ -403,7 +405,7 @@ See [[04-MPU-Functional-Specification#5.1 SPI Protocol]] for full frame definiti
 - No dynamic memory allocation after boot (all FreeRTOS objects static)
 - No floating-point in ISRs (FPU context save overhead)
 - CAN bus requires 120 Ω termination at both ends
-- I2C bus: 4 devices (MLX90614 + INA219 + ADS1015 + PCF8574), total bus capacitance must stay under 400 pF
+- I2C bus: 5 devices (MLX90614 + INA219 + ADS1015 + PCF8574 #1 + PCF8574 #2), total bus capacitance must stay under 400 pF
 
 ### 9.4 Cross-References
 

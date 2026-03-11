@@ -26,7 +26,7 @@ Testing strategy for the STM32G474RE real-time control firmware: PID controller,
 | `spi_protocol` | Frame packing/unpacking, CRC16 calculation and verification, invalid frame rejection, buffer overflow protection |
 | `can_interface` | CAN frame construction for power set commands, status response parsing, fault code decoding |
 | `dispenser_asd` | Solenoid valve sequencing for puff-dosing, pressure threshold logic, cartridge selection |
-| `dispenser_cid` | Linear actuator travel limits, push-plate sequencing |
+| `dispenser_cid` | CID-1 stepper pulse generation (TIM1_CH3 freq range), step counting, home switch detection; CID-2 linear actuator travel limits, push-plate sequencing |
 | `dispenser_sld` | Peristaltic pump flow rate calculation, load-cell closed-loop dispensing, level alert thresholds |
 | `safety_manager` | Over-temperature cutoff logic, watchdog feed timing, e-stop relay state transitions, interlock validation |
 | `sensor_manager` | MLX90614 I2C read parsing, HX711 SPI read parsing, CAN coil temp parsing, sensor timeout detection |

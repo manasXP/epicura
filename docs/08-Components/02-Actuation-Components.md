@@ -1,7 +1,7 @@
 ---
 created: 2026-02-15
-modified: 2026-02-20
-version: 6.0
+modified: 2026-03-11
+version: 8.0
 status: Draft
 ---
 
@@ -28,8 +28,8 @@ This document details the actuation subsystem components for the Epicura kitchen
 │  │              │         └──────────────┘                     │
 │  │              │                                               │
 │  │              │── GPIO ►┌──────────────┐                     │
-│  │              │  + PWM  │  CID: LinAct │                     │
-│  │              │         │  x2 (Coarse) │                     │
+│  │              │  + PWM  │  CID: Step+  │                     │
+│  │              │  + I2C  │  LAct (Coarse)│                    │
 │  │              │         └──────────────┘                     │
 │  │              │                                               │
 │  │              │── PWM  ►┌──────────────┐                     │
@@ -61,14 +61,17 @@ This document details the actuation subsystem components for the Epicura kitchen
 | Pneumatic Tubing + Fittings — P-ASD | 4mm OD silicone + barb fittings | 1 lot | $10.00 | $10.00 | AliExpress | Pump-to-manifold-to-cartridges |
 | Spice Cartridges (6x, PP) — P-ASD | Custom 60mL, food-grade PP | 6 | $3.00 | $18.00 | Custom/3D print | Bayonet-lock, 5mm orifice + 200-mesh screen |
 | Relief Valve (2.0 bar) — P-ASD | Pop-off safety valve | 1 | $2.00 | $2.00 | AliExpress | Overpressure protection on accumulator |
-| 12V DC Linear Actuator (50mm) — CID | Generic 12V, 50mm stroke | 2 | $8.00 | $16.00 | Amazon / AliExpress | CID push-plate slider for coarse ingredients |
+| NEMA 23 Stepper Motor — CID-1 | NEMA 23, 1.8°/step, ~2A/phase | 1 | $15.00 | $15.00 | AliExpress | CID-1 push-plate slider (stepper driven) |
+| External Stepper Driver — CID-1 | DM542/TB6600-class, 24V input | 1 | $10.00 | $10.00 | AliExpress | Pulse/dir/enable driver for CID-1 NEMA 23 |
+| 12V DC Linear Actuator (50mm) — CID-2 | Generic 12V, 50mm stroke | 1 | $8.00 | $8.00 | Amazon / AliExpress | CID-2 push-plate slider for coarse ingredients |
 | 12V Peristaltic Pump — SLD | Generic 12V DC gear motor | 2 | $10.00 | $20.00 | Amazon / AliExpress | SLD liquid dispensing (oil + water) |
 | 12V NC Solenoid Valve — SLD | Generic 12V, normally closed | 2 | $4.00 | $8.00 | Amazon / AliExpress | SLD drip prevention |
 | 2 kg Load Cell + HX711 — SLD (oil) | Generic 2 kg strain gauge + HX711 | 1 | $8.00 | $8.00 | Amazon | SLD oil reservoir closed-loop metering + level alert |
 | 2 kg Load Cell + HX711 — SLD (water) | Generic 2 kg strain gauge + HX711 | 1 | $8.00 | $8.00 | Amazon | SLD water reservoir closed-loop metering + level alert |
-| H-Bridge Motor Driver — CID | DRV8876RGTR (x2) | 2 | $2.50 | $5.00 | Mouser | CID linear actuator EN/PH direction + speed |
-| Limit Switches (micro) — CID | Generic micro switch | 4 | $0.50 | $2.00 | Amazon | CID home/extend position detection |
-| PCF8574 I2C GPIO Expander — P-ASD | PCF8574 (SOIC-16) | 1 | $0.50 | $0.50 | LCSC / Mouser | P-ASD solenoid V1-V6 gate driver (I2C1, addr 0x20) |
+| H-Bridge Motor Driver — CID-2 | DRV8876RGTR (x1) | 1 | $2.50 | $2.50 | Mouser | CID-2 linear actuator EN/PH direction + speed |
+| Limit Switches (micro) — CID | Generic micro switch | 3 | $0.50 | $1.50 | Amazon | CID-1 home, CID-2 home/extend position detection |
+| PCF8574 #1 I2C GPIO Expander — P-ASD | PCF8574 (SOIC-16) | 1 | $0.50 | $0.50 | LCSC / Mouser | P-ASD solenoid V1-V6 + CID (I2C1, addr 0x20) |
+| PCF8574 #2 I2C GPIO Expander — SLD/LED | PCF8574 (SOIC-16) | 1 | $0.50 | $0.50 | LCSC / Mouser | SLD solenoids + status LED + LED ring power (I2C1, addr 0x21) |
 | ISO1050DUB (isolated CAN transceiver) | ISO1050DUBR | 1 | $3.50 | $3.50 | TI / Mouser | 5 kV RMS galvanic isolation, SOIC-8; on Driver PCB, CAN bus to induction module |
 | CAN Termination + Decoupling | 120Ω + MLCC caps | 1 lot | $0.13 | $0.13 | LCSC | CAN bus passives on Driver PCB |
 | Relay Module (5V, 10A) | SRD-05VDC-SL-C | 2 | $3.00 | $6.00 | Amazon | Induction on/off and power cycling control (prototype) |
@@ -92,13 +95,16 @@ This document details the actuation subsystem components for the Epicura kitchen
 | Microwave Induction Surface (CAN) | $60.00 |
 | 24V BLDC Motor (main arm) | $25.00 |
 | P-ASD Pneumatic System (pump, valves, accumulator, regulator, sensor, tubing, cartridges, relief valve) | $90.00 |
-| Linear Actuators — CID (2x) | $16.00 |
+| NEMA 23 Stepper Motor — CID-1 | $15.00 |
+| External Stepper Driver — CID-1 | $10.00 |
+| Linear Actuator — CID-2 (1x) | $8.00 |
 | Peristaltic Pumps — SLD (2x) | $20.00 |
 | Solenoid Valves — SLD (2x) | $8.00 |
 | Load Cells + HX711 — SLD (2×) | $16.00 |
-| H-Bridge Driver — CID | $5.00 |
-| Limit Switches — CID (4x) | $2.00 |
-| PCF8574 I2C GPIO Expander (P-ASD) | $0.50 |
+| H-Bridge Driver — CID-2 (1x) | $2.50 |
+| Limit Switches — CID (3x) | $1.50 |
+| PCF8574 #1 I2C GPIO Expander (P-ASD + CID) | $0.50 |
+| PCF8574 #2 I2C GPIO Expander (SLD/LED) | $0.50 |
 | ISO1050DUB (isolated CAN transceiver) | $3.50 |
 | CAN Termination + Decoupling | $0.13 |
 | Relay Module (safety, 2x) | $6.00 |
@@ -106,7 +112,7 @@ This document details the actuation subsystem components for the Epicura kitchen
 | Connectors + Wiring | $17.00 |
 | Exhaust Fan + Filtration | $22.50 |
 | Piezo Buzzer + MOSFET | $0.85 |
-| **Category Subtotal** | **$300.48** |
+| **Category Subtotal** | **$314.98** |
 
 ---
 
@@ -138,11 +144,15 @@ This document details the actuation subsystem components for the Epicura kitchen
 - **Anti-clog**: inherent (pressurized air breaks powder bridges), no moving parts in powder path
 - **BOM cost**: ~$90 (vs ~$6 for old 3× SG90 servos) — 15× cost for 2× capacity + dramatically improved reliability with sticky Indian spices
 
-### 5.4 CID Linear Actuators (×2)
-- 12V DC, 50 mm stroke push-plate sliders for coarse ingredients
-- 20–50 N force sufficient for pushing up to 500g of chopped vegetables
-- H-bridge driver (DRV8876RGTR) for EN/PH direction and speed control
-- Limit switches at home/extend positions for position feedback
+### 5.4 CID Actuators
+- **CID-1**: NEMA 23 stepper motor + external DM542/TB6600-class driver, powered from 24V rail
+  - 3 differential signal pairs (PUL+/-, DIR+/-, ENA+/-) from STM32 via 100R series resistors
+  - PA10 (TIM1_CH3) → PUL+, PB4 (GPIO) → DIR+, PCF8574 P7 → ENA+
+  - Home limit switch only; step counting replaces full-extend switch
+  - DRV8876 #1 removed — saves ~$2.50 + board space
+- **CID-2**: 12V DC linear actuator, 50 mm stroke push-plate slider (unchanged)
+  - H-bridge driver (DRV8876RGTR #2) for EN/PH direction and speed control
+  - Limit switches at home/extend positions for position feedback
 
 ### 5.5 SLD Peristaltic Pumps (×2) + Solenoid Valves (×2)
 - Peristaltic: fluid only touches food-grade silicone tubing (no contamination)
@@ -157,7 +167,8 @@ This document details the actuation subsystem components for the Epicura kitchen
 | Microwave surface | $60 | $40 (bulk) | 33% |
 | 24V BLDC motor | $25 | $15 (bulk) | 40% |
 | P-ASD system (pump+valves+cartridges) | $90 | $50 (bulk) | 44% |
-| Linear actuators x2 (CID) | $16 | $8 (bulk) | 50% |
+| NEMA 23 stepper + driver (CID-1) | $25 | $15 (bulk) | 40% |
+| Linear actuator x1 (CID-2) | $8 | $4 (bulk) | 50% |
 | Peristaltic pumps x2 (SLD) | $20 | $10 (bulk) | 50% |
 | Solenoid valves x2 (SLD) | $8 | $4 (bulk) | 50% |
 | CAN transceiver (ISO1050DUB) | $3.50 (on Driver PCB) | $2.50 (bulk) | 29% |
@@ -189,3 +200,5 @@ This document details the actuation subsystem components for the Epicura kitchen
 | 4.0 | 2026-02-20 | Manas Pradhan | Moved CAN transceiver (now ISO1050DUB) to Compute Modules; replaced with CAN termination + decoupling passives ($0.13); subtotal $289.85 → $286.98 |
 | 5.0 | 2026-02-20 | Manas Pradhan | Moved ISO1050DUB ($3.50) back from Compute Modules to Actuation (now on Driver PCB); subtotal $286.98 → $290.48 |
 | 6.0 | 2026-02-20 | Manas Pradhan | Replaced DS3225 servo ($15) with 24V BLDC motor w/ integrated ESC ($25); net +$10; subtotal $290.48→$300.48 |
+| 7.0 | 2026-03-11 | Manas Pradhan | CID-1: replaced DC linear actuator ($8) + DRV8876 ($2.50) with NEMA 23 stepper ($15) + external driver ($10); CID-2 unchanged; limit switches 4→3; net +$14.00; subtotal $300.48→$314.48 |
+| 8.0 | 2026-03-11 | Manas Pradhan | Added PCF8574 #2 ($0.50) for GPIO headroom; SLD solenoid gates now via PCF8574 #2 (0x21); subtotal $314.48→$314.98 |

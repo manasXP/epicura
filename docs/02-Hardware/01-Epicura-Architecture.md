@@ -68,7 +68,7 @@ This document provides the comprehensive hardware architecture, wiring diagrams,
           │                                                 └──────────────┘   │
           │   ┌────────┐ ┌──────────┐      ┌──────────────┐ ┌──────────────┐   │
           │   │WiFi    │ │eMMC/SD   │      │24V BLDC      │ │ASD SG90 x3   │   │
-          │   │802.11ac│ │8-16GB    │      │Stirring Motor│ │CID LinAct x2 │   │
+          │   │802.11ac│ │8-16GB    │      │Stirring Motor│ │CID Step+LAct │   │
           │   │BLE 5.0 │ │Storage   │      │(integrated)  │ │SLD Pumps x2  │   │
           │   └────────┘ └──────────┘      └──────────────┘ └──────────────┘   │
           │                                                                    │
@@ -94,9 +94,10 @@ This document provides the comprehensive hardware architecture, wiring diagrams,
 | BLDC Stirring Motor | 24V BLDC (integrated ESC) | PWM (10kHz) + EN + DIR | STM32 PA8 + PA4 + PA5 | Stirring arm rotation |
 | ASD Gate Servos | SG90 (x3) | PWM (50Hz) | STM32 TIM2 CH1-3 (PA0-PA2) | Seasoning dispenser gates |
 | ASD Vibration Motors | ERM 3V (x3) | GPIO | STM32 PC7, PD2, PA3 via MOSFET | Anti-clog mechanism (one per hopper) |
-| CID Linear Actuators | 12V DC (x2) via DRV8876 | GPIO (EN/PH) | STM32 PA10/PB4, PB5/PC2 | Coarse ingredient push-plate sliders |
+| CID-1 Stepper Motor | NEMA 23 + external driver (24V) | PWM (PUL) + GPIO (DIR) + I2C (ENA) | STM32 PA10/PB4, PCF8574 P7 → J_CID | Coarse ingredient push-plate slider (stepper) |
+| CID-2 Linear Actuator | 12V DC via DRV8876 #2 | GPIO (EN/PH) | STM32 PB5/PC2 | Coarse ingredient push-plate slider (DC motor) |
 | SLD Peristaltic Pumps | 12V DC (x2) via TB6612 | GPIO (PWM/DIR) | STM32 PC3-PC6 | Oil and water dispensing |
-| SLD Solenoid Valves | 12V NC (x2) | GPIO | STM32 PA7, PA9 via MOSFET | Liquid drip prevention |
+| SLD Solenoid Valves | 12V NC (x2) | I2C (GPIO expander) | PCF8574 #2 P0/P1 (0x21) via MOSFET | Liquid drip prevention |
 | Exhaust Fans | 2× 120mm 12V DC brushless | PWM (25kHz) | STM32 PA6, PB10 via MOSFET | Fume extraction, independent control |
 | Piezo Buzzer | 5V active | PWM | STM32 PC7 via MOSFET | Audio alerts |
 | USB-C Receptacle | Mid-mount 16-pin | USB 2.0 FS | STM32 PA11/PA12 (native USB) | DFU programming, CDC serial debug |
@@ -237,8 +238,11 @@ STM32G474RE (LQFP-64)
 │  └─────────────────────────────────┘                         │
 │                                                              │
 │  ┌─── CID Subsystem (Coarse Ingredients Dispenser) ──┐       │
-│  │  PA10 (TIM1_CH3)   ──► CID-1 Linear Actuator EN (DRV8876) │
-│  │  PB4  (GPIO)       ──► CID-1 Linear Actuator PH/DIR       │
+│  │  CID-1: NEMA 23 Stepper + External Driver (24V)           │
+│  │  PA10 (TIM1_CH3)   ──► CID-1 Stepper PUL+ (via 100R)     │
+│  │  PB4  (GPIO)       ──► CID-1 Stepper DIR+ (via 100R)     │
+│  │  PCF8574 P7        ──► CID-1 Stepper ENA+ (via 100R)     │
+│  │  CID-2: DC Linear Actuator (DRV8876 #2)                   │
 │  │  PB5  (GPIO)       ──► CID-2 Linear Actuator EN (DRV8876) │
 │  │  PC2  (GPIO)       ──► CID-2 Linear Actuator PH/DIR       │
 │  └─────────────────────────────────┘                         │
@@ -248,8 +252,9 @@ STM32G474RE (LQFP-64)
 │  │  PC4  (GPIO)       ──► SLD-OIL Pump DIR (TB6612 AIN1)     │
 │  │  PC5  (GPIO)       ──► SLD-WATER Pump PWM (TB6612 PWMB)   │
 │  │  PC6  (GPIO)       ──► SLD-WATER Pump DIR (TB6612 BIN1)   │
-│  │  PA7  (GPIO)       ──► SLD-OIL Solenoid (via MOSFET)      │
-│  │  PA9  (GPIO)       ──► SLD-WATER Solenoid (via MOSFET)    │
+│  │  PCF8574 #2 P0     ──► SLD-OIL Solenoid (via MOSFET)      │
+│  │  PCF8574 #2 P1     ──► SLD-WATER Solenoid (via MOSFET)   │
+│  │    (I2C1 addr 0x21, on Unified PCB)                       │
 │  └─────────────────────────────────┘                         │
 │                                                              │
 │  ┌─── Exhaust Fans (2x 120mm) ────┐                          │
@@ -287,7 +292,7 @@ STM32G474RE (LQFP-64)
 │  │  PB0  (GPIO)      ──► Safety Relay (via MOSFET driver)    │
 │  │  PB1  (GPIO)      ◄── Pot Detection (reed switch)         │
 │  │  PB2  (GPIO)      ◄── E-Stop Button (interrupt, act-low)  │
-│  │  PC8  (GPIO)      ──► Status LED (on-board)               │
+│  │  PCF8574 #2 P2    ──► Status LED (on-board, 0x21)         │
 │  └─────────────────────────────────┘                         │
 │                                                              │
 │  Power: 3.3V / GND from PSU rail                             │
@@ -611,7 +616,8 @@ STM32 controls the module via CAN bus (FDCAN1).
 | 5V (from Unified PCB) | Display backlight | 3 | 5 | Fed from CM5IO 5V rail (sourced from Unified PCB) |
 | 24V direct | BLDC stirring motor | 12 | 48 | 24V direct to integrated ESC, ~0.5A typical, ~2A peak |
 | 24V → 5V buck | ASD SG90 servos (x3) | 0.5 | 3 | 4.8-6V via same buck |
-| 24V → 12V | CID linear actuators (x2) | 0 | 5 | 12V, only during dispense |
+| 24V direct | CID-1 stepper driver | 0 | 72 | 24V, ~3A peak to external driver, only during dispense |
+| 24V → 12V | CID-2 linear actuator | 0 | 2.5 | 12V, only during dispense |
 | 24V → 12V | SLD peristaltic pumps (x2) | 0 | 6 | 12V, only during dispense |
 | 24V → 12V | SLD solenoid valves (x2) | 0 | 10 | 5W each when energized |
 | 24V → 5V buck | LED ring (WS2812B) | 2 | 5 | 16 LEDs at partial brightness |
@@ -682,25 +688,37 @@ The dispensing system comprises three subsystems. See [[03-Ingredient-Dispensing
   │
   I2C1 (PA15/PB7):
     ├── ADS1015 (0x48) — Accumulator pressure sensor
-    └── PCF8574 (0x20) — Solenoid GPIO expander
+    ├── PCF8574 #1 (0x20) — P-ASD solenoid + CID GPIO expander
+    └── PCF8574 #2 (0x21) — SLD solenoids + status LED + LED ring power
 
   Note: P-ASD uses pneumatic puff-dosing (no servo gates or vibration motors)
 ```
 
-### 12.2 CID — Linear Actuator Wiring
+### 12.2 CID — Actuator Wiring
 
 ```
+  CID-1: NEMA 23 Stepper Motor (via external driver, 24V)
+  │
+  │  24V Input Rail ──► J_CID Pin 12 (24V_STEP) ──► External Driver VCC
+  │  GND ────────────► J_CID Pin 13 (GND_PWR) ──► External Driver GND
+  │
+  │  PA10 (TIM1_CH3) ── 100R ──► J_CID Pin 1 (PUL+) ──► Driver PUL+
+  │  PB4  (GPIO)      ── 100R ──► J_CID Pin 3 (DIR+) ──► Driver DIR+
+  │  PCF8574 P7       ── 100R ──► J_CID Pin 5 (ENA+) ──► Driver ENA+
+  │  J_CID Pins 2,4,6 (GND) ──► Driver PUL-, DIR-, ENA-
+  │
+  │  Home switch: PB6 (EXTI) via J_CID Pin 9
+  │  Full-extend: step counting (no switch)
+
+  CID-2: DC Linear Actuator (via DRV8876 #2 on Unified PCB)
+  │
   12V Rail (from on-board MP1584EN #1)
   │
-  ├──► CID-1 Linear Actuator (via DRV8876 #1 on Unified PCB)
-  │      EN/PWM ◄── PA10 (TIM1_CH3)
-  │      PH/DIR ◄── PB4  (GPIO)
-  │
-  └──► CID-2 Linear Actuator (via DRV8876 #2 on Unified PCB)
+  └──► CID-2 Linear Actuator (via DRV8876 #2)
          EN/PWM ◄── PB5  (GPIO)
          PH/DIR ◄── PC2  (GPIO)
-
-  Note: Limit switches not currently implemented (reserved for future use)
+         Home switch: PD2 (EXTI) via J_CID Pin 10
+         Full-extend: PCF8574 P6 via J_CID Pin 11
 ```
 
 ### 12.3 SLD — Liquid Dispensing Wiring
@@ -716,8 +734,8 @@ The dispensing system comprises three subsystems. See [[03-Ingredient-Dispensing
   │      PWMB ◄── PC5 (GPIO)
   │      BIN1 ◄── PC6 (GPIO)
   │
-  ├──► Solenoid Valve (Oil)   ◄── PA7 (GPIO), MOSFET + flyback
-  └──► Solenoid Valve (Water) ◄── PA9 (GPIO), MOSFET + flyback
+  ├──► Solenoid Valve (Oil)   ◄── PCF8574 #2 P0 (I2C1, 0x21), MOSFET + flyback
+  └──► Solenoid Valve (Water) ◄── PCF8574 #2 P1 (I2C1, 0x21), MOSFET + flyback
 
   I2C for INA219 current monitor (on Unified PCB):
     SCL ◄── PA15 (I2C1_SCL)
@@ -734,11 +752,11 @@ The dispensing system comprises three subsystems. See [[03-Ingredient-Dispensing
 | Subsystem | Actuators | Metering | Min Dispense |
 |-----------|-----------|----------|-------------|
 | P-ASD (seasonings) | 1× diaphragm pump + 6× solenoid valve (PCF8574 I2C) | Pot load cells (±10%) | ~1 g |
-| CID (coarse) | 2× linear actuator (DRV8876 drivers) | Position-based / user pre-measured | Full tray |
+| CID (coarse) | CID-1: NEMA 23 stepper + ext. driver; CID-2: linear actuator (DRV8876 #2) | Position-based / user pre-measured | Full tray |
 | SLD (liquids) | 2× peristaltic pump (TB6612) + 2× solenoid + 2× 2 kg load cell | Closed-loop via dedicated per-reservoir load cells + low-level alerts | ~5 g |
 | Exhaust | 2× 120mm fans (independent PWM control) | Temperature/fume-based control | — |
 
-**Unified PCB On-Board Routing:** All STM32 control signals connect directly to their corresponding driver ICs (DRV8876, TB6612, ISO1050DUB, PCF8574, MOSFETs) on the same board. No inter-board stacking connector is required. The Unified PCB connects to the CM5IO board via the 40-pin GPIO header for SPI communication and 5V power.
+**Unified PCB On-Board Routing:** All STM32 control signals connect directly to their corresponding driver ICs (DRV8876 #2, TB6612, ISO1050DUB, PCF8574 x2, MOSFETs) on the same board. CID-1 stepper signals (PUL+/DIR+/ENA+) route to J_CID via 100R series resistors for the external driver. No inter-board stacking connector is required. The Unified PCB connects to the CM5IO board via the 40-pin GPIO header for SPI communication and 5V power.
 
 ---
 
@@ -879,7 +897,9 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 | **Actuators** | 24V BLDC motor w/ integrated ESC | 1 | $25 | $25 |
 | | SG90 micro servos (ASD gates) | 3 | $3 | $9 |
 | | ERM vibration motors (ASD anti-clog) | 3 | $2 | $6 |
-| | 12V DC linear actuators (CID) | 2 | $8 | $16 |
+| | NEMA 23 stepper motor (CID-1) | 1 | $15 | $15 |
+| | External stepper driver (CID-1) | 1 | $10 | $10 |
+| | 12V DC linear actuator (CID-2) | 1 | $8 | $8 |
 | | 12V peristaltic pumps (SLD) | 2 | $10 | $20 |
 | | 12V NC solenoid valves (SLD) | 2 | $4 | $8 |
 | | 120mm 12V DC brushless fans (exhaust) | 2 | $5 | $10 |
@@ -954,8 +974,10 @@ The Raspberry Pi CM5 includes onboard WiFi and Bluetooth. No external modules ar
 - [ ] ASD: Each hopper dispenses 5g powder within ±10%
 - [ ] ASD: Vibration motors (3x) activate before dispense (200ms pulse)
 - [ ] ASD: Anti-clog retry mechanism clears blockages within 2 attempts
-- [ ] CID: Linear actuators (DRV8876) push full tray contents into pot
-- [ ] CID: Actuators return to home position reliably
+- [ ] CID-1: Stepper motor (NEMA 23 via external driver) pushes full tray contents into pot
+- [ ] CID-1: Stepper returns to home position (PB6 limit switch)
+- [ ] CID-2: Linear actuator (DRV8876 #2) pushes full tray contents into pot
+- [ ] CID-2: Actuator returns to home position reliably
 - [ ] SLD: Each pump (TB6612) dispenses 50g liquid within ±5%
 - [ ] SLD: Solenoid valves seal (no drips when idle)
 - [ ] Both exhaust fans: PWM control from 0-100%, no audible whine

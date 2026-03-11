@@ -1,7 +1,7 @@
 ---
 created: 2026-03-06
-modified: 2026-03-07
-version: 1.4
+modified: 2026-03-11
+version: 1.9
 status: Draft
 ---
 
@@ -46,7 +46,7 @@ This document covers the design of the single custom PCB for Epicura, merging th
 
 ### 1.4 Area Analysis
 
-Combined components (~112 ICs/discretes + 16 connectors) occupy ~3,739 mm² of the ~12,000 mm² usable placement area = **31% utilization**. Well within typical PCB density limits (50-70% is tight). No board size increase needed.
+Combined components (~112 ICs/discretes + 17 connectors) occupy ~3,789 mm² of the ~12,000 mm² usable placement area = **32% utilization**. Well within typical PCB density limits (50-70% is tight). No board size increase needed.
 
 ---
 
@@ -69,8 +69,8 @@ Combined components (~112 ICs/discretes + 16 connectors) occupy ~3,739 mm² of t
                     ┌──────────────┼──────────────┐
                     │              │              │
                 ┌───▼───┐    ┌───▼───┐    ┌─────▼─────┐
-                │SLD Sol│    │Fans   │    │CID LinAct │
-                │2×IRLML│    │2×IRLML│    │2×DRV8876  │
+                │SLD Sol│    │Fans   │    │CID-2 LAct │
+                │2×IRLML│    │2×IRLML│    │1×DRV8876  │
                 └───────┘    └───────┘    └───────────┘
 
 12V UPS Input ─── F5 (3A Polyfuse) ─── SS34 ─── SMBJ12A TVS ─── 12V UPS Rail
@@ -110,7 +110,7 @@ USB-C VBUS ─── F_USB (500mA polyfuse) ──── 5V_USB ── D_OR2 (SS
                                      │  USB ─────────── J_USB (PA11/PA12)
                                      │  TIM/GPIO ───── Actuator drivers
                                      │  I2C1 ──────── MLX90614, INA219,
-                                     │                 PCF8574, ADS1015
+                                     │                 PCF8574 x2, ADS1015
                                      └──────────────┘
 
                    ┌──────────────┐
@@ -122,9 +122,18 @@ USB-C VBUS ─── F_USB (500mA polyfuse) ──── 5V_USB ── D_OR2 (SS
                    │  Current Mon │
                    └──────────────┘
   .                ┌──────────────┐
-         I2C1 ─────┤  PCF8574     │──── P0-P5 → P-ASD Solenoid V1-V6 gates
-                   │  GPIO Exp.   │     (addr 0x20)
-                   └──────────────┘
+         I2C1 ─────┤  PCF8574 #1  │──── P0-P5 → P-ASD Solenoid V1-V6 gates
+                   │  GPIO Exp.   │     P6 ◄── CID-2 Full-Extend Limit
+                   └──────────────┘     P7 ──► CID-1 Stepper ENA+
+                                        (addr 0x20)
+
+                   ┌──────────────┐
+         I2C1 ─────┤  PCF8574 #2  │──── P0 → SLD Solenoid 1 (oil) gate
+                   │  GPIO Exp.   │     P1 → SLD Solenoid 2 (water) gate
+                   └──────────────┘     P2 → Status LED
+                                        P3 → LED Ring Power Enable (Q_LED_N)
+                                        P4-P7: Reserved
+                                        (addr 0x21)
 
                    ┌──────────────┐
          12V ──────┤  TB6612FNG   │──── SLD 2× Peristaltic Pumps
@@ -175,10 +184,17 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 │  └──────────────────────────────────────────┘                  │
 │                                                                │
 │  ┌─── CID: Coarse Ingredients Dispenser ──┐                    │
-│  │  PA10 (TIM1_CH3)  ──► CID-1 Linear Actuator EN (DRV8876)    │
-│  │  PB4  (GPIO)      ──► CID-1 Linear Actuator PH/DIR          │
+│  │  CID-1: NEMA 23 Stepper Motor (external driver)             │
+│  │  PA10 (TIM1_CH3)  ──► CID-1 Stepper PUL+ (via 100R)        │
+│  │  PB4  (GPIO)      ──► CID-1 Stepper DIR+ (via 100R)        │
+│  │  PCF8574 P7       ──► CID-1 Stepper ENA+ (via 100R)        │
+│  │  CID-2: DC Linear Actuator (DRV8876 #2)                    │
 │  │  PB5  (GPIO)      ──► CID-2 Linear Actuator EN (DRV8876)    │
 │  │  PC2  (GPIO)      ──► CID-2 Linear Actuator PH/DIR          │
+│  │  PB6  (GPIO/EXTI) ◄── CID-1 Home Limit (NC, 10k PU)        │
+│  │  PB11              ── Reserved (freed from CID-1 extend)    │
+│  │  PD2  (GPIO/EXTI) ◄── CID-2 Home Limit (NC, 10k PU)        │
+│  │  PCF8574 P6       ◄── CID-2 Full-Extend Limit (NC)          │
 │  └─────────────────────────────────────────┘                   │
 │                                                                │
 │  ┌─── SLD: Standard Liquid Dispenser ──┐                       │
@@ -186,8 +202,12 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 │  │  PC4  (GPIO)      ──► SLD-OIL Pump DIR (TB6612 AIN1)        │
 │  │  PC5  (GPIO)      ──► SLD-WATER Pump PWM (TB6612 PWMB)      │
 │  │  PC6  (GPIO)      ──► SLD-WATER Pump DIR (TB6612 BIN1)      │
-│  │  PA7  (GPIO)      ──► SLD-OIL Solenoid (via MOSFET)         │
-│  │  PA9  (GPIO)      ──► SLD-WATER Solenoid (via MOSFET)       │
+│  │  PCF8574 #2 P0    ──► SLD-OIL Solenoid (via MOSFET)         │
+│  │  PCF8574 #2 P1    ──► SLD-WATER Solenoid (via MOSFET)       │
+│  │  PC11 (GPIO)      ──► HX711 SCK (SLD oil reservoir)         │
+│  │  PC12 (GPIO)      ◄── HX711 DOUT (SLD oil reservoir)        │
+│  │  PC9  (GPIO)      ──► HX711 SCK (SLD water reservoir)       │
+│  │  PC10 (GPIO)      ◄── HX711 DOUT (SLD water reservoir)      │
 │  └─────────────────────────────────────────┘                   │
 │                                                                │
 │  ┌─── Exhaust Fans (2x 120mm) ────┐                            │
@@ -211,14 +231,19 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 │  ┌─── I2C1: Sensors & Peripherals ──┐                          │
 │  │  PA15 (I2C1_SCL)  ──► MLX90614 (0x5A) — J_IR                │
 │  │  PB7  (I2C1_SDA)  ◄─► INA219 (0x40) — on-board              │
-│  │                    ◄─► PCF8574 (0x20) — on-board            │
-│  │                    ◄─► ADS1015 (0x48) — external            │
+│  │                    ◄─► PCF8574 #1 (0x20) — on-board         │
+│  │                    ◄─► PCF8574 #2 (0x21) — on-board         │
+│  │                    ◄─► ADS1015 (0x48) — J_PRES            │
 │  │  100 kHz, 4.7k pull-ups to 3.3V                             │
 │  └─────────────────────────────────┘                           │
 │                                                                │
 │  ┌─── GPIO: Load Cells (HX711) ───┐                            │
-│  │  PC0  (GPIO)      ──► HX711 SCK (clock out)                 │
-│  │  PC1  (GPIO)      ◄── HX711 DOUT (data in)                  │
+│  │  PC0  (GPIO)      ──► HX711 SCK (pot load cell)             │
+│  │  PC1  (GPIO)      ◄── HX711 DOUT (pot load cell)            │
+│  │  PC11 (GPIO)      ──► HX711 SCK (SLD oil reservoir)         │
+│  │  PC12 (GPIO)      ◄── HX711 DOUT (SLD oil reservoir)        │
+│  │  PC9  (GPIO)      ──► HX711 SCK (SLD water reservoir)       │
+│  │  PC10 (GPIO)      ◄── HX711 DOUT (SLD water reservoir)      │
 │  └─────────────────────────────────┘                           │
 │                                                                │
 │  ┌─── Power Fail Detection ───────┐                            │
@@ -227,7 +252,7 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 │  └─────────────────────────────────┘                           │
 │                                                                │
 │  ┌─── LED Ring Power Control ────┐                             │
-│  │  PA2  (GPIO)     ──► Q_LED_N gate (2N7002, N-MOSFET)        │
+│  │  PCF8574 #2 P3   ──► Q_LED_N gate (2N7002, N-MOSFET)        │
 │  │       Q_LED_N drain ──► Q_LED_P gate (SI2301, P-MOSFET)     │
 │  │       Q_LED_P switches 5V to LED ring via J_LED             │
 │  │       Data: CM5 GPIO18 → J_CM5 pin 12 → J_LED pin 2         │
@@ -237,8 +262,15 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 │  │  PB0  (GPIO)      ──► Safety Relay (via MOSFET Q_RLY)       │
 │  │  PB1  (GPIO)      ◄── Pot Detection (reed switch)           │
 │  │  PB2  (GPIO/EXTI) ◄── E-Stop Button (active-low)            │
-│  │  PC8  (GPIO)      ──► Status LED (green, active-low)        │
 │  └─────────────────────────────────┘                           │
+│                                                                │
+│  ┌─── PCF8574 #2 (0x21): GPIO Headroom ─┐                     │
+│  │  P0 ──► SLD Solenoid 1 (oil, IRLML6344)                     │
+│  │  P1 ──► SLD Solenoid 2 (water, IRLML6344)                   │
+│  │  P2 ──► Status LED (green, 330R, active-low)                │
+│  │  P3 ──► LED Ring Power (Q_LED_N gate)                       │
+│  │  P4-P7: Reserved (future expansion)                         │
+│  └───────────────────────────────────────┘                     │
 │                                                                │
 │  Debug: SWD via PA13 (SWDIO) / PA14 (SWCLK)                    │
 │  Power: 3.3V / GND from on-board LDO                           │
@@ -255,32 +287,32 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 |-----|----------|------------|-----------|-------------|-----------|
 | PA0 | TIM2_CH1 | P-ASD Pump PWM | Output | IRLML6344 gate | P-ASD |
 | PA1 | COMP1_INP | 24V Power Fail Detection | Input | Voltage divider | Power |
-| PA2 | GPIO | LED Ring Power Enable | Output | Q_LED_N/Q_LED_P MOSFET → J_LED | Illumination |
+| PA2 | — | Available (moved to PCF8574 #2 P3) | — | Freed: TIM2_CH3, USART2_TX, ADC1_IN3 | — |
 | PA3 | ADC | USB VBUS Detect | Input | 100k/100k divider from 5V_USB | USB |
 | PA4 | GPIO | BLDC Motor EN | Output | J_BLDC pin 4 (100R series) | Main |
 | PA5 | GPIO | BLDC Motor DIR | Output | J_BLDC pin 5 (100R series) | Main |
 | PA6 | TIM3_CH1 | Exhaust Fan 1 PWM | Output | IRLML6344 gate → J_FAN | Exhaust |
-| PA7 | GPIO | SLD Solenoid 1 Enable | Output | IRLML6344 gate → J_SLD | SLD |
+| PA7 | — | Available (moved to PCF8574 #2 P0) | — | Freed: TIM3_CH2, SPI1_MOSI, ADC2_IN4 | — |
 | PA8 | TIM1_CH1 | BLDC Motor PWM (10 kHz) | Output | J_BLDC pin 3 (100R series) | Main |
-| PA9 | GPIO | SLD Solenoid 2 Enable | Output | IRLML6344 gate → J_SLD | SLD |
-| PA10 | TIM1_CH3 | CID Linear Actuator 1 EN | Output | DRV8876 #1 EN | CID |
+| PA9 | — | Available (moved to PCF8574 #2 P1) | — | Freed: TIM1_CH2, USART1_TX, TIM15_CH1 | — |
+| PA10 | TIM1_CH3 | CID-1 Stepper PUL+ | Output | J_CID pin 1 (100R series) | CID |
 | PA11 | USB_DM | USB D- | Bidir | USBLC6-2SC6 ESD → 22R → J_USB | USB |
 | PA12 | USB_DP | USB D+ | Bidir | USBLC6-2SC6 ESD → 22R → J_USB | USB |
 | PA13 | SWDIO | SWD Debug | Bidir | J_SWD | Debug |
 | PA14 | SWCLK | SWD Debug | Input | J_SWD | Debug |
-| PA15 | I2C1_SCL | MLX90614/INA219/PCF8574/ADS1015 | Output | J_IR, on-board ICs | Sensors |
+| PA15 | I2C1_SCL | MLX90614/INA219/PCF8574 x2/ADS1015 | Output | J_IR, J_PRES, on-board ICs | Sensors |
 | PB0 | GPIO | Safety Relay | Output | Q_RLY (2N7002) | Safety |
 | PB1 | GPIO | Pot Detection | Input | Reed switch (10k pull-up) | Safety |
 | PB2 | GPIO (EXTI) | E-Stop | Input | NC button (10k pull-up, RC debounce) | Safety |
 | PB3 | GPIO | IRQ to CM5 | Output | J_CM5 pin 7 | Comms |
-| PB4 | GPIO | CID Linear Actuator 1 PH | Output | DRV8876 #1 PH | CID |
+| PB4 | GPIO | CID-1 Stepper DIR+ | Output | J_CID pin 3 (100R series) | CID |
 | PB5 | GPIO | CID Linear Actuator 2 EN | Output | DRV8876 #2 EN | CID |
-| PB6 | — | Available (freed from I2C1_SCL) | — | — | — |
-| PB7 | I2C1_SDA | MLX90614/INA219/PCF8574/ADS1015 | Bidir | J_IR, on-board ICs | Sensors |
+| PB6 | GPIO (EXTI) | CID-1 Home Limit Switch | Input | J_CID pin 9 (10k pull-up, 100nF debounce) | CID |
+| PB7 | I2C1_SDA | MLX90614/INA219/PCF8574 x2/ADS1015 | Bidir | J_IR, J_PRES, on-board ICs | Sensors |
 | PB8 | FDCAN1_RX | CAN RX | Input | ISO1050 RXD (on-board) | CAN |
 | PB9 | FDCAN1_TX | CAN TX | Output | ISO1050 TXD (on-board) | CAN |
 | PB10 | TIM2_CH3 | Exhaust Fan 2 PWM | Output | IRLML6344 gate → J_FAN | Exhaust |
-| PB11 | — | Available (freed from Buzzer) | — | — | — |
+| PB11 | — | Reserved (freed from CID-1 extend) | — | Unassigned | — |
 | PB12 | SPI2_NSS | CM5 CE0 | Input | J_CM5 pin 24 | Comms |
 | PB13 | SPI2_SCK | CM5 SCLK | Input | J_CM5 pin 23 | Comms |
 | PB14 | SPI2_MISO | CM5 MISO | Output | J_CM5 pin 21 | Comms |
@@ -293,16 +325,21 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 | PC5 | GPIO | SLD Pump 2 PWM | Output | TB6612 PWMB | SLD |
 | PC6 | GPIO | SLD Pump 2 DIR | Output | TB6612 BIN1 | SLD |
 | PC7 | TIM8_CH2 | Buzzer PWM | Output | 2N7002 gate → J_BUZZER | Audio |
-| PC8 | GPIO | Status LED | Output | Green LED (330R) | Status |
+| PC8 | — | Available (moved to PCF8574 #2 P2) | — | Freed: General GPIO | — |
+| PC9 | GPIO | HX711 SCK (SLD water reservoir) | Output | J_SLD pin 15 | SLD |
+| PC10 | GPIO | HX711 DOUT (SLD water reservoir) | Input | J_SLD pin 16 | SLD |
+| PC11 | GPIO | HX711 SCK (SLD oil reservoir) | Output | J_SLD pin 13 | SLD |
+| PC12 | GPIO | HX711 DOUT (SLD oil reservoir) | Input | J_SLD pin 14 | SLD |
+| PD2 | GPIO (EXTI) | CID-2 Home Limit Switch | Input | J_CID pin 10 (10k pull-up, 100nF debounce) | CID |
 
 ### 3.3 Complete Pin Usage Summary
 
 | Port | Used Pins | Total Used | Available |
 |------|-----------|------------|-----------|
 | PA | PA0-PA15 | 16 | — |
-| PB | PB0-PB5, PB7-PB10, PB12-PB15 | 14 | PB6, PB11 |
-| PC | PC0-PC8, PC14-PC15 | 11 | PC9-PC12 |
-| PD | — | 0 | PD2 |
+| PB | PB0-PB15 | 16 | — |
+| PC | PC0-PC12, PC14-PC15 | 15 | — |
+| PD | PD2 | 1 | — |
 
 ---
 
@@ -476,21 +513,21 @@ The Unified PCB sits on top; its **J_CM5** 2x20 pin socket (2.54mm pitch) is mou
 
 ```
 CM5 IO Board (40-pin GPIO Header)       Unified PCB (J_CM5, 2x20 socket)
-┌───────────────────────┐                ┌───────────────────────┐
-│                       │   stacking     │                       │
+┌───────────────────────┐               ┌───────────────────────┐
+│                       │   stacking    │                       │
 │  Pin  2  (5V)         ├◄──────────────┤ 5V out (UPS-backed)   │
 │  Pin  4  (5V)         ├◄──────────────┤ 5V out (UPS-backed)   │
 │  Pin  7  (GPIO4)      │◄──────────────┤ PB3  (IRQ, act-low)   │
 │  Pin 12  (GPIO18)     ├──────────────►│ LED ring data (pass)  │
-│  Pin 19  (GPIO10/MOSI)├──────────────►│ PB15 (SPI2_MOSI)     │
-│  Pin 21  (GPIO9/MISO) │◄──────────────┤ PB14 (SPI2_MISO)     │
-│  Pin 23  (GPIO11/SCLK)├──────────────►│ PB13 (SPI2_SCK)      │
-│  Pin 24  (GPIO8/CE0)  ├──────────────►│ PB12 (SPI2_NSS)      │
+│  Pin 19  (GPIO10/MOSI)├──────────────►│ PB15 (SPI2_MOSI)      │
+│  Pin 21  (GPIO9/MISO) │◄──────────────┤ PB14 (SPI2_MISO)      │
+│  Pin 23  (GPIO11/SCLK)├──────────────►│ PB13 (SPI2_SCK)       │
+│  Pin 24  (GPIO8/CE0)  ├──────────────►│ PB12 (SPI2_NSS)       │
 │  Pin 6,9,14,20,25,    │               │                       │
 │  30,34,39 (GND)       ├──────────────►│ GND                   │
 │  (all other pins)     ├───── N/C ─────┤ (not connected)       │
-│                       │                │                       │
-└───────────────────────┘                └───────────────────────┘
+│                       │               │                       │
+└───────────────────────┘               └───────────────────────┘
 
 Connection: Direct board-to-board stacking (Unified PCB on top, CM5IO below)
 Logic level: 3.3V on both sides (no level shifter needed)
@@ -652,8 +689,8 @@ PCF8574 P0-P5 (I2C1, 0x20) ── 100R Gate Resistor ── Gate
 | Solenoid V4 | P3 | P-ASD-4 (Salt) |
 | Solenoid V5 | P4 | P-ASD-5 (Garam Masala) |
 | Solenoid V6 | P5 | P-ASD-6 (Coriander) |
-| (Available) | P6 | Future use |
-| (Available) | P7 | Future use |
+| CID-2 Full-Extend Limit | P6 | CID limit switch input (NC to GND) |
+| CID-1 Stepper ENA+ | P7 | Stepper driver enable via 100R to J_CID pin 5 |
 
 **PCF8574 Configuration:**
 
@@ -665,9 +702,52 @@ PCF8574 P0-P5 (I2C1, 0x20) ── 100R Gate Resistor ── Gate
 | Output Current | 25 mA sink per pin (sufficient for IRLML6344 gate charge) |
 | Decoupling | 100nF MLCC on VDD |
 
-### 6.3 SLD Solenoid Valves (2x)
+### 6.3 PCF8574 #2 — GPIO Headroom Expander (0x21)
 
-Two 12V solenoid valves for SLD drip prevention, driven by low-side N-MOSFETs with flyback protection.
+A second PCF8574 at I2C address 0x21 (A0=VCC, A1=A2=GND) offloads 4 simple on/off digital outputs from the STM32, freeing PA7, PA9, PC8, and PA2 for future use. These signals have no timing requirements and tolerate the ~1 ms I2C write latency.
+
+**PCF8574 #2 Output Allocation:**
+
+| Pin | Signal | Previous STM32 Pin | Notes |
+|-----|--------|--------------------|-------|
+| P0 | SLD Solenoid 1 (oil) | PA7 | On/off, no timing requirement |
+| P1 | SLD Solenoid 2 (water) | PA9 | On/off, no timing requirement |
+| P2 | Status LED (green) | PC8 | Active-low, 330R, latency irrelevant |
+| P3 | LED Ring Power Enable | PA2 | On/off switch via Q_LED_N, not PWM |
+| P4 | Reserved | — | Future expansion |
+| P5 | Reserved | — | Future expansion |
+| P6 | Reserved | — | Future expansion |
+| P7 | Reserved | — | Future expansion |
+
+**Freed STM32 Pins:**
+
+| Pin | Available Alternate Functions | Potential Future Use |
+|-----|-------------------------------|---------------------|
+| PA7 | TIM3_CH2, SPI1_MOSI, ADC2_IN4 | Extra PWM, SPI device, analog input |
+| PA9 | TIM1_CH2, USART1_TX, TIM15_CH1 | Extra PWM, serial debug output |
+| PC8 | General GPIO | Digital I/O |
+| PA2 | TIM2_CH3, USART2_TX, ADC1_IN3 | Analog input, serial, PWM |
+
+Combined with existing free pins (PB11, PC13-15), the STM32 now has **7-8 unassigned GPIO** — substantial headroom for future features.
+
+**PCF8574 #2 Configuration:**
+
+| Parameter | Value |
+|-----------|-------|
+| IC | PCF8574 (SOIC-16) |
+| I2C Address | 0x21 (A0=VCC, A1=GND, A2=GND) |
+| I2C Bus | I2C1 (PA15 SCL / PB7 SDA), shared with PCF8574 #1 (0x20), MLX90614 (0x5A), INA219 (0x40), ADS1015 (0x48) |
+| Output Current | 25 mA sink per pin (sufficient for IRLML6344 gate charge) |
+| Decoupling | 100nF MLCC on VDD |
+| Placement | Zone D, adjacent to U_EXP (PCF8574 #1) |
+| Bus Capacitance | Adds ~10-15 pF; total 5 devices well under 400 pF limit |
+
+> [!note]
+> All MOSFET gate pull-downs (10k to GND) remain on the gate resistor side, ensuring safe boot state regardless of PCF8574 #2 I2C initialization order. The existing 4.7kΩ I2C pull-ups require no changes — 5 devices at 100 kHz with 4.7kΩ is standard and safe.
+
+### 6.4 SLD Solenoid Valves (2x)
+
+Two 12V solenoid valves for SLD drip prevention, driven by low-side N-MOSFETs with flyback protection. MOSFET gates driven by **PCF8574 #2 I2C GPIO expander** (address 0x21) on-board — moved from direct STM32 GPIO (PA7/PA9) to free pins for future use.
 
 ```
 12V Rail ──── Solenoid Coil ──┬── Drain (IRLML6344)
@@ -676,7 +756,7 @@ Two 12V solenoid valves for SLD drip prevention, driven by low-side N-MOSFETs wi
                               │
                          10k Pull-down
                               │
-PA7/PA9 ── 100R Gate Resistor ── Gate
+PCF8574 #2 P0/P1 (I2C1, 0x21) ── 100R Gate Resistor ── Gate
                               │
                              GND ── Source
 ```
@@ -689,7 +769,7 @@ PA7/PA9 ── 100R Gate Resistor ── Gate
 | Gate Pull-down | 10k to GND |
 | Solenoid Current | ~0.5A per valve |
 
-### 6.4 Exhaust Fans (2x)
+### 6.5 Exhaust Fans (2x)
 
 Two independent 120mm 12V brushless DC fans, driven by PWM via low-side MOSFETs.
 
@@ -713,19 +793,59 @@ PA6/PB10 ── 100R ── Gate
 | Flyback Diode | SS14 |
 | Fan Current | ~0.3-0.5A typical per fan |
 
-### 6.5 CID Linear Actuators (2x) — DRV8876RGTR
+### 6.6 CID — Coarse Ingredients Dispenser
 
-Two linear actuators for CID push-plate sliders, each driven by a TI DRV8876RGTR H-bridge IC.
+CID-1 uses a NEMA 23 stepper motor with an external pulse/direction/enable driver (DM542/TB6600-class). CID-2 retains the DC linear actuator with DRV8876 H-bridge. The stepper driver is powered from the 24V input rail via J_CID.
+
+#### 6.6.1 CID-1 Stepper Motor (NEMA 23 + External Driver)
+
+The STM32 provides 3 differential signal pairs (PUL+/-, DIR+/-, ENA+/-) to the external driver's optocoupler inputs. The "-" signals are connected to GND. 100R series resistors on all "+" lines limit current for optocoupler compatibility (~20 mA at 3.3V).
 
 ```
-12V Rail ──── VM (DRV8876) ──── OUT1 ──┐
-                                       │  Linear Actuator
-              VREF ◄── 3.3V            │  (12V, 1.5A nominal)
-                                       │
-              GND ─── GND      OUT2 ───┘
+PA10 (TIM1_CH3) ── R_PUL (100R) ──► J_CID Pin 1 (STEP_PUL+)
+                                      J_CID Pin 2 (STEP_PUL-) ── GND
+
+PB4  (GPIO)      ── R_DIR (100R) ──► J_CID Pin 3 (STEP_DIR+)
+                                      J_CID Pin 4 (STEP_DIR-) ── GND
+
+PCF8574 P7       ── R_ENA (100R) ──► J_CID Pin 5 (STEP_ENA+)
+                                      J_CID Pin 6 (STEP_ENA-) ── GND
+
+24V Input Rail ──────────────────────► J_CID Pin 12 (24V_STEP)
+GND ─────────────────────────────────► J_CID Pin 13 (GND_PWR)
+```
+
+| Parameter | Value |
+|-----------|-------|
+| Motor | NEMA 23, 1.8°/step (200 steps/rev), ~2A/phase |
+| External Driver | DM542/TB6600-class (pulse/dir/ena, 24V input) |
+| Pulse Signal | PA10 (TIM1_CH3), 200 Hz–10 kHz step rate |
+| Direction Signal | PB4 (GPIO), high = extend, low = retract |
+| Enable Signal | PCF8574 P7 (I2C), active-low on most drivers |
+| Series Resistors | 3× 100R (0402) on PUL+, DIR+, ENA+ |
+| Power | 24V from input rail via J_CID pin 12 (2–3A to driver) |
+| Position Feedback | Home limit switch only (PB6); step counting for travel distance |
+| Travel | Step count calibrated to linear slide pitch (e.g., 8mm lead screw) |
+
+> [!note]
+> CID-1 full-extend limit switch removed — step counting provides travel distance. PB11 is freed and marked as reserved/unassigned. The ENA signal uses PCF8574 P7 (the only remaining free I/O on the expander); ENA is not timing-critical so I2C latency (~1 ms) is acceptable.
+
+> [!warning]
+> The 24V_STEP pin (J_CID pin 12) carries 2–3A to the external stepper driver. Verify Hirose DF11 pin current rating (3A per pin max) is sufficient. If sustained current exceeds 3A, use dual pins or a separate power connector.
+
+#### 6.6.2 CID-2 Linear Actuator — DRV8876RGTR
+
+One linear actuator for CID-2 push-plate slider, driven by a TI DRV8876RGTR H-bridge IC (#2).
+
+```
+12V Rail ──── VM (DRV8876 #2) ──── OUT1 ──┐
+                                           │  Linear Actuator
+              VREF ◄── 3.3V                │  (12V, 1.5A nominal)
+                                           │
+              GND ─── GND          OUT2 ───┘
                 │
-                ├── EN/PWM ◄── PA10 or PB5 (100R gate)
-                ├── PH/DIR ◄── PB4 or PC2 (100R)
+                ├── EN/PWM ◄── PB5 (100R gate)
+                ├── PH/DIR ◄── PC2 (100R)
                 ├── nSLEEP ◄── 3.3V (always awake via 10k pull-up)
                 ├── nFAULT ──► (optional: route to STM32 reserved pin)
                 ├── IPROPI ──► 1k sense resistor to GND
@@ -749,10 +869,35 @@ Two linear actuators for CID push-plate sliders, each driven by a TI DRV8876RGTR
 
 | Actuator | EN/PWM Pin | PH/DIR Pin |
 |----------|------------|------------|
-| Linear Actuator 1 | PA10 | PB4 |
-| Linear Actuator 2 | PB5 | PC2 |
+| CID-2 Linear Actuator | PB5 | PC2 |
 
-### 6.6 SLD Peristaltic Pumps (2x) — TB6612FNG
+#### 6.6.3 CID Limit Switches
+
+CID-1 has a single home limit switch (step counting replaces the full-extend switch). CID-2 retains both home and full-extend switches. NC wiring provides fail-safe behavior: a broken wire reads as "at limit" and stops motion.
+
+```
+3.3V ── R_CID_PU (10k) ──┬── STM32 GPIO (EXTI, falling edge)
+                         │
+                    C_CID (100nF) ── GND
+                         │
+                   Limit Switch (NC) ── GND
+                   (opens at limit position)
+
+Switch pressed (at limit): pin LOW  (switch closed to GND)
+Switch released (in travel): pin HIGH (pulled up via 10k)
+Debounce time constant: 10k × 100nF = 1ms (adequate for ~10mm/s actuator)
+```
+
+| Switch | Signal | Pin | Type | Pull-up |
+|--------|--------|-----|------|---------|
+| CID-1 Home | CID1_HOME | PB6 | GPIO Input (EXTI) | 10k to 3.3V + 100nF debounce |
+| CID-2 Home | CID2_HOME | PD2 | GPIO Input (EXTI) | 10k to 3.3V + 100nF debounce |
+| CID-2 Full-Extend | CID2_EXTEND | PCF8574 P6 | I2C Input | Internal pull-up (PCF8574) |
+
+> [!note]
+> CID-2 Full-Extend uses PCF8574 P6 (I2C expander, addr 0x20) because no more direct GPIO pins are available. Polling rate via the Sensor task (10 Hz) is sufficient for the slow linear actuator (~10mm/s travel speed).
+
+### 6.7 SLD Peristaltic Pumps (2x) — TB6612FNG
 
 Two peristaltic pumps for precise liquid dispensing (oil + water), driven by a single TB6612FNG dual H-bridge IC.
 
@@ -787,7 +932,44 @@ Two peristaltic pumps for precise liquid dispensing (oil + water), driven by a s
 | Peak Current | 3.2A per channel (pulsed) |
 | Pull-downs | 10k on PWMA, PWMB (pumps off during boot) |
 
-### 6.7 Piezo Buzzer (1x)
+### 6.8 SLD Reservoir Load Cells (2x) — HX711
+
+Two dedicated 2 kg load cells (one under each SLD reservoir) for independent liquid level monitoring and closed-loop dispensing accuracy. Each load cell connects to its own HX711 24-bit ADC breakout board, routed to the STM32 via J_SLD.
+
+```
+3.3V ──── VDD (HX711 #2, oil) ──── 100nF decoupling
+              │
+         ┌────┤
+         │    ├── SCK ◄── PC11 (100R series)
+         │    ├── DOUT ──► PC12 (100R series)
+         │    └── GND ─── GND
+         │
+   2 kg Load Cell (under oil reservoir)
+
+3.3V ──── VDD (HX711 #3, water) ──── 100nF decoupling
+              │
+         ┌────┤
+         │    ├── SCK ◄── PC9 (100R series)
+         │    ├── DOUT ──► PC10 (100R series)
+         │    └── GND ─── GND
+         │
+   2 kg Load Cell (under water reservoir)
+```
+
+| Parameter | Value |
+|-----------|-------|
+| Load Cells | 2× 2 kg strain gauge (one per SLD reservoir) |
+| ADC | 2× HX711 24-bit (external breakout boards, connected via J_SLD) |
+| STM32 Pins | PC11/PC12 (oil), PC9/PC10 (water) |
+| Sampling | 10 Hz |
+| Resolution | ±1 g (with averaging) |
+| Purpose | Individual reservoir level monitoring + closed-loop dispensing weight feedback |
+| Low-Level Alert | Configurable threshold per channel (default: 50 g remaining) |
+| Decoupling | 100nF MLCC on each HX711 VDD |
+
+> **Note:** The pot load cell (PC0/PC1) uses a separate HX711 on pins 9-10 of J_SLD. The SLD reservoir HX711s share the same 3.3V/GND supply from J_SLD pins 11-12.
+
+### 6.9 Piezo Buzzer (1x)
 
 Active piezo buzzer (5V, PWM-capable) driven by a 2N7002 N-MOSFET.
 
@@ -808,7 +990,7 @@ PC7 (TIM8_CH2) ── 100R ── Gate
 | PWM Frequency | Variable (2-4 kHz for tones, 10 Hz for beeps) |
 | Current | ~20-30 mA typical |
 
-### 6.8 USB-C Programming Port (Native USB 2.0 Full-Speed)
+### 6.10 USB-C Programming Port (Native USB 2.0 Full-Speed)
 
 The STM32G474RE has a built-in USB 2.0 Full-Speed Device peripheral on PA11 (USB_DM) and PA12 (USB_DP). No external USB-UART bridge IC is needed. The USB-C port provides DFU bootloader programming (BOOT0 HIGH during reset) and USB CDC virtual serial for debug.
 
@@ -851,7 +1033,7 @@ Hold SW_BOOT during reset → BOOT0 = HIGH → STM32 enters DFU bootloader on PA
 > [!tip]
 > The USB-C port enables standalone programming and debug without the 24V PSU or 12V UPS. Simply plug in a USB-C cable and the Schottky-OR feeds 5V_USB to the AMS1117 LDO, powering the STM32 at 3.3V.
 
-### 6.9 Li-Ion Battery Charger + Boost Converter (Micro-UPS)
+### 6.11 Li-Ion Battery Charger + Boost Converter (Micro-UPS)
 
 A single-cell Li-Ion battery provides micro-UPS capability for STM32 RTC and state retention. The charger is powered from 5V_USB (USB-C VBUS), and the boost converter outputs 5V_BATT to the Schottky-OR.
 
@@ -908,7 +1090,7 @@ BAT+ (3.0-4.2V) ──── L_BST (4.7µH, 4x4mm) ──┬── D_BST (SS14 S
 > [!warning]
 > The Li-Ion battery is intended as a micro-UPS for STM32 state retention only (~50mA load). It is NOT sized to power the CM5 or actuators. At ~50mA, a 500mAh cell provides ~10 hours of STM32 standby.
 
-### 6.10 P-ASD Diaphragm Pump (1x)
+### 6.12 P-ASD Diaphragm Pump (1x)
 
 A 12V micro diaphragm pump (3-4 L/min) pressurizes the P-ASD accumulator. Driven by an IRLML6344 N-MOSFET with PWM speed control.
 
@@ -945,15 +1127,15 @@ PB9 (FDCAN1_TX) ──► TXD ┐
                ┌──────────▼──────────┐
                │     ISO1050DUB      │
                │                     │
-  VCC1 = 3.3V ┤ VCC1          VCC2 ├──── 5V
+  VCC1 = 3.3V ─┤ VCC1           VCC2 ├──── 5V
                │                     │
-  GND1 = GND  ┤ GND1          GND2 ├──── GND_ISO (isolated)
+  GND1 = GND  ─┤ GND1           GND2 ├──── GND_ISO (isolated)
                │                     │
-               │  ─── 5 kV barrier ──│
+               │  ─── 5 kV barrier ─ │
                │                     │
                └──────────┬──────────┘
                           │
-PB8 (FDCAN1_RX) ◄── RXD ┘
+  PB8 (FDCAN1_RX) ◄── RXD ┘
                           │
                    CANH ──┤── R_TERM (120R) ──┤── CANL
                           │                   │
@@ -1072,7 +1254,7 @@ A high-side P-MOSFET switch controls 5V power to the WS2812B LED ring. An N-MOSF
                           │
                      Q_LED_N Source ── GND
                           │
-                     Q_LED_N Gate ── 100R ── PA2 (GPIO)
+                     Q_LED_N Gate ── 100R ── PCF8574 #2 P3 (I2C1, 0x21)
                           │
                      10k pull-down to GND
 
@@ -1085,6 +1267,7 @@ GND ──────── J_LED Pin 3 (GND)
 | Q_LED_N | 2N7002 (N-MOSFET, SOT-23) — level shifter |
 | Q_LED_P | SI2301CDS (P-MOSFET, SOT-23) — high-side switch |
 | Id(max) Q_LED_P | -2.3A (sufficient for 1A LED ring peak) |
+| Control | PCF8574 #2 P3 (I2C1, 0x21) — moved from PA2 to free STM32 pin |
 | Default State | OFF (Q_LED_N gate pulled low → Q_LED_P gate to 5V → P-MOSFET off) |
 
 ### 9.6 MOSFET Gate Safety
@@ -1095,7 +1278,7 @@ All MOSFET and H-bridge IC enable pins have:
 
 ---
 
-## 10. Connector Definitions (16 total)
+## 10. Connector Definitions (17 total)
 
 ### 10.1 J_CM5 — CM5IO GPIO Header Receptor (2x20 pin socket, 2.54mm)
 
@@ -1129,7 +1312,7 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 | 1 | +12V | From external 12V UPS battery backup |
 | 2 | GND | Power ground |
 
-### 10.4 J_BLDC — 24V BLDC Stirring Motor (6-pin JST-XH 2.5mm)
+### 10.4 J_BLDC — 24V BLDC Stirring Motor (Hirose DF11-6DP-2DS, 2x3, 2.0mm)
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
@@ -1140,7 +1323,7 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 | 5 | DIR | Direction CW/CCW (PA5, 100R series) |
 | 6 | FG | Tachometer feedback (NC for prototype) |
 
-### 10.5 J_PASD — Combined P-ASD Connector (1x 16-pin JST-XH 2.5mm)
+### 10.5 J_PASD — Combined P-ASD Connector (Hirose DF11-16DP-2DS, 2x8, 2.0mm)
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
@@ -1161,7 +1344,19 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 | 15 | GND | Common ground |
 | 16 | GND | Common ground |
 
-### 10.6 J_SLD — Combined SLD + Pot Load Cell (1x 12-pin JST-XH 2.5mm)
+### 10.6 J_PRES — P-ASD Pressure Sensor (Hirose DF11-4DP-2DS, 2x2, 2.0mm)
+
+| Pin | Signal | Notes |
+|-----|--------|-------|
+| 1 | I2C1_SCL | ADS1015 clock (PA15, 4.7k pull-up on PCB) |
+| 2 | I2C1_SDA | ADS1015 data (PB7, 4.7k pull-up on PCB) |
+| 3 | 3.3V | ADS1015 + MPXV5100GP supply |
+| 4 | GND | Sensor return |
+
+> [!note]
+> Connects to ADS1015 + MPXV5100GP breakout near P-ASD accumulator. I2C pull-ups (4.7k) on main PCB only — no pull-ups on remote breakout. Max cable length 500 mm. Place adjacent to J_PASD on the board edge.
+
+### 10.7 J_SLD — Combined SLD + Load Cells (Hirose DF11-16DP-2DS, 2x8, 2.0mm)
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
@@ -1170,24 +1365,41 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 | 3 | PUMP2_BO1 | TB6612 output B1 (water pump +) |
 | 4 | PUMP2_BO2 | TB6612 output B2 (water pump -) |
 | 5 | 12V_SOL1 | Oil solenoid power (switched) |
-| 6 | SOL1_OUT | Oil solenoid drain (PA7) |
+| 6 | SOL1_OUT | Oil solenoid drain (PCF8574 #2 P0) |
 | 7 | 12V_SOL2 | Water solenoid power (switched) |
-| 8 | SOL2_OUT | Water solenoid drain (PA9) |
-| 9 | HX711_SCK | Clock output to HX711 (PC0) |
-| 10 | HX711_DOUT | Data input from HX711 (PC1) |
-| 11 | 3.3V | HX711 supply |
+| 8 | SOL2_OUT | Water solenoid drain (PCF8574 #2 P1) |
+| 9 | HX711_POT_SCK | Clock output to pot HX711 (PC0) |
+| 10 | HX711_POT_DOUT | Data input from pot HX711 (PC1) |
+| 11 | 3.3V | HX711 supply (shared by all 3 HX711s) |
 | 12 | GND | HX711 ground |
+| 13 | HX711_OIL_SCK | Clock output to SLD oil reservoir HX711 (PC11) |
+| 14 | HX711_OIL_DOUT | Data input from SLD oil reservoir HX711 (PC12) |
+| 15 | HX711_WATER_SCK | Clock output to SLD water reservoir HX711 (PC9) |
+| 16 | HX711_WATER_DOUT | Data input from SLD water reservoir HX711 (PC10) |
 
-### 10.7 J_CID — Combined CID Linear Actuators (1x 4-pin JST-XH 2.5mm)
+### 10.8 J_CID — Combined CID Stepper + Linear Actuator + Limit Switches (Hirose DF11-14DP-2DS, 2x7, 2.0mm)
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
-| 1 | LACT1_OUT1 | DRV8876 #1 output 1 (actuator 1) |
-| 2 | LACT1_OUT2 | DRV8876 #1 output 2 (actuator 1) |
-| 3 | LACT2_OUT1 | DRV8876 #2 output 1 (actuator 2) |
-| 4 | LACT2_OUT2 | DRV8876 #2 output 2 (actuator 2) |
+| 1 | STEP_PUL+ | PA10 (TIM1_CH3) via 100R — stepper pulse signal |
+| 2 | STEP_PUL- | GND — pulse return |
+| 3 | STEP_DIR+ | PB4 (GPIO) via 100R — stepper direction signal |
+| 4 | STEP_DIR- | GND — direction return |
+| 5 | STEP_ENA+ | PCF8574 P7 via 100R — stepper enable signal |
+| 6 | STEP_ENA- | GND — enable return |
+| 7 | LACT2_OUT1 | DRV8876 #2 output 1 (CID-2 linear actuator) |
+| 8 | LACT2_OUT2 | DRV8876 #2 output 2 (CID-2 linear actuator) |
+| 9 | CID1_HOME | Limit switch → PB6 (10k pull-up, 100nF debounce) |
+| 10 | CID2_HOME | Limit switch → PD2 (10k pull-up, 100nF debounce) |
+| 11 | CID2_EXTEND | Limit switch → PCF8574 P6 (internal pull-up) |
+| 12 | 24V_STEP | 24V power to external stepper driver (from 24V input rail) |
+| 13 | GND_PWR | Power ground return for stepper driver |
+| 14 | GND_SW | Limit switch common ground |
 
-### 10.8 J_FAN — Combined Exhaust Fans (1x 4-pin JST-XH 2.5mm)
+> [!note]
+> CID-1 full-extend limit switch removed (step counting used for travel distance); PB11 freed → reserved. The 24V_STEP pin (12) carries 2–3A to the external driver; verify Hirose DF11 pin current rating (3A per pin max).
+
+### 10.9 J_FAN — Combined Exhaust Fans (1x 4-pin JST-XH 2.5mm)
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
@@ -1196,7 +1408,7 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 | 3 | 12V_FAN2 | Fan 2 power (IRLML6344, PB10 PWM) |
 | 4 | FAN2_OUT | Fan 2 drain |
 
-### 10.9 J_CAN — CAN Bus to Microwave Surface (JST-XH 2.5mm, 4-pin)
+### 10.10 J_CAN — CAN Bus to Microwave Surface (JST-XH 2.5mm, 4-pin)
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
@@ -1205,14 +1417,14 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 | 3 | GND_ISO | Isolated bus ground (NOT system GND) |
 | 4 | NC | Reserved |
 
-### 10.10 J_BUZZER — Piezo Buzzer (2-pin JST-PH 2.0mm)
+### 10.11 J_BUZZER — Piezo Buzzer (2-pin JST-PH 2.0mm)
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
 | 1 | 5V | Buzzer power (switched by 2N7002) |
 | 2 | BUZZ_OUT | Drain side of 2N7002 (PA11 PWM) |
 
-### 10.11 J_IR — MLX90614 I2C (JST-SH 1.0mm, 4-pin)
+### 10.12 J_IR — MLX90614 I2C (JST-SH 1.0mm, 4-pin)
 
 | Pin | Signal | STM32 Pin | Notes |
 |-----|--------|-----------|-------|
@@ -1221,7 +1433,7 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 | 3 | VCC | 3.3V | — |
 | 4 | GND | GND | — |
 
-### 10.12 J_SWD — SWD Debug (10-pin 1.27mm Cortex Debug or 6-pin TagConnect)
+### 10.13 J_SWD — SWD Debug (10-pin 1.27mm Cortex Debug or 6-pin TagConnect)
 
 | Pin | Signal | STM32 Pin |
 |-----|--------|-----------|
@@ -1235,7 +1447,7 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 > [!note]
 > PB3 is shared between SPI IRQ and SWD SWO. Solder jumper SJ1 selects between the two. Default: IRQ.
 
-### 10.13 J_SAFE — Safety I/O (JST-XH 2.5mm, 4-pin)
+### 10.14 J_SAFE — Safety I/O (Hirose DF11-4DP-2DS, 2x2, 2.0mm)
 
 | Pin | Signal | STM32 Pin | Notes |
 |-----|--------|-----------|-------|
@@ -1244,15 +1456,15 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 | 3 | E_STOP | PB2 | NC button, 10k pull-up, RC debounce |
 | 4 | GND | GND | — |
 
-### 10.14 J_LED — LED Ring (JST-XH 2.5mm, 3-pin)
+### 10.15 J_LED — LED Ring (JST-XH 2.5mm, 3-pin)
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
-| 1 | 5V_SW | Switched 5V from Q_LED_P (PA2 enable) |
+| 1 | 5V_SW | Switched 5V from Q_LED_P (PCF8574 #2 P3 enable) |
 | 2 | DATA | WS2812B data (passthrough from CM5 GPIO18) |
 | 3 | GND | Power ground |
 
-### 10.15 J_USB — USB-C Programming Port (USB-C 2.0, 16-pin mid-mount)
+### 10.16 J_USB — USB-C Programming Port (USB-C 2.0, 16-pin mid-mount)
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
@@ -1266,7 +1478,7 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 > [!note]
 > Only USB 2.0 signals are used. SuperSpeed (A2/A3/B2/B3) and SBU pins are not connected. The connector is mid-mount SMD, placed on the board edge in Zone B near J_SWD.
 
-### 10.16 J_BAT — Li-Ion Battery (JST-PH 2.0mm, 2-pin)
+### 10.17 J_BAT — Li-Ion Battery (JST-PH 2.0mm, 2-pin)
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
@@ -1310,7 +1522,7 @@ Inner copper: 1 oz (35um) for planes
 
 ```
 ┌─────────────────────── 160mm ───────────────────────┐
-│     J_CM5 (2x20 socket, bottom side, top edge center)  │
+│  J_CM5 (2x20 socket, bottom side, top edge center)  │
 │  ┌─────────────┐  ┌───────────┐  ┌───────────────┐  │
 │  │ ZONE A:     │  │ ZONE B:   │  │ ZONE C:       │  │
 │  │ DIGITAL     │  │ COMMS     │  │ POWER INPUT   │  │
@@ -1318,19 +1530,19 @@ Inner copper: 1 oz (35um) for planes
 │  │ Crystals    │  │ J_IR      │  │ J_12V_UPS XT30│  │
 │  │ AMS1117 LDO │  │ J_SAFE    │  │ Polyfuses,TVS │  │ 90mm
 │  │ ESD, relay  │  │ J_LED     │  │ INA219+shunt  │  │
-│  │ Schottky-OR │  │ J_USB ◄───│  │ J_BAT ◄──────│  │
-│  │ (D_OR1-3)   │  │ SW_BOOT   │  │ TP4056+DW01A │  │
-│  ├─────────────┤  │ USBLC6    │  │ MT3608 boost │  │
+│  │ Schottky-OR │  │ J_USB ◄───│  │ J_BAT ◄────── │  │
+│  │ (D_OR1-3)   │  │ SW_BOOT   │  │ TP4056+DW01A  │  │
+│  ├─────────────┤  │ USBLC6    │  │ MT3608 boost  │  │
 │  │ ZONE D:     │  ├───────────┤  ├───────────────┤  │
 │  │ ACTUATOR ICs│  │ ZONE E:   │  │ ZONE F:       │  │
-│  │ 2x DRV8876  │  │ MOSFET    │  │ BUCK          │  │
+│  │ 1x DRV8876  │  │ MOSFET    │  │ BUCK          │  │
 │  │ TB6612FNG   │  │ ARRAY     │  │ CONVERTERS    │  │
-│  │ PCF8574     │  │ 11xMOSFET │  │ 2x MP1584EN   │  │
+│  │ PCF8574 x2  │  │ 11xMOSFET │  │ 2x MP1584EN   │  │
 │  └─────────────┘  │ +flybacks │  │ TPS54531      │  │
-│  ┌── CAN ISOLATION (6mm slot) ──┐│ +3 inductors  │  │
-│  │ ISO1050 │ SLOT │ J_CAN      │└───────────────┘  │
-│  └─────────────────────────────┘                    │
-│    J_BLDC  J_PASD  J_SLD  J_CID  J_FAN  J_BUZZER    │
+│  ┌── CAN ISOLATION (6mm slot)─┐  │ +3 inductors  │  │
+│  │ ISO1050 │ SLOT │ J_CAN     │  └───────────────┘  │
+│  └────────────────────────────┘                     │
+│J_BLDC  J_PASD  J_PRES  J_SLD  J_CID  J_FAN  J_BUZZER│
 └─────────────────────────────────────────────────────┘
 ```
 
@@ -1346,7 +1558,7 @@ Inner copper: 1 oz (35um) for planes
 - **Power plane (L3):** Split into 5V/3.3V, 12V, and 24V zones matching physical layout.
 - **Buck converter isolation:** 25mm+ from STM32; switching loops minimized on outer layers (2oz Cu).
 - **Ferrite bead** on STM32 VDDA separates analog from digital 3.3V.
-- **Thermal vias:** 9+ under STM32, 6+ under each DRV8876, 400mm2 copper pour around each buck converter.
+- **Thermal vias:** 9+ under STM32, 6+ under DRV8876 #2, 400mm2 copper pour around each buck converter.
 - **0-ohm jumper links** between power zones for sectional debug isolation.
 - **Test points** on each power rail + SPI + CAN for prototype bring-up.
 
@@ -1369,7 +1581,7 @@ Inner copper: 1 oz (35um) for planes
 | Safety relay creepage | >=2mm between 5V/12V and 3.3V logic | IEC 60335 clearance |
 | CAN isolation | Creepage >=6.4mm between GND1 and GND2; 6mm milled slot | IEC 60335 reinforced |
 | Thermal vias under STM32 | Minimum 9 vias, 0.3mm drill | Thermal dissipation |
-| Thermal vias under DRV8876 | Minimum 6 vias, 0.3mm drill each | Heat to inner GND plane |
+| Thermal vias under DRV8876 #2 | Minimum 6 vias, 0.3mm drill | Heat to inner GND plane |
 | Thermal copper pour | >=400mm2 around each buck converter IC + inductor | Heat spreading |
 
 ---
@@ -1383,8 +1595,7 @@ Inner copper: 1 oz (35um) for planes
 | MP1584EN #1 (12V) | 2A continuous | ~2.7 | IC + inductor, PCB copper pour |
 | MP1584EN #2 (6.5V) | 1A average | ~1.0 | IC + inductor, PCB copper pour |
 | TPS54531 (5V) | 2A average | ~0.5 | SOIC-8 + inductor, PCB copper pour |
-| DRV8876 #1 | 1.5A continuous | ~0.8 | WSON-8 exposed pad → GND plane vias |
-| DRV8876 #2 | 1.5A continuous | ~0.8 | WSON-8 exposed pad → GND plane vias |
+| DRV8876 #2 (CID-2) | 1.5A continuous | ~0.8 | WSON-8 exposed pad → GND plane vias |
 | TB6612FNG | 1.2A total | ~0.7 | SSOP-24 thermal pad → PCB |
 | IRLML6344 (x11) | 0.5-1A each | ~0.03 each | SOT-23, negligible |
 | 2N7002 (x2) | <0.1A total | ~0.005 | SOT-23, negligible |
@@ -1432,7 +1643,7 @@ At 40C ambient (inside Epicura enclosure near induction surface):
 | L3 | 10uH inductor | CDRH127 (12.7x12.7mm) | 1 | $0.60 | 5V rail, Isat > 6A |
 | D_BST1-2 | SS34 | SMA | 2 | $0.15 | Bootstrap Schottky (MP1584EN) |
 | **H-Bridge ICs** | | | | | |
-| U_DRV1-2 | DRV8876RGTR | WSON-8 (3x3mm) | 2 | $2.50 | CID linear actuator drivers |
+| U_DRV2 | DRV8876RGTR | WSON-8 (3x3mm) | 1 | $2.50 | CID-2 linear actuator driver |
 | U_TB | TB6612FNG | SSOP-24 | 1 | $1.50 | SLD dual peristaltic pump driver |
 | **Discrete MOSFETs** | | | | | |
 | Q1-Q11 | IRLML6344 | SOT-23 | 11 | $0.20 | SLD sol x2, fan x2, P-ASD sol V1-V6, P-ASD pump |
@@ -1441,7 +1652,9 @@ At 40C ambient (inside Epicura enclosure near induction surface):
 | Q_LED_N | 2N7002 | SOT-23 | 1 | $0.05 | LED ring N-MOSFET (level shifter) |
 | Q_LED_P | SI2301CDS | SOT-23 | 1 | $0.10 | LED ring P-MOSFET (high-side switch) |
 | **I2C Peripherals** | | | | | |
-| U_EXP | PCF8574 | SOIC-16 | 1 | $0.50 | P-ASD solenoid V1-V6 (I2C 0x20) |
+| U_EXP | PCF8574 | SOIC-16 | 1 | $0.50 | P-ASD solenoid V1-V6 + CID (I2C 0x20) |
+| U_EXP2 | PCF8574 | SOIC-16 | 1 | $0.50 | SLD solenoids + status LED + LED ring power (I2C 0x21) |
+| C_EXP2 | 100nF MLCC | 0402 | 1 | $0.01 | U_EXP2 VDD decoupling |
 | U_MON | INA219BIDR | SOT-23-8 | 1 | $1.50 | 24V input current/power monitor |
 | R_SHUNT | 10 mR 1% 1W | 2512 | 1 | $0.30 | Current sense shunt |
 | **CAN Transceiver** | | | | | |
@@ -1507,18 +1720,22 @@ At 40C ambient (inside Epicura enclosure near induction surface):
 | R_GATE (x19) | 100R | 0402 | 19 | $0.01 | Gate/input series resistors |
 | R_PD (x16) | 10k | 0402 | 16 | $0.01 | Gate/enable pull-downs |
 | R_FB (x6) | Various (10k-140k) | 0402 | 6 | $0.01 | Buck converter feedback dividers |
-| R_SENSE (x2) | 1k | 0402 | 2 | $0.01 | DRV8876 IPROPI sense |
+| R_SENSE (x1) | 1k | 0402 | 1 | $0.01 | DRV8876 #2 IPROPI sense |
 | C_LDO (x2) | 10uF ceramic | 0805 | 2 | $0.10 | LDO input/output bulk |
 | C_VDD (x8) | 100nF ceramic | 0402 | 8 | $0.01 | STM32 VDD decoupling |
 | C_VDDA | 1uF ceramic | 0402 | 1 | $0.02 | VDDA decoupling |
 | C_HSE (x2) | 18pF ceramic | 0402 | 2 | $0.01 | HSE crystal load caps |
 | C_LSE (x2) | 6.8pF ceramic | 0402 | 2 | $0.01 | LSE crystal load caps |
 | C_ESTOP | 100nF ceramic | 0402 | 1 | $0.01 | E-stop debounce cap |
+| **CID Limit Switches** | | | | | |
+| R_CID_PU (x2) | 10k | 0402 | 2 | $0.01 | CID limit switch pull-ups (PB6, PD2) |
+| C_CID (x2) | 100nF ceramic | 0402 | 2 | $0.01 | CID limit switch debounce caps |
+| R_STEP (x3) | 100R | 0402 | 3 | $0.01 | CID-1 stepper signal series resistors (PUL+, DIR+, ENA+) |
 | C_BUCK_IN (x3) | 10uF ceramic | 0805 (25V) | 3 | $0.15 | Buck input bypass |
 | C_BUCK_OUT (x6) | 22uF ceramic | 0805 | 6 | $0.12 | Buck output filter (2 per rail) |
 | C_BULK | 100uF electrolytic | 8x8mm (25V) | 1 | $0.20 | 12V rail bulk |
 | C_IC_DEC (x10) | 100nF ceramic | 0402 | 10 | $0.01 | IC decoupling |
-| C_IC_BULK (x3) | 10uF ceramic | 0805 | 3 | $0.10 | DRV8876/TB6612 VM bypass |
+| C_IC_BULK (x2) | 10uF ceramic | 0805 | 2 | $0.10 | DRV8876 #2 / TB6612 VM bypass |
 | **Mechanical** | | | | | |
 | SW_RST | Tactile switch | 6x6mm | 1 | $0.05 | Reset button |
 | SJ1 | Solder jumper | 0603 pad | 1 | — | IRQ/SWO select |
@@ -1527,16 +1744,17 @@ At 40C ambient (inside Epicura enclosure near induction surface):
 | J_CM5 | 2x20 pin socket | 2.54mm, 8.5mm stacking | 1 | $0.80 | CM5IO GPIO header receptor |
 | J_24V_IN | XT30 or JST-VH 2-pin | 2.5mm pitch | 1 | $0.40 | 24V DC input |
 | J_12V_UPS | XT30 2-pin | 2.5mm pitch | 1 | $0.40 | 12V UPS input |
-| J_BLDC | JST-XH 6-pin | 2.5mm pitch | 1 | $0.15 | BLDC motor |
-| J_SLD | JST-XH 12-pin | 2.5mm pitch | 1 | $0.40 | SLD + pot load cell |
-| J_PASD | JST-XH 16-pin | 2.5mm pitch | 1 | $0.60 | P-ASD combined |
+| J_BLDC | Hirose DF11-6DP-2DS | 2x3, 2.0mm pitch | 1 | $0.50 | BLDC motor |
+| J_SLD | Hirose DF11-16DP-2DS | 2x8, 2.0mm pitch | 1 | $0.80 | SLD + pot/reservoir load cells |
+| J_PASD | Hirose DF11-16DP-2DS | 2x8, 2.0mm pitch | 1 | $0.80 | P-ASD combined |
+| J_PRES | Hirose DF11-4DP-2DS | 2x2, 2.0mm pitch | 1 | $0.40 | P-ASD pressure sensor I2C |
 | J_FAN | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | Exhaust fans |
-| J_CID | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | CID linear actuators |
+| J_CID | Hirose DF11-14DP-2DS | 2x7, 2.0mm pitch | 1 | $0.70 | CID stepper + linear actuator + limit switches |
 | J_CAN | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | CAN bus |
 | J_BUZZER | JST-PH 2-pin | 2.0mm pitch | 1 | $0.08 | Piezo buzzer |
 | J_IR | JST-SH 4-pin | 1.0mm pitch | 1 | $0.20 | MLX90614 I2C |
 | J_SWD | Pin header 2x5 | 1.27mm pitch | 1 | $0.30 | SWD debug |
-| J_SAFE | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | Safety I/O |
+| J_SAFE | Hirose DF11-4DP-2DS | 2x2, 2.0mm pitch | 1 | $0.40 | Safety I/O |
 | J_LED | JST-XH 3-pin | 2.5mm pitch | 1 | $0.12 | LED ring |
 | J_USB | USB-C 16-pin mid-mount | SMD | 1 | $0.30 | USB programming port |
 | J_BAT | JST-PH 2-pin | 2.0mm pitch | 1 | $0.08 | Li-Ion battery |
@@ -1548,17 +1766,17 @@ At 40C ambient (inside Epicura enclosure near induction surface):
 |----------|---------------|---------------|
 | Microcontroller + Crystals | $8.50 | $6.00 |
 | Power Conversion (3 bucks + LDO + passives) | $10.50 | $6.50 |
-| H-Bridge ICs (DRV8876 + TB6612) | $6.50 | $4.50 |
+| H-Bridge ICs (DRV8876 x1 + TB6612) | $4.00 | $3.25 |
 | Discrete MOSFETs + Diodes | $3.70 | $2.20 |
-| I2C Peripherals (PCF8574 + INA219) | $2.30 | $1.50 |
+| I2C Peripherals (PCF8574 x2 + INA219) | $2.81 | $2.00 |
 | CAN Transceiver (ISO1050 + passives) | $3.64 | $2.50 |
 | Protection (polyfuses + TVS + ESD) | $2.70 | $1.60 |
 | Passive Components | $3.00 | $1.50 |
 | USB-C + Schottky-OR | $1.13 | $0.75 |
 | Li-Ion Charger + Boost | $1.45 | $0.95 |
-| Connectors (16 total) | $4.43 | $2.70 |
+| Connectors (17 total) | $6.18 | $3.80 |
 | PCB | $5.50 | $2.50 |
-| **Total** | **~$53.00** | **~$33.00** |
+| **Total** | **~$55.50** | **~$34.50** |
 
 > [!note]
 > **Cost comparison vs 2-board design:**
@@ -1595,7 +1813,7 @@ At 40C ambient (inside Epicura enclosure near induction surface):
 ### 14.1 Assembly Notes
 
 - All ICs and passives are SMT (top side preferred, bottom side available for passives)
-- Through-hole: JST-XH connectors, XT30 for power inputs, 2.54mm pin headers
+- Through-hole: Hirose DF11 dual-row connectors, JST-XH connectors (J_FAN, J_CAN, J_LED), XT30 for power inputs, 2.54mm pin headers
 - J_CM5 (2x20 socket) on bottom side, top edge center — mates downward with CM5IO below
 - Reflow for SMT, then wave or hand-solder through-hole
 - Mark pin 1 of all multi-pin connectors with silkscreen triangle
@@ -1618,7 +1836,7 @@ At 40C ambient (inside Epicura enclosure near induction surface):
 | Timer | Channel | Pin | Function | Frequency |
 |-------|---------|-----|----------|-----------|
 | TIM1 | CH1 | PA8 | BLDC Motor PWM | 10 kHz |
-| TIM1 | CH3 | PA10 | CID Linear Actuator 1 EN | Up to 100 kHz |
+| TIM1 | CH3 | PA10 | CID-1 Stepper PUL (step pulse) | 200 Hz–10 kHz |
 | TIM8 | CH2 | PC7 | Buzzer PWM | Variable (1-4 kHz) |
 | TIM2 | CH1 | PA0 | P-ASD Pump PWM | 25 kHz |
 | TIM2 | CH3 | PB10 | Exhaust Fan 2 PWM | 25 kHz |
@@ -1628,16 +1846,17 @@ At 40C ambient (inside Epicura enclosure near induction surface):
 
 | Address | Device | Location | Read Rate |
 |---------|--------|----------|-----------|
-| 0x20 | PCF8574 (P-ASD solenoids) | On-board | On-demand |
+| 0x20 | PCF8574 #1 (P-ASD solenoids + CID) | On-board | On-demand |
+| 0x21 | PCF8574 #2 (SLD solenoids + LED) | On-board | On-demand |
 | 0x40 | INA219 (24V current monitor) | On-board | 1 Hz |
-| 0x48 | ADS1015 (P-ASD pressure) | External (cable) | On-demand |
+| 0x48 | ADS1015 (P-ASD pressure) | External (J_PRES) | On-demand |
 | 0x5A | MLX90614 (IR thermometer) | External (J_IR) | 10 Hz |
 
 ### 15.4 Power Failure State Machine
 
 **STM32 behavior:**
 1. COMP1 interrupt fires (24V drops below ~16.5V) → set `power_fail = true`
-2. Immediately disable all actuators (CAN power OFF, all MOSFET gates LOW, PCF8574 all LOW)
+2. Immediately disable all actuators (CAN power OFF, all MOSFET gates LOW, PCF8574 #1 all LOW, PCF8574 #2 all LOW)
 3. Send `POWER_FAIL(state=1, voltage_mV)` to CM5 via SPI
 4. Enter low-power monitoring loop
 5. On recovery (>20V sustained 2s): send `POWER_FAIL(state=0)`, CM5 decides whether to resume
@@ -1663,8 +1882,10 @@ At 40C ambient (inside Epicura enclosure near induction surface):
 - [ ] I2C pull-up values appropriate for 100 kHz bus speed
 - [ ] All buck converter feedback resistor values verified
 - [ ] Inductor saturation current ratings exceed maximum load current per rail
-- [ ] DRV8876 IPROPI sense resistor correct (1k → 1.5V/A)
+- [ ] DRV8876 #2 IPROPI sense resistor correct (1k → 1.5V/A)
 - [ ] TB6612FNG VM decoupling adequate (100nF + 10uF within 5mm)
+- [ ] CID-1 stepper signal 100R series resistors present on PUL+, DIR+, ENA+ lines
+- [ ] PCF8574 P7 allocated to CID-1 ENA+ (verified I2C write toggles J_CID pin 5)
 - [ ] All MOSFET gate pull-downs present (safe default state)
 - [ ] INA219 I2C address (0x40) does not conflict with other devices
 - [ ] 24V input protection chain in correct order: Polyfuse → Schottky → TVS
@@ -1678,7 +1899,12 @@ At 40C ambient (inside Epicura enclosure near induction surface):
 - [ ] DW01A/FS8205A protection circuit correct
 - [ ] MT3608 feedback divider (732kR/100kR) gives 5.0V output
 - [ ] Buzzer PWM moved from PA11 (TIM1_CH4) to PC7 (TIM8_CH2) — independent timer
-- [ ] All 16 external connectors have correct pinouts
+- [ ] CID limit switch pull-ups (10k to 3.3V) on PB6, PD2
+- [ ] CID limit switch debounce caps (100nF) on PB6, PD2
+- [ ] PCF8574 P6 assigned to CID-2 Full-Extend Limit (input with internal pull-up)
+- [ ] PCF8574 P7 assigned to CID-1 Stepper ENA+ (output via 100R to J_CID pin 5)
+- [ ] J_CID expanded to 14-pin with stepper signals, CID-2 motor, limit switches, 24V power, and GND
+- [ ] All 17 external connectors have correct pinouts
 
 ### 16.2 PCB Layout
 
@@ -1688,7 +1914,7 @@ At 40C ambient (inside Epicura enclosure near induction surface):
 - [ ] Buck converter input/output cap loops minimized (<10mm total)
 - [ ] Power traces sized: >=2mm for 24V, >=1mm for 12V/5V
 - [ ] Thermal vias under STM32 exposed pad (9+ vias, 0.3mm)
-- [ ] Thermal vias under DRV8876 exposed pads (6+ vias each)
+- [ ] Thermal vias under DRV8876 #2 exposed pad (6+ vias)
 - [ ] Thermal copper pour >=400mm2 around each buck converter
 - [ ] Creepage >=2mm between 24V and logic signals
 - [ ] CAN isolation slot >=6mm, no copper crossing boundary
@@ -1707,13 +1933,31 @@ At 40C ambient (inside Epicura enclosure near induction surface):
 - [ ] STM32 responds to SWD probe (device ID read)
 - [ ] SPI loopback test with CM5 passes
 - [ ] All PWM channels output correct frequency on oscilloscope
-- [ ] I2C scan detects MLX90614 (0x5A), INA219 (0x40), PCF8574 (0x20)
-- [ ] HX711 returns stable readings
+- [ ] I2C scan detects 5 devices: PCF8574 #1 (0x20), PCF8574 #2 (0x21), INA219 (0x40), ADS1015 (0x48), MLX90614 (0x5A)
+- [ ] PCF8574 #2 P0 toggles SLD oil solenoid via IRLML6344
+- [ ] PCF8574 #2 P1 toggles SLD water solenoid via IRLML6344
+- [ ] PCF8574 #2 P2 toggles status LED (active-low, 330R)
+- [ ] PCF8574 #2 P3 controls LED ring power (via Q_LED_N → Q_LED_P)
+- [ ] PA7, PA9, PC8, PA2 confirmed unconnected (no trace to old loads)
+- [ ] HX711 (pot, PC0/PC1) returns stable readings
+- [ ] HX711 (SLD oil reservoir, PC11/PC12) returns stable readings (±1 g)
+- [ ] HX711 (SLD water reservoir, PC9/PC10) returns stable readings (±1 g)
+- [ ] SLD low-level alert triggers when reservoir weight < configured threshold
 - [ ] E-stop interrupt triggers on button press
 - [ ] Safety relay clicks when PB0 driven high
 - [ ] J_BLDC PWM verified (10 kHz, 3.3V logic)
 - [ ] Solenoid MOSFETs switch correctly
-- [ ] DRV8876 drives actuator in both directions
+- [ ] DRV8876 #2 drives CID-2 actuator in both directions
+- [ ] CID-1 stepper: PA10 outputs step pulses at J_CID pin 1 (200 Hz–10 kHz range, oscilloscope)
+- [ ] CID-1 stepper: PB4 toggles direction at J_CID pin 3 (multimeter)
+- [ ] CID-1 stepper: PCF8574 P7 controls ENA+ at J_CID pin 5 (I2C write)
+- [ ] CID-1 stepper: all "-" pins (2, 4, 6) connected to board GND (continuity)
+- [ ] CID-1 stepper: 100R series resistors present on signal lines
+- [ ] CID-1 stepper: 24V present at J_CID pin 12, GND at pin 13
+- [ ] CID-1 home switch on J_CID pin 9 triggers PB6 EXTI
+- [ ] CID-2 limit switches read LOW when pressed (at limit), HIGH when released
+- [ ] CID-2 actuator stops at home and full-extend limit positions
+- [ ] PCF8574 P6 reads CID-2 Full-Extend switch state correctly
 - [ ] TB6612FNG drives pump with variable speed
 - [ ] All actuators OFF when STM32 held in reset (pull-down verify)
 - [ ] CAN loopback test passes via ISO1050
@@ -1759,6 +2003,11 @@ The following documents were merged into this unified design and are retained fo
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
+| 1.9 | 2026-03-11 | Manas Pradhan | Added PCF8574 #2 (0x21) I2C GPIO expander for GPIO headroom; moved SLD solenoids (PA7→P0, PA9→P1), status LED (PC8→P2), and LED ring enable (PA2→P3) to PCF8574 #2; freed 4 STM32 pins (PA2, PA7, PA9, PC8) for future use; 7-8 total free GPIO; +$0.51 BOM (PCF8574 $0.50 + 100nF $0.01); I2C bus now 5 devices, within 400pF budget |
+| 1.8 | 2026-03-11 | Manas Pradhan | Replaced CID-1 DC linear actuator + DRV8876 #1 with NEMA 23 stepper motor + external driver (PUL/DIR/ENA differential signals); PA10→PUL+, PB4→DIR+, PCF8574 P7→ENA+ (all via 100R); J_CID expanded 10-pin→14-pin (2x7 Hirose DF11) with stepper signals + 24V power; DRV8876 qty 2→1; PB11 freed (CID-1 extend switch removed, step counting for travel); 3× 100R stepper resistors added; BOM/thermal/checklists updated |
+| 1.7 | 2026-03-10 | Manas Pradhan | Converted 6 connectors from single-row JST-XH 2.5mm to dual-row Hirose DF11 2.0mm: J_BLDC (2x3), J_PASD (2x8), J_PRES (2x2), J_SLD (2x8), J_CID (2x5, +1 GND pin), J_SAFE (2x2); more compact layout, keyed/polarized; updated BOM and cost summary (+$2/unit) |
+| 1.6 | 2026-03-10 | Manas Pradhan | Added CID limit switches: 4× micro switches (2 per actuator: home + full-extend) for position feedback; PB6, PB11, PD2 assigned as GPIO EXTI inputs with 10k pull-ups and 100nF debounce; PCF8574 P6 used for CID-2 Full-Extend (no more free GPIO); J_CID expanded from 4-pin to 9-pin (added 4 switch signals + GND return); NC wiring for fail-safe; updated pin summary, BOM, verification checklists |
+| 1.5 | 2026-03-10 | Manas Pradhan | Added J_PRES 4-pin connector for ADS1015 pressure sensor (I2C1 + 3.3V + GND); placed adjacent to J_PASD; renumbered sections 10.6–10.16 → 10.7–10.17; +1 connector (now 17 total) |
 | 1.4 | 2026-03-10 | Manas Pradhan | Datasheet review fixes: PA1 COMP2→COMP1 (PA1 has COMP1_INP per DS12288 Table 12); buzzer moved PB11/TIM2_CH4→PC7/TIM8_CH2 (TIM2 frequency conflict: fan 25kHz vs buzzer variable tone); status LED moved PC13→PC8 (PC13 limited to 3mA sink per DS12288 Note 2); updated pin summary, timer allocation, verification checklist |
 | 1.3 | 2026-03-10 | Manas Pradhan | Fixed I2C1_SCL pin error: PB6 → PA15 (AF4) — PB6 has no I2C1_SCL on LQFP-64 per datasheet DS12288; PA15 (pin 51) confirmed as I2C1_SCL AF4; PB6 now available |
 | 1.2 | 2026-03-09 | Manas Pradhan | Added USB-C programming port (native USB on PA11/PA12 with USBLC6 ESD, DFU+CDC) and Li-Ion battery charger (TP4056+DW01A+FS8205A+MT3608 boost); buzzer PWM moved PA11→PB11 (TIM2_CH4); PA3 repurposed for VBUS detect; 3-way Schottky-OR 5V power architecture; +2 connectors (J_USB, J_BAT); updated BOM, zone layout, verification checklists |
