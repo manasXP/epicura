@@ -19,8 +19,8 @@ This document provides a consolidated view of all component costs for the Epicur
 |----------|----------|------------|---------|
 | [[01-Compute-Module-Components|Compute Modules]] | $196.00 | 25% | CM5, STM32, display, cables |
 | [[02-Actuation-Components|Actuation]] | $314.98 | 39% | Induction hob, P-ASD pneumatic system + PCF8574 #1 I2C expander, PCF8574 #2 GPIO headroom expander, CID-1 NEMA 23 stepper + driver, CID-2 linear actuator, SLD pumps/solenoids/load cell, ISO1050DUB CAN transceiver, 24V BLDC motor, relays, exhaust fan, filters |
-| [[03-Sensor-Components|Sensors]] | $62.70 | 8% | Camera, IR thermo, load cells |
-| **Component Total** | **$573.68** | **70%** | Electronic components only |
+| [[03-Sensor-Components|Sensors]] | $43.70 | 6% | Camera, IR thermo, reed switch, LED ring |
+| **Component Total** | **$554.68** | **69%** | Electronic components only |
 
 ---
 
@@ -60,14 +60,12 @@ This document provides a consolidated view of all component costs for the Epicur
 | Exhaust Fan + Filtration | $22.50 |
 | Piezo Buzzer + MOSFET | $0.85 |
 
-### 3.3 Sensors ($62.70)
+### 3.3 Sensors ($43.70)
 
 | Item | Cost |
 |------|------|
 | IMX219 Camera | $25.00 |
 | MLX90614 IR Thermometer | $12.00 |
-| Load Cells (4x CZL635) | $16.00 |
-| HX711 ADC | $3.00 |
 | Reed Switch + LED Ring | $6.00 |
 | Passive Components | $0.70 |
 
@@ -91,10 +89,10 @@ This document provides a consolidated view of all component costs for the Epicur
 
 | Category | Cost |
 |----------|------|
-| Electronic Components | $573.68 |
+| Electronic Components | $554.68 |
 | Mechanical / Other | $250.00 |
-| **Total BOM (Prototype)** | **$823.68** |
-| **With Contingency (+20%)** | **~$988** |
+| **Total BOM (Prototype)** | **$804.68** |
+| **With Contingency (+20%)** | **~$966** |
 | **With Tools & Consumables** | **$1,100-1,400** |
 
 ---
@@ -112,7 +110,7 @@ This document provides a consolidated view of all component costs for the Epicur
 | Linear Actuator — CID-2 (1x) | $8.00 | $4.00 | Bulk pricing |
 | Pumps + Solenoids — SLD | $28.00 | $14.00 | Bulk pricing |
 | 24V BLDC Stirring Motor | $25.00 | $15.00 | Bulk pricing |
-| Sensors (all) | $62.70 | $35.00 | Direct from manufacturer, MOQ pricing |
+| Sensors (all) | $43.70 | $25.00 | Direct from manufacturer, MOQ pricing |
 | Enclosure | $80.00 (3D print) | $15.00 (injection mold) | Mold cost amortized over production run |
 | PCBs | $25.50 (prototype) | $8.00 (panel production) | Single unified PCB (controller + driver merged) |
 | Power Supply | $30.00 | $12.00 | Integrated SMPS on main PCB |
@@ -121,7 +119,7 @@ This document provides a consolidated view of all component costs for the Epicur
 | Wiring / Connectors | $30.00 | $10.00 | Custom harness, bulk connectors |
 | Exhaust + Filters | $22.50 | $8.00 (OEM blower + bulk filters) | Custom blower + injection-molded housing |
 | Other (CAN, relays, drivers, load cell, cables, buzzer) | $94.85 | $20.00 (integrated into PCB + bulk) | Small components absorbed into custom PCB at volume |
-| **Total Unit** | **~$824** | **~$355** | **~57% cost reduction** |
+| **Total Unit** | **~$805** | **~$345** | **~57% cost reduction** |
 
 ---
 
@@ -143,17 +141,16 @@ This document provides a consolidated view of all component costs for the Epicur
 │  └─ CID/SLD (7%)        ███████                                          │
 │  └─ Other (10%)         ██████████                                       │
 │                                                                          │
-│  Sensors (8%)           ████████                                         │
+│  Sensors (5%)           █████                                            │
 │  └─ Camera (3%)         ███                                              │
-│  └─ Load Cells (2%)     ██                                               │
-│  └─ Other (3%)          ███                                              │
+│  └─ Other (2%)          ██                                               │
 │                                                                          │
 │  Additional (32%)       ████████████████████████████████                  │
 │  └─ Enclosure (10%)     ██████████                                       │
 │  └─ Mechanical (6%)     ██████                                           │
 │  └─ PCBs/PSU (9%)       █████████                                        │
 │                                                                          │
-│  Total Prototype BOM: ~$824                                              │
+│  Total Prototype BOM: ~$805                                              │
 └────────────────────────────────────────────────────────────────────────────┘
 ```
 

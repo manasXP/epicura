@@ -140,7 +140,7 @@ This document details the actuation subsystem components for the Epicura kitchen
 - **6 cartridges** (60 mL each) with quarter-turn bayonet docking
 - **12V diaphragm pump** (3-4 L/min) + 100 mL accumulator at ~1.0 bar
 - **6× 12V NC solenoid valves** (<20 ms response) for individual cartridge control
-- **Weight-verified** via existing pot load cells (±10% accuracy)
+- **Pressure-verified** via ADS1015 pressure sensor (~±20% accuracy)
 - **Anti-clog**: inherent (pressurized air breaks powder bridges), no moving parts in powder path
 - **BOM cost**: ~$90 (vs ~$6 for old 3× SG90 servos) — 15× cost for 2× capacity + dramatically improved reliability with sticky Indian spices
 

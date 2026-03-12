@@ -151,8 +151,7 @@ This document outlines the comprehensive plan for building a functional Epicura 
 
 #### 3.3.1 Objectives
 - Build and mount the servo stirring arm
-- Integrate load cells for weight measurement
-- Implement stirring patterns and weight-verified dispensing preparation
+- Implement stirring patterns
 
 #### 3.3.2 Tasks
 
@@ -174,14 +173,6 @@ This document outlines the comprehensive plan for building a functional Epicura 
 - [ ] Add speed control: 10-60 RPM range
 - [ ] Add torque monitoring: detect obstruction via servo current
 - [ ] Test all patterns with water, then with thick dal consistency
-
-**Week 10: Load Cells**
-- [ ] Install 4x CZL635 load cells in platform (Wheatstone bridge configuration)
-- [ ] Wire to HX711 24-bit ADC module
-- [ ] Connect HX711 to STM32 SPI/GPIO
-- [ ] Calibrate: tare, 500g, 1000g, 2000g, 3000g reference weights
-- [ ] Measure accuracy: target ±5g at 500g, ±10g at 3000g
-- [ ] Implement weight-change detection for ingredient dispensing feedback
 
 ```
 ┌──────────────────────────────────────────┐
@@ -221,7 +212,6 @@ This document outlines the comprehensive plan for building a functional Epicura 
 |-------------|-----------------|
 | Servo arm mounted | Stable mounting, paddle reaches pot bottom |
 | 5 stirring patterns | All patterns functional, speed adjustable |
-| Load cells calibrated | ±10g accuracy at full range (0-5 kg) |
 | Torque limiting | Servo stalls safely at obstruction |
 
 ---
@@ -341,7 +331,7 @@ This document outlines the comprehensive plan for building a functional Epicura 
 - [ ] Build SLD: 2 liquid channels (peristaltic pumps + solenoid valves + silicone tubing)
 - [ ] Install 2× SLD dedicated load cells (2 kg each) + HX711 under oil and water reservoirs
 - [ ] Wire all dispensing actuators to STM32 (PWM + GPIO)
-- [ ] Calibrate ASD dispensing: open gate, monitor pot weight, close at target
+- [ ] Calibrate P-ASD dispensing: pulse duration per spice, verify pressure drop via ADS1015
 - [ ] Calibrate SLD dispensing per channel: start pump, monitor individual reservoir weight loss, stop at target
 - [ ] Test SLD low-level alert: verify alert fires when reservoir drops below threshold
 
@@ -388,7 +378,7 @@ This document outlines the comprehensive plan for building a functional Epicura 
 | Recipe YAML format | 5 recipes defined, schema validated |
 | State machine | Executes recipes end-to-end, handles timeouts |
 | ASD/CID/SLD subsystems | All actuators functional, no jamming |
-| Weight-verified dispensing | ±10% accuracy on dispensed weight |
+| Pressure-verified dispensing (P-ASD) | ~±20% accuracy, pressure drop confirmed |
 | 3-5 cooked recipes | Edible output, correct stage transitions |
 
 ---
@@ -505,7 +495,7 @@ This document outlines the comprehensive plan for building a functional Epicura 
 |----------|-------|----------------|
 | Compute | CM5 + carrier board + STM32 Nucleo dev board | $200-300 |
 | Actuation | 24V BLDC motor + ASD servos + CID actuators + SLD pumps/solenoids + induction hob | $200-300 |
-| Sensors | IMX219 camera + MLX90614 + 4x load cells + HX711 | $80-120 |
+| Sensors | IMX219 camera + MLX90614 + reed switch + LED ring | $50-80 |
 | Mechanical | 3D printing (PETG filament) + stainless steel shaft + fasteners + brackets | $100-200 |
 | Display | 10.1" IPS touchscreen (HDMI + I2C touch) | $80-120 |
 | Power | Bench PSU + prototype PSU board + cables + connectors | $50-80 |
@@ -555,7 +545,7 @@ This document outlines the comprehensive plan for building a functional Epicura 
 - [ ] CV-guided cooking stage detection (> 80% accuracy)
 - [ ] Mobile app with basic functionality (browse, live view, start/stop)
 - [ ] Temperature accuracy ±5°C
-- [ ] Weight-verified dispensing (±10% accuracy)
+- [ ] Pressure-verified P-ASD dispensing (~±20% accuracy)
 
 ### 6.3 Nice-to-Have
 - [ ] 10+ recipes in library

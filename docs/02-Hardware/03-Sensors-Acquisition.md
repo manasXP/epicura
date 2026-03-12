@@ -13,7 +13,6 @@ status: Draft
 |--------|------|-----------|-------|----------|---------------|--------------|
 | Camera (IMX219/477) | CMOS image sensor | MIPI CSI-2 (2-lane) | 1080p @ 30fps | N/A (pixel-level) | 2 Hz (CV frames) | CM5 CSI port |
 | IR Thermometer (MLX90614) | Non-contact thermopile | I2C (0x5A) | -70 to +380C | +/-0.5C | 10 Hz | STM32 I2C1 |
-| Load Cells (4x 5kg) | Strain gauge (Wheatstone bridge) | SPI-like via HX711 | 0-20 kg total | +/-1g | 10 Hz | STM32 GPIO |
 | Pot Detection | Reed switch / Hall effect | Digital GPIO | On/Off | N/A | Interrupt-driven | STM32 GPIO |
 
 ---
@@ -219,144 +218,9 @@ float mlx90614_read_object_temp(I2C_HandleTypeDef *hi2c) {
 
 ---
 
-## 4. Load Cell System
-
-### 4.1 Strain Gauge Configuration
-
-Four 5kg strain gauges are arranged in a full Wheatstone bridge under the pot platform, providing 20kg total capacity with excellent sensitivity and temperature compensation.
-
-```
-                    Excitation+ (E+, 5V from HX711)
-                         │
-                    ┌────┴────┐
-                    │         │
-                R1 (SG)    R2 (SG)
-                (5kg)      (5kg)
-                    │         │
-                    ├── A+ ───┤
-                    │  (Signal │
-                    │   Out+) │
-                R4 (SG)    R3 (SG)
-                (5kg)      (5kg)
-                    │         │
-                    └────┬────┘
-                         │
-                    Excitation- (E-, GND)
-
-SG = Strain Gauge (5 kg full scale)
-A+ / A- = Differential signal output to HX711
-Total capacity: 20 kg
-Nominal resistance: 350 ohm per gauge (typical)
-Full-scale output: ~2 mV/V (at rated load)
-At 5V excitation: ~10 mV full scale
-```
-
-### 4.2 HX711 ADC Wiring
-
-```
-Load Cell Bridge                HX711 Module              STM32G474RE
-┌──────────────────┐          ┌──────────────────┐       ┌──────────────┐
-│                  │          │                  │       │              │
-│  E+ (Red) ──────┼─────────►┼── E+             │       │              │
-│  E- (Black) ────┼─────────►┼── E-             │       │              │
-│  A+ (Green) ────┼─────────►┼── A+  (Ch A)     │       │              │
-│  A- (White) ────┼─────────►┼── A-             │       │              │
-│                  │          │                  │       │              │
-│                  │          │  DOUT ───────────┼──────►┼── PC1 (IN)  │
-│                  │          │  SCK  ◄──────────┼───────┼── PC0 (OUT) │
-│                  │          │                  │       │              │
-│                  │          │  VCC ◄── 3.3-5V  │       │              │
-│                  │          │  GND ◄── GND     │       │              │
-│                  │          │                  │       │              │
-│                  │          │  RATE: GND=10Hz  │       │              │
-│                  │          │        VCC=80Hz  │       │              │
-└──────────────────┘          └──────────────────┘       └──────────────┘
-
-HX711 Specifications:
-  - Input: Differential, from Wheatstone bridge
-  - ADC Resolution: 24-bit (effective ~20-bit noise-free)
-  - Gain: 128 (Channel A, default) or 64 (Channel A) or 32 (Channel B)
-  - Sampling Rate: 10 Hz (RATE pin LOW) or 80 Hz (RATE pin HIGH)
-  - Output: Serial data via DOUT/SCK protocol
-  - Excitation: On-chip 5V regulated output for bridge
-```
-
-### 4.3 Calibration Procedure
-
-1. **Zero Offset (Tare):**
-   - On system boot (no pot), read 10 samples and average
-   - Store as `tare_offset` (raw ADC counts)
-   - Repeat tare when pot is placed (pot weight becomes new zero)
-
-2. **Scale Factor:**
-   - Place known calibration weight (e.g., 500g) on platform
-   - Read raw ADC value, subtract tare_offset
-   - `scale_factor = known_weight_g / (raw_value - tare_offset)`
-   - Store in `/data/calibration/loadcell.json`
-
-3. **Linearity Check:**
-   - Test at 100g, 500g, 1000g, 2000g, 5000g
-   - Verify readings are within +/-1% of linear fit
-   - If nonlinear, apply polynomial correction (2nd or 3rd order)
-
-4. **Temperature Drift:**
-   - Full Wheatstone bridge provides first-order temperature compensation
-   - For high accuracy, recalibrate tare when ambient temp changes >10C
-
-### 4.4 Measurements and Use Cases
-
-| Measurement | Method | Accuracy | Use Case |
-|-------------|--------|----------|----------|
-| Ingredient Weight | Dispense, measure delta | +/-2g | Verify correct amount dispensed |
-| Evaporation Rate | Continuous weight monitoring | +/-5g | Detect water loss during simmering |
-| Pot Detection | Weight > threshold (500g) | Binary | Interlock: don't heat without pot |
-| Total Food Weight | Current weight - pot tare | +/-5g | Portion tracking, recipe scaling |
-| Stirring Torque (indirect) | Weight oscillation during stir | Qualitative | Detect thick vs. thin consistency |
-
-### 4.5 STM32 Software Interface
-
-```c
-// HX711 read sequence (bit-bang GPIO)
-#define HX711_SCK_PIN  GPIO_PIN_0  // PC0
-#define HX711_DOUT_PIN GPIO_PIN_1  // PC1
-#define HX711_PORT     GPIOC
-
-int32_t hx711_read_raw(void) {
-    // Wait for DOUT to go LOW (data ready)
-    while (HAL_GPIO_ReadPin(HX711_PORT, HX711_DOUT_PIN) == GPIO_PIN_SET);
-
-    int32_t value = 0;
-    for (int i = 0; i < 24; i++) {
-        HAL_GPIO_WritePin(HX711_PORT, HX711_SCK_PIN, GPIO_PIN_SET);
-        delay_us(1);
-        value = (value << 1) | HAL_GPIO_ReadPin(HX711_PORT, HX711_DOUT_PIN);
-        HAL_GPIO_WritePin(HX711_PORT, HX711_SCK_PIN, GPIO_PIN_RESET);
-        delay_us(1);
-    }
-    // 25th pulse: set gain to 128 for next read (Channel A)
-    HAL_GPIO_WritePin(HX711_PORT, HX711_SCK_PIN, GPIO_PIN_SET);
-    delay_us(1);
-    HAL_GPIO_WritePin(HX711_PORT, HX711_SCK_PIN, GPIO_PIN_RESET);
-    delay_us(1);
-
-    // Sign-extend 24-bit to 32-bit
-    if (value & 0x800000) {
-        value |= 0xFF000000;
-    }
-    return value;
-}
-
-float hx711_read_grams(int32_t tare_offset, float scale_factor) {
-    int32_t raw = hx711_read_raw();
-    return (float)(raw - tare_offset) * scale_factor;
-}
-```
-
 ---
 
----
-
-## 5. Pot Detection
+## 4. Pot Detection
 
 ### 5.1 Mechanism
 
@@ -391,7 +255,7 @@ Alternative: Hall effect sensor (SS49E or A3144)
   - Requires small magnet in pot base
 ```
 
-### 5.2 Interlock Logic
+### 4.2 Interlock Logic
 
 1. On boot, STM32 queries microwave surface module via CAN for pot detection status
 2. If pot not detected, display "Place pot" on UI
@@ -402,9 +266,9 @@ Alternative: Hall effect sensor (SS49E or A3144)
 
 ---
 
-## 6. Sensor Fusion
+## 5. Sensor Fusion
 
-### 6.1 Multi-Sensor Cooking Stage Detection
+### 5.1 Multi-Sensor Cooking Stage Detection
 
 The recipe engine on CM5 combines data from multiple sensors to determine the current cooking stage and trigger transitions:
 
@@ -419,11 +283,11 @@ The recipe engine on CM5 combines data from multiple sensors to determine the cu
 │                                │                        │
 │  IR Temp (10Hz)                ├──► Stage Classifier    │
 │  ├── Surface temperature ──────┤    (CM5, TFLite/       │
-│  └── Rate of change ───────────┤     OpenCV logic)      │
-│                                │         │              │
-│  Load Cells (10Hz)             │         ▼              │
-│  ├── Current weight ───────────┤    Cooking Stage ID    │
-│  └── Weight delta/min ─────────┘    (e.g., "browning",  │
+│  └── Rate of change ───────────┘     OpenCV logic)      │
+│                                         │              │
+│                                         ▼              │
+│                                    Cooking Stage ID    │
+│                                    (e.g., "browning",  │
 │                                      "boiling",         │
 │                                      "simmering",       │
 │                                      "done")            │
@@ -437,54 +301,51 @@ The recipe engine on CM5 combines data from multiple sensors to determine the cu
 └─────────────────────────────────────────────────────────┘
 ```
 
-### 6.2 Decision Matrix
+### 5.2 Decision Matrix
 
-| Cooking Stage | Camera Signal | IR Temp (C) | Weight Change | Confidence |
-|---------------|---------------|-------------|---------------|------------|
-| Raw/Cold | Raw ingredient colors, no bubbles | <50 | Stable | High |
-| Heating | Slight color shift, steam wisps | 50-90 | Stable | Medium |
-| Boiling | Active bubbles, steam, rolling motion | 95-102 | Slow decrease | High |
-| Browning | Golden-brown color shift, darkening edges | 120-180 | Moderate decrease | High |
-| Simmering | Gentle bubbles, consistent color | 80-95 | Slow decrease | High |
-| Thickening | Darker color, less liquid visible | 85-100 | Significant decrease | Medium |
-| Done | Target color/texture reached | Recipe-specific | Recipe-specific | Recipe-dependent |
-| Burning (ALERT) | Dark/black spots, smoke detection | >200 | Rapid decrease | High |
+| Cooking Stage | Camera Signal | IR Temp (C) | Confidence |
+|---------------|---------------|-------------|------------|
+| Raw/Cold | Raw ingredient colors, no bubbles | <50 | High |
+| Heating | Slight color shift, steam wisps | 50-90 | Medium |
+| Boiling | Active bubbles, steam, rolling motion | 95-102 | High |
+| Browning | Golden-brown color shift, darkening edges | 120-180 | High |
+| Simmering | Gentle bubbles, consistent color | 80-95 | High |
+| Thickening | Darker color, less liquid visible | 85-100 | Medium |
+| Done | Target color/texture reached | Recipe-specific | Recipe-dependent |
+| Burning (ALERT) | Dark/black spots, smoke detection | >200 | High |
 
-### 6.3 Sampling Rate Summary
+### 5.3 Sampling Rate Summary
 
 | Sensor | Acquisition Rate | Processing Rate | Latency Budget |
 |--------|-----------------|-----------------|----------------|
 | Camera | 30 fps capture | 2 Hz CV inference | <500ms per frame |
 | IR Thermometer | 10 Hz read | 10 Hz to PID | <100ms |
-| Load Cells | 10 Hz read | 10 Hz to recipe engine | <100ms |
 | Pot Detection | Interrupt-driven | Immediate (<1ms) | <1ms |
 
 ---
 
-## 7. Sensor Quality Monitoring
+## 6. Sensor Quality Monitoring
 
-### 7.1 Health Check Table
+### 6.1 Health Check Table
 
 | Sensor | Health Check | Pass Criteria | Failure Mode |
 |--------|-------------|---------------|--------------|
 | Camera | Frame received, not black/white | Valid histogram, >10% variance | Lens blocked, cable loose, module fault |
 | IR Thermometer | I2C ACK, reading in range | ACK on address, -20C < T < 350C | I2C bus fault, sensor damaged |
-| Load Cells | Zero drift check, range valid | Drift < 5g/hour, 0 < raw < 0xFFFFFF | Bridge wire break, HX711 fault |
 | Pot Detection | State change matches expectations | Toggles when pot placed/removed | Switch stuck, magnet missing |
 
-### 7.2 Degradation Fallback Strategy
+### 6.2 Degradation Fallback Strategy
 
 | Primary Sensor Failed | Fallback Strategy | Limitations |
 |-----------------------|-------------------|-------------|
 | Camera fails | Timer-based cooking (no CV stage detection) | Cannot detect browning, must rely on time/temp |
 | IR thermometer fails | CAN coil temp + camera (color-based temp estimation) | Less accurate food temp, wider PID margins |
-| Load cells fail | Timer-based dispensing (open gate for N seconds) | Cannot verify dispensed weight, +/-20% accuracy |
 
 ---
 
-## 8. Testing & Validation
+## 7. Testing & Validation
 
-### 8.1 Camera Test Procedures
+### 7.1 Camera Test Procedures
 
 - [ ] Mount camera at 25cm height, verify full pot is in frame
 - [ ] Capture image of white card, verify white balance (R/G/B within +/-10%)
@@ -494,7 +355,7 @@ The recipe engine on CM5 combines data from multiple sensors to determine the cu
 - [ ] Steam test: boil water for 10 minutes, verify lens does not fog (shroud effective)
 - [ ] FPS test: verify 30fps capture sustained over 30 minutes
 
-### 8.2 IR Thermometer Test Procedures
+### 7.2 IR Thermometer Test Procedures
 
 - [ ] Read room temperature, compare to reference thermometer (+/-1C)
 - [ ] Read boiling water surface, verify 97-102C (altitude-dependent)
@@ -504,17 +365,7 @@ The recipe engine on CM5 combines data from multiple sensors to determine the cu
 - [ ] Steam interference: verify stable reading during active boiling
 - [ ] Response time: apply sudden temp change, verify 90% response in <200ms
 
-### 8.3 Load Cell Test Procedures
-
-- [ ] Tare with empty platform, verify drift <2g over 10 minutes
-- [ ] Place 100g weight, verify reading 98-102g
-- [ ] Place 500g weight, verify reading 495-505g
-- [ ] Place 2000g weight, verify reading 1990-2010g
-- [ ] Linearity: plot weight vs. reading for 5 points, R-squared >0.999
-- [ ] Temperature test: verify drift <5g over 0-40C ambient range
-- [ ] Dynamic test: dispense water into pot, verify weight tracks smoothly
-
-### 8.4 Pot Detection Test Procedures
+### 7.3 Pot Detection Test Procedures
 
 - [ ] Place pot: verify detection within 100ms
 - [ ] Remove pot: verify detection within 100ms
@@ -524,7 +375,7 @@ The recipe engine on CM5 combines data from multiple sensors to determine the cu
 
 ---
 
-## 9. Related Documentation
+## 8. Related Documentation
 
 - [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications|Technical Specifications]]
 - [[01-Epicura-Architecture|Hardware Architecture & Wiring Diagrams]]
@@ -535,7 +386,7 @@ The recipe engine on CM5 combines data from multiple sensors to determine the cu
 
 ---
 
-## 10. Revision History
+## 9. Revision History
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|

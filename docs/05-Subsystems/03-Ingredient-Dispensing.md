@@ -13,7 +13,7 @@ The ingredient dispensing system is divided into three purpose-built subsystems,
 
 | Subsystem | Full Name | Purpose | Actuators | Metering |
 |-----------|-----------|---------|-----------|----------|
-| **P-ASD** | Pneumatic Advanced Seasoning Dispenser | Ground/powdered spices (turmeric, chili, cumin, salt, garam masala, coriander) | 6 Solenoid Valves + Micro Diaphragm Pump | Weight-verified via pot load cells |
+| **P-ASD** | Pneumatic Advanced Seasoning Dispenser | Ground/powdered spices (turmeric, chili, cumin, salt, garam masala, coriander) | 6 Solenoid Valves + Micro Diaphragm Pump | Pressure-and-time-based (ADS1015 feedback) |
 | **CID** | Coarse Ingredients Dispenser | Pre-cut vegetables, meat, paneer, dal, rice | CID-1: NEMA 23 stepper + ext. driver; CID-2: DC linear actuator (slider mechanism) | Timed/position-based |
 | **SLD** | Standard Liquid Dispenser | Oil and water | 2 Peristaltic Pumps + 2 Solenoid Valves + 2 Load Cells (one per reservoir) | Closed-loop weight feedback + low-level alerts |
 
@@ -255,11 +255,11 @@ Pneumatic dispensing inherently prevents clogging — the primary failure mode o
 | 200-mesh SS screen | Prevents large clumps from blocking the 5 mm orifice |
 | 60° cone angle | Internal cartridge geometry prevents dead zones |
 
-**Clog Recovery (if no weight change after 3 pulses):** Rapid 50 ms on/off oscillating air pulses to vibrate powder loose — pneumatic equivalent of vibration motors, but with no additional hardware.
+**Clog Recovery (if no pressure drop after 3 pulses):** Rapid 50 ms on/off oscillating air pulses to vibrate powder loose — pneumatic equivalent of vibration motors, but with no additional hardware.
 
 ### 3.6 Metering Strategy
 
-P-ASD uses **calibrated puff-dosing with weight feedback** (dual-loop):
+P-ASD uses **calibrated puff-dosing with pressure-drop verification**:
 
 **Primary control:** Timed air pulses calibrated per spice type:
 
@@ -272,18 +272,17 @@ P-ASD uses **calibrated puff-dosing with weight feedback** (dual-loop):
 | Garam masala | 0.50 | 200–300 | 1.0 |
 | Coriander powder | 0.35 | 300–400 | 1.0 |
 
-**Secondary control (closed-loop):** Pot load cells provide weight feedback at 10 Hz:
+**Secondary control (pressure-drop verification):** ADS1015 pressure sensor confirms powder ejection:
 
-1. Tare pot weight → W_initial
+1. Record pre-dispense accumulator pressure via ADS1015 → P_initial
 2. Pre-purge: 100 ms pulse at 0.3 bar (loosen packed powder)
 3. Main dispense: open solenoid for calibrated duration
-4. Monitor pot weight at 10 Hz: W_delta = W_current − W_initial
-5. If W_delta < target × 0.85 → additional 50 ms pulses until target reached
-6. Close solenoid when W_delta ≥ target × 0.90 (in-flight compensation)
-7. Post-dispense purge: 200 ms at 1.2 bar (clear orifice)
-8. Log actual dispensed weight
+4. Read post-pulse pressure → P_final; verify pressure drop ≥ threshold (confirms air flowed through powder bed)
+5. If pressure drop < threshold → additional 50 ms pulses (up to 3 retries)
+6. Post-dispense purge: 200 ms at 1.2 bar (clear orifice)
+7. Log estimated dispensed amount (pulse count × calibrated mass per pulse)
 
-Accuracy: ±10% of target weight (with weight feedback).
+Accuracy: ~±20% of target weight (pressure-and-time-based, no direct weight feedback).
 
 ## 4. CID — Coarse Ingredients Dispenser
 
@@ -330,7 +329,7 @@ The push-plate slides along the tray, sweeping ingredients off the drop-off edge
 2. STM32 drives actuator forward: CID-1 via stepper pulses (TIM1_CH3), CID-2 via DRV8876 PWM
 3. Ingredients fall off tray edge into pot
 4. CID-1: step count reaches travel target → reverse to home; CID-2: full-extend limit switch → retract to home
-5. Dispense confirmed by home switch + optional pot weight check
+5. Dispense confirmed by home switch
 
 ### 4.4 Metering Strategy
 
@@ -381,7 +380,7 @@ CID uses **position-based / timed dispensing**:
 | Parameter | Value |
 |-----------|-------|
 | Type | 2× 2 kg strain gauge (one under each SLD reservoir: oil and water) |
-| ADC | 2× dedicated HX711 (separate from pot load cells) |
+| ADC | 2× dedicated HX711 |
 | Purpose | Individual liquid level monitoring + closed-loop dispensing by tracking reservoir weight decrease |
 | Capacity | 2 kg per load cell (accommodates full reservoir + container weight) |
 | Accuracy | ±1 g (24-bit HX711 with averaging) |
@@ -460,20 +459,20 @@ Accuracy: ±5% of target weight (significantly better than ASD due to dedicated 
 | **SLD** | HX711 #2 SCK (water) | PC9 (GPIO) | Clock out | SLD water reservoir load cell (2 kg) |
 | **SLD** | HX711 #2 DOUT (water) | PC10 (GPIO) | Data in | SLD water reservoir load cell (2 kg) |
 
-> **Note:** Pot load cells remain on PC0/PC1 (existing allocation). Pin assignments match [[01-Unified-PCB-Design|Unified PCB Design]] document. P-ASD solenoid valves are driven by IRLML6344 MOSFETs on the Unified PCB, with gates controlled by a PCF8574 I2C GPIO expander (addr 0x20) instead of direct STM32 GPIO. PCF8574 #1 P7 is allocated to CID-1 stepper ENA+ (all 8 pins in use: P0-P5 solenoids, P6 CID-2 extend limit, P7 CID-1 stepper enable). A second PCF8574 #2 (addr 0x21) drives SLD solenoids (P0-P1), status LED (P2), and LED ring power (P3), with P4-P7 reserved. I2C1 bus devices: PCF8574 #1 (0x20), PCF8574 #2 (0x21), INA219 (0x40), ADS1015 (0x48), MLX90614 (0x5A).
+> **Note:** Pin assignments match [[01-Unified-PCB-Design|Unified PCB Design]] document. P-ASD solenoid valves are driven by IRLML6344 MOSFETs on the Unified PCB, with gates controlled by a PCF8574 I2C GPIO expander (addr 0x20) instead of direct STM32 GPIO. PCF8574 #1 P7 is allocated to CID-1 stepper ENA+ (all 8 pins in use: P0-P5 solenoids, P6 CID-2 extend limit, P7 CID-1 stepper enable). A second PCF8574 #2 (addr 0x21) drives SLD solenoids (P0-P1), status LED (P2), and LED ring power (P3), with P4-P7 reserved. I2C1 bus devices: PCF8574 #1 (0x20), PCF8574 #2 (0x21), INA219 (0x40), ADS1015 (0x48), MLX90614 (0x5A). PC0/PC1 are available (pot load cells removed).
 
 ### 6.2 Dispensing Command Protocol (CM5 → STM32)
 
 | Command | Code | Parameters | Response | Description |
 |---------|------|------------|----------|-------------|
-| DISPENSE_PASD | 0x30 | cartridge_id (1 byte: 1–6), target_weight_g (2 bytes) | ACK + actual_weight_g | Dispense seasoning via pneumatic puff-dose, weight-verified by pot load cells |
+| DISPENSE_PASD | 0x30 | cartridge_id (1 byte: 1–6), target_weight_g (2 bytes) | ACK + pulse_count + pressure_delta | Dispense seasoning via pneumatic puff-dose, pressure-drop verified by ADS1015 |
 | DISPENSE_CID | 0x31 | cid_id (1 byte: 1–2), mode (1 byte: FULL/PARTIAL), position_mm (1 byte) | ACK + status | Push tray contents into pot via linear actuator |
 | DISPENSE_SLD | 0x32 | channel (1 byte: OIL=1, WATER=2), target_weight_g (2 bytes) | ACK + actual_weight_g | Pump liquid, closed-loop via dedicated load cell |
 | PURGE_PASD | 0x38 | cartridge_id (1 byte: 1–6, or 0xFF=all) | ACK | Post-dispense air purge to clear orifice |
 | PRESSURE_STATUS | 0x39 | — | pressure_bar (2 bytes, fixed-point) | Read accumulator pressure |
-| QUERY_WEIGHT | 0x35 | source (1 byte: POT=0, SLD_OIL=1, SLD_WATER=2) | weight_g (4 bytes) | Read weight from pot or individual SLD load cell |
+| QUERY_WEIGHT | 0x35 | source (1 byte: SLD_OIL=1, SLD_WATER=2) | weight_g (4 bytes) | Read weight from individual SLD load cell |
 | PREFLIGHT | 0x36 | subsystem_mask (1 byte) | status per subsystem | Check if required subsystems are loaded/ready |
-| TARE | 0x37 | source (1 byte: POT=0, SLD_OIL=1, SLD_WATER=2) | ACK | Zero the specified load cell readings |
+| TARE | 0x37 | source (1 byte: SLD_OIL=1, SLD_WATER=2) | ACK | Zero the specified SLD load cell readings |
 
 ## 7. Clog Prevention (P-ASD)
 
@@ -481,9 +480,10 @@ Accuracy: ±5% of target weight (significantly better than ASD due to dedicated 
 
 ```
 ┌──────────────┐     ┌───────────────┐     ┌──────────────┐
-│ Pre-purge    │────►│ Main dispense │────►│ Pot Weight   │
-│ (100ms,0.3bar│     │ pulse         │     │ Changed?     │
-└──────────────┘     └───────────────┘     └──────┬───────┘
+│ Pre-purge    │────►│ Main dispense │────►│ Pressure     │
+│ (100ms,0.3bar│     │ pulse         │     │ Drop         │
+└──────────────┘     └───────────────┘     │ Detected?    │
+                                           └──────┬───────┘
                                                    │
                                           Yes ◄────┴────► No
                                            │              │
@@ -498,8 +498,9 @@ Accuracy: ±5% of target weight (significantly better than ASD due to dedicated 
                                                           │
                                                           ▼
                                                    ┌──────────────┐
-                                                   │ Pot Weight   │
-                                                   │ Changed?     │
+                                                   │ Pressure     │
+                                                   │ Drop         │
+                                                   │ Detected?    │
                                                    └──────┬───────┘
                                                           │
                                                  Yes ◄────┴────► No
@@ -514,8 +515,9 @@ Accuracy: ±5% of target weight (significantly better than ASD due to dedicated 
                                                                  │
                                                                  ▼
                                                           ┌──────────────┐
-                                                          │ Pot Weight   │
-                                                          │ Changed?     │
+                                                          │ Pressure     │
+                                                          │ Drop         │
+                                                          │ Detected?    │
                                                           └──────┬───────┘
                                                                  │
                                                         Yes ◄────┴────► No
@@ -534,8 +536,8 @@ Accuracy: ±5% of target weight (significantly better than ASD due to dedicated 
 | Factor | P-ASD Impact | CID Impact | SLD Impact | Mitigation |
 |--------|-------------|-----------|-----------|------------|
 | In-flight material | Powder still in chute after solenoid closes | N/A (push mechanism) | Fluid in tube after pump stops | P-ASD: close at 90% target. SLD: close at 95% target |
-| Load cell noise | ±3 g at 10 Hz (pot cells) | N/A | ±1 g (dedicated cell) | Moving average filter (3 samples) |
-| Vibration | Arm motor affects pot weight | N/A | Dedicated cell isolated from pot | Pause arm during P-ASD dispensing |
+| Pressure sensor noise | ±0.02 bar (ADS1015) | N/A | ±1 g (dedicated cell) | Moving average filter (3 samples) |
+| Vibration | Minimal (pressure-based, not weight-based) | N/A | Dedicated cell isolated from pot | N/A |
 | Sticky ingredients | Pressurized air forces through orifice | Pieces stick to tray | Oil residue in tube | P-ASD: post-dispense purge. CID: angled tray. SLD: tube replacement |
 | Fill level variance | Air pressure compensates (consistent regardless of fill) | N/A | Pump rate independent of level | P-ASD: pressure regulation maintains consistent force |
 
@@ -573,7 +575,7 @@ Users configure subsystem contents when loading ingredients before cooking:
 
 Before starting a recipe, the system verifies all required subsystems:
 
-1. **P-ASD:** Short air pulse into each cartridge, monitor pot weight change — confirms powder present and orifice clear
+1. **P-ASD:** Short air pulse into each cartridge, monitor pressure drop via ADS1015 — confirms orifice clear and air path unobstructed
 2. **CID:** User confirms tray loaded via touchscreen (no automatic check — visual confirmation)
 3. **SLD:** Read each reservoir's dedicated load cell — compare oil and water levels individually to minimum required for recipe; alert if either is below threshold
 4. Display subsystem status on UI: loaded / insufficient / empty
@@ -651,7 +653,7 @@ For quick cleaning of SLD channels between recipes:
 
 - [ ] All 6 P-ASD cartridges dock securely via bayonet lock and release easily
 - [ ] P-ASD air seals are airtight (no pressure loss when cartridge docked)
-- [ ] P-ASD weight-verified dispensing achieves ±10% accuracy for all 6 spices
+- [ ] P-ASD pressure-verified dispensing achieves ~±20% accuracy for all 6 spices
 - [ ] P-ASD clog detection fires within 3 pulse cycles of blocked flow
 - [ ] P-ASD post-dispense purge clears orifice (no residual powder visible)
 - [ ] P-ASD pump recharges accumulator to 1.0 bar within 5 seconds

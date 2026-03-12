@@ -72,21 +72,6 @@ The primary cooking element is a commercial microwave induction surface — a se
 | Mounting | Angled toward pot center, 5-10cm distance |
 | Purpose | Food surface temperature, PID feedback |
 
-### 2.3 Load Cells
-
-| Parameter | Value |
-|-----------|-------|
-| Configuration | 4x 5kg strain gauges in full Wheatstone bridge |
-| Total Capacity | 20kg (pot + ingredients + margin) |
-| ADC | HX711 24-bit sigma-delta, 2 channels |
-| Interface | SPI-like protocol (DOUT/SCK) to STM32 GPIO |
-| Sampling Rate | 10Hz or 80Hz (selectable) |
-| Resolution | ~1g at 10Hz, ~3g at 80Hz |
-| Tare | Software tare on boot and on pot placement |
-| Excitation | 5V from HX711 on-chip regulator |
-| Purpose | Ingredient weight, evaporation tracking, pot detection |
-
-
 ## 3. Data Storage
 
 ### 3.1 Storage Architecture
@@ -184,7 +169,7 @@ An off-the-shelf 12V UPS powers the 5V rail (CM5 + STM32) independently of the 2
 | UI Response Time | <200ms | Touch-to-visual feedback on display |
 | System Boot Time | <30s | Power-on to recipe selection screen |
 | Temperature Accuracy | +/-5C | IR sensor to actual food surface |
-| Dispensing Accuracy | ±10% (P-ASD), ±5% (SLD) | P-ASD by pot weight, SLD by dedicated per-reservoir load cells (2× 2 kg) |
+| Dispensing Accuracy | ~±20% (P-ASD), ±5% (SLD) | P-ASD by pressure-and-time (ADS1015 feedback), SLD by dedicated per-reservoir load cells (2× 2 kg) |
 | Camera Latency | <100ms | Capture to frame available in memory |
 | Recipe Step Transition | <2s | From stage detection to actuator response |
 | WiFi Connection | <10s | Auto-reconnect to saved network |
@@ -200,7 +185,7 @@ An off-the-shelf 12V UPS powers the 5V rail (CM5 + STM32) independently of the 2
 | CM5 <-> Display | DSI or HDMI | 1080p/60Hz | CM5 DSI/HDMI <-> 10" panel | UI rendering |
 | CM5 <-> Touch | I2C | 400 kHz | CM5 I2C1 <-> touch controller | Touch input events |
 | STM32 <-> IR Sensor | I2C | 100 kHz | STM32 I2C1 <-> MLX90614 | Temperature readings |
-| STM32 <-> Load Cells | SPI-like GPIO | 10-80 Hz | STM32 GPIO <-> HX711 | Weight measurements |
+| STM32 <-> SLD Load Cells | SPI-like GPIO | 10 Hz | STM32 GPIO <-> 2× HX711 | SLD reservoir weight measurements |
 | STM32 <-> BLDC Motor | PWM + GPIO | 10 kHz + digital | STM32 TIM1_CH1 (PA8) + PA4 (EN) + PA5 (DIR) | Stirring motor speed, enable, direction |
 | STM32 <-> Microwave Surface | CAN 2.0B | 500 kbps | STM32 FDCAN1 (PB8/PB9) via J_STACK → Driver PCB ISO1050DUB → J_CAN <-> module CAN port | Induction power control via CAN; 5 kV isolation on Driver PCB |
 | STM32 <-> Exhaust Fan | PWM | 25 kHz | STM32 TIM4 CH3 <-> fan 4-pin | Fume extraction speed |

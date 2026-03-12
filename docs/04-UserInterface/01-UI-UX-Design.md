@@ -391,7 +391,7 @@ temp_label = Label(text=_("Temperature: %d°C") % current_temp)
 
 2. **Clear Ingredient Loading Instructions**
    - Visual subsystem diagram with highlighting
-   - Live weight feedback from load cells
+   - Live SLD reservoir weight feedback from load cells
    - Step-by-step guided flow
    - Confirmation before proceeding
 

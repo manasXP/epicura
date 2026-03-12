@@ -32,15 +32,6 @@ This document details the sensing subsystem components for the Epicura kitchen r
 │  │  IR Thermo   │          │  (Controller)│                   │
 │  └──────────────┘          │              │                   │
 │                            │              │                   │
-│  ┌──────────────┐  SPI     │              │                   │
-│  │  HX711 ADC   │─────────►│              │                   │
-│  │  (Load Cell) │          │              │                   │
-│  └──────┬───────┘          │              │                   │
-│         │                  │              │                   │
-│  ┌──┐┌──┐┌──┐┌──┐         │              │                   │
-│  │LC││LC││LC││LC│ x4      │              │                   │
-│  └──┘└──┘└──┘└──┘         │              │                   │
-│                            │              │                   │
 │  ┌──────────────┐  GPIO    │              │                   │
 │  │  Reed Switch │─────────►│              │                   │
 │  │  (Pot Detect)│          └──────────────┘                   │
@@ -69,8 +60,6 @@ This document details the sensing subsystem components for the Epicura kitchen r
 | Component | Part Number | Qty | Unit Price | Subtotal | Supplier | Notes |
 |-----------|-------------|-----|------------|----------|----------|-------|
 | IR Thermometer | MLX90614ESF-BAA | 1 | $12.00 | $12.00 | Mouser / DigiKey | Non-contact, I2C, 90° FOV, -70 to +380°C |
-| Load Cell (5kg) | CZL635 | 4 | $4.00 | $16.00 | Amazon / AliExpress | Wheatstone bridge, aluminum alloy |
-| HX711 ADC Module | HX711 breakout | 1 | $3.00 | $3.00 | Amazon / AliExpress | 24-bit, 80 SPS, SPI/GPIO interface |
 
 ### 3.4 Detection & Illumination
 
@@ -96,20 +85,18 @@ This document details the sensing subsystem components for the Epicura kitchen r
 |------|------|
 | IMX219 Camera | $25.00 |
 | MLX90614 IR Thermometer | $12.00 |
-| Load Cells (4x CZL635) | $16.00 |
-| HX711 ADC | $3.00 |
 | Reed Switch | $1.00 |
 | LED Ring (WS2812B) | $5.00 |
 | Passive Components | $0.70 |
-| **Category Subtotal** | **$62.70** |
+| **Category Subtotal** | **$43.70** |
 
 ### 4.2 With IMX477 (Premium Option)
 
 | Item | Cost |
 |------|------|
 | IMX477 Camera | $50.00 |
-| All other sensors (same) | $37.70 |
-| **Category Subtotal** | **$87.70** |
+| All other sensors (same) | $18.70 |
+| **Category Subtotal** | **$68.70** |
 
 ---
 
@@ -135,13 +122,6 @@ This document details the sensing subsystem components for the Epicura kitchen r
 - **Accuracy:** ±0.5°C in 0-50°C range, ±2°C at higher temperatures
 - **Interface:** I2C (SMBus compatible), default address 0x5A
 - **Mounting:** 15-20 cm above pot surface for full pot coverage
-
-### 5.3 Load Cell Configuration
-- **4x CZL635** in Wheatstone bridge configuration
-- Mounted at corners of platform base
-- Full-scale range: 5 kg per cell, 20 kg total (pot + ingredients max ~5 kg)
-- **HX711 ADC:** 24-bit resolution, 80 SPS mode for responsive weight tracking
-- Calibration: 5-point (0, 500g, 1000g, 2000g, 3000g) with known weights
 
 ---
 

@@ -18,7 +18,7 @@ This project encompasses the following major subsystems:
 
 - [[__Workspaces/Epicura/docs/02-Hardware/02-Technical-Specifications|Technical Specifications]] - Induction, robotic arm, sensors, and power budget
 - [[../02-Hardware/01-Epicura-Architecture|Epicura Architecture]] - System block diagrams and hardware wiring
-- [[../02-Hardware/03-Sensors-Acquisition|Sensors & Acquisition]] - Camera, IR thermometer, and load cells
+- [[../02-Hardware/03-Sensors-Acquisition|Sensors & Acquisition]] - Camera, IR thermometer, and pot detection
 - [[../02-Hardware/04-Mechanical-Design|Mechanical Design]] - Enclosure, arm mechanism, and industrial design
 - [[../03-Software/02-Controller-Software-Architecture|Controller & Software Architecture]] - Dual-processor software modules and recipe state machine
 - [[../03-Software/01-Tech-Stack|Tech Stack]] - Hardware platforms, software frameworks, and tools
@@ -115,14 +115,10 @@ This project encompasses the following major subsystems:
 │     └──────────────┘ └──────────────┘    └────────────┘ └──────────────┘    │
 │                                                                             │
 │     ┌──────────────┐ ┌──────────────┐    ┌────────────┐ ┌──────────────┐    │
-│     │ WiFi / BT    │ │ IR Thermo-   │    │ Load       │ │ Ingredient   │    │
-│     │ Module       │ │ meter        │    │ Cells      │ │ Hoppers      │    │
-│     │              │ │              │    │            │ │ (4-6 compt.) │    │
+│     │ WiFi / BT    │ │ IR Thermo-   │    │ Reed       │ │ Ingredient   │    │
+│     │ Module       │ │ meter        │    │ Switch     │ │ Hoppers      │    │
+│     │              │ │              │    │(Pot Detect)│ │ (4-6 compt.) │    │
 │     └──────────────┘ └──────────────┘    └────────────┘ └──────────────┘    │
-│                                                                             │
-│     ┌──────────────────────────────────────────────────────────────────┐    │
-│     │                    Load Cells (Pot Weight Sensing)               │    │
-│     └──────────────────────────────────────────────────────────────────┘    │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -140,7 +136,6 @@ This project encompasses the following major subsystems:
                        │            ┌───────▼───────┐           │
                        │            │  HD Camera    │           │
                        │            │  IR Thermo    │           │
-                       │            │  Load Cells   │           │
                        │            └───────────────┘           │
                        │                                        │
                        ▼                                        ▼

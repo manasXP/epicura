@@ -237,9 +237,7 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 │  │  100 kHz, 4.7k pull-ups to 3.3V                             │
 │  └─────────────────────────────────┘                           │
 │                                                                │
-│  ┌─── GPIO: Load Cells (HX711) ───┐                            │
-│  │  PC0  (GPIO)      ──► HX711 SCK (pot load cell)             │
-│  │  PC1  (GPIO)      ◄── HX711 DOUT (pot load cell)            │
+│  ┌─── GPIO: SLD Load Cells (HX711) ─┐                          │
 │  │  PC11 (GPIO)      ──► HX711 SCK (SLD oil reservoir)         │
 │  │  PC12 (GPIO)      ◄── HX711 DOUT (SLD oil reservoir)        │
 │  │  PC9  (GPIO)      ──► HX711 SCK (SLD water reservoir)       │
@@ -317,8 +315,8 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 | PB13 | SPI2_SCK | CM5 SCLK | Input | J_CM5 pin 23 | Comms |
 | PB14 | SPI2_MISO | CM5 MISO | Output | J_CM5 pin 21 | Comms |
 | PB15 | SPI2_MOSI | CM5 MOSI | Input | J_CM5 pin 19 | Comms |
-| PC0 | GPIO | HX711 SCK (pot load cell) | Output | J_SLD pin 9 | Sensors |
-| PC1 | GPIO | HX711 DOUT (pot load cell) | Input | J_SLD pin 10 | Sensors |
+| PC0 | — | Available (pot load cells removed) | — | Freed | — |
+| PC1 | — | Available (pot load cells removed) | — | Freed | — |
 | PC2 | GPIO | CID Linear Actuator 2 PH | Output | DRV8876 #2 PH | CID |
 | PC3 | GPIO | SLD Pump 1 PWM | Output | TB6612 PWMA | SLD |
 | PC4 | GPIO | SLD Pump 1 DIR | Output | TB6612 AIN1 | SLD |
@@ -967,7 +965,7 @@ Two dedicated 2 kg load cells (one under each SLD reservoir) for independent liq
 | Low-Level Alert | Configurable threshold per channel (default: 50 g remaining) |
 | Decoupling | 100nF MLCC on each HX711 VDD |
 
-> **Note:** The pot load cell (PC0/PC1) uses a separate HX711 on pins 9-10 of J_SLD. The SLD reservoir HX711s share the same 3.3V/GND supply from J_SLD pins 11-12.
+> **Note:** J_SLD pins 9-10 are reserved (pot load cells removed). The SLD reservoir HX711s share the same 3.3V/GND supply from J_SLD pins 11-12.
 
 ### 6.9 Piezo Buzzer (1x)
 
@@ -1368,8 +1366,8 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 | 6 | SOL1_OUT | Oil solenoid drain (PCF8574 #2 P0) |
 | 7 | 12V_SOL2 | Water solenoid power (switched) |
 | 8 | SOL2_OUT | Water solenoid drain (PCF8574 #2 P1) |
-| 9 | HX711_POT_SCK | Clock output to pot HX711 (PC0) |
-| 10 | HX711_POT_DOUT | Data input from pot HX711 (PC1) |
+| 9 | Reserved | (Pot load cells removed — PC0 freed) |
+| 10 | Reserved | (Pot load cells removed — PC1 freed) |
 | 11 | 3.3V | HX711 supply (shared by all 3 HX711s) |
 | 12 | GND | HX711 ground |
 | 13 | HX711_OIL_SCK | Clock output to SLD oil reservoir HX711 (PC11) |
@@ -1745,7 +1743,7 @@ At 40C ambient (inside Epicura enclosure near induction surface):
 | J_24V_IN | XT30 or JST-VH 2-pin | 2.5mm pitch | 1 | $0.40 | 24V DC input |
 | J_12V_UPS | XT30 2-pin | 2.5mm pitch | 1 | $0.40 | 12V UPS input |
 | J_BLDC | Hirose DF11-6DP-2DS | 2x3, 2.0mm pitch | 1 | $0.50 | BLDC motor |
-| J_SLD | Hirose DF11-16DP-2DS | 2x8, 2.0mm pitch | 1 | $0.80 | SLD + pot/reservoir load cells |
+| J_SLD | Hirose DF11-16DP-2DS | 2x8, 2.0mm pitch | 1 | $0.80 | SLD pumps/solenoids + reservoir load cells |
 | J_PASD | Hirose DF11-16DP-2DS | 2x8, 2.0mm pitch | 1 | $0.80 | P-ASD combined |
 | J_PRES | Hirose DF11-4DP-2DS | 2x2, 2.0mm pitch | 1 | $0.40 | P-ASD pressure sensor I2C |
 | J_FAN | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | Exhaust fans |
@@ -1939,7 +1937,6 @@ At 40C ambient (inside Epicura enclosure near induction surface):
 - [ ] PCF8574 #2 P2 toggles status LED (active-low, 330R)
 - [ ] PCF8574 #2 P3 controls LED ring power (via Q_LED_N → Q_LED_P)
 - [ ] PA7, PA9, PC8, PA2 confirmed unconnected (no trace to old loads)
-- [ ] HX711 (pot, PC0/PC1) returns stable readings
 - [ ] HX711 (SLD oil reservoir, PC11/PC12) returns stable readings (±1 g)
 - [ ] HX711 (SLD water reservoir, PC9/PC10) returns stable readings (±1 g)
 - [ ] SLD low-level alert triggers when reservoir weight < configured threshold

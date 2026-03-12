@@ -71,7 +71,6 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 
 | ID | Requirement | Priority | Acceptance Criteria |
 |----|-------------|----------|---------------------|
-| FR-MCU-020 | Read pot load cells (4× strain gauge + HX711) at 10 Hz | Must | Resolution ~1 g, total capacity 20 kg |
 | FR-MCU-021 | Read 2× SLD reservoir load cells (oil + water) at 10 Hz during dispensing | Must | Accuracy ±5% for closed-loop liquid dispensing; individual level monitoring with low-level alerts |
 | FR-MCU-022 | Read IR thermometer at 10 Hz | Must | MLX90614 via I2C1 (PA15/PB7) |
 | FR-MCU-023 | Parse coil temperature from CAN HEAT_STATUS | Must | Received at 10 Hz from induction module |
@@ -82,7 +81,7 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 
 | ID | Requirement | Priority | Acceptance Criteria |
 |----|-------------|----------|---------------------|
-| FR-MCU-030 | P-ASD: Pressurize accumulator, open solenoid valve, puff-dose spice, monitor pot weight | Must | Accuracy ±10%, clog retry (3 attempts), post-dispense purge |
+| FR-MCU-030 | P-ASD: Pressurize accumulator, open solenoid valve, puff-dose spice, verify pressure drop via ADS1015 | Must | Accuracy ~±20%, clog retry (3 attempts), post-dispense purge |
 | FR-MCU-031a | CID-1: Drive NEMA 23 stepper via TIM1_CH3 (PA10 PUL+), PB4 (DIR+), PCF8574 P7 (ENA+) | Must | Step counting for travel, home limit switch (PB6) detection |
 | FR-MCU-031b | CID-2: Drive linear actuator via DRV8876 #2 (PB5 EN, PC2 PH) | Must | Home + full-extend limit switch detection |
 | FR-MCU-032 | SLD: Drive peristaltic pumps + solenoids, closed-loop weight | Must | Accuracy ±5%, stop at target×0.95 |
@@ -93,12 +92,12 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 
 **Normal dispense:**
 1. Pre-purge: 100 ms pulse at 0.3 bar (loosen packed powder)
-2. Main dispense: open solenoid for calibrated duration (100–400 ms)
-3. Monitor pot weight at 10 Hz; additional 50 ms pulses if under target
-4. Close at 90% target (in-flight compensation)
+2. Record pre-dispense accumulator pressure via ADS1015
+3. Main dispense: open solenoid for calibrated duration (100–400 ms)
+4. Verify pressure drop ≥ threshold (confirms powder ejected)
 5. Post-dispense purge: 200 ms at 1.2 bar (clear orifice)
 
-**Clog recovery (no weight change after main pulse):**
+**Clog recovery (no pressure drop after main pulse):**
 1. **Retry 1:** Increase pressure to 1.2 bar, repeat pulse
 2. **Retry 2:** Rapid 50 ms on/off oscillating pulses (5 cycles)
 3. **Failure:** Send CLOG ERROR (0x12) to CM5
@@ -172,8 +171,8 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 | **PB13** | SPI2_SCK | SPI slave | CM5 clock |
 | **PB14** | SPI2_MISO | SPI slave | STM32 → CM5 data |
 | **PB15** | SPI2_MOSI | SPI slave | CM5 → STM32 data |
-| **PC0** | GPIO output | Digital | HX711 SCK (pot load cells) |
-| **PC1** | GPIO input | Digital | HX711 DOUT (pot load cells) |
+| **PC0** | — | Available | Freed (pot load cells removed) |
+| **PC1** | — | Available | Freed (pot load cells removed) |
 | **PC2** | GPIO output | Digital | CID linear actuator 2 PH (DRV8876) |
 | **PC3** | GPIO output | PWM (software) | SLD pump 1 PWM (TB6612) |
 | **PC4** | GPIO output | Digital | SLD pump 1 DIR (TB6612) |
@@ -203,14 +202,13 @@ The STM32G474RE is the real-time motor/sensor controller and safety guardian for
 - Termination: 120 Ω at each end
 - Messages: power set, power query, status request, fault report
 
-### 3.4 Load Cells (HX711)
+### 3.4 SLD Reservoir Load Cells (HX711)
 
-- Interface: Bit-banged GPIO (PC0 = SCK, PC1 = DOUT)
-- Sample rate: 10 Hz (RATE pin low) or 80 Hz (RATE pin high)
-- Configuration: 4× 5 kg strain gauges in Wheatstone bridge (pot)
 - SLD oil reservoir: HX711 #1 on PC11 (SCK) / PC12 (DOUT), 2 kg strain gauge
 - SLD water reservoir: HX711 #2 on PC9 (SCK) / PC10 (DOUT), 2 kg strain gauge
-- Resolution: 24-bit ADC → ~1 g at 20 kg full scale
+- Interface: Bit-banged GPIO
+- Sample rate: 10 Hz (RATE pin low)
+- Resolution: 24-bit ADC → ~1 g at 2 kg full scale
 
 ---
 
@@ -249,7 +247,7 @@ CRITICAL ──[condition cleared within timeout]──→ WARNING
 
 | From | To | Trigger |
 |------|----|---------|
-| NORMAL | WARNING | CAN coil temp > 250 °C, or load cell drift > 50 g/min unexpected |
+| NORMAL | WARNING | CAN coil temp > 250 °C |
 | WARNING | CRITICAL | IR > 260 °C, or CAN fault from induction module |
 | CRITICAL | E_STOP | IR > 270 °C, CAN coil over-temp, E-stop button, CM5 heartbeat timeout (5 s) |
 | E_STOP | NORMAL | Manual hardware reset (E-stop button released + PB2 debounce) |
@@ -344,7 +342,7 @@ See [[04-MPU-Functional-Specification#5.1 SPI Protocol]] for full frame definiti
 | 0x04 | CAN_FAULT | Critical | Reduce power to 0, alert CM5 |
 | 0x05 | CM5_HEARTBEAT_LOSS | Critical | Safe state (hold temp at 0, stop servo) |
 | 0x10 | SERVO_STALL | Warning | Stop servo, alert CM5 |
-| 0x11 | LOAD_CELL_DRIFT | Warning | Alert CM5, flag dispense unreliable |
+| 0x11 | SLD_LOAD_CELL_DRIFT | Warning | Alert CM5, flag SLD dispense unreliable |
 | 0x12 | PASD_CLOG | Warning | Pneumatic retry sequence (pressure increase + oscillating pulses), then alert CM5 |
 | 0x13 | SLD_DISPENSE_ERROR | Warning | Stop pump, alert CM5 with actual vs target |
 | 0x20 | CAN_TX_TIMEOUT | Info | Retry 3×, then CAN_FAULT |
@@ -374,7 +372,7 @@ See [[04-MPU-Functional-Specification#5.1 SPI Protocol]] for full frame definiti
 | CAN round-trip | <10 ms | TX → RX status |
 | Sensor poll cycle | <50 ms (all sensors) | Cycle start → data ready |
 | Temperature accuracy | ±5 °C (IR to food surface) | Calibrated against thermocouple |
-| Dispensing accuracy (ASD) | ±10% | Load cell vs target weight |
+| Dispensing accuracy (ASD) | ~±20% | Pressure-drop verification vs calibrated pulse |
 | Dispensing accuracy (SLD) | ±5% | Load cell vs target weight |
 | FreeRTOS CPU utilization | <70% | Idle task runtime measurement |
 | Flash usage | <256 KB | Linker map |

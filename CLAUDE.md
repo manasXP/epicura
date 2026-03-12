@@ -26,7 +26,6 @@ Design/documentation phase. Comprehensive documentation exists across 35+ docume
 | Carrier Board | CM5IO (official Raspberry Pi IO board) | Board-to-board connectors | CM5 carrier with all breakouts |
 | Camera | IMX219 (8MP) or IMX477 (12.3MP) | CSI-2 to CM5 | Food stage detection via CV |
 | IR Thermometer | MLX90614 | I2C to STM32 | Non-contact food surface temp |
-| Load Cells | 4x strain gauge + HX711 | SPI to STM32 | Weight-based dispensing verification |
 | NTC Thermistors | 100K NTC | ADC to STM32 | Coil and ambient temp monitoring |
 | Microwave Induction Surface | 1,800W commercial module | CAN bus to STM32 FDCAN1 | Cooking heat source (self-contained coil + driver) |
 | BLDC Stirring Motor | 24V BLDC (30-50 kg·cm, integrated ESC) | PWM (10kHz) + EN + DIR from STM32 | Stirring and scraping |

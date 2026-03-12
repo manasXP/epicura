@@ -382,12 +382,12 @@ See [[03-Ingredient-Dispensing|Ingredient Dispensing System]] for full details.
 | Capacity | 80 mL each | 400 mL each | 200 mL (oil), 500 mL (water) |
 | Material | Food-grade PP | Food-grade PP | PP reservoirs + silicone tubing |
 | Actuator | SG90 servo gate | 12V linear actuator | Peristaltic pump + solenoid valve |
-| Metering | Pot load cells (±10%) | Position-based | Dedicated load cell (±5%) |
+| Metering | Pressure-and-time-based (~±20%) | Position-based | Dedicated load cell (±5%) |
 | Cleaning | Removable, dishwasher-safe | Slide-out, dishwasher-safe | Removable reservoir; tubing replaceable |
 
 ### 7.3 Dispensing Sequence
 
-**ASD:** Recipe engine sends `DISPENSE_ASD(id, target_g)` → STM32 opens servo gate → monitors pot weight → closes at target
+**ASD:** Recipe engine sends `DISPENSE_ASD(id, target_g)` → STM32 opens solenoid for calibrated duration → monitors pressure drop via ADS1015 → post-dispense purge
 
 **CID:** Recipe engine sends `DISPENSE_CID(id, FULL)` → STM32 drives linear actuator → ingredients pushed off tray into pot → actuator retracts
 
@@ -541,9 +541,7 @@ Optional automated cleaning: fill pot with water, heat to 60C, stir for 5 minute
 
 1. Mount microwave induction surface module into base
 2. Route CAN bus cable from module to controller PCB
-3. Place load cells on platform mounting points
-4. Install pot platform over load cells
-5. Mount PSU module in rear-bottom compartment
+3. Mount PSU module in rear-bottom compartment
 6. Install STM32 control PCB on side bracket
 7. Install CM5 + carrier board in rear-top area
 8. Wire PSU to all DC loads (color-coded connectors)

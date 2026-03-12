@@ -89,8 +89,6 @@ This document provides the comprehensive hardware architecture, wiring diagrams,
 | Motor Controller | STM32G474RE (LQFP-64) | - | Unified PCB | Real-time control: PID, servos, sensors, safety |
 | Camera Module | IMX219 or IMX477 | MIPI CSI-2 | CM5 CSI port | Overhead food monitoring, CV inference |
 | IR Thermometer | MLX90614ESF-BAA | I2C | STM32 I2C1 | Non-contact food surface temperature |
-| Load Cell ADC | HX711 | SPI-like GPIO | STM32 GPIO | 24-bit weight measurement from strain gauges |
-| Strain Gauges | 4x 5kg load cells | Wheatstone bridge | HX711 | Weight sensing under pot platform |
 | BLDC Stirring Motor | 24V BLDC (integrated ESC) | PWM (10kHz) + EN + DIR | STM32 PA8 + PA4 + PA5 | Stirring arm rotation |
 | ASD Gate Servos | SG90 (x3) | PWM (50Hz) | STM32 TIM2 CH1-3 (PA0-PA2) | Seasoning dispenser gates |
 | ASD Vibration Motors | ERM 3V (x3) | GPIO | STM32 PC7, PD2, PA3 via MOSFET | Anti-clog mechanism (one per hopper) |
@@ -281,11 +279,6 @@ STM32G474RE (LQFP-64)
 │  │  PA15 (I2C1_SCL) ──► MLX90614 SCL                         │
 │  │  PB7  (I2C1_SDA) ◄─► MLX90614 SDA                         │
 │  │  100 kHz, pull-ups 4.7k to 3.3V                           │
-│  └─────────────────────────────────┘                         │
-│                                                              │
-│  ┌─── GPIO: Load Cells (HX711) ───┐                          │
-│  │  PC0  (GPIO)      ──► HX711 SCK (clock out)               │
-│  │  PC1  (GPIO)      ◄── HX711 DOUT (data in)                │
 │  └─────────────────────────────────┘                         │
 │                                                              │
 │  ┌─── GPIO: Safety & Control ─────┐                          │
@@ -751,7 +744,7 @@ The dispensing system comprises three subsystems. See [[03-Ingredient-Dispensing
 
 | Subsystem | Actuators | Metering | Min Dispense |
 |-----------|-----------|----------|-------------|
-| P-ASD (seasonings) | 1× diaphragm pump + 6× solenoid valve (PCF8574 I2C) | Pot load cells (±10%) | ~1 g |
+| P-ASD (seasonings) | 1× diaphragm pump + 6× solenoid valve (PCF8574 I2C) | Pressure-and-time-based (~±20%) | ~1 g |
 | CID (coarse) | CID-1: NEMA 23 stepper + ext. driver; CID-2: linear actuator (DRV8876 #2) | Position-based / user pre-measured | Full tray |
 | SLD (liquids) | 2× peristaltic pump (TB6612) + 2× solenoid + 2× 2 kg load cell | Closed-loop via dedicated per-reservoir load cells + low-level alerts | ~5 g |
 | Exhaust | 2× 120mm fans (independent PWM control) | Temperature/fume-based control | — |
