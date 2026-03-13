@@ -229,7 +229,7 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 │  └────────────────────────────────────────────────────────────┘  │
 │                                                                │
 │  ┌─── I2C1: Sensors & Peripherals ──┐                          │
-│  │  PA15 (I2C1_SCL)  ──► MLX90614 (0x5A) — J_IR                │
+│  │  PA15 (I2C1_SCL)  ──► MLX90614 (0x5A) — J_IR_LED              │
 │  │  PB7  (I2C1_SDA)  ◄─► INA219 (0x40) — on-board              │
 │  │                    ◄─► PCF8574 #1 (0x20) — on-board         │
 │  │                    ◄─► PCF8574 #2 (0x21) — on-board         │
@@ -252,8 +252,8 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 │  ┌─── LED Ring Power Control ────┐                             │
 │  │  PCF8574 #2 P3   ──► Q_LED_N gate (2N7002, N-MOSFET)        │
 │  │       Q_LED_N drain ──► Q_LED_P gate (SI2301, P-MOSFET)     │
-│  │       Q_LED_P switches 5V to LED ring via J_LED             │
-│  │       Data: CM5 GPIO18 → J_CM5 pin 12 → J_LED pin 2         │
+│  │       Q_LED_P switches 5V to LED ring via J_IR_LED           │
+│  │       Data: CM5 GPIO18 → J_CM5 pin 12 → J_IR_LED pin 6       │
 │  └─────────────────────────────────┘                           │
 │                                                                │
 │  ┌─── GPIO: Safety & Control ─────┐                            │
@@ -298,7 +298,7 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 | PA12 | USB_DP | USB D+ | Bidir | USBLC6-2SC6 ESD → 22R → J_USB | USB |
 | PA13 | SWDIO | SWD Debug | Bidir | J_SWD | Debug |
 | PA14 | SWCLK | SWD Debug | Input | J_SWD | Debug |
-| PA15 | I2C1_SCL | MLX90614/INA219/PCF8574 x2/ADS1015 | Output | J_IR, J_PRES, on-board ICs | Sensors |
+| PA15 | I2C1_SCL | MLX90614/INA219/PCF8574 x2/ADS1015 | Output | J_IR_LED, J_PRES, on-board ICs | Sensors |
 | PB0 | GPIO | Safety Relay | Output | Q_RLY (2N7002) | Safety |
 | PB1 | GPIO | Pot Detection | Input | Reed switch (10k pull-up) | Safety |
 | PB2 | GPIO (EXTI) | E-Stop | Input | NC button (10k pull-up, RC debounce) | Safety |
@@ -306,7 +306,7 @@ STM32G474RE (LQFP-64) — Unified PCB Pin Assignment
 | PB4 | GPIO | CID-1 Stepper DIR+ | Output | J_CID pin 3 (100R series) | CID |
 | PB5 | GPIO | CID Linear Actuator 2 EN | Output | DRV8876 #2 EN | CID |
 | PB6 | GPIO (EXTI) | CID-1 Home Limit Switch | Input | J_CID pin 9 (10k pull-up, 100nF debounce) | CID |
-| PB7 | I2C1_SDA | MLX90614/INA219/PCF8574 x2/ADS1015 | Bidir | J_IR, J_PRES, on-board ICs | Sensors |
+| PB7 | I2C1_SDA | MLX90614/INA219/PCF8574 x2/ADS1015 | Bidir | J_IR_LED, J_PRES, on-board ICs | Sensors |
 | PB8 | FDCAN1_RX | CAN RX | Input | ISO1050 RXD (on-board) | CAN |
 | PB9 | FDCAN1_TX | CAN TX | Output | ISO1050 TXD (on-board) | CAN |
 | PB10 | TIM2_CH3 | Exhaust Fan 2 PWM | Output | IRLML6344 gate → J_FAN | Exhaust |
@@ -1245,7 +1245,7 @@ Pot absent → reed open → PB1 = HIGH (pulled up)
 A high-side P-MOSFET switch controls 5V power to the WS2812B LED ring. An N-MOSFET level-shifts the 3.3V GPIO to drive the P-MOSFET gate.
 
 ```
-5V ──── Q_LED_P: SI2301 (P-MOSFET, SOT-23) ──── J_LED Pin 1 (5V_SW)
+5V ──── Q_LED_P: SI2301 (P-MOSFET, SOT-23) ──── J_IR_LED Pin 5 (5V_SW)
           │ Source              Drain │
           Gate ──┬── R: 10k to 5V (default OFF)
                  └── Q_LED_N: 2N7002 Drain
@@ -1256,8 +1256,8 @@ A high-side P-MOSFET switch controls 5V power to the WS2812B LED ring. An N-MOSF
                           │
                      10k pull-down to GND
 
-CM5 GPIO18 ── J_CM5 Pin 12 ── J_LED Pin 2 (DATA, PCB trace passthrough)
-GND ──────── J_LED Pin 3 (GND)
+CM5 GPIO18 ── J_CM5 Pin 12 ── J_IR_LED Pin 6 (DATA, PCB trace passthrough)
+GND ──────── J_IR_LED Pin 7 (GND)
 ```
 
 | Parameter | Value |
@@ -1276,7 +1276,7 @@ All MOSFET and H-bridge IC enable pins have:
 
 ---
 
-## 10. Connector Definitions (17 total)
+## 10. Connector Definitions (16 total)
 
 ### 10.1 J_CM5 — CM5IO GPIO Header Receptor (2x20 pin socket, 2.54mm)
 
@@ -1287,7 +1287,7 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 | 2, 4 | 5V | 5V rail (UPS-backed) | Out to CM5IO | Powers CM5IO + CM5 module |
 | 6, 9, 14, 20, 25, 30, 34, 39 | GND | GND | Power | Common ground |
 | 7 | GPIO4 | PB3 (GPIO) | Out to CM5 | Data-ready IRQ (active-low, 10us pulse) |
-| 12 | GPIO18 | J_LED pin 2 (passthrough) | Out from CM5 | WS2812B LED ring data |
+| 12 | GPIO18 | J_IR_LED pin 6 (passthrough) | Out from CM5 | WS2812B LED ring data |
 | 19 | GPIO10 (MOSI) | PB15 (SPI2_MOSI) | In from CM5 | SPI data to STM32 |
 | 21 | GPIO9 (MISO) | PB14 (SPI2_MISO) | Out to CM5 | SPI data from STM32 |
 | 23 | GPIO11 (SCLK) | PB13 (SPI2_SCK) | In from CM5 | SPI clock |
@@ -1422,14 +1422,18 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 | 1 | 5V | Buzzer power (switched by 2N7002) |
 | 2 | BUZZ_OUT | Drain side of 2N7002 (PA11 PWM) |
 
-### 10.12 J_IR — MLX90614 I2C (JST-SH 1.0mm, 4-pin)
+### 10.12 J_IR_LED — IR Sensor + LED Ring (Hirose DF11-8DP-2DS, 2x4, 2.0mm)
 
-| Pin | Signal | STM32 Pin | Notes |
-|-----|--------|-----------|-------|
-| 1 | SCL | PA15 (I2C1_SCL) | 4.7k pull-up on board |
-| 2 | SDA | PB7 (I2C1_SDA) | 4.7k pull-up on board |
-| 3 | VCC | 3.3V | — |
-| 4 | GND | GND | — |
+| Pin | Row | Signal | Source | Notes |
+|-----|-----|--------|--------|-------|
+| 1 | 1 | SCL | PA15 (I2C1_SCL) | 4.7k pull-up on board |
+| 2 | 1 | SDA | PB7 (I2C1_SDA) | 4.7k pull-up on board |
+| 3 | 1 | 3V3 | 3.3V | IR sensor power |
+| 4 | 1 | GND | GND | IR ground |
+| 5 | 2 | 5V_SW | Q_LED_P | Switched 5V for LED ring (PCF8574 #2 P3 enable) |
+| 6 | 2 | DATA | CM5 GPIO18 passthrough | WS2812B data |
+| 7 | 2 | GND | GND | LED ground |
+| 8 | 2 | NC | — | Spare pin |
 
 ### 10.13 J_SWD — SWD Debug (10-pin 1.27mm Cortex Debug or 6-pin TagConnect)
 
@@ -1454,15 +1458,7 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 | 3 | E_STOP | PB2 | NC button, 10k pull-up, RC debounce |
 | 4 | GND | GND | — |
 
-### 10.15 J_LED — LED Ring (JST-XH 2.5mm, 3-pin)
-
-| Pin | Signal | Notes |
-|-----|--------|-------|
-| 1 | 5V_SW | Switched 5V from Q_LED_P (PCF8574 #2 P3 enable) |
-| 2 | DATA | WS2812B data (passthrough from CM5 GPIO18) |
-| 3 | GND | Power ground |
-
-### 10.16 J_USB — USB-C Programming Port (USB-C 2.0, 16-pin mid-mount)
+### 10.15 J_USB — USB-C Programming Port (USB-C 2.0, 16-pin mid-mount)
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
@@ -1476,7 +1472,7 @@ Mates directly with the CM5IO board's 40-pin GPIO header. Only the pins listed b
 > [!note]
 > Only USB 2.0 signals are used. SuperSpeed (A2/A3/B2/B3) and SBU pins are not connected. The connector is mid-mount SMD, placed on the board edge in Zone B near J_SWD.
 
-### 10.17 J_BAT — Li-Ion Battery (JST-PH 2.0mm, 2-pin)
+### 10.16 J_BAT — Li-Ion Battery (JST-PH 2.0mm, 2-pin)
 
 | Pin | Signal | Notes |
 |-----|--------|-------|
@@ -1525,9 +1521,9 @@ Inner copper: 1 oz (35um) for planes
 │  │ ZONE A:     │  │ ZONE B:   │  │ ZONE C:       │  │
 │  │ DIGITAL     │  │ COMMS     │  │ POWER INPUT   │  │
 │  │ STM32G474RE │  │ J_SWD     │  │ J_24V_IN XT30 │  │
-│  │ Crystals    │  │ J_IR      │  │ J_12V_UPS XT30│  │
+│  │ Crystals    │  │ J_IR_LED  │  │ J_12V_UPS XT30│  │
 │  │ AMS1117 LDO │  │ J_SAFE    │  │ Polyfuses,TVS │  │ 90mm
-│  │ ESD, relay  │  │ J_LED     │  │ INA219+shunt  │  │
+│  │ ESD, relay  │  │           │  │ INA219+shunt  │  │
 │  │ Schottky-OR │  │ J_USB ◄───│  │ J_BAT ◄────── │  │
 │  │ (D_OR1-3)   │  │ SW_BOOT   │  │ TP4056+DW01A  │  │
 │  ├─────────────┤  │ USBLC6    │  │ MT3608 boost  │  │
@@ -1750,10 +1746,9 @@ At 40C ambient (inside Epicura enclosure near induction surface):
 | J_CID | Hirose DF11-14DP-2DS | 2x7, 2.0mm pitch | 1 | $0.70 | CID stepper + linear actuator + limit switches |
 | J_CAN | JST-XH 4-pin | 2.5mm pitch | 1 | $0.15 | CAN bus |
 | J_BUZZER | JST-PH 2-pin | 2.0mm pitch | 1 | $0.08 | Piezo buzzer |
-| J_IR | JST-SH 4-pin | 1.0mm pitch | 1 | $0.20 | MLX90614 I2C |
+| J_IR_LED | Hirose DF11-8DP-2DS | 2x4, 2.0mm pitch | 1 | $0.50 | IR sensor + LED ring combined |
 | J_SWD | Pin header 2x5 | 1.27mm pitch | 1 | $0.30 | SWD debug |
 | J_SAFE | Hirose DF11-4DP-2DS | 2x2, 2.0mm pitch | 1 | $0.40 | Safety I/O |
-| J_LED | JST-XH 3-pin | 2.5mm pitch | 1 | $0.12 | LED ring |
 | J_USB | USB-C 16-pin mid-mount | SMD | 1 | $0.30 | USB programming port |
 | J_BAT | JST-PH 2-pin | 2.0mm pitch | 1 | $0.08 | Li-Ion battery |
 | **PCB** | 4-layer, 160x90mm | FR4 ENIG, 2oz outer | 1 | $5.50 | JLCPCB batch (5 pcs) |
@@ -1811,7 +1806,7 @@ At 40C ambient (inside Epicura enclosure near induction surface):
 ### 14.1 Assembly Notes
 
 - All ICs and passives are SMT (top side preferred, bottom side available for passives)
-- Through-hole: Hirose DF11 dual-row connectors, JST-XH connectors (J_FAN, J_CAN, J_LED), XT30 for power inputs, 2.54mm pin headers
+- Through-hole: Hirose DF11 dual-row connectors (incl. J_IR_LED), JST-XH connectors (J_FAN, J_CAN), XT30 for power inputs, 2.54mm pin headers
 - J_CM5 (2x20 socket) on bottom side, top edge center — mates downward with CM5IO below
 - Reflow for SMT, then wave or hand-solder through-hole
 - Mark pin 1 of all multi-pin connectors with silkscreen triangle
@@ -1848,7 +1843,7 @@ At 40C ambient (inside Epicura enclosure near induction surface):
 | 0x21 | PCF8574 #2 (SLD solenoids + LED) | On-board | On-demand |
 | 0x40 | INA219 (24V current monitor) | On-board | 1 Hz |
 | 0x48 | ADS1015 (P-ASD pressure) | External (J_PRES) | On-demand |
-| 0x5A | MLX90614 (IR thermometer) | External (J_IR) | 10 Hz |
+| 0x5A | MLX90614 (IR thermometer) | External (J_IR_LED) | 10 Hz |
 
 ### 15.4 Power Failure State Machine
 
